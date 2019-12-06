@@ -2,6 +2,37 @@ import React, { Component } from 'react';
 import Error from './error';
 import Player from './player';
 
+const METADATA = 'metadata.xml';
+const SHAPES = 'shapes.svg';
+const PANZOOMS = 'panzooms.xml';
+const CURSOR = 'cursor.xml';
+const TEXT = 'presentation_text.json';
+const CHAT = 'slides_new.xml';
+const SCREENSHARE = 'deskshare.xml';
+const CAPTIONS = 'captions.json';
+
+const FILES = [
+  METADATA,
+  SHAPES,
+  PANZOOMS,
+  CURSOR,
+  TEXT,
+  CHAT,
+  SCREENSHARE,
+  CAPTIONS
+];
+
+const MEDIAS = [
+  'webm',
+  'mp4'
+];
+
+const DATA = {
+  xml: 'text',
+  svg: 'text',
+  json: 'json'
+};
+
 const getRecordId = match => {
   if (match) {
     const { params } = match;
@@ -32,135 +63,83 @@ export default class Loader extends Component {
       text: false,
       chat: false,
       screenshare: false,
-      media: false,
-      captions: false
+      captions: false,
+      media: false
     };
 
-    this.fetchMetadata = this.fetchMetadata.bind(this);
-    this.fetchShapes = this.fetchShapes.bind(this);
-    this.fetchPanzooms = this.fetchPanzooms.bind(this);
-    this.fetchCursor = this.fetchCursor.bind(this);
-    this.fetchScreenshare = this.fetchScreenshare.bind(this);
-    this.fetchChat = this.fetchChat.bind(this);
-    this.fetchCaptions = this.fetchCaptions.bind(this);
-    this.fetchText = this.fetchText.bind(this);
+    this.fetchFile = this.fetchFile.bind(this);
     this.fetchMedia = this.fetchMedia.bind(this);
   }
 
   componentDidMount() {
     if (!this.recordId) return;
-    // TODO: Refactor this nonsense
-    this.fetchMetadata();
-    this.fetchShapes();
-    this.fetchPanzooms();
-    this.fetchCursor();
-    this.fetchScreenshare();
-    this.fetchChat();
-    this.fetchCaptions();
-    this.fetchText();
+
+    FILES.forEach(filename => this.fetchFile(this.recordId, filename));
     this.fetchMedia();
   }
 
-  fetchMetadata() {
-    const url = `/presentation/${this.recordId}/metadata.xml`;
-    fetch(url).then(response => {
-      if (response.ok) {
-        this.metadata = response.text();
-        this.setState({ metadata: true });
-      } else {
-        this.setState({ error: response.status });
-      }
-    });
-  }
+  fetchFile(recordId, filename) {
+    const type = DATA[filename.split('.').pop()];
+    const url = `/presentation/${recordId}/${filename}`;
 
-  fetchShapes() {
-    const url = `/presentation/${this.recordId}/shapes.svg`;
     fetch(url).then(response => {
       if (response.ok) {
-        this.shapes = response.text();
-        this.setState({ shapes: true });
+        switch (type) {
+          case 'text':
+            return response.text();
+          case 'json':
+            return response.json();
+          default:
+            this.setState({ error: 400 });
+            throw Error(filename);
+        }
       } else {
         this.setState({ error: response.status });
+        throw Error(response.statusText);
       }
-    });
-  }
-
-  fetchPanzooms() {
-    const url = `/presentation/${this.recordId}/panzooms.xml`;
-    fetch(url).then(response => {
-      if (response.ok) {
-        this.panzooms = response.text();
-        this.setState({ panzooms: true });
-      } else {
-        this.setState({ error: response.status });
+    }).then(value => {
+      switch (filename) {
+        case METADATA:
+          this.metadata = value;
+          this.setState({ metadata: true });
+          break;
+        case SHAPES:
+          this.shapes = value;
+          this.setState({ shapes: true });
+          break;
+        case PANZOOMS:
+          this.panzooms = value;
+          this.setState({ panzooms: true });
+          break;
+        case CURSOR:
+          this.cursor = value;
+          this.setState({ cursor: true });
+          break;
+        case TEXT:
+          this.text = value;
+          this.setState({ text: true });
+          break;
+        case CHAT:
+          this.chat = value;
+          this.setState({ chat: true });
+          break;
+        case SCREENSHARE:
+          this.screenshare = value;
+          this.setState({ screenshare: true });
+          break;
+        case CAPTIONS:
+          this.captions = value;
+          this.setState({ captions: true });
+          break;
+        default:
+          this.setState({ error: 400 });
+          throw Error(filename);
       }
-    });
-  }
-
-  fetchCursor() {
-    const url = `/presentation/${this.recordId}/cursor.xml`;
-    fetch(url).then(response => {
-      if (response.ok) {
-        this.cursor = response.text();
-        this.setState({ cursor: true });
-      } else {
-        this.setState({ error: response.status });
-      }
-    });
-  }
-
-  fetchScreenshare() {
-    const url = `/presentation/${this.recordId}/deskshare.xml`;
-    fetch(url).then(response => {
-      if (response.ok) {
-        this.screenshare = response.text();
-        this.setState({ screenshare: true });
-      } else {
-        this.setState({ error: response.status });
-      }
-    });
-  }
-
-  fetchChat() {
-    const url = `/presentation/${this.recordId}/slides_new.xml`;
-    fetch(url).then(response => {
-      if (response.ok) {
-        this.chat = response.text();
-        this.setState({ chat: true });
-      } else {
-        this.setState({ error: response.status });
-      }
-    });
-  }
-
-  fetchCaptions() {
-    const url = `/presentation/${this.recordId}/captions.json`;
-    fetch(url).then(response => {
-      if (response.ok) {
-        this.captions = response.json();
-        this.setState({ captions: true });
-      } else {
-        this.setState({ error: response.status });
-      }
-    });
-  }
-
-  fetchText() {
-    const url = `/presentation/${this.recordId}/presentation_text.json`;
-    fetch(url).then(response => {
-      if (response.ok) {
-        this.text = response.json();
-        this.setState({ text: true });
-      } else {
-        this.setState({ error: response.status });
-      }
-    });
+    }).catch(error => console.log(error));
   }
 
   fetchMedia() {
-    const medias = ['webm', 'mp4'];
-
-    const fetches = medias.map(type => {
+    const fetches = MEDIAS.map(type => {
       const url = `/presentation/${this.recordId}/video/webcams.${type}`;
       return fetch(url, { method: 'HEAD' });
     });
@@ -170,7 +149,7 @@ export default class Loader extends Component {
       responses.forEach(response => {
         const { ok, url } = response;
         if (ok) {
-          media = medias.find(type => url.endsWith(type));
+          media = MEDIAS.find(type => url.endsWith(type));
         }
       });
 
@@ -197,7 +176,9 @@ export default class Loader extends Component {
       captions
     } = this.state;
 
-    if (error) return <Error code={error} />;
+    if (error) {
+      return <Error code={error} />;
+    }
 
     const loaded =
       metadata &&
@@ -210,7 +191,20 @@ export default class Loader extends Component {
       media &&
       captions;
 
-    if (loaded) return <Player />;
+    if (loaded) {
+      return <Player
+        recordId={this.recordId}
+        metadata={this.metadata}
+        shapes={this.shapes}
+        panzooms={this.panzooms}
+        cursor={this.cursor}
+        text={this.text}
+        chat={this.chat}
+        screenshare={this.screenshare}
+        media={this.media}
+        captions={this.captions}
+      />;
+    }
 
     return (
       <div>
