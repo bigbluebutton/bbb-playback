@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 import Video from './video';
+import Chat from './chat';
 
 export default class Player extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      time: 0
+    }
 
     const {
       recordId,
@@ -41,17 +46,38 @@ export default class Player extends Component {
     this.handleTimeUpdate = this.handleTimeUpdate.bind(this);
   }
 
-  handleTimeUpdate(time) {
-    console.log(time);
+  shouldComponentUpdate(prevProps, prevState) {
+    const { time } = this.state;
+    if (time !== prevState.time) return true;
+    return false;
+  }
+
+  handleTimeUpdate(value) {
+    const { time } = this.state;
+    const roundedValue = Math.round(value);
+    if (time !== roundedValue) {
+      this.setState({ time: roundedValue });
+    }
   }
 
   render() {
+    const { chat } = this.props;
+    const { time } = this.state;
+
     return (
       <div>
-        <Video
-          onTimeUpdate={this.handleTimeUpdate}
-          { ...this.videoJsOptions }
-        />
+        <div>
+          <Video
+            onTimeUpdate={this.handleTimeUpdate}
+            { ...this.videoJsOptions }
+          />
+        </div>
+        <div>
+          <Chat
+            time={time}
+            chat={chat}
+          />
+        </div>
       </div>
     );
   }
