@@ -1,0 +1,34 @@
+@import "styles/colors";
+@import "styles/fonts";
+
+html {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: $font-family;
+  font-weight: $font-weight-regular;
+  color: $gray-dark;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  flex-flow: row wrap;
+  width: 100%;
+  height: 100%;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}

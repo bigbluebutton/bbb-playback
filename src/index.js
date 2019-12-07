@@ -9,7 +9,7 @@ ReactDOM.render(
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Switch>
         <Route path="/:recordId" component={ Loader } />
-        <Route component={ Error } />
+        <Route render={(props) => <Error {...props} code={404} />} />
       </Switch>
     </BrowserRouter>
   ), document.getElementById('root')

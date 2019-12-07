@@ -51,13 +51,11 @@ export default class Chat extends Component {
       }
     }
 
-    console.log(chat)
-
     return chat;
   }
 
   render() {
-    if (this.data.length > 0) return null;
+    if (this.data.length === 0) return null;
 
     return (
       <div>
