@@ -1,8 +1,9 @@
 #!/bin/bash
 
-PLAYBACK_PATH=/var/bigbluebutton/playback/presentation/3.0
+BBB_PLAYBACK_HOMEPAGE=/playback/presentation/3.0
+BBB_PLAYBACK=/var/bigbluebutton$BBB_PLAYBACK_HOMEPAGE
 
 npm run-script build
-rm -rf $PLAYBACK_PATH
-cp -r ./build $PLAYBACK_PATH
-chown --recursive bigbluebutton: $PLAYBACK_PATH
+sudo rm -rf $BBB_PLAYBACK
+sudo cp -r ./build $BBB_PLAYBACK
+sudo chown --recursive bigbluebutton: $BBB_PLAYBACK
