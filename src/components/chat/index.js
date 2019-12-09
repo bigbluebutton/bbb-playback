@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { parseStringPromise } from 'xml2js';
-import Message from './message';
+import './index.scss'
 
 export default class Chat extends Component {
   constructor(props) {
@@ -8,9 +8,13 @@ export default class Chat extends Component {
 
     this.data = [];
     this.buildData = this.buildData.bind(this);
-    this.buildChat = this.buildChat.bind(this);
+    this.renderChat = this.renderChat.bind(this);
+  }
 
-    parseStringPromise(props.chat).then(result => {
+  componentDidMount() {
+    const { chat } = this.props;
+
+    parseStringPromise(chat).then(result => {
       this.buildData(result);
     }).catch(error => console.log(error));
   }
@@ -22,8 +26,8 @@ export default class Chat extends Component {
       this.data = chattimeline.map(chat => {
         const attr = chat['$'];
         return {
-          in: parseInt(attr.in, 10),
-          out: attr.out ? parseInt(attr.out, 10) : undefined,
+          send: parseInt(attr.in, 10),
+          clear: attr.out ? parseInt(attr.out, 10) : undefined,
           name: attr.name,
           message: attr.message
         };
@@ -31,23 +35,20 @@ export default class Chat extends Component {
     }
   }
 
-  buildChat() {
+  renderChat() {
     const { time } = this.props;
     const chat = [];
 
     for (let i = 0; i < this.data.length; i++) {
-      const sent = this.data[i].in > time;
-      const cleared = this.data[i].out && this.data[i].out > time;
+      const { send, clear, name, message } = this.data[i];
 
-      if (!sent) break;
+      const sent = time > send;
+      const cleared = clear && time > clear;
 
       if (sent && !cleared) {
-        chat.push(
-          <Message
-            name={this.data[i].name}
-            message={this.data[i].message}
-          />
-        );
+        chat.push(<span>{name}: {message}<br/></span>);
+      } else {
+        break;
       }
     }
 
@@ -55,11 +56,9 @@ export default class Chat extends Component {
   }
 
   render() {
-    if (this.data.length === 0) return null;
-
     return (
-      <div>
-        {this.buildChat()}
+      <div className="chat-wrapper">
+        {this.renderChat()}
       </div>
     );
   }

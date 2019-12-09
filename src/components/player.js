@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Video from './video';
 import Chat from './chat';
+import Whiteboard from './whiteboard';
+import './player.scss';
 
 export default class Player extends Component {
   constructor(props) {
@@ -40,7 +42,7 @@ export default class Player extends Component {
       controls: true,
       sources: source,
       tracks: tracks,
-      fluid: true
+      fill: true
     };
 
     this.handleTimeUpdate = this.handleTimeUpdate.bind(this);
@@ -61,23 +63,32 @@ export default class Player extends Component {
   }
 
   render() {
-    const { chat } = this.props;
+    const {
+      chat,
+      shapes,
+      panzooms,
+      cursor,
+      text
+    } = this.props;
     const { time } = this.state;
 
     return (
-      <div>
-        <div>
-          <Video
-            onTimeUpdate={this.handleTimeUpdate}
-            { ...this.videoJsOptions }
-          />
-        </div>
-        <div>
+      <div className="wrapper">
           <Chat
             time={time}
             chat={chat}
           />
-        </div>
+          <Whiteboard
+            time={time}
+            shapes={shapes}
+            panzooms={panzooms}
+            cursor={cursor}
+            text={text}
+          />
+          <Video
+            onTimeUpdate={this.handleTimeUpdate}
+            { ...this.videoJsOptions }
+          />
       </div>
     );
   }

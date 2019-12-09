@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { Component } from 'react';
+import './index.scss';
 
-export default function Whiteboard() {
-  return (
-    <div>
-      Whiteboard
-    </div>
-  );
+export default class Whiteboard extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div className="whiteboard-wrapper">
+        <span>{this.props.time}</span>
+      </div>
+    );
+  }
 }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import videojs from 'video.js';
+import './index.scss';
 
 export default class Video extends Component {
   componentDidMount() {
@@ -22,12 +23,14 @@ export default class Video extends Component {
 
   render() {
     return (
-      <div data-vjs-player>
-        <video
-          ref={ node => this.node = node }
-          className="video-js"
-          crossOrigin="anonymous"
-        />
+      <div className="video-wrapper">
+        <div data-vjs-player>
+          <video
+            ref={ node => this.node = node }
+            className="video-js"
+            crossOrigin="anonymous"
+          />
+        </div>
       </div>
     );
   }
