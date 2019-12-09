@@ -12,3 +12,7 @@
   font-weight: $font-weight-regular;
   background-color: $gray-dark;
 }
+
+.vjs-has-started .vjs-control-bar {
+  position: fixed;
+}
