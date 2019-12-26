@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Error from './error';
 import Player from './player';
-import { build } from '../util/builder';
+import { build } from '../utils/builder';
 import {
   METADATA,
   SHAPES,
@@ -11,25 +11,13 @@ import {
   CHAT,
   SCREENSHARE,
   CAPTIONS,
+  FILES,
   MEDIAS,
-  getType
-} from '../util/data';
+  ERROR,
+  getType,
+  getRecordId
+} from '../utils/data';
 import './index.scss';
-
-
-const getRecordId = match => {
-  if (match) {
-    const { params } = match;
-    if (params && params.recordId) {
-      const { recordId } = params;
-      const regex = /^[a-z0-9]{40}-[0-9]{13}$/;
-      if (recordId.match(regex)) {
-        return recordId;
-      }
-    }
-  }
-  return null;
-};
 
 export default class Loader extends Component {
   constructor(props) {
@@ -41,7 +29,7 @@ export default class Loader extends Component {
     this.counter = 0;
 
     this.state = {
-      error: this.recordId ? null : 404,
+      error: this.recordId ? null : ERROR['NOT_FOUND'],
       loaded: false
     };
   }
@@ -65,7 +53,7 @@ export default class Loader extends Component {
           case 'json':
             return response.json();
           default:
-            this.setState({ error: 400 });
+            this.setState({ error: ERROR['BAD_REQUEST'] });
             throw Error(filename);
         }
       } else {
@@ -100,12 +88,14 @@ export default class Loader extends Component {
             this.data.captions = data;
             break;
           default:
-            this.setState({ error: 400 });
-            throw Error(filename);
         }
         this.update();
-      }).catch(error => console.log(error));
-    }).catch(error => console.log(error));
+      }).catch(error => {
+        this.setState({ error: ERROR['BAD_REQUEST'] });
+      });
+    }).catch(error => {
+      this.setState({ error: ERROR['NOT_FOUND'] });
+    });
   }
 
   fetchMedia() {
@@ -128,13 +118,14 @@ export default class Loader extends Component {
         this.data.media = media;
         this.update();
       } else {
-        this.setState({ error: 404 });
+        this.setState({ error: ERROR['NOT_FOUND'] });
       }
     });
   }
 
   update() {
     this.counter = this.counter + 1;
+    // TODO: Replace FILES.length + 1
     if (this.counter === FILES.length + 1) {
       this.setState({ loaded: true });
     }

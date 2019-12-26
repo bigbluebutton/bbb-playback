@@ -4,11 +4,8 @@ import {
   SHAPES,
   PANZOOMS,
   CURSOR,
-  TEXT,
   CHAT,
   SCREENSHARE,
-  CAPTIONS,
-  MEDIAS,
   getType
 } from './data';
 
@@ -30,9 +27,10 @@ const buildCursor = result => {
 
 const buildChat = result => {
   const { popcorn } = result;
+  let data = [];
   if (popcorn && popcorn.chattimeline) {
     const { chattimeline } = popcorn;
-    this.data = chattimeline.map(chat => {
+    data = chattimeline.map(chat => {
       const attr = chat['$'];
       return {
         send: parseInt(attr.in, 10),
@@ -42,6 +40,7 @@ const buildChat = result => {
       };
     });
   }
+  return data;
 };
 
 const buildScreenshare = result => {
@@ -57,7 +56,7 @@ const build = (filename, value) => {
       resolve(value);
     } else {
       parseStringPromise(value).then(result => {
-        let data = {};
+        let data;
         switch (filename) {
           case METADATA:
             data = buildMetadata(result);
@@ -86,6 +85,6 @@ const build = (filename, value) => {
   });
 };
 
-export default {
+export {
   build
 };

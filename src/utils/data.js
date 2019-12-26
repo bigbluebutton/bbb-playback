@@ -30,9 +30,37 @@ const TYPE = {
   json: 'json'
 };
 
+const ERROR = {
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  PAYMENT_REQUIRED: 402,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  METHOD_NOT_ALLOWED: 405,
+  NOT_ACCEPTABLE: 406,
+  PROXY_AUTHENTICATION_REQUIRED: 407,
+  REQUEST_TIMEOUT: 408,
+  CONFLICT: 409,
+  GONE: 410
+};
+
 const getType = filename => TYPE[filename.split('.').pop()];
 
-export default {
+const getRecordId = match => {
+  if (match) {
+    const { params } = match;
+    if (params && params.recordId) {
+      const { recordId } = params;
+      const regex = /^[a-z0-9]{40}-[0-9]{13}$/;
+      if (recordId.match(regex)) {
+        return recordId;
+      }
+    }
+  }
+  return null;
+};
+
+export {
   METADATA,
   SHAPES,
   PANZOOMS,
@@ -41,6 +69,9 @@ export default {
   CHAT,
   SCREENSHARE,
   CAPTIONS,
+  FILES,
   MEDIAS,
-  getType
+  ERROR,
+  getType,
+  getRecordId
 };
