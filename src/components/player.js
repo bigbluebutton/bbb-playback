@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import Video from './video';
 import Chat from './chat';
-import Whiteboard from './whiteboard';
-import './player.scss';
+import Presentation from './presentation';
+import './index.scss';
 
 export default class Player extends Component {
   constructor(props) {
@@ -14,9 +14,13 @@ export default class Player extends Component {
 
     const {
       recordId,
+      data
+    } = props;
+
+    const {
       media,
       captions
-    } = props;
+    } = data;
 
     const sources = [{
         src: `/presentation/${recordId}/video/webcams.mp4`,
@@ -63,22 +67,24 @@ export default class Player extends Component {
   }
 
   render() {
+    const { data } = this.props
+    const { time } = this.state;
+
     const {
       chat,
       shapes,
       panzooms,
       cursor,
       text
-    } = this.props;
-    const { time } = this.state;
+    } = data;
 
     return (
-      <div className="wrapper">
+      <div className="player-wrapper">
           <Chat
             time={time}
             chat={chat}
           />
-          <Whiteboard
+          <Presentation
             time={time}
             shapes={shapes}
             panzooms={panzooms}

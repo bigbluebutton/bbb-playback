@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Error from './error';
 import Player from './player';
+import './index.scss';
 
 const METADATA = 'metadata.xml';
 const SHAPES = 'shapes.svg';
@@ -53,22 +54,13 @@ export default class Loader extends Component {
 
     const { match } = props;
     this.recordId = getRecordId(match);
+    this.data = {};
+    this.counter = 0;
 
     this.state = {
       error: this.recordId ? null : 404,
-      metadata: false,
-      shapes: false,
-      panzooms: false,
-      cursor: false,
-      text: false,
-      chat: false,
-      screenshare: false,
-      captions: false,
-      media: false
+      loaded: false
     };
-
-    this.fetchFile = this.fetchFile.bind(this);
-    this.fetchMedia = this.fetchMedia.bind(this);
   }
 
   componentDidMount() {
@@ -100,41 +92,34 @@ export default class Loader extends Component {
     }).then(value => {
       switch (filename) {
         case METADATA:
-          this.metadata = value;
-          this.setState({ metadata: true });
+          this.data.metadata = value;
           break;
         case SHAPES:
-          this.shapes = value;
-          this.setState({ shapes: true });
+          this.data.shapes = value;
           break;
         case PANZOOMS:
-          this.panzooms = value;
-          this.setState({ panzooms: true });
+          this.data.panzooms = value;
           break;
         case CURSOR:
-          this.cursor = value;
-          this.setState({ cursor: true });
+          this.data.cursor = value;
           break;
         case TEXT:
-          this.text = value;
-          this.setState({ text: true });
+          this.data.text = value;
           break;
         case CHAT:
-          this.chat = value;
-          this.setState({ chat: true });
+          this.data.chat = value;
           break;
         case SCREENSHARE:
-          this.screenshare = value;
-          this.setState({ screenshare: true });
+          this.data.screenshare = value;
           break;
         case CAPTIONS:
-          this.captions = value;
-          this.setState({ captions: true });
+          this.data.captions = value;
           break;
         default:
           this.setState({ error: 400 });
           throw Error(filename);
       }
+      this.update();
     }).catch(error => console.log(error));
   }
 
@@ -153,61 +138,35 @@ export default class Loader extends Component {
         }
       });
 
+      // TODO: Work with more than one media
       if (media) {
-        this.media = media;
-        this.setState({ media: true });
+        this.data.media = media;
+        this.update();
       } else {
         this.setState({ error: 404 });
       }
     });
   }
 
+  update() {
+    this.counter = this.counter + 1;
+    if (this.counter === FILES.length + 1) {
+      this.setState({ loaded: true });
+    }
+  }
+
   render() {
     const {
       error,
-      metadata,
-      shapes,
-      panzooms,
-      cursor,
-      text,
-      chat,
-      screenshare,
-      media,
-      captions
+      loaded
     } = this.state;
 
-    if (error) {
-      return <Error code={error} />;
-    }
+    if (error) return <Error code={error} />;
 
-    const loaded =
-      metadata &&
-      shapes &&
-      panzooms &&
-      cursor &&
-      text &&
-      chat &&
-      screenshare &&
-      media &&
-      captions;
-
-    if (loaded) {
-      return <Player
-        recordId={this.recordId}
-        metadata={this.metadata}
-        shapes={this.shapes}
-        panzooms={this.panzooms}
-        cursor={this.cursor}
-        text={this.text}
-        chat={this.chat}
-        screenshare={this.screenshare}
-        media={this.media}
-        captions={this.captions}
-      />;
-    }
+    if (loaded) return <Player data={this.data} />;
 
     return (
-      <div>
+      <div className="loader-wrapper">
         Loading
       </div>
     );
