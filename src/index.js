@@ -13,5 +13,6 @@ ReactDOM.render(
         <Route render={(props) => <Error {...props} code={404} />} />
       </Switch>
     </BrowserRouter>
-  ), document.getElementById('root')
+  ),
+  document.getElementById('root')
 );

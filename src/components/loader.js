@@ -1,18 +1,8 @@
 import React, { Component } from 'react';
 import Error from './error';
 import Player from './player';
-import './index.scss';
-
-const METADATA = 'metadata.xml';
-const SHAPES = 'shapes.svg';
-const PANZOOMS = 'panzooms.xml';
-const CURSOR = 'cursor.xml';
-const TEXT = 'presentation_text.json';
-const CHAT = 'slides_new.xml';
-const SCREENSHARE = 'deskshare.xml';
-const CAPTIONS = 'captions.json';
-
-const FILES = [
+import { build } from '../util/builder';
+import {
   METADATA,
   SHAPES,
   PANZOOMS,
@@ -20,19 +10,12 @@ const FILES = [
   TEXT,
   CHAT,
   SCREENSHARE,
-  CAPTIONS
-];
+  CAPTIONS,
+  MEDIAS,
+  getType
+} from '../util/data';
+import './index.scss';
 
-const MEDIAS = [
-  'webm',
-  'mp4'
-];
-
-const DATA = {
-  xml: 'text',
-  svg: 'text',
-  json: 'json'
-};
 
 const getRecordId = match => {
   if (match) {
@@ -71,7 +54,7 @@ export default class Loader extends Component {
   }
 
   fetchFile(recordId, filename) {
-    const type = DATA[filename.split('.').pop()];
+    const type = getType(filename);
     const url = `/presentation/${recordId}/${filename}`;
 
     fetch(url).then(response => {
@@ -90,36 +73,38 @@ export default class Loader extends Component {
         throw Error(response.statusText);
       }
     }).then(value => {
-      switch (filename) {
-        case METADATA:
-          this.data.metadata = value;
-          break;
-        case SHAPES:
-          this.data.shapes = value;
-          break;
-        case PANZOOMS:
-          this.data.panzooms = value;
-          break;
-        case CURSOR:
-          this.data.cursor = value;
-          break;
-        case TEXT:
-          this.data.text = value;
-          break;
-        case CHAT:
-          this.data.chat = value;
-          break;
-        case SCREENSHARE:
-          this.data.screenshare = value;
-          break;
-        case CAPTIONS:
-          this.data.captions = value;
-          break;
-        default:
-          this.setState({ error: 400 });
-          throw Error(filename);
-      }
-      this.update();
+      build(filename, value).then(data => {
+        switch (filename) {
+          case METADATA:
+            this.data.metadata = data;
+            break;
+          case SHAPES:
+            this.data.shapes = data;
+            break;
+          case PANZOOMS:
+            this.data.panzooms = data;
+            break;
+          case CURSOR:
+            this.data.cursor = data;
+            break;
+          case TEXT:
+            this.data.text = data;
+            break;
+          case CHAT:
+            this.data.chat = data;
+            break;
+          case SCREENSHARE:
+            this.data.screenshare = data;
+            break;
+          case CAPTIONS:
+            this.data.captions = data;
+            break;
+          default:
+            this.setState({ error: 400 });
+            throw Error(filename);
+        }
+        this.update();
+      }).catch(error => console.log(error));
     }).catch(error => console.log(error));
   }
 
@@ -172,4 +157,3 @@ export default class Loader extends Component {
     );
   }
 }
-
