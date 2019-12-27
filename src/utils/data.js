@@ -46,6 +46,8 @@ const ERROR = {
 
 const getType = filename => TYPE[filename.split('.').pop()];
 
+const getFile = filename => filename.split('.').shift();
+
 const getRecordId = match => {
   if (match) {
     const { params } = match;
@@ -73,5 +75,6 @@ export {
   MEDIAS,
   ERROR,
   getType,
+  getFile,
   getRecordId
 };

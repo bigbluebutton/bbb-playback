@@ -4,10 +4,22 @@ import {
   SHAPES,
   PANZOOMS,
   CURSOR,
+  TEXT,
   CHAT,
   SCREENSHARE,
+  CAPTIONS,
   getType
 } from './data';
+
+const buildText = result => {
+  // TODO: Restructure JSON data
+  return result;
+};
+
+const buildCaptions = result => {
+  // TODO: Restructure JSON data
+  return result;
+};
 
 const buildMetadata = result => {
   return {};
@@ -49,14 +61,23 @@ const buildScreenshare = result => {
 
 const build = (filename, value) => {
   return new Promise((resolve, reject) => {
+    let data;
     const type = getType(filename);
-
     if (type === 'json') {
-      // TODO: Build json data
-      resolve(value);
+      switch (filename) {
+        case TEXT:
+          data = buildText(value);
+          break;
+        case CAPTIONS:
+          data = buildCaptions(value);
+          break;
+        default:
+          reject(filename);
+      }
+      resolve(data);
     } else {
+      // Parse XML data
       parseStringPromise(value).then(result => {
-        let data;
         switch (filename) {
           case METADATA:
             data = buildMetadata(result);

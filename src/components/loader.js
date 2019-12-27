@@ -3,18 +3,11 @@ import Error from './error';
 import Player from './player';
 import { build } from '../utils/builder';
 import {
-  METADATA,
-  SHAPES,
-  PANZOOMS,
-  CURSOR,
-  TEXT,
-  CHAT,
-  SCREENSHARE,
-  CAPTIONS,
   FILES,
   MEDIAS,
   ERROR,
   getType,
+  getFile,
   getRecordId
 } from '../utils/data';
 import './index.scss';
@@ -42,11 +35,10 @@ export default class Loader extends Component {
   }
 
   fetchFile(recordId, filename) {
-    const type = getType(filename);
     const url = `/presentation/${recordId}/${filename}`;
-
     fetch(url).then(response => {
       if (response.ok) {
+        const type = getType(filename);
         switch (type) {
           case 'text':
             return response.text();
@@ -62,40 +54,11 @@ export default class Loader extends Component {
       }
     }).then(value => {
       build(filename, value).then(data => {
-        switch (filename) {
-          case METADATA:
-            this.data.metadata = data;
-            break;
-          case SHAPES:
-            this.data.shapes = data;
-            break;
-          case PANZOOMS:
-            this.data.panzooms = data;
-            break;
-          case CURSOR:
-            this.data.cursor = data;
-            break;
-          case TEXT:
-            this.data.text = data;
-            break;
-          case CHAT:
-            this.data.chat = data;
-            break;
-          case SCREENSHARE:
-            this.data.screenshare = data;
-            break;
-          case CAPTIONS:
-            this.data.captions = data;
-            break;
-          default:
-        }
+        const index = getFile(filename);
+        this.data[index] = data;
         this.update();
-      }).catch(error => {
-        this.setState({ error: ERROR['BAD_REQUEST'] });
-      });
-    }).catch(error => {
-      this.setState({ error: ERROR['NOT_FOUND'] });
-    });
+      }).catch(error => this.setState({ error: ERROR['BAD_REQUEST'] }));
+    }).catch(error => this.setState({ error: ERROR['NOT_FOUND'] }));
   }
 
   fetchMedia() {
@@ -105,19 +68,19 @@ export default class Loader extends Component {
     });
 
     Promise.all(fetches).then(responses => {
-      let media;
+      const media = [];
       responses.forEach(response => {
         const { ok, url } = response;
         if (ok) {
-          media = MEDIAS.find(type => url.endsWith(type));
+          media.push(MEDIAS.find(type => url.endsWith(type)));
         }
       });
 
-      // TODO: Work with more than one media
-      if (media) {
+      if (media.length > 0) {
         this.data.media = media;
         this.update();
       } else {
+        // TODO: Handle audio medias
         this.setState({ error: ERROR['NOT_FOUND'] });
       }
     });
@@ -125,9 +88,10 @@ export default class Loader extends Component {
 
   update() {
     this.counter = this.counter + 1;
-    // TODO: Replace FILES.length + 1
-    if (this.counter === FILES.length + 1) {
-      this.setState({ loaded: true });
+    // FILES + MEDIAS
+    if (this.counter > FILES.length) {
+      const { loaded } = this.state;
+      if (!loaded) this.setState({ loaded: true });
     }
   }
 

@@ -2,6 +2,14 @@ import React, { Component } from 'react';
 import Video from './video';
 import Chat from './chat';
 import Presentation from './presentation';
+import {
+  SHAPES,
+  PANZOOMS,
+  CURSOR,
+  TEXT,
+  CHAT,
+  getFile
+} from '../utils/data';
 import './index.scss';
 
 export default class Player extends Component {
@@ -29,9 +37,7 @@ export default class Player extends Component {
         src: `/presentation/${recordId}/video/webcams.webm`,
         type: 'video/webm'
       }
-    ];
-
-    const source = sources.filter(src => {
+    ].filter(src => {
       const { type } = src;
       return type.includes(media);
     });
@@ -44,7 +50,7 @@ export default class Player extends Component {
 
     this.videoJsOptions = {
       controls: true,
-      sources: source,
+      sources: sources,
       tracks: tracks,
       fill: true
     };
@@ -70,26 +76,18 @@ export default class Player extends Component {
     const { data } = this.props
     const { time } = this.state;
 
-    const {
-      chat,
-      shapes,
-      panzooms,
-      cursor,
-      text
-    } = data;
-
     return (
       <div className="player-wrapper">
           <Chat
             time={time}
-            chat={chat}
+            chat={data[getFile(CHAT)]}
           />
           <Presentation
             time={time}
-            shapes={shapes}
-            panzooms={panzooms}
-            cursor={cursor}
-            text={text}
+            shapes={data[getFile(SHAPES)]}
+            panzooms={data[getFile(PANZOOMS)]}
+            cursor={data[getFile(CURSOR)]}
+            text={data[getFile(TEXT)]}
           />
           <Video
             onTimeUpdate={this.handleTimeUpdate}
