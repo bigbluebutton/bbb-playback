@@ -78,21 +78,21 @@ export default class Player extends Component {
 
     return (
       <div className="player-wrapper">
-          <Chat
-            time={time}
-            chat={data[getFile(CHAT)]}
-          />
-          <Presentation
-            time={time}
-            shapes={data[getFile(SHAPES)]}
-            panzooms={data[getFile(PANZOOMS)]}
-            cursor={data[getFile(CURSOR)]}
-            text={data[getFile(TEXT)]}
-          />
-          <Video
-            onTimeUpdate={this.handleTimeUpdate}
-            { ...this.videoJsOptions }
-          />
+        <Chat
+          time={time}
+          chat={data[getFile(CHAT)]}
+        />
+        <Presentation
+          time={time}
+          shapes={data[getFile(SHAPES)]}
+          panzooms={data[getFile(PANZOOMS)]}
+          cursor={data[getFile(CURSOR)]}
+          text={data[getFile(TEXT)]}
+        />
+        <Video
+          onTimeUpdate={this.handleTimeUpdate}
+          { ...this.videoJsOptions }
+        />
       </div>
     );
   }
