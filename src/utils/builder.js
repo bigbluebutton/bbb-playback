@@ -22,11 +22,29 @@ const buildCaptions = result => {
 };
 
 const buildMetadata = result => {
-  return {};
+  let data = {};
+  const { recording } = result;
+  if (recording && recording.meeting) {
+    const { id, name } = recording.meeting.shift()['$'];
+    data = { id, name };
+  }
+  return data;
 };
 
 const buildShapes = result => {
-  return {};
+  let data = {};
+  const { svg } = result;
+  if (svg) {
+    data.slides = svg.image.map(image => {
+      const slide = image['$'];
+      return {
+        id: slide['id'],
+        show: slide['in'].split(' '),
+        xlink: slide['xlink:href']
+      };
+    });
+  }
+  return data;
 };
 
 const buildPanzooms = result => {

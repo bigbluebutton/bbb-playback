@@ -3,11 +3,13 @@ import Video from './video';
 import Chat from './chat';
 import Presentation from './presentation';
 import {
+  METADATA,
   SHAPES,
   PANZOOMS,
   CURSOR,
   TEXT,
   CHAT,
+  CAPTIONS,
   getFile
 } from '../utils/data';
 import './index.scss';
@@ -20,21 +22,18 @@ export default class Player extends Component {
       time: 0
     }
 
-    const {
-      recordId,
-      data
-    } = props;
+    const { data } = props;
 
-    const {
-      media,
-      captions
-    } = data;
+    const metadata = data[getFile(METADATA)];
+    const captions = data[getFile(CAPTIONS)];
+
+    const { media } = data;
 
     const sources = [{
-        src: `/presentation/${recordId}/video/webcams.mp4`,
+        src: `/presentation/${metadata.id}/video/webcams.mp4`,
         type: 'video/mp4'
       }, {
-        src: `/presentation/${recordId}/video/webcams.webm`,
+        src: `/presentation/${metadata.id}/video/webcams.webm`,
         type: 'video/webm'
       }
     ].filter(src => {
@@ -44,7 +43,7 @@ export default class Player extends Component {
 
     const tracks = captions.map(lang => {
       const { locale, localeName } = lang;
-      const src = `/presentation/${recordId}/caption_${locale}.vtt`;
+      const src = `/presentation/${metadata.id}/caption_${locale}.vtt`;
       return { kind: 'captions', src, srclang: locale, label: localeName };
     });
 
