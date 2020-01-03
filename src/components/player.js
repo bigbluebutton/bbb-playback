@@ -83,6 +83,7 @@ export default class Player extends Component {
         />
         <Presentation
           time={time}
+          metadata={data[getFile(METADATA)]}
           shapes={data[getFile(SHAPES)]}
           panzooms={data[getFile(PANZOOMS)]}
           cursor={data[getFile(CURSOR)]}

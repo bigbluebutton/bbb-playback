@@ -38,8 +38,8 @@ const buildShapes = result => {
     data.slides = svg.image.map(image => {
       const slide = image['$'];
       return {
+        timestamp: slide['in'].split(' ').map(v => parseFloat(v)),
         id: slide['id'],
-        show: slide['in'].split(' '),
         xlink: slide['xlink:href']
       };
     });
@@ -48,11 +48,43 @@ const buildShapes = result => {
 };
 
 const buildPanzooms = result => {
-  return {};
+  let data = [];
+  const { recording } = result;
+  if (recording && recording.event) {
+    data = recording.event.map(panzoom => {
+      const viewbox = panzoom['viewBox']
+        .shift()
+        .split(' ')
+        .map(v => parseFloat(v));
+      return {
+        timestamp: parseFloat(panzoom['$'].timestamp),
+        x: viewbox.shift(),
+        y: viewbox.shift(),
+        width: viewbox.shift(),
+        height: viewbox.shift()
+      };
+    });
+  }
+  return data;
 };
 
 const buildCursor = result => {
-  return {};
+  let data = [];
+  const { recording } = result;
+  if (recording && recording.event) {
+    data = recording.event.map(cursor => {
+      const position = cursor['cursor']
+        .shift()
+        .split(' ')
+        .map(v => parseFloat(v));
+      return {
+        timestamp: parseFloat(cursor['$'].timestamp),
+        x: position.shift(),
+        y: position.shift()
+      };
+    });
+  }
+  return data;
 };
 
 const buildChat = result => {
@@ -63,8 +95,7 @@ const buildChat = result => {
     data = chattimeline.map(chat => {
       const attr = chat['$'];
       return {
-        send: parseInt(attr.in, 10),
-        clear: attr.out ? parseInt(attr.out, 10) : undefined,
+        timestamp: parseFloat(attr.in),
         name: attr.name,
         message: attr.message
       };
@@ -74,7 +105,7 @@ const buildChat = result => {
 };
 
 const buildScreenshare = result => {
-  return {};
+  return result;
 };
 
 const build = (filename, value) => {

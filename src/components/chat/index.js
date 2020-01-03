@@ -7,12 +7,11 @@ export default class Chat extends Component {
     const result = [];
 
     for (let i = 0; i < chat.length; i++) {
-      const { send, clear, name, message } = chat[i];
+      const { timestamp, name, message } = chat[i];
 
-      const sent = time > send;
-      const cleared = clear && time > clear;
+      const visible = time > timestamp;
 
-      if (sent && !cleared) {
+      if (visible) {
         result.push(<span>{name}: {message}<br/></span>);
       } else {
         break;
