@@ -5,17 +5,27 @@ export default class Slide extends Component {
   constructor(props) {
     super(props);
 
-    const { metadata } = props;
+    const { metadata, slides } = props;
     this.url = `/presentation/${metadata.id}`;
+    this.xlink = slides[0].xlink;
+  }
+
+  getAlt(xlink) {
+    const { alternates } = this.props;
+
+    let result = '';
+    const found = alternates.find(alt => xlink === alt.xlink);
+    if (found) result = found.text;
+
+    return result;
   }
 
   render() {
-    const { slides, text } = this.props;
-    const s = slides[0];
     return (
       <image
         className="slide-wrapper"
-        xlinkHref={`${this.url}/${s.xlink}`}
+        xlinkHref={`${this.url}/${this.xlink}`}
+        alt={this.getAlt(this.xlink)}
       />
     );
   }

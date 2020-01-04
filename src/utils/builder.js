@@ -4,16 +4,30 @@ import {
   SHAPES,
   PANZOOMS,
   CURSOR,
-  TEXT,
+  ALTERNATES,
   CHAT,
   SCREENSHARE,
   CAPTIONS,
   getType
 } from './data';
 
-const buildText = result => {
-  // TODO: Restructure JSON data
-  return result;
+const buildAlternates = result => {
+  let data = [];
+  for (const presentation in result) {
+    if (result.hasOwnProperty(presentation)) {
+      const slides = result[presentation];
+      for (const slide in slides) {
+        if (slides.hasOwnProperty(slide)) {
+          const text = slides[slide];
+          data.push({
+            xlink: `presentation/${presentation}/${slide}.png`,
+            text: text
+          });
+        }
+      }
+    }
+  }
+  return data;
 };
 
 const buildCaptions = result => {
@@ -114,8 +128,8 @@ const build = (filename, value) => {
     const type = getType(filename);
     if (type === 'json') {
       switch (filename) {
-        case TEXT:
-          data = buildText(value);
+        case ALTERNATES:
+          data = buildAlternates(value);
           break;
         case CAPTIONS:
           data = buildCaptions(value);

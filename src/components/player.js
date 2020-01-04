@@ -7,7 +7,7 @@ import {
   SHAPES,
   PANZOOMS,
   CURSOR,
-  TEXT,
+  ALTERNATES,
   CHAT,
   CAPTIONS,
   getFile
@@ -87,7 +87,7 @@ export default class Player extends Component {
           shapes={data[getFile(SHAPES)]}
           panzooms={data[getFile(PANZOOMS)]}
           cursor={data[getFile(CURSOR)]}
-          text={data[getFile(TEXT)]}
+          alternates={data[getFile(ALTERNATES)]}
         />
         <Video
           onTimeUpdate={this.handleTimeUpdate}

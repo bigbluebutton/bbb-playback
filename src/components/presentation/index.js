@@ -22,7 +22,7 @@ export default class Presentation extends Component {
       time,
       metadata,
       shapes,
-      text,
+      alternates,
     } = this.props;
     const { slides } = shapes;
     return (
@@ -36,7 +36,7 @@ export default class Presentation extends Component {
             time={time}
             metadata={metadata}
             slides={slides}
-            text={text}
+            alternates={alternates}
           />
         </svg>
       </div>

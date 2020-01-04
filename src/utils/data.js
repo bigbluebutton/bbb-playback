@@ -3,7 +3,7 @@ const METADATA = 'metadata.xml';
 const SHAPES = 'shapes.svg';
 const PANZOOMS = 'panzooms.xml';
 const CURSOR = 'cursor.xml';
-const TEXT = 'presentation_text.json';
+const ALTERNATES = 'presentation_text.json';
 const CHAT = 'slides_new.xml';
 const SCREENSHARE = 'deskshare.xml';
 const CAPTIONS = 'captions.json';
@@ -13,7 +13,7 @@ const FILES = [
   SHAPES,
   PANZOOMS,
   CURSOR,
-  TEXT,
+  ALTERNATES,
   CHAT,
   SCREENSHARE,
   CAPTIONS
@@ -67,7 +67,7 @@ export {
   SHAPES,
   PANZOOMS,
   CURSOR,
-  TEXT,
+  ALTERNATES,
   CHAT,
   SCREENSHARE,
   CAPTIONS,
