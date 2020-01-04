@@ -5,9 +5,28 @@ export default class Slide extends Component {
   constructor(props) {
     super(props);
 
-    const { metadata, slides } = props;
+    const { metadata } = props;
     this.url = `/presentation/${metadata.id}`;
-    this.xlink = slides[0].xlink;
+    this.index = 0;
+  }
+
+  shouldComponentUpdate(nextProps) {
+    const { time } = nextProps;
+    const nextIndex = this.getIndex(time);
+    if (this.index !== nextIndex) {
+      this.index = nextIndex;
+      return true;
+    }
+    return false;
+  }
+
+  getIndex(time) {
+    const { slides } = this.props;
+
+    let i = 0;
+    while (i < slides.length - 1 && slides[i].timestamp < time) i++;
+
+    return i;
   }
 
   getAlt(xlink) {
@@ -21,11 +40,13 @@ export default class Slide extends Component {
   }
 
   render() {
+    const { slides } = this.props;
+    const { xlink } = slides[this.index];
     return (
       <image
         className="slide-wrapper"
-        xlinkHref={`${this.url}/${this.xlink}`}
-        alt={this.getAlt(this.xlink)}
+        xlinkHref={`${this.url}/${xlink}`}
+        alt={this.getAlt(xlink)}
       />
     );
   }

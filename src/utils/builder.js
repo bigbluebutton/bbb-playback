@@ -49,14 +49,25 @@ const buildShapes = result => {
   let data = {};
   const { svg } = result;
   if (svg) {
-    data.slides = svg.image.map(image => {
+    data.slides = [];
+    svg.image.forEach(image => {
       const slide = image['$'];
-      return {
-        timestamp: slide['in'].split(' ').map(v => parseFloat(v)),
-        id: slide['id'],
-        xlink: slide['xlink:href']
-      };
+      const id = slide['id'];
+      const xlink = slide['xlink:href'];
+
+      const timestamps = slide['in']
+        .split(' ')
+        .map(v => parseFloat(v));
+
+      timestamps.forEach(timestamp => {
+        data.slides.push({
+          timestamp,
+          id,
+          xlink
+        });
+      });
     });
+    data.slides = data.slides.sort((a, b) => a.timestamp - b.timestamp);
   }
   return data;
 };
