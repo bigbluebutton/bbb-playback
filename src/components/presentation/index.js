@@ -35,18 +35,20 @@ export default class Presentation extends Component {
 
     return (
       <div className="presentation-wrapper">
-        <svg
-          viewBox={this.getViewBox()}
-          xmlns="http://www.w3.org/2000/svg"
-          xmlnsXlink="http://www.w3.org/1999/xlink"
-        >
-          <Slide
-            alternates={alternates}
-            metadata={metadata}
-            slides={slides}
-            time={time}
-          />
-        </svg>
+        <div className="presentation">
+          <svg
+            viewBox={this.getViewBox()}
+            xmlns="http://www.w3.org/2000/svg"
+            xmlnsXlink="http://www.w3.org/1999/xlink"
+          >
+            <Slide
+              alternates={alternates}
+              metadata={metadata}
+              slides={slides}
+              time={time}
+            />
+          </svg>
+        </div>
       </div>
     );
   }

@@ -1,7 +1,14 @@
 .presentation-wrapper,
 .slide-wrapper {
+  align-items: center;
+  display: flex;
+  justify-content: center;
   height: 100%;
   width: 100%;
+}
+
+.presentation {
+  display: flex;
 }
 
 svg {
