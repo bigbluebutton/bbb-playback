@@ -1,32 +1,35 @@
 import React, { Component } from 'react';
+import { getCurrentIndex } from '../../utils/data';
 import './index.scss';
 
 export default class Slide extends Component {
   constructor(props) {
     super(props);
 
-    const { metadata } = props;
+    const {
+      metadata,
+      slides,
+      time
+    } = props;
+
     this.url = `/presentation/${metadata.id}`;
-    this.index = 0;
+    this.index = getCurrentIndex(slides, time);
   }
 
   shouldComponentUpdate(nextProps) {
-    const { time } = nextProps;
-    const nextIndex = this.getIndex(time);
+    const {
+      slides,
+      time
+    } = nextProps;
+
+    const nextIndex = getCurrentIndex(slides, time);
     if (this.index !== nextIndex) {
       this.index = nextIndex;
+
       return true;
     }
+
     return false;
-  }
-
-  getIndex(time) {
-    const { slides } = this.props;
-
-    let i = 0;
-    while (i < slides.length - 1 && slides[i].timestamp < time) i++;
-
-    return i;
   }
 
   getAlt(xlink) {
@@ -42,11 +45,12 @@ export default class Slide extends Component {
   render() {
     const { slides } = this.props;
     const { xlink } = slides[this.index];
+
     return (
       <image
+        alt={this.getAlt(xlink)}
         className="slide-wrapper"
         xlinkHref={`${this.url}/${xlink}`}
-        alt={this.getAlt(xlink)}
       />
     );
   }

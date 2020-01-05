@@ -6,7 +6,9 @@ export default function Error(props) {
 
   return (
     <div className="error-wrapper">
-      Error {code}
+      <div className="error-code">
+        {code}
+      </div>
     </div>
   );
 }

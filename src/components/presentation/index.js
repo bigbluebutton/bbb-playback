@@ -1,30 +1,38 @@
 import React, { Component } from 'react';
 import Slide from './slide.js';
+import { getCurrentIndex } from '../../utils/data';
 import './index.scss';
 
 export default class Presentation extends Component {
   // TODO: Optimize this storing indexes
   getViewBox() {
     const {
-      time,
-      panzooms
+      panzooms,
+      time
     } = this.props;
 
-    let i = 0;
-    while (i < panzooms.length - 1 && panzooms[i].timestamp < time) i++;
+    const index = getCurrentIndex(panzooms, time);
 
-    const pz = panzooms[i];
-    return `${pz.x} ${pz.y} ${pz.width} ${pz.height}`;
+    const {
+      height,
+      width,
+      x,
+      y
+    } = panzooms[index];
+
+    return `${x} ${y} ${width} ${height}`;
   }
 
   render() {
     const {
-      time,
+      alternates,
       metadata,
       shapes,
-      alternates,
+      time
     } = this.props;
+
     const { slides } = shapes;
+
     return (
       <div className="presentation-wrapper">
         <svg
@@ -33,10 +41,10 @@ export default class Presentation extends Component {
           xmlnsXlink="http://www.w3.org/1999/xlink"
         >
           <Slide
-            time={time}
+            alternates={alternates}
             metadata={metadata}
             slides={slides}
-            alternates={alternates}
+            time={time}
           />
         </svg>
       </div>

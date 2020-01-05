@@ -3,14 +3,21 @@ import './index.scss'
 
 export default class Chat extends Component {
   renderChat() {
-    const { time, chat } = this.props;
+    const {
+      chat,
+      time
+    } = this.props;
+
     const result = [];
 
     for (let i = 0; i < chat.length; i++) {
-      const { timestamp, name, message } = chat[i];
+      const {
+        message,
+        name,
+        timestamp
+      } = chat[i];
 
       const visible = time > timestamp;
-
       if (visible) {
         result.push(<span>{name}: {message}<br/></span>);
       } else {

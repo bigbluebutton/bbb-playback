@@ -1,13 +1,13 @@
 import { parseStringPromise } from 'xml2js';
 import {
-  METADATA,
-  SHAPES,
-  PANZOOMS,
-  CURSOR,
   ALTERNATES,
-  CHAT,
-  SCREENSHARE,
   CAPTIONS,
+  CHAT,
+  CURSOR,
+  METADATA,
+  PANZOOMS,
+  SCREENSHARE,
+  SHAPES,
   getType
 } from './data';
 

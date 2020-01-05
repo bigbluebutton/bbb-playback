@@ -1,34 +1,12 @@
 
-const METADATA = 'metadata.xml';
-const SHAPES = 'shapes.svg';
-const PANZOOMS = 'panzooms.xml';
-const CURSOR = 'cursor.xml';
 const ALTERNATES = 'presentation_text.json';
-const CHAT = 'slides_new.xml';
-const SCREENSHARE = 'deskshare.xml';
 const CAPTIONS = 'captions.json';
-
-const FILES = [
-  METADATA,
-  SHAPES,
-  PANZOOMS,
-  CURSOR,
-  ALTERNATES,
-  CHAT,
-  SCREENSHARE,
-  CAPTIONS
-];
-
-const MEDIAS = [
-  'webm',
-  'mp4'
-];
-
-const TYPE = {
-  xml: 'text',
-  svg: 'text',
-  json: 'json'
-};
+const CHAT = 'slides_new.xml';
+const CURSOR = 'cursor.xml';
+const METADATA = 'metadata.xml';
+const PANZOOMS = 'panzooms.xml';
+const SCREENSHARE = 'deskshare.xml';
+const SHAPES = 'shapes.svg';
 
 const ERROR = {
   BAD_REQUEST: 400,
@@ -44,9 +22,38 @@ const ERROR = {
   GONE: 410
 };
 
-const getType = filename => TYPE[filename.split('.').pop()];
+const FILES = [
+  ALTERNATES,
+  CAPTIONS,
+  CHAT,
+  CURSOR,
+  METADATA,
+  PANZOOMS,
+  SCREENSHARE,
+  SHAPES
+];
+
+const MEDIAS = [
+  'mp4',
+  'webm'
+];
+
+const TYPE = {
+  json: 'json',
+  svg: 'text',
+  xml: 'text'
+};
+
+const getCurrentIndex = (data, time) => {
+  let index = 0;
+  while (index < data.length - 1 && data[index].timestamp < time) index++;
+
+  return index;
+};
 
 const getFile = filename => filename.split('.').shift();
+
+const getType = filename => TYPE[filename.split('.').pop()];
 
 const getRecordId = match => {
   if (match) {
@@ -55,26 +62,29 @@ const getRecordId = match => {
       const { recordId } = params;
       const regex = /^[a-z0-9]{40}-[0-9]{13}$/;
       if (recordId.match(regex)) {
+
         return recordId;
       }
     }
   }
+
   return null;
 };
 
 export {
-  METADATA,
-  SHAPES,
-  PANZOOMS,
-  CURSOR,
   ALTERNATES,
-  CHAT,
-  SCREENSHARE,
   CAPTIONS,
+  CHAT,
+  CURSOR,
+  ERROR,
   FILES,
   MEDIAS,
-  ERROR,
-  getType,
+  METADATA,
+  PANZOOMS,
+  SCREENSHARE,
+  SHAPES,
+  getCurrentIndex,
   getFile,
+  getType,
   getRecordId
 };

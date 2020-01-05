@@ -3,13 +3,13 @@ import Video from './video';
 import Chat from './chat';
 import Presentation from './presentation';
 import {
-  METADATA,
-  SHAPES,
-  PANZOOMS,
-  CURSOR,
   ALTERNATES,
-  CHAT,
   CAPTIONS,
+  CHAT,
+  CURSOR,
+  METADATA,
+  PANZOOMS,
+  SHAPES,
   getFile
 } from '../utils/data';
 import './index.scss';
@@ -38,12 +38,14 @@ export default class Player extends Component {
       }
     ].filter(src => {
       const { type } = src;
+
       return type.includes(media);
     });
 
     const tracks = captions.map(lang => {
       const { locale, localeName } = lang;
       const src = `/presentation/${metadata.id}/caption_${locale}.vtt`;
+
       return { kind: 'captions', src, srclang: locale, label: localeName };
     });
 
@@ -60,6 +62,7 @@ export default class Player extends Component {
   shouldComponentUpdate(prevProps, prevState) {
     const { time } = this.state;
     if (time !== prevState.time) return true;
+
     return false;
   }
 
@@ -78,16 +81,16 @@ export default class Player extends Component {
     return (
       <div className="player-wrapper">
         <Chat
-          time={time}
           chat={data[getFile(CHAT)]}
+          time={time}
         />
         <Presentation
-          time={time}
-          metadata={data[getFile(METADATA)]}
-          shapes={data[getFile(SHAPES)]}
-          panzooms={data[getFile(PANZOOMS)]}
-          cursor={data[getFile(CURSOR)]}
           alternates={data[getFile(ALTERNATES)]}
+          cursor={data[getFile(CURSOR)]}
+          metadata={data[getFile(METADATA)]}
+          panzooms={data[getFile(PANZOOMS)]}
+          shapes={data[getFile(SHAPES)]}
+          time={time}
         />
         <Video
           onTimeUpdate={this.handleTimeUpdate}

@@ -3,11 +3,11 @@ import Error from './error';
 import Player from './player';
 import { build } from '../utils/builder';
 import {
+  ERROR,
   FILES,
   MEDIAS,
-  ERROR,
-  getType,
   getFile,
+  getType,
   getRecordId
 } from '../utils/data';
 import './index.scss';
@@ -107,7 +107,11 @@ export default class Loader extends Component {
 
     return (
       <div className="loader-wrapper">
-        Loading
+        <div className="loading-dots">
+          <div className="first" />
+          <div className="second" />
+          <div className="third" />
+        </div>
       </div>
     );
   }
