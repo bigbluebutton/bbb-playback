@@ -10,7 +10,7 @@ import {
   METADATA,
   PANZOOMS,
   SHAPES,
-  getFile
+  getFileIndex,
 } from '../utils/data';
 import './index.scss';
 
@@ -19,13 +19,13 @@ export default class Player extends Component {
     super(props);
 
     this.state = {
-      time: 0
+      time: 0,
     }
 
     const { data } = props;
 
-    const metadata = data[getFile(METADATA)];
-    const captions = data[getFile(CAPTIONS)];
+    const metadata = data[getFileIndex(METADATA)];
+    const captions = data[getFileIndex(CAPTIONS)];
 
     const { media } = data;
 
@@ -35,7 +35,7 @@ export default class Player extends Component {
       }, {
         src: `/presentation/${metadata.id}/video/webcams.webm`,
         type: 'video/webm'
-      }
+      },
     ].filter(src => {
       const { type } = src;
 
@@ -43,17 +43,26 @@ export default class Player extends Component {
     });
 
     const tracks = captions.map(lang => {
-      const { locale, localeName } = lang;
+      const {
+        locale,
+        localeName,
+      } = lang;
+
       const src = `/presentation/${metadata.id}/caption_${locale}.vtt`;
 
-      return { kind: 'captions', src, srclang: locale, label: localeName };
+      return {
+        kind: 'captions',
+        src,
+        srclang: locale,
+        label: localeName,
+      };
     });
 
     this.videoJsOptions = {
       controls: true,
-      sources: sources,
-      tracks: tracks,
-      fill: true
+      sources,
+      tracks,
+      fill: true,
     };
 
     this.handleTimeUpdate = this.handleTimeUpdate.bind(this);
@@ -81,15 +90,15 @@ export default class Player extends Component {
     return (
       <div className="player-wrapper">
         <Chat
-          chat={data[getFile(CHAT)]}
+          chat={data[getFileIndex(CHAT)]}
           time={time}
         />
         <Presentation
-          alternates={data[getFile(ALTERNATES)]}
-          cursor={data[getFile(CURSOR)]}
-          metadata={data[getFile(METADATA)]}
-          panzooms={data[getFile(PANZOOMS)]}
-          shapes={data[getFile(SHAPES)]}
+          alternates={data[getFileIndex(ALTERNATES)]}
+          cursor={data[getFileIndex(CURSOR)]}
+          metadata={data[getFileIndex(METADATA)]}
+          panzooms={data[getFileIndex(PANZOOMS)]}
+          shapes={data[getFileIndex(SHAPES)]}
           time={time}
         />
         <Video

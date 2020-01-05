@@ -6,9 +6,9 @@ import {
   ERROR,
   FILES,
   MEDIAS,
-  getFile,
-  getType,
-  getRecordId
+  getFileIndex,
+  getFileType,
+  getRecordId,
 } from '../utils/data';
 import './index.scss';
 
@@ -23,7 +23,7 @@ export default class Loader extends Component {
 
     this.state = {
       error: this.recordId ? null : ERROR['NOT_FOUND'],
-      loaded: false
+      loaded: false,
     };
   }
 
@@ -38,12 +38,12 @@ export default class Loader extends Component {
     const url = `/presentation/${recordId}/${filename}`;
     fetch(url).then(response => {
       if (response.ok) {
-        const type = getType(filename);
-        switch (type) {
-          case 'text':
-            return response.text();
+        const fileType = getFileType(filename);
+        switch (fileType) {
           case 'json':
             return response.json();
+          case 'text':
+            return response.text();
           default:
             this.setState({ error: ERROR['BAD_REQUEST'] });
             throw Error(filename);
@@ -54,8 +54,7 @@ export default class Loader extends Component {
       }
     }).then(value => {
       build(filename, value).then(data => {
-        const index = getFile(filename);
-        this.data[index] = data;
+        this.data[getFileIndex(filename)] = data;
         this.update();
       }).catch(error => this.setState({ error: ERROR['BAD_REQUEST'] }));
     }).catch(error => this.setState({ error: ERROR['NOT_FOUND'] }));
@@ -98,7 +97,7 @@ export default class Loader extends Component {
   render() {
     const {
       error,
-      loaded
+      loaded,
     } = this.state;
 
     if (error) return <Error code={error} />;

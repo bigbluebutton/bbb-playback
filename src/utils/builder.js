@@ -8,7 +8,7 @@ import {
   PANZOOMS,
   SCREENSHARE,
   SHAPES,
-  getType
+  getFileType,
 } from './data';
 
 const buildAlternates = result => {
@@ -21,12 +21,13 @@ const buildAlternates = result => {
           const text = slides[slide];
           data.push({
             xlink: `presentation/${presentation}/${slide}.png`,
-            text: text
+            text: text,
           });
         }
       }
     }
   }
+
   return data;
 };
 
@@ -39,9 +40,16 @@ const buildMetadata = result => {
   let data = {};
   const { recording } = result;
   if (recording && recording.meeting) {
-    const { id, name } = recording.meeting.shift()['$'];
+    const meeting = recording.meeting.shift()['$']
+
+    const {
+      id,
+      name,
+    } = meeting;
+
     data = { id, name };
   }
+
   return data;
 };
 
@@ -63,12 +71,13 @@ const buildShapes = result => {
         data.slides.push({
           timestamp,
           id,
-          xlink
+          xlink,
         });
       });
     });
     data.slides = data.slides.sort((a, b) => a.timestamp - b.timestamp);
   }
+
   return data;
 };
 
@@ -81,15 +90,17 @@ const buildPanzooms = result => {
         .shift()
         .split(' ')
         .map(v => parseFloat(v));
+
       return {
         timestamp: parseFloat(panzoom['$'].timestamp),
         x: viewbox.shift(),
         y: viewbox.shift(),
         width: viewbox.shift(),
-        height: viewbox.shift()
+        height: viewbox.shift(),
       };
     });
   }
+
   return data;
 };
 
@@ -102,13 +113,15 @@ const buildCursor = result => {
         .shift()
         .split(' ')
         .map(v => parseFloat(v));
+
       return {
         timestamp: parseFloat(cursor['$'].timestamp),
         x: position.shift(),
-        y: position.shift()
+        y: position.shift(),
       };
     });
   }
+
   return data;
 };
 
@@ -119,13 +132,15 @@ const buildChat = result => {
     const { chattimeline } = popcorn;
     data = chattimeline.map(chat => {
       const attr = chat['$'];
+
       return {
         timestamp: parseFloat(attr.in),
         name: attr.name,
-        message: attr.message
+        message: attr.message,
       };
     });
   }
+
   return data;
 };
 
@@ -136,8 +151,8 @@ const buildScreenshare = result => {
 const build = (filename, value) => {
   return new Promise((resolve, reject) => {
     let data;
-    const type = getType(filename);
-    if (type === 'json') {
+    const fileType = getFileType(filename);
+    if (fileType === 'json') {
       switch (filename) {
         case ALTERNATES:
           data = buildAlternates(value);
@@ -153,23 +168,23 @@ const build = (filename, value) => {
       // Parse XML data
       parseStringPromise(value).then(result => {
         switch (filename) {
-          case METADATA:
-            data = buildMetadata(result);
-            break;
-          case SHAPES:
-            data = buildShapes(result);
-            break;
-          case PANZOOMS:
-            data = buildPanzooms(result);
+          case CHAT:
+            data = buildChat(result);
             break;
           case CURSOR:
             data = buildCursor(result);
             break;
-          case CHAT:
-            data = buildChat(result);
+          case METADATA:
+            data = buildMetadata(result);
+            break;
+          case PANZOOMS:
+            data = buildPanzooms(result);
             break;
           case SCREENSHARE:
             data = buildScreenshare(result);
+            break;
+          case SHAPES:
+            data = buildShapes(result);
             break;
           default:
             reject(filename);
@@ -181,5 +196,5 @@ const build = (filename, value) => {
 };
 
 export {
-  build
+  build,
 };

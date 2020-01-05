@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Slide from './slide.js';
-import { getCurrentIndex } from '../../utils/data';
+import { getCurrentDataIndex } from '../../utils/data';
 import './index.scss';
 
 export default class Presentation extends Component {
@@ -8,17 +8,17 @@ export default class Presentation extends Component {
   getViewBox() {
     const {
       panzooms,
-      time
+      time,
     } = this.props;
 
-    const index = getCurrentIndex(panzooms, time);
+    const currentDataIndex = getCurrentDataIndex(panzooms, time);
 
     const {
       height,
       width,
       x,
-      y
-    } = panzooms[index];
+      y,
+    } = panzooms[currentDataIndex];
 
     return `${x} ${y} ${width} ${height}`;
   }
@@ -28,7 +28,7 @@ export default class Presentation extends Component {
       alternates,
       metadata,
       shapes,
-      time
+      time,
     } = this.props;
 
     const { slides } = shapes;

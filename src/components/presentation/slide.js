@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getCurrentIndex } from '../../utils/data';
+import { getCurrentDataIndex } from '../../utils/data';
 import './index.scss';
 
 export default class Slide extends Component {
@@ -9,22 +9,22 @@ export default class Slide extends Component {
     const {
       metadata,
       slides,
-      time
+      time,
     } = props;
 
     this.url = `/presentation/${metadata.id}`;
-    this.index = getCurrentIndex(slides, time);
+    this.currentDataIndex = getCurrentDataIndex(slides, time);
   }
 
   shouldComponentUpdate(nextProps) {
     const {
       slides,
-      time
+      time,
     } = nextProps;
 
-    const nextIndex = getCurrentIndex(slides, time);
-    if (this.index !== nextIndex) {
-      this.index = nextIndex;
+    const nextCurrentDataIndex = getCurrentDataIndex(slides, time);
+    if (this.currentDataIndex !== nextCurrentDataIndex) {
+      this.currentDataIndex = nextCurrentDataIndex;
 
       return true;
     }
@@ -44,7 +44,7 @@ export default class Slide extends Component {
 
   render() {
     const { slides } = this.props;
-    const { xlink } = slides[this.index];
+    const { xlink } = slides[this.currentDataIndex];
 
     return (
       <image

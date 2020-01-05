@@ -19,7 +19,7 @@ const ERROR = {
   PROXY_AUTHENTICATION_REQUIRED: 407,
   REQUEST_TIMEOUT: 408,
   CONFLICT: 409,
-  GONE: 410
+  GONE: 410,
 };
 
 const FILES = [
@@ -30,30 +30,30 @@ const FILES = [
   METADATA,
   PANZOOMS,
   SCREENSHARE,
-  SHAPES
+  SHAPES,
 ];
 
 const MEDIAS = [
   'mp4',
-  'webm'
+  'webm',
 ];
 
 const TYPE = {
   json: 'json',
   svg: 'text',
-  xml: 'text'
+  xml: 'text',
 };
 
-const getCurrentIndex = (data, time) => {
+const getCurrentDataIndex = (data, time) => {
   let index = 0;
   while (index < data.length - 1 && data[index].timestamp < time) index++;
 
   return index;
 };
 
-const getFile = filename => filename.split('.').shift();
+const getFileIndex = filename => filename.split('.').shift();
 
-const getType = filename => TYPE[filename.split('.').pop()];
+const getFileType = filename => TYPE[filename.split('.').pop()];
 
 const getRecordId = match => {
   if (match) {
@@ -83,8 +83,8 @@ export {
   PANZOOMS,
   SCREENSHARE,
   SHAPES,
-  getCurrentIndex,
-  getFile,
-  getType,
-  getRecordId
+  getCurrentDataIndex,
+  getFileIndex,
+  getFileType,
+  getRecordId,
 };

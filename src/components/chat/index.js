@@ -5,24 +5,19 @@ export default class Chat extends Component {
   renderChat() {
     const {
       chat,
-      time
+      time,
     } = this.props;
 
     const result = [];
-
-    for (let i = 0; i < chat.length; i++) {
+    let i = 0;
+    while (i < chat.length && chat[i].timestamp < time) {
       const {
         message,
         name,
-        timestamp
       } = chat[i];
 
-      const visible = time > timestamp;
-      if (visible) {
-        result.push(<span>{name}: {message}<br/></span>);
-      } else {
-        break;
-      }
+      result.push(<span>{name}: {message}<br/></span>);
+      i++;
     }
 
     return result;
