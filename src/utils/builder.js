@@ -53,29 +53,106 @@ const buildMetadata = result => {
   return data;
 };
 
-const buildShapes = result => {
-  let data = {};
-  const { svg } = result;
-  if (svg) {
-    data.slides = [];
-    svg.image.forEach(image => {
-      const slide = image['$'];
-      const id = slide['id'];
+const buildStyle = data => {
+  const items = data.split(';');
+  let style = {};
+
+  items.forEach(item => {
+    const split = item.split(':').map(i => i.trim());
+
+    // Remove visibility
+    if (split[0] === 'visibility') return;
+
+    style[split[0]] = split[1];
+  });
+
+  return style;
+};
+
+const buildSlides = image => {
+  let slides = [];
+  if (image) {
+    image.forEach(img => {
+      const slide = img['$'];
+      // Get the number from the id name
+      const id = parseInt(slide['id'].match(/\d/g).join(''), 10);
       const xlink = slide['xlink:href'];
+
+      // Skip the logo
+      if (!xlink) return;
 
       const timestamps = slide['in']
         .split(' ')
         .map(v => parseFloat(v));
 
       timestamps.forEach(timestamp => {
-        data.slides.push({
+        slides.push({
           timestamp,
           id,
           xlink,
         });
       });
     });
-    data.slides = data.slides.sort((a, b) => a.timestamp - b.timestamp);
+  }
+
+  return slides;
+};
+
+const buildCanvases = group => {
+  let canvases = [];
+  if (group) {
+    canvases = group.map(canvas => {
+      // Get the number from the id name
+      const id = parseInt(canvas['$'].id.match(/\d/g).join(''), 10);
+
+      let draws = canvas.g.map(g => {
+        const draw = g['$'];
+        const timestamp = parseFloat(draw.timestamp);
+        const style = buildStyle(draw.style);
+
+        let shape = {};
+        if (g.polyline) {
+          shape.type = 'polyline';
+          shape.data = Object.assign({}, g.polyline.shift()['$']);
+        } else if (g.line) {
+          shape.type = 'line';
+          shape.data = Object.assign({}, g.line.shift()['$']);
+        } else if (g.polygon) {
+          shape.type = 'polygon';
+          shape.data = Object.assign({}, g.polygon.shift()['$']);
+        } else {
+          console.warn('Unhandled', g);
+          return null;
+        }
+
+        return {
+          shape,
+          style,
+          timestamp,
+        };
+      });
+
+      return {
+        draws,
+        id,
+      };
+    });
+  }
+
+  return canvases;
+};
+
+const buildShapes = result => {
+  let data = {};
+  const { svg } = result;
+  if (svg) {
+    const {
+      image,
+      g,
+    } = svg;
+
+    data.slides = buildSlides(image);
+    data.canvases = buildCanvases(g);
   }
 
   return data;

@@ -29,6 +29,7 @@ export default class Video extends Component {
             ref={ node => this.node = node }
             className="video-js"
             crossOrigin="anonymous"
+            playsInline
           />
         </div>
       </div>

@@ -1,43 +1,21 @@
 import React, { Component } from 'react';
-import Slide from './slide.js';
+import Slide from './slide';
+import Whiteboard from './whiteboard';
 import { getCurrentDataIndex } from '../../utils/data';
 import './index.scss';
 
 export default class Presentation extends Component {
-  constructor(props) {
-    super(props);
-
-    this.presentationRef = React.createRef();
-  }
-
-  getCursorStyle() {
+  getSlideId() {
     const {
-      cursor,
+      shapes,
       time,
     } = this.props;
 
-    const currentDataIndex = getCurrentDataIndex(cursor, time);
+    const { slides } = shapes;
+    const currentDataIndex = getCurrentDataIndex(slides, time);
+    const { id } = slides[currentDataIndex];
 
-    const {
-      x,
-      y,
-    } = cursor[currentDataIndex];
-
-    if (!this.presentationRef.current || (x === -1 && y === -1)) {
-      return {
-        display: 'none',
-      };
-    }
-
-    const {
-      offsetHeight,
-      offsetWidth,
-    } = this.presentationRef.current;
-
-    return {
-      top: `${x * offsetHeight}px`,
-      left: `${y * offsetWidth}px`,
-    };
+    return id;
   }
 
   // TODO: Optimize this storing indexes
@@ -67,14 +45,16 @@ export default class Presentation extends Component {
       time,
     } = this.props;
 
-    const { slides } = shapes;
+    const {
+      canvases,
+      slides,
+    } = shapes;
+
+    const id = this.getSlideId();
 
     return (
       <div className="presentation-wrapper">
-        <div
-          className="presentation"
-          ref={this.presentationRef}
-        >
+        <div className="presentation">
           <svg
             viewBox={this.getViewBox()}
             xmlns="http://www.w3.org/2000/svg"
@@ -82,15 +62,16 @@ export default class Presentation extends Component {
           >
             <Slide
               alternates={alternates}
+              id={id}
               metadata={metadata}
               slides={slides}
+            />
+            <Whiteboard
+              canvases={canvases}
+              id={id}
               time={time}
             />
           </svg>
-          <div
-            className="cursor"
-            style={this.getCursorStyle()}
-          />
         </div>
       </div>
     );
