@@ -9,9 +9,19 @@
 
 .presentation {
   display: flex;
+  position: relative;
 }
 
 svg {
   height: 100%;
   width: 100%;
+}
+
+.cursor {
+  background-color: red;
+  border-radius: 100%;
+  height: 10px;
+  opacity: .6;
+  position: absolute;
+  width: 10px;
 }

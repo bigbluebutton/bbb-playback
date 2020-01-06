@@ -45,10 +45,16 @@ const TYPE = {
 };
 
 const getCurrentDataIndex = (data, time) => {
-  let index = 0;
-  while (index < data.length - 1 && data[index].timestamp < time) index++;
+  if (data.length === 0) return null;
 
-  return index;
+  let index = 0;
+  let lastIndex = index;
+  while (index < data.length && data[index].timestamp < time) {
+    lastIndex = index;
+    index++;
+  }
+
+  return lastIndex;
 };
 
 const getFileIndex = filename => filename.split('.').shift();

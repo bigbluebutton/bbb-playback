@@ -4,6 +4,42 @@ import { getCurrentDataIndex } from '../../utils/data';
 import './index.scss';
 
 export default class Presentation extends Component {
+  constructor(props) {
+    super(props);
+
+    this.presentationRef = React.createRef();
+  }
+
+  getCursorStyle() {
+    const {
+      cursor,
+      time,
+    } = this.props;
+
+    const currentDataIndex = getCurrentDataIndex(cursor, time);
+
+    const {
+      x,
+      y,
+    } = cursor[currentDataIndex];
+
+    if (!this.presentationRef.current || (x === -1 && y === -1)) {
+      return {
+        display: 'none',
+      };
+    }
+
+    const {
+      offsetHeight,
+      offsetWidth,
+    } = this.presentationRef.current;
+
+    return {
+      top: `${x * offsetHeight}px`,
+      left: `${y * offsetWidth}px`,
+    };
+  }
+
   // TODO: Optimize this storing indexes
   getViewBox() {
     const {
@@ -35,7 +71,10 @@ export default class Presentation extends Component {
 
     return (
       <div className="presentation-wrapper">
-        <div className="presentation">
+        <div
+          className="presentation"
+          ref={this.presentationRef}
+        >
           <svg
             viewBox={this.getViewBox()}
             xmlns="http://www.w3.org/2000/svg"
@@ -48,6 +87,10 @@ export default class Presentation extends Component {
               time={time}
             />
           </svg>
+          <div
+            className="cursor"
+            style={this.getCursorStyle()}
+          />
         </div>
       </div>
     );
