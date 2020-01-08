@@ -5,7 +5,11 @@ export default function Error(props) {
   const { code } = props;
 
   return (
-    <div className="error-wrapper">
+    <div
+      aria-label="error"
+      className="error-wrapper"
+      id="error"
+    >
       <div className="error-code">
         {code}
       </div>

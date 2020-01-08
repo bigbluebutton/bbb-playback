@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import Video from './video';
 import Chat from './chat';
 import Presentation from './presentation';
+import Screenshare from './screenshare';
+import Video from './video';
 import {
   ALTERNATES,
   CAPTIONS,
@@ -9,6 +10,7 @@ import {
   CURSOR,
   METADATA,
   PANZOOMS,
+  SCREENSHARE,
   SHAPES,
   getFileIndex,
 } from '../utils/data';
@@ -22,48 +24,18 @@ export default class Player extends Component {
       time: 0,
     }
 
-    const { data } = props;
+    const {
+      data,
+    } = props;
 
-    const metadata = data[getFileIndex(METADATA)];
-    const captions = data[getFileIndex(CAPTIONS)];
-
-    const { media } = data;
-
-    const sources = [{
-        src: `/presentation/${metadata.id}/video/webcams.mp4`,
-        type: 'video/mp4'
-      }, {
-        src: `/presentation/${metadata.id}/video/webcams.webm`,
-        type: 'video/webm'
-      },
-    ].filter(src => {
-      const { type } = src;
-
-      return type.includes(media);
-    });
-
-    const tracks = captions.map(lang => {
-      const {
-        locale,
-        localeName,
-      } = lang;
-
-      const src = `/presentation/${metadata.id}/caption_${locale}.vtt`;
-
-      return {
-        kind: 'captions',
-        src,
-        srclang: locale,
-        label: localeName,
-      };
-    });
-
-    this.videoJsOptions = {
-      controls: true,
-      sources,
-      tracks,
-      fill: true,
-    };
+    this.alternates = data[getFileIndex(ALTERNATES)];
+    this.captions = data[getFileIndex(CAPTIONS)];
+    this.chat = data[getFileIndex(CHAT)];
+    this.cursor = data[getFileIndex(CURSOR)];
+    this.metadata = data[getFileIndex(METADATA)];
+    this.panzooms = data[getFileIndex(PANZOOMS)];
+    this.screenshare = data[getFileIndex(SCREENSHARE)];
+    this.shapes = data[getFileIndex(SHAPES)];
 
     this.handleTimeUpdate = this.handleTimeUpdate.bind(this);
   }
@@ -78,6 +50,7 @@ export default class Player extends Component {
   handleTimeUpdate(value) {
     const { time } = this.state;
     const roundedValue = Math.round(value);
+
     if (time !== roundedValue) {
       this.setState({ time: roundedValue });
     }
@@ -86,25 +59,40 @@ export default class Player extends Component {
   render() {
     const { data } = this.props
     const { time } = this.state;
+    const { media } = data;
 
     return (
-      <div className="player-wrapper">
+      <div
+        aria-label="player"
+        className="player-wrapper"
+        id="player"
+      >
         <Chat
-          chat={data[getFileIndex(CHAT)]}
+          chat={this.chat}
           time={time}
         />
         <Presentation
-          alternates={data[getFileIndex(ALTERNATES)]}
-          cursor={data[getFileIndex(CURSOR)]}
-          metadata={data[getFileIndex(METADATA)]}
-          panzooms={data[getFileIndex(PANZOOMS)]}
-          shapes={data[getFileIndex(SHAPES)]}
+          alternates={this.alternates}
+          cursor={this.cursor}
+          metadata={this.metadata}
+          panzooms={this.panzooms}
+          shapes={this.shapes}
           time={time}
         />
         <Video
+          captions={this.captions}
+          media={media}
+          metadata={this.metadata}
           onTimeUpdate={this.handleTimeUpdate}
-          { ...this.videoJsOptions }
         />
+        { this.screenshare.length > 0 ?
+          (
+            <Screenshare
+              media={media}
+              metadata={this.metadata}
+            />
+          ) : null
+        }
       </div>
     );
   }

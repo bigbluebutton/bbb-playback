@@ -25,7 +25,12 @@ export default class Chat extends Component {
 
   render() {
     return (
-      <div className="chat-wrapper">
+      <div
+        aria-label="chat"
+        aria-live="polite"
+        className="chat-wrapper"
+        id="chat"
+      >
         {this.renderChat()}
       </div>
     );

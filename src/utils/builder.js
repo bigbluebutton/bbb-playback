@@ -13,12 +13,15 @@ import {
 
 const buildAlternates = result => {
   let data = [];
+
   for (const presentation in result) {
     if (result.hasOwnProperty(presentation)) {
       const slides = result[presentation];
+
       for (const slide in slides) {
         if (slides.hasOwnProperty(slide)) {
           const text = slides[slide];
+
           data.push({
             xlink: `presentation/${presentation}/${slide}.png`,
             text: text,
@@ -39,6 +42,7 @@ const buildCaptions = result => {
 const buildMetadata = result => {
   let data = {};
   const { recording } = result;
+
   if (recording && recording.meeting) {
     const meeting = recording.meeting.shift()['$']
 
@@ -71,6 +75,7 @@ const buildStyle = data => {
 
 const buildSlides = image => {
   let slides = [];
+
   if (image) {
     image.forEach(img => {
       const slide = img['$'];
@@ -93,6 +98,8 @@ const buildSlides = image => {
         });
       });
     });
+
+    slides = slides.sort((a, b) => a.timestamp - b.timestamp);
   }
 
   return slides;
@@ -100,6 +107,7 @@ const buildSlides = image => {
 
 const buildCanvases = group => {
   let canvases = [];
+
   if (group) {
     canvases = group.map(canvas => {
       // Get the number from the id name
@@ -145,6 +153,7 @@ const buildCanvases = group => {
 const buildShapes = result => {
   let data = {};
   const { svg } = result;
+
   if (svg) {
     const {
       image,
@@ -161,6 +170,7 @@ const buildShapes = result => {
 const buildPanzooms = result => {
   let data = [];
   const { recording } = result;
+
   if (recording && recording.event) {
     data = recording.event.map(panzoom => {
       const viewbox = panzoom['viewBox']
@@ -184,6 +194,7 @@ const buildPanzooms = result => {
 const buildCursor = result => {
   let data = [];
   const { recording } = result;
+
   if (recording && recording.event) {
     data = recording.event.map(cursor => {
       const position = cursor['cursor']
@@ -205,6 +216,7 @@ const buildCursor = result => {
 const buildChat = result => {
   const { popcorn } = result;
   let data = [];
+
   if (popcorn && popcorn.chattimeline) {
     const { chattimeline } = popcorn;
     data = chattimeline.map(chat => {
@@ -222,13 +234,28 @@ const buildChat = result => {
 };
 
 const buildScreenshare = result => {
-  return result;
+  let data = [];
+  const { recording } = result;
+
+  if (recording && recording.event) {
+    data = recording.event.map(screenshare => {
+      const attr = screenshare['$'];
+
+      return {
+        timestamp: parseFloat(attr.start_timestamp),
+        clear: parseFloat(attr.stop_timestamp),
+      };
+    });
+  }
+
+  return data;
 };
 
 const build = (filename, value) => {
   return new Promise((resolve, reject) => {
     let data;
     const fileType = getFileType(filename);
+
     if (fileType === 'json') {
       switch (filename) {
         case ALTERNATES:

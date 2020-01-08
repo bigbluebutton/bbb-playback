@@ -53,7 +53,11 @@ export default class Presentation extends Component {
     const id = this.getSlideId();
 
     return (
-      <div className="presentation-wrapper">
+      <div
+        aria-label="presentation"
+        className="presentation-wrapper"
+        id="presentation"
+      >
         <div className="presentation">
           <svg
             viewBox={this.getViewBox()}

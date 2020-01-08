@@ -105,7 +105,11 @@ export default class Loader extends Component {
     if (loaded) return <Player data={this.data} />;
 
     return (
-      <div className="loader-wrapper">
+      <div
+        aria-label="loader"
+        className="loader-wrapper"
+        id="loader"
+      >
         <div className="loading-dots">
           <div className="first" />
           <div className="second" />
