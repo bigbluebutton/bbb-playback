@@ -1,81 +1,104 @@
 
+const STATUSES = [
+  'canplay',
+  'seeking',
+  'waiting',
+];
+
+const EVENTS = [
+  'abort',
+  'canplay',
+  'canplaythrough',
+  'durationchange',
+  'emptied',
+  'encrypted',
+  'ended',
+  'error',
+  'interruptbegin',
+  'interruptend',
+  'loadeddata',
+  'loadedmetadata',
+  'loadstart',
+  'mozaudioavailable',
+  'pause',
+  'play',
+  'playing',
+  'progress',
+  'ratechange',
+  'seeked',
+  'seeking',
+  'stalled',
+  'suspend',
+  'timeupdate',
+  'volumechange',
+  'waiting',
+];
+
 export default class Synchronizer {
   constructor(primary, secondary) {
     this.primary = primary;
     this.secondary = secondary;
 
-    this.seeked = false;
+    this.status = {
+      primary: 'waiting',
+      secondary: 'waiting',
+    }
+
     this.synching = false;
 
     this.init();
   }
 
   init() {
-    this.primary.on('play', () => {
-      if (!this.secondary) return null;
-
-      this.secondary.play();
+    STATUSES.forEach(status => {
+      this.primary.on(status, () => this.status.primary = status);
+      this.secondary.on(status, () => this.status.secondary = status);
     });
 
-    this.primary.on('pause', () => this.sync());
+    this.primary.on('play', () => this.secondary.play());
+    this.primary.on('pause', () => this.secondary.pause());
 
     this.primary.on('seeking', () => {
-      if (!this.primary) return null;
-
-      const played = this.primary.played();
-      if (played.length !== 0) {
-        this.seeked = true;
-      }
+      const currentTime = this.primary.currentTime();
+      this.secondary.currentTime(currentTime);
     });
 
-    this.primary.on('seeked', () => {
-      if (!this.primary) return null;
+    this.primary.on('ratechange', () => {
+      const playbackRate = this.primary.playbackRate();
+      this.secondary.playbackRate(playbackRate);
+    });
 
-      if (this.primary.paused()) {
-        this.sync();
-      } else {
+    this.primary.on('waiting', () => {
+      if (!this.synching && this.status.secondary === 'canplay') {
+        this.synching = true;
         this.primary.pause();
       }
     });
 
-    const players = [
-      this.primary,
-      this.secondary,
-    ];
-
-    players.forEach(player => {
-      player.on('waiting', () => {
-        if (!this.primary) return null;
-
-        const seeking = this.primary.seeking();
-
-        if (!seeking && !this.synching) {
-          this.synching = true;
-          this.primary.pause();
-        }
-      });
-
-      player.on('canplay', () => {
-        if (!this.primary && !this.secondary) return null;
-
-        if (this.seeked || this.synching) {
-          if (this.primary.readyState() === 4 && this.secondary.readyState() === 4) {
-            this.seeked = false;
-            this.synching = false;
-            this.primary.play();
-          }
-        }
-      });
+    this.primary.on('canplay', () => {
+      if (this.synching) {
+        this.synching = false;
+        this.primary.play();
+      }
     });
-  }
 
-  sync() {
-    if (!this.primary && !this.secondary) return null;
+    this.secondary.on('waiting', () => {
+      if (!this.synching && this.status.primary === 'canplay') {
+        this.synching = true;
+        this.primary.pause();
+      }
+    });
 
-    if (this.secondary.readyState() > 1) {
-      this.secondary.pause();
-      const currentTime = this.primary.currentTime();
-      this.secondary.currentTime(currentTime);
-    }
+    this.secondary.on('canplay', () => {
+      if (this.synching) {
+        this.synching = false;
+        this.primary.play();
+      }
+    });
+
+    //EVENTS.forEach(event => {
+    //  this.primary.on(event, () => console.log(`primary ${event} ${this.status.primary}`));
+    //  this.secondary.on(event, () => console.log(`secondary ${event} ${this.status.secondary}`));
+    //});
   }
 }
