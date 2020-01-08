@@ -5,6 +5,12 @@ import { getCurrentDataIndex } from '../../utils/data';
 import './index.scss';
 
 export default class Presentation extends Component {
+  constructor(props) {
+    super(props);
+
+    this.id = 'presentation';
+  }
+
   getSlideId() {
     const {
       shapes,
@@ -56,7 +62,7 @@ export default class Presentation extends Component {
       <div
         aria-label="presentation"
         className="presentation-wrapper"
-        id="presentation"
+        id={this.id}
       >
         <div className="presentation">
           <svg

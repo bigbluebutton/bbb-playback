@@ -13,13 +13,14 @@ export default class Video extends Component {
     } = props;
 
     const playbackRates = [0.5, 1, 1.5, 2];
+    const url = `/presentation/${metadata.id}`;
 
     const sources = [
       {
-        src: `/presentation/${metadata.id}/video/webcams.mp4`,
+        src: `${url}/video/webcams.mp4`,
         type: 'video/mp4',
       }, {
-        src: `/presentation/${metadata.id}/video/webcams.webm`,
+        src: `${url}/video/webcams.webm`,
         type: 'video/webm',
       },
     ].filter(src => {
@@ -44,6 +45,7 @@ export default class Video extends Component {
       };
     });
 
+    this.id = 'video';
     this.options = {
       controls: true,
       sources,
@@ -55,13 +57,19 @@ export default class Video extends Component {
 
   componentDidMount() {
     this.player = videojs(this.node, this.options, () => {
-      const { onTimeUpdate } = this.props;
+      const {
+        onPlayerReady,
+        onTimeUpdate,
+      } = this.props;
+
       if (onTimeUpdate) {
         this.player.on('timeupdate', () => {
           const time = this.player.currentTime();
           onTimeUpdate(time);
         });
       }
+
+      if (onPlayerReady) onPlayerReady(this.id, this.player);
     });
   }
 
@@ -76,7 +84,7 @@ export default class Video extends Component {
       <div
         aria-label="video"
         className="video-wrapper"
-        id="video"
+        id={this.id}
       >
         <div data-vjs-player>
           <video

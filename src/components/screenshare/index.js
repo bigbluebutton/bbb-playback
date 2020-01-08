@@ -11,12 +11,14 @@ export default class Screenshare extends Component {
       metadata,
     } = props;
 
+    const url = `/presentation/${metadata.id}`;
+
     const sources = [
       {
-        src: `/presentation/${metadata.id}/deskshare/deskshare.mp4`,
+        src: `${url}/deskshare/deskshare.mp4`,
         type: `video/mp4`,
       }, {
-        src: `/presentation/${metadata.id}/deskshare/deskshare.webm`,
+        src: `${url}/deskshare/deskshare.webm`,
         type: `video/webm`,
       },
     ].filter(src => {
@@ -25,6 +27,7 @@ export default class Screenshare extends Component {
       return type.includes(media);
     });
 
+    this.id = 'screenshare';
     this.options = {
       controls: false,
       sources,
@@ -33,7 +36,11 @@ export default class Screenshare extends Component {
   }
 
   componentDidMount() {
-    this.player = videojs(this.node, this.options, () => {});
+    this.player = videojs(this.node, this.options, () => {
+      const { onPlayerReady } = this.props;
+
+      if (onPlayerReady) onPlayerReady(this.id, this.player);
+    });
   }
 
   componentWillUnmount() {
@@ -47,7 +54,7 @@ export default class Screenshare extends Component {
       <div
         aria-label="screenshare"
         className="screenshare-wrapper"
-        id="screenshare"
+        id={this.id}
       >
         <div data-vjs-player>
           <video

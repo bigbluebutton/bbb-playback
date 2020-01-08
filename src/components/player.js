@@ -14,6 +14,7 @@ import {
   SHAPES,
   getFileIndex,
 } from '../utils/data';
+import Synchronizer from '../utils/synchronizer';
 import './index.scss';
 
 export default class Player extends Component {
@@ -28,6 +29,13 @@ export default class Player extends Component {
       data,
     } = props;
 
+    this.player = {
+      video: null,
+      screenshare: null,
+    };
+
+    this.id = 'player';
+
     this.alternates = data[getFileIndex(ALTERNATES)];
     this.captions = data[getFileIndex(CAPTIONS)];
     this.chat = data[getFileIndex(CHAT)];
@@ -37,6 +45,7 @@ export default class Player extends Component {
     this.screenshare = data[getFileIndex(SCREENSHARE)];
     this.shapes = data[getFileIndex(SHAPES)];
 
+    this.handlePlayerReady = this.handlePlayerReady.bind(this);
     this.handleTimeUpdate = this.handleTimeUpdate.bind(this);
   }
 
@@ -45,6 +54,22 @@ export default class Player extends Component {
     if (time !== prevState.time) return true;
 
     return false;
+  }
+
+  handlePlayerReady(media, player) {
+    switch (media) {
+      case 'video':
+        this.player.video = player;
+        break;
+      case 'screenshare':
+        this.player.screenshare = player;
+        break;
+      default:
+    }
+
+    if (this.player.video && this.player.screenshare) {
+      this.synchronizer = new Synchronizer(this.player.video, this.player.screenshare);
+    }
   }
 
   handleTimeUpdate(value) {
@@ -65,7 +90,7 @@ export default class Player extends Component {
       <div
         aria-label="player"
         className="player-wrapper"
-        id="player"
+        id={this.id}
       >
         <Chat
           chat={this.chat}
@@ -83,6 +108,7 @@ export default class Player extends Component {
           captions={this.captions}
           media={media}
           metadata={this.metadata}
+          onPlayerReady={this.handlePlayerReady}
           onTimeUpdate={this.handleTimeUpdate}
         />
         { this.screenshare.length > 0 ?
@@ -90,6 +116,7 @@ export default class Player extends Component {
             <Screenshare
               media={media}
               metadata={this.metadata}
+              onPlayerReady={this.handlePlayerReady}
             />
           ) : null
         }

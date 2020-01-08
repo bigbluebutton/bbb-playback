@@ -2,6 +2,12 @@ import React, { Component } from 'react';
 import './index.scss'
 
 export default class Chat extends Component {
+  constructor(props) {
+    super(props);
+
+    this.id = 'chat';
+  }
+
   renderChat() {
     const {
       chat,
@@ -29,7 +35,7 @@ export default class Chat extends Component {
         aria-label="chat"
         aria-live="polite"
         className="chat-wrapper"
-        id="chat"
+        id={this.id}
       >
         {this.renderChat()}
       </div>

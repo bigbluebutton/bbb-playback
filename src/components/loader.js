@@ -17,9 +17,11 @@ export default class Loader extends Component {
     super(props);
 
     const { match } = props;
-    this.recordId = getRecordId(match);
-    this.data = {};
+
+    this.id = 'loader';
     this.counter = 0;
+    this.data = {};
+    this.recordId = getRecordId(match);
 
     this.state = {
       error: this.recordId ? null : ERROR['NOT_FOUND'],
@@ -108,7 +110,7 @@ export default class Loader extends Component {
       <div
         aria-label="loader"
         className="loader-wrapper"
-        id="loader"
+        id={this.id}
       >
         <div className="loading-dots">
           <div className="first" />

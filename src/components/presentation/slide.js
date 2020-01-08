@@ -6,6 +6,8 @@ export default class Slide extends Component {
     super(props);
 
     const { metadata } = props;
+
+    this.id = 'slide';
     this.url = `/presentation/${metadata.id}`;
   }
 
@@ -35,7 +37,7 @@ export default class Slide extends Component {
         alt={this.getAlt(xlink)}
         aria-label="slide"
         className="slide-wrapper"
-        id="slide"
+        id={this.id}
         xlinkHref={`${this.url}/${xlink}`}
       />
     );
