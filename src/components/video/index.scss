@@ -14,7 +14,13 @@
 }
 
 .video-js .vjs-big-play-button,
-.vjs-has-started .vjs-control-bar {
+.vjs-has-started .vjs-control-bar,
+.vjs-text-track-display {
   position: fixed;
   z-index: 1;
+}
+
+.vjs-text-track-display {
+  height: 100%;
+  width: 100%;
 }
