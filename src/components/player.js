@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Chat from './chat';
 import Presentation from './presentation';
 import Screenshare from './screenshare';
+import Thumbnails from './thumbnails';
 import Video from './video';
 import {
   ALTERNATES,
@@ -45,6 +46,10 @@ export default class Player extends Component {
     this.screenshare = data[getFileIndex(SCREENSHARE)];
     this.shapes = data[getFileIndex(SHAPES)];
 
+    this.canvases = this.shapes.canvases;
+    this.slides = this.shapes.slides;
+    this.thumbnails = this.shapes.thumbnails;
+
     this.handlePlayerReady = this.handlePlayerReady.bind(this);
     this.handleTimeUpdate = this.handleTimeUpdate.bind(this);
   }
@@ -84,6 +89,7 @@ export default class Player extends Component {
   render() {
     const { data } = this.props
     const { time } = this.state;
+    const { video } = this.player;
     const { media } = data;
 
     return (
@@ -92,16 +98,22 @@ export default class Player extends Component {
         className="player-wrapper"
         id={this.id}
       >
+        <Thumbnails
+          metadata={this.metadata}
+          player={video}
+          thumbnails={this.thumbnails}
+        />
         <Chat
           chat={this.chat}
           time={time}
         />
         <Presentation
           alternates={this.alternates}
+          canvases={this.canvases}
           cursor={this.cursor}
           metadata={this.metadata}
           panzooms={this.panzooms}
-          shapes={this.shapes}
+          slides={this.slides}
           time={time}
         />
         <Video

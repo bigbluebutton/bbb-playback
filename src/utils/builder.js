@@ -105,6 +105,31 @@ const buildSlides = image => {
   return slides;
 };
 
+const buildThumbnails = slides => {
+  const screenshare = 'deskshare';
+  const prefix = 'slide-';
+  const url = 'thumbnails/thumb-';
+
+  return slides.reduce((result, slide) => {
+    const {
+      timestamp,
+      xlink,
+    } = slide;
+
+    // TODO: Screenshare thumbnail
+    if (!xlink.includes(screenshare)) {
+      const src = xlink.replace(prefix, url);
+
+      result.push({
+        src,
+        timestamp,
+      });
+    }
+
+    return result;
+  }, []);
+};
+
 const buildCanvases = group => {
   let canvases = [];
 
@@ -161,6 +186,7 @@ const buildShapes = result => {
     } = svg;
 
     data.slides = buildSlides(image);
+    data.thumbnails = buildThumbnails(data.slides);
     data.canvases = buildCanvases(g);
   }
 

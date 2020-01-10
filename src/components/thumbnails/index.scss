@@ -1,0 +1,12 @@
+.thumbnails-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.thumbnail {
+  height: 100%;
+  width: 100%;
+}

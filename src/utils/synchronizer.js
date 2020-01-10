@@ -96,9 +96,9 @@ export default class Synchronizer {
       }
     });
 
-    //EVENTS.forEach(event => {
-    //  this.primary.on(event, () => console.log(`primary ${event} ${this.status.primary}`));
-    //  this.secondary.on(event, () => console.log(`secondary ${event} ${this.status.secondary}`));
-    //});
+    EVENTS.forEach(event => {
+      //this.primary.on(event, () => console.log(`primary ${event} ${this.status.primary}`));
+      //this.secondary.on(event, () => console.log(`secondary ${event} ${this.status.secondary}`));
+    });
   }
 }

@@ -13,11 +13,10 @@ export default class Presentation extends Component {
 
   getSlideId() {
     const {
-      shapes,
+      slides,
       time,
     } = this.props;
 
-    const { slides } = shapes;
     const currentDataIndex = getCurrentDataIndex(slides, time);
     const { id } = slides[currentDataIndex];
 
@@ -46,15 +45,11 @@ export default class Presentation extends Component {
   render() {
     const {
       alternates,
+      canvases,
       metadata,
-      shapes,
+      slides,
       time,
     } = this.props;
-
-    const {
-      canvases,
-      slides,
-    } = shapes;
 
     const id = this.getSlideId();
 

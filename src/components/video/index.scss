@@ -15,12 +15,14 @@
 
 .video-js .vjs-big-play-button,
 .vjs-has-started .vjs-control-bar,
-.vjs-text-track-display {
+.vjs-text-track-display,
+.video-js .vjs-modal-dialog {
   position: fixed;
   z-index: 1;
 }
 
-.vjs-text-track-display {
+.vjs-text-track-display,
+.video-js .vjs-modal-dialog {
   height: 100%;
   width: 100%;
 }
