@@ -1,12 +1,27 @@
+@import 'src/styles/colors';
+@import 'src/styles/sizes';
+
 .thumbnails-wrapper {
+  bottom: $thumbnails-wrapper-bottom;
+  box-sizing: border-box;
   display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow-y: auto;
+  height: $thumbnails-wrapper-height;
+  padding: calc(#{$thumbnails-wrapper-height} * 0.05);
+  position: fixed;
+  overflow-x: auto;
   width: 100%;
+  z-index: 1;
 }
 
 .thumbnail {
-  height: 100%;
-  width: 100%;
+  border-radius: $border-radius;
+  box-sizing: border-box;
+  cursor: pointer;
+  height: calc(#{$thumbnails-wrapper-height} * 0.8);
+  margin: calc(#{$thumbnails-wrapper-height} * 0.05);
+  width: auto;
+
+  &:hover {
+    box-shadow: 0 0 $box-shadow-blur-radius 0 $box-shadow-color;
+  }
 }

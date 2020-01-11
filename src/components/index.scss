@@ -1,6 +1,5 @@
-@import "../styles/fonts";
-
-$control-bar-height: 30px;
+@import 'src/styles/fonts';
+@import 'src/styles/sizes';
 
 .error-wrapper,
 .loader-wrapper,
@@ -12,7 +11,7 @@ $control-bar-height: 30px;
 
 .player-wrapper {
   box-sizing: border-box;
-  padding-bottom: $control-bar-height;
+  padding: 0 0 $player-wrapper-padding 0;
 }
 
 .error-code,
