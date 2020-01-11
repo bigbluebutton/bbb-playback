@@ -44,7 +44,6 @@ export default class Presentation extends Component {
 
   render() {
     const {
-      alternates,
       canvases,
       metadata,
       slides,
@@ -66,7 +65,6 @@ export default class Presentation extends Component {
             xmlnsXlink="http://www.w3.org/1999/xlink"
           >
             <Slide
-              alternates={alternates}
               id={id}
               metadata={metadata}
               slides={slides}

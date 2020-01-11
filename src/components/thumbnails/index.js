@@ -24,6 +24,7 @@ export default class Thumbnails extends Component {
 
     return thumbnails.map(thumbnail => {
       const {
+        alt,
         src,
         timestamp,
       } = thumbnail;
@@ -31,7 +32,7 @@ export default class Thumbnails extends Component {
       // TODO: Add alternate
       return (
         <img
-          alt="thumbnail"
+          alt={alt}
           className="thumbnail"
           onClick={() => this.handleOnClick(timestamp)}
           src={`${this.url}/${src}`}

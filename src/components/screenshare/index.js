@@ -30,8 +30,8 @@ export default class Screenshare extends Component {
     this.id = 'screenshare';
     this.options = {
       controls: false,
-      sources,
       fill: true,
+      sources,
     };
   }
 

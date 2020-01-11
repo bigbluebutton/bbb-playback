@@ -47,11 +47,19 @@ export default class Video extends Component {
 
     this.id = 'video';
     this.options = {
+      controlBar: {
+        fullscreenToggle: false,
+        volumePanel: {
+          inline: false,
+          vertical: true,
+        },
+      },
       controls: true,
+      fill: true,
+      inactivityTimeout: 0,
+      playbackRates,
       sources,
       tracks,
-      playbackRates,
-      fill: true,
     };
   }
 

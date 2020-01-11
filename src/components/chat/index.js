@@ -22,7 +22,11 @@ export default class Chat extends Component {
         name,
       } = chat[i];
 
-      result.push(<span>{name}: {message}<br/></span>);
+      result.push(
+        <span className="chat">
+          {name}: {message}<br/>
+        </span>
+      );
       i++;
     }
 

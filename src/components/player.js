@@ -5,6 +5,10 @@ import Screenshare from './screenshare';
 import Thumbnails from './thumbnails';
 import Video from './video';
 import {
+  addAlternatesToSlides,
+  addAlternatesToThumbnails,
+} from '../utils/builder';
+import {
   ALTERNATES,
   CAPTIONS,
   CHAT,
@@ -47,11 +51,14 @@ export default class Player extends Component {
     this.shapes = data[getFileIndex(SHAPES)];
 
     this.canvases = this.shapes.canvases;
-    this.slides = this.shapes.slides;
-    this.thumbnails = this.shapes.thumbnails;
+    this.slides = addAlternatesToSlides(this.shapes.slides, this.alternates);
+    this.thumbnails = addAlternatesToThumbnails(this.shapes.thumbnails, this.alternates);
 
     this.handlePlayerReady = this.handlePlayerReady.bind(this);
     this.handleTimeUpdate = this.handleTimeUpdate.bind(this);
+
+    // Uncomment for post-processed data details
+    // console.log(data);
   }
 
   shouldComponentUpdate(prevProps, prevState) {
@@ -108,7 +115,6 @@ export default class Player extends Component {
           time={time}
         />
         <Presentation
-          alternates={this.alternates}
           canvases={this.canvases}
           cursor={this.cursor}
           metadata={this.metadata}

@@ -11,16 +11,6 @@ export default class Slide extends Component {
     this.url = `/presentation/${metadata.id}`;
   }
 
-  getAlt(xlink) {
-    const { alternates } = this.props;
-
-    let result = '';
-    const found = alternates.find(alt => xlink === alt.xlink);
-    if (found) result = found.text;
-
-    return result;
-  }
-
   render() {
     const {
       id,
@@ -30,15 +20,18 @@ export default class Slide extends Component {
     const current = slides.find(slide => id === slide.id);
     if (!current) return null;
 
-    const { xlink } = current;
+    const {
+      alt,
+      src,
+    } = current;
 
     return (
       <image
-        alt={this.getAlt(xlink)}
+        alt={alt}
         aria-label="slide"
         className="slide-wrapper"
         id={this.id}
-        xlinkHref={`${this.url}/${xlink}`}
+        xlinkHref={`${this.url}/${src}`}
       />
     );
   }

@@ -23,8 +23,8 @@ const buildAlternates = result => {
           const text = slides[slide];
 
           data.push({
-            xlink: `presentation/${presentation}/${slide}.png`,
-            text: text,
+            src: `presentation/${presentation}/${slide}.png`,
+            text,
           });
         }
       }
@@ -81,10 +81,10 @@ const buildSlides = image => {
       const slide = img['$'];
       // Get the number from the id name
       const id = parseInt(slide['id'].match(/\d/g).join(''), 10);
-      const xlink = slide['xlink:href'];
+      const src = slide['xlink:href'];
 
       // Skip the logo
-      if (!xlink) return;
+      if (!src) return;
 
       const timestamps = slide['in']
         .split(' ')
@@ -92,9 +92,9 @@ const buildSlides = image => {
 
       timestamps.forEach(timestamp => {
         slides.push({
-          timestamp,
           id,
-          xlink,
+          src,
+          timestamp,
         });
       });
     });
@@ -112,16 +112,14 @@ const buildThumbnails = slides => {
 
   return slides.reduce((result, slide) => {
     const {
+      src,
       timestamp,
-      xlink,
     } = slide;
 
     // TODO: Screenshare thumbnail
-    if (!xlink.includes(screenshare)) {
-      const src = xlink.replace(prefix, url);
-
+    if (!src.includes(screenshare)) {
       result.push({
-        src,
+        src: src.replace(prefix, url),
         timestamp,
       });
     }
@@ -325,6 +323,35 @@ const build = (filename, value) => {
   });
 };
 
+const addAlternatesToSlides = (slides, alternates) => {
+  return slides.map(slide => {
+    const { src } = slide;
+    slide.alt = '';
+
+    const found = alternates.find(alt => src === alt.src);
+    if (found) slide.alt = found.text;
+
+    return slide;
+  });
+};
+
+const addAlternatesToThumbnails = (thumbnails, alternates) => {
+  const prefix = 'thumbnails/thumb-';
+  const url = 'slide-';
+
+  return thumbnails.map(thumbnail => {
+    const { src } = thumbnail;
+    thumbnail.alt = '';
+
+    const found = alternates.find(alt => src.replace(prefix, url) === alt.src);
+    if (found) thumbnail.alt = found.text;
+
+    return thumbnail;
+  });
+};
+
 export {
+  addAlternatesToSlides,
+  addAlternatesToThumbnails,
   build,
 };

@@ -1,11 +1,18 @@
 @import "../styles/fonts";
 
+$control-bar-height: 30px;
+
 .error-wrapper,
 .loader-wrapper,
 .player-wrapper {
   display: flex;
   height: 100%;
   width: 100%;
+}
+
+.player-wrapper {
+  box-sizing: border-box;
+  padding-bottom: $control-bar-height;
 }
 
 .error-code,
