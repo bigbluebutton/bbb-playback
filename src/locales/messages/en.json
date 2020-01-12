@@ -1,4 +1,5 @@
 {
+  "player.wrapper.aria": "Player area",
   "player.chat.wrapper.aria": "Chat area",
   "player.presentation.wrapper.aria": "Presentation area",
   "player.presentation.slide.wrapper.aria": "Slide area",
