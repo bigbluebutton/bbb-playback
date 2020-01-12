@@ -43,6 +43,7 @@ export default class Whiteboard extends Component {
   }
 
   renderSwitch(style, data) {
+    // TODO: Check if switch element is really needed
     return (
       <foreignObject
         style={style}
@@ -52,7 +53,7 @@ export default class Whiteboard extends Component {
         y={data.y}
       >
         <p xmlns="http://www.w3.org/1999/xhtml">
-          {data.p}
+          {data.p.split('\r').map(p => <span>{p}<br /></span>)}
         </p>
       </foreignObject>
     );
