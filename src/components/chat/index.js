@@ -18,15 +18,19 @@ export default class Chat extends Component {
     let i = 0;
     while (i < chat.length && chat[i].timestamp < time) {
       const {
+        clear,
         message,
         name,
       } = chat[i];
 
-      result.push(
-        <span className="chat">
-          {name}: {message}<br/>
-        </span>
-      );
+      if (clear === -1 || clear >= time) {
+        result.push(
+          <span className="chat">
+            {name}: {message}<br/>
+          </span>
+        );
+      }
+
       i++;
     }
 

@@ -141,6 +141,7 @@ const buildCanvases = group => {
       let draws = canvas.g.map(g => {
         const draw = g['$'];
         const timestamp = parseFloat(draw.timestamp);
+        const clear = parseFloat(draw.undo);
         const style = buildStyle(draw.style);
         const drawId = parseInt(draw.shape
           .split('-')
@@ -172,6 +173,7 @@ const buildCanvases = group => {
         }
 
         return {
+          clear,
           id: drawId,
           shape,
           style,
@@ -261,11 +263,13 @@ const buildChat = result => {
     const { chattimeline } = popcorn;
     data = chattimeline.map(chat => {
       const attr = chat['$'];
+      const clear = attr.out ? parseFloat(attr.out) : -1;
 
       return {
-        timestamp: parseFloat(attr.in),
+        clear,
         name: attr.name,
         message: attr.message,
+        timestamp: parseFloat(attr.in),
       };
     });
   }
