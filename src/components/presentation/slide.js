@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
+import { defineMessages } from 'react-intl';
 import './index.scss';
+
+const intlMessages = defineMessages({
+  aria: {
+    id: 'player.presentation.slide.wrapper.aria',
+    description: 'Aria label for the slide wrapper',
+  },
+});
 
 export default class Slide extends Component {
   constructor(props) {
@@ -14,6 +22,7 @@ export default class Slide extends Component {
   render() {
     const {
       id,
+      intl,
       slides,
     } = this.props;
 
@@ -28,7 +37,7 @@ export default class Slide extends Component {
     return (
       <image
         alt={alt}
-        aria-label="slide"
+        aria-label={intl.formatMessage(intlMessages.aria)}
         className="slide-wrapper"
         id={this.id}
         xlinkHref={`${this.url}/${src}`}

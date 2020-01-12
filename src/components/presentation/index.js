@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
+import { defineMessages } from 'react-intl';
 import Slide from './slide';
 import Whiteboard from './whiteboard';
 import { getCurrentDataIndex } from 'utils/data';
 import './index.scss';
+
+const intlMessages = defineMessages({
+  aria: {
+    id: 'player.presentation.wrapper.aria',
+    description: 'Aria label for the presentation wrapper',
+  },
+});
 
 export default class Presentation extends Component {
   constructor(props) {
@@ -45,6 +53,7 @@ export default class Presentation extends Component {
   render() {
     const {
       canvases,
+      intl,
       metadata,
       slides,
       time,
@@ -54,7 +63,7 @@ export default class Presentation extends Component {
 
     return (
       <div
-        aria-label="presentation"
+        aria-label={intl.formatMessage(intlMessages.aria)}
         className="presentation-wrapper"
         id={this.id}
       >
@@ -66,6 +75,7 @@ export default class Presentation extends Component {
           >
             <Slide
               id={id}
+              intl={intl}
               metadata={metadata}
               slides={slides}
             />

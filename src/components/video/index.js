@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
+import { defineMessages } from 'react-intl';
 import videojs from 'video.js';
 import './index.scss';
+
+const intlMessages = defineMessages({
+  aria: {
+    id: 'player.video.wrapper.aria',
+    description: 'Aria label for the video wrapper',
+  },
+});
 
 export default class Video extends Component {
   constructor(props) {
@@ -88,9 +96,11 @@ export default class Video extends Component {
   }
 
   render() {
+    const { intl } = this.props;
+
     return (
       <div
-        aria-label="video"
+        aria-label={intl.formatMessage(intlMessages.aria)}
         className="video-wrapper"
         id={this.id}
       >

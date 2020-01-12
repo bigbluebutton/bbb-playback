@@ -1,4 +1,3 @@
-
 const STATUSES = [
   'canplay',
   'seeking',

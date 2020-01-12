@@ -1,4 +1,3 @@
-
 const ALTERNATES = 'presentation_text.json';
 const CAPTIONS = 'captions.json';
 const CHAT = 'slides_new.xml';

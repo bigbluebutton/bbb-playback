@@ -1,0 +1,8 @@
+{
+  "player.chat.wrapper.aria": "Área do chat",
+  "player.presentation.wrapper.aria": "Área da apresentação",
+  "player.presentation.slide.wrapper.aria": "Área do slide",
+  "player.screenshare.wrapper.aria": "Área do compartilhamento de tela",
+  "player.thumbnails.wrapper.aria": "Área das miniaturas",
+  "player.video.wrapper.aria": "Área do vídeo"
+}

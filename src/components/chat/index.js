@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
-import './index.scss'
+import { defineMessages } from 'react-intl';
+import './index.scss';
+
+const intlMessages = defineMessages({
+  aria: {
+    id: 'player.chat.wrapper.aria',
+    description: 'Aria label for the chat wrapper',
+  },
+});
 
 export default class Chat extends Component {
   constructor(props) {
@@ -38,9 +46,11 @@ export default class Chat extends Component {
   }
 
   render() {
+    const { intl } = this.props;
+
     return (
       <div
-        aria-label="chat"
+        aria-label={intl.formatMessage(intlMessages.aria)}
         aria-live="polite"
         className="chat-wrapper"
         id={this.id}

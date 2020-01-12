@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import {
+  defineMessages,
+  injectIntl,
+} from 'react-intl';
 import Chat from './chat';
 import Presentation from './presentation';
 import Screenshare from './screenshare';
@@ -22,7 +26,14 @@ import {
 import Synchronizer from 'utils/synchronizer';
 import './index.scss';
 
-export default class Player extends Component {
+const intlMessages = defineMessages({
+  aria: {
+    id: 'player.wrapper.aria',
+    description: 'Aria label for the player wrapper',
+  },
+});
+
+class Player extends Component {
   constructor(props) {
     super(props);
 
@@ -94,29 +105,36 @@ export default class Player extends Component {
   }
 
   render() {
-    const { data } = this.props
+    const {
+      intl,
+      data,
+    } = this.props
+
     const { time } = this.state;
     const { video } = this.player;
     const { media } = data;
 
     return (
       <div
-        aria-label="player"
+        aria-label={intl.formatMessage(intlMessages.aria)}
         className="player-wrapper"
         id={this.id}
       >
         <Thumbnails
+          intl={intl}
           metadata={this.metadata}
           player={video}
           thumbnails={this.thumbnails}
         />
         <Chat
           chat={this.chat}
+          intl={intl}
           time={time}
         />
         <Presentation
           canvases={this.canvases}
           cursor={this.cursor}
+          intl={intl}
           metadata={this.metadata}
           panzooms={this.panzooms}
           slides={this.slides}
@@ -124,6 +142,7 @@ export default class Player extends Component {
         />
         <Video
           captions={this.captions}
+          intl={intl}
           media={media}
           metadata={this.metadata}
           onPlayerReady={this.handlePlayerReady}
@@ -132,6 +151,7 @@ export default class Player extends Component {
         { this.screenshare.length > 0 ?
           (
             <Screenshare
+              intl={intl}
               media={media}
               metadata={this.metadata}
               onPlayerReady={this.handlePlayerReady}
@@ -142,3 +162,5 @@ export default class Player extends Component {
     );
   }
 }
+
+export default injectIntl(Player);

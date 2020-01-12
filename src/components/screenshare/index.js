@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
+import { defineMessages } from 'react-intl';
 import videojs from 'video.js';
 import './index.scss';
+
+const intlMessages = defineMessages({
+  aria: {
+    id: 'player.screenshare.wrapper.aria',
+    description: 'Aria label for the screenshare wrapper',
+  },
+});
 
 export default class Screenshare extends Component {
   constructor(props) {
@@ -50,9 +58,11 @@ export default class Screenshare extends Component {
   }
 
   render() {
+    const { intl } = this.props;
+
     return (
       <div
-        aria-label="screenshare"
+        aria-label={intl.formatMessage(intlMessages.aria)}
         className="screenshare-wrapper"
         id={this.id}
       >
