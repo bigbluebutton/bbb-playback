@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Error from './error';
 import Player from './player';
-import { build } from '../utils/builder';
+import { build } from 'utils/builder';
 import {
   ERROR,
   FILES,
@@ -9,7 +9,7 @@ import {
   getFileIndex,
   getFileType,
   getRecordId,
-} from '../utils/data';
+} from 'utils/data';
 import './index.scss';
 
 export default class Loader extends Component {

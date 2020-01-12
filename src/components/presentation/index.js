@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Slide from './slide';
 import Whiteboard from './whiteboard';
-import { getCurrentDataIndex } from '../../utils/data';
+import { getCurrentDataIndex } from 'utils/data';
 import './index.scss';
 
 export default class Presentation extends Component {

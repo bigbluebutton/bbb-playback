@@ -7,7 +7,7 @@ import Video from './video';
 import {
   addAlternatesToSlides,
   addAlternatesToThumbnails,
-} from '../utils/builder';
+} from 'utils/builder';
 import {
   ALTERNATES,
   CAPTIONS,
@@ -18,8 +18,8 @@ import {
   SCREENSHARE,
   SHAPES,
   getFileIndex,
-} from '../utils/data';
-import Synchronizer from '../utils/synchronizer';
+} from 'utils/data';
+import Synchronizer from 'utils/synchronizer';
 import './index.scss';
 
 export default class Player extends Component {
