@@ -134,12 +134,19 @@ const buildCanvases = group => {
   if (group) {
     canvases = group.map(canvas => {
       // Get the number from the id name
-      const id = parseInt(canvas['$'].id.match(/\d/g).join(''), 10);
+      const canvasId = parseInt(canvas['$'].id
+        .match(/\d/g)
+        .join(''), 10);
 
       let draws = canvas.g.map(g => {
         const draw = g['$'];
         const timestamp = parseFloat(draw.timestamp);
         const style = buildStyle(draw.style);
+        const drawId = parseInt(draw.shape
+          .split('-')
+          .pop()
+          .match(/\d/g)
+          .join(''), 10);
 
         let shape = {};
         if (g.polyline) {
@@ -151,12 +158,21 @@ const buildCanvases = group => {
         } else if (g.polygon) {
           shape.type = 'polygon';
           shape.data = Object.assign({}, g.polygon.shift()['$']);
-        } else {
-          console.warn('Unhandled', g);
-          return null;
+        } else if (g.circle) {
+          shape.type = 'circle';
+          shape.data = Object.assign({}, g.circle.shift()['$']);
+        } else if (g.path) {
+          shape.type = 'path';
+          shape.data = Object.assign({}, g.path.shift()['$']);
+        } else if (g.switch) {
+          shape.type = 'switch';
+          const foreignObject = g.switch.shift()['foreignObject'].shift();
+          const p = foreignObject.p.shift()['_'];
+          shape.data = Object.assign({ p: p ? p : '' }, foreignObject['$']);
         }
 
         return {
+          id: drawId,
           shape,
           style,
           timestamp,
@@ -165,7 +181,7 @@ const buildCanvases = group => {
 
       return {
         draws,
-        id,
+        id: canvasId,
       };
     });
   }
