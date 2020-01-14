@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-import {
-  defineMessages,
-  injectIntl,
-} from 'react-intl';
+import { defineMessages } from 'react-intl';
 import Chat from './chat';
 import Presentation from './presentation';
 import Screenshare from './screenshare';
@@ -33,7 +30,7 @@ const intlMessages = defineMessages({
   },
 });
 
-class Player extends Component {
+export default class Player extends Component {
   constructor(props) {
     super(props);
 
@@ -162,5 +159,3 @@ class Player extends Component {
     );
   }
 }
-
-export default injectIntl(Player);

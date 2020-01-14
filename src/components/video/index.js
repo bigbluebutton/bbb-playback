@@ -57,6 +57,7 @@ export default class Video extends Component {
     this.options = {
       controlBar: {
         fullscreenToggle: false,
+        pictureInPictureToggle: false,
         volumePanel: {
           inline: false,
           vertical: true,

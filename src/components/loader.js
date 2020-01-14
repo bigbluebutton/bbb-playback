@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import {
+  defineMessages,
+  injectIntl,
+} from 'react-intl';
 import Error from './error';
 import Player from './player';
 import { build } from 'utils/builder';
@@ -12,7 +16,14 @@ import {
 } from 'utils/data';
 import './index.scss';
 
-export default class Loader extends Component {
+const intlMessages = defineMessages({
+  aria: {
+    id: 'loader.wrapper.aria',
+    description: 'Aria label for the loader wrapper',
+  },
+});
+
+class Loader extends Component {
   constructor(props) {
     super(props);
 
@@ -97,18 +108,34 @@ export default class Loader extends Component {
   }
 
   render() {
+    const { intl } = this.props;
+
     const {
       error,
       loaded,
     } = this.state;
 
-    if (error) return <Error code={error} />;
+    if (error) {
+      return (
+        <Error
+          code={error}
+          intl={intl}
+        />
+      );
+    }
 
-    if (loaded) return <Player data={this.data} />;
+    if (loaded) {
+      return (
+        <Player
+          data={this.data}
+          intl={intl}
+        />
+      );
+    }
 
     return (
       <div
-        aria-label="loader"
+        aria-label={intl.formatMessage(intlMessages.aria)}
         className="loader-wrapper"
         id={this.id}
       >
@@ -121,3 +148,5 @@ export default class Loader extends Component {
     );
   }
 }
+
+export default injectIntl(Loader);

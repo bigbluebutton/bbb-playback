@@ -44,7 +44,7 @@ const buildMetadata = result => {
   const { recording } = result;
 
   if (recording && recording.meeting) {
-    const meeting = recording.meeting.shift()['$']
+    const meeting = recording.meeting.shift()['$'];
 
     const {
       id,
