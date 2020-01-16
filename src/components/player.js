@@ -126,6 +126,7 @@ export default class Player extends Component {
         <Chat
           chat={this.chat}
           intl={intl}
+          player={video}
           time={time}
         />
         <Presentation

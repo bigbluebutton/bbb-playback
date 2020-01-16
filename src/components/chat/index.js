@@ -20,6 +20,14 @@ export default class Chat extends Component {
     this.id = 'chat';
   }
 
+  handleOnClick(timestamp) {
+    const { player } = this.props;
+
+    if (!player) return null;
+
+    player.currentTime(timestamp);
+  }
+
   renderChat() {
     const {
       chat,
@@ -37,12 +45,16 @@ export default class Chat extends Component {
       } = chat[i];
 
       if (clear === -1 || clear >= time) {
+        const style = {
+          'background-color': getUserColor(name),
+        };
+
         result.push(
           <div className="chat">
             <div className="avatar-wrapper">
               <div
                 className="avatar"
-                style={{ 'background-color': getUserColor(name) }}
+                style={style}
               >
                 <span className="initials">
                   {name.slice(0, 2).toLowerCase()}
@@ -54,7 +66,10 @@ export default class Chat extends Component {
                 <div className="name">
                   {name}
                 </div>
-                <div className="time">
+                <div
+                  className="time"
+                  onClick={() => this.handleOnClick(timestamp)}
+                >
                   {getTimeAsString(timestamp)}
                 </div>
               </div>

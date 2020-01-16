@@ -56,6 +56,7 @@
 
 .name {
   font-weight: $font-weight-bold;
+  max-width: 70%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -64,10 +65,10 @@
 .time {
   align-items: center;
   color: $gray-lighter;
+  cursor: pointer;
   display: flex;
   font-size: x-small;
   margin: 0 0 0 .5rem;
-  width: 100%;
 }
 
 .message {
