@@ -9,6 +9,7 @@
     "react-intl": "^3.11.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.3.0",
+    "string-hash": "^1.1.3",
     "video.js": "^7.6.6",
     "xml2js": "^0.4.22"
   },

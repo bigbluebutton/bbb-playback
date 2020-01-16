@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import { defineMessages } from 'react-intl';
+import {
+  getTimeAsString,
+  getUserColor,
+} from 'utils/data';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -29,13 +33,36 @@ export default class Chat extends Component {
         clear,
         message,
         name,
+        timestamp,
       } = chat[i];
 
       if (clear === -1 || clear >= time) {
         result.push(
-          <span className="chat">
-            {name}: {message}<br/>
-          </span>
+          <div className="chat">
+            <div className="avatar-wrapper">
+              <div
+                className="avatar"
+                style={{ 'background-color': getUserColor(name) }}
+              >
+                <span className="initials">
+                  {name.slice(0, 2).toLowerCase()}
+                </span>
+              </div>
+            </div>
+            <div className="content">
+              <div className="info">
+                <div className="name">
+                  {name}
+                </div>
+                <div className="time">
+                  {getTimeAsString(timestamp)}
+                </div>
+              </div>
+              <div className="message">
+                {message}
+              </div>
+            </div>
+          </div>
         );
       }
 

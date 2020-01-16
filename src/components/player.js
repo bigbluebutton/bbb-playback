@@ -18,7 +18,7 @@ import {
   PANZOOMS,
   SCREENSHARE,
   SHAPES,
-  getFileIndex,
+  getFileName,
 } from 'utils/data';
 import Synchronizer from 'utils/synchronizer';
 import './index.scss';
@@ -49,14 +49,14 @@ export default class Player extends Component {
 
     this.id = 'player';
 
-    this.alternates = data[getFileIndex(ALTERNATES)];
-    this.captions = data[getFileIndex(CAPTIONS)];
-    this.chat = data[getFileIndex(CHAT)];
-    this.cursor = data[getFileIndex(CURSOR)];
-    this.metadata = data[getFileIndex(METADATA)];
-    this.panzooms = data[getFileIndex(PANZOOMS)];
-    this.screenshare = data[getFileIndex(SCREENSHARE)];
-    this.shapes = data[getFileIndex(SHAPES)];
+    this.alternates = data[getFileName(ALTERNATES)];
+    this.captions = data[getFileName(CAPTIONS)];
+    this.chat = data[getFileName(CHAT)];
+    this.cursor = data[getFileName(CURSOR)];
+    this.metadata = data[getFileName(METADATA)];
+    this.panzooms = data[getFileName(PANZOOMS)];
+    this.screenshare = data[getFileName(SCREENSHARE)];
+    this.shapes = data[getFileName(SHAPES)];
 
     this.canvases = this.shapes.canvases;
     this.slides = addAlternatesToSlides(this.shapes.slides, this.alternates);

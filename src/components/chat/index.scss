@@ -1,11 +1,75 @@
+@import 'src/styles/fonts';
+@import 'src/styles/colors';
+
 .chat-wrapper {
   background-color: white;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  font-size: small;
+  padding: .75rem;
   overflow-y: auto;
   width: 100%;
 }
 
 .chat {
+  display: flex;
+  padding: 0 0 .75rem 0;
+  width: 100%;
+}
+
+.avatar-wrapper {
+  display: flex;
+  height: 100%;
+  margin: 0 .5rem 0 0;
+}
+
+.avatar {
+  border-radius: 50%;
+  height: 2.25rem;
+  text-align: center;
+  width: 2.25rem;
+
+  .initials {
+    align-items: center;
+    color: white;
+    display: flex;
+    font-weight: $font-weight-bold;
+    height: 100%;
+    justify-content: center;
+    text-transform: capitalize;
+    width: 100%;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  width:100%
+}
+
+.info {
+  display: flex;
+  width: 100%;
+  margin: 0 .15rem .15rem 0;
+}
+
+.name {
+  font-weight: $font-weight-bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.time {
+  align-items: center;
+  color: $gray-lighter;
+  display: flex;
+  font-size: x-small;
+  margin: 0 0 0 .5rem;
+  width: 100%;
+}
+
+.message {
   width: 100%;
 }

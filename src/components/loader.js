@@ -10,7 +10,7 @@ import {
   ERROR,
   FILES,
   MEDIAS,
-  getFileIndex,
+  getFileName,
   getFileType,
   getRecordId,
 } from 'utils/data';
@@ -43,15 +43,15 @@ class Loader extends Component {
   componentDidMount() {
     if (!this.recordId) return;
 
-    FILES.forEach(filename => this.fetchFile(this.recordId, filename));
+    FILES.forEach(file => this.fetchFile(this.recordId, file));
     this.fetchMedia();
   }
 
-  fetchFile(recordId, filename) {
-    const url = `/presentation/${recordId}/${filename}`;
+  fetchFile(recordId, file) {
+    const url = `/presentation/${recordId}/${file}`;
     fetch(url).then(response => {
       if (response.ok) {
-        const fileType = getFileType(filename);
+        const fileType = getFileType(file);
         switch (fileType) {
           case 'json':
             return response.json();
@@ -59,15 +59,15 @@ class Loader extends Component {
             return response.text();
           default:
             this.setState({ error: ERROR['BAD_REQUEST'] });
-            throw Error(filename);
+            throw Error(file);
         }
       } else {
         this.setState({ error: response.status });
         throw Error(response.statusText);
       }
     }).then(value => {
-      build(filename, value).then(data => {
-        this.data[getFileIndex(filename)] = data;
+      build(file, value).then(data => {
+        this.data[getFileName(file)] = data;
         this.update();
       }).catch(error => this.setState({ error: ERROR['BAD_REQUEST'] }));
     }).catch(error => this.setState({ error: ERROR['NOT_FOUND'] }));
