@@ -4,6 +4,7 @@ import { defineMessages } from 'react-intl';
 import {
   getTimeAsString,
   getUserColor,
+  isActive,
 } from 'utils/data';
 import './index.scss';
 
@@ -43,11 +44,10 @@ export default class Chat extends Component {
         timestamp,
       } = item;
 
-      const cleared = clear !== -1 && clear < time;
-      const inactive = timestamp >= time || cleared;
+      const active = isActive(time, timestamp, clear);
 
       const color = {
-        'background-color': inactive ? getUserColor() : getUserColor(name),
+        'background-color': active ? getUserColor(name) : getUserColor(),
       };
 
       return (
@@ -64,17 +64,17 @@ export default class Chat extends Component {
           </div>
           <div className="content">
             <div className="info">
-              <div className={cx('name', { inactive })}>
+              <div className={cx('name', { inactive: !active })}>
                 {name}
               </div>
               <div
-                className={cx('time', { inactive })}
+                className={cx('time', { inactive: !active })}
                 onClick={() => this.handleOnClick(timestamp)}
               >
                 {getTimeAsString(timestamp)}
               </div>
             </div>
-            <div className={cx('message', { inactive })}>
+            <div className={cx('message', { inactive: !active })}>
               {message}
             </div>
           </div>

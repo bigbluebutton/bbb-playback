@@ -65,7 +65,7 @@ const getCurrentDataIndex = (data, time) => {
   for (let index = 0; index < data.length; index++) {
     const item = data[index];
     if (item.hasOwnProperty('timestamp')) {
-      if (item.timestamp < time) {
+      if (isActive(time, item.timestamp)) {
         currentDataIndex = index;
       } else {
         // Timestamp has gone further the current time
@@ -119,7 +119,14 @@ const getTimeAsString = seconds => {
   if (sec < 10) sec = `0${sec}`;
 
   return `${hr}:${min}:${sec}`;
-}
+};
+
+const isActive = (time, timestamp, clear = -1) => {
+  const cleared = clear !== -1 && clear <= time;
+  const visible = timestamp <= time;
+
+  return visible && !cleared;
+};
 
 export {
   ALTERNATES,
@@ -139,4 +146,5 @@ export {
   getRecordId,
   getTimeAsString,
   getUserColor,
+  isActive,
 };

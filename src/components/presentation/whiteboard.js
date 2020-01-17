@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { isActive } from 'utils/data';
 import './index.scss';
 
 export default class Whiteboard extends Component {
@@ -71,17 +72,17 @@ export default class Whiteboard extends Component {
         timestamp,
       } = draws[i];
 
-      if (timestamp >= time) break;
+      const active = isActive(time, timestamp, clear);
+
+      if (!active) break;
 
       const j = i + 1;
       let intermediate = false;
-      if (j < draws.length && draws[j].timestamp < time) {
+      if (j < draws.length && isActive(time, draws[j].timestamp)) {
         intermediate = draws[j].id === id;
       }
 
-      const cleared = clear !== -1 && clear < time;
-      const visible = !cleared && !intermediate;
-      if (!visible) continue;
+      if (intermediate) continue;
 
       const {
         data,

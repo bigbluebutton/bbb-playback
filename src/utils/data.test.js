@@ -19,7 +19,7 @@ it('gets current data index', () => {
   expect(getCurrentDataIndex(data, 1.0)).toEqual(0);
 
   // Top boundary
-  expect(getCurrentDataIndex(data, 2.0)).toEqual(0);
+  expect(getCurrentDataIndex(data, 2.0)).toEqual(1);
   expect(getCurrentDataIndex(data, 2.1)).toEqual(1);
 
   // Above
