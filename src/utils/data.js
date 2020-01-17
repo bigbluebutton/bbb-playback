@@ -110,6 +110,9 @@ const getUserColor = name => {
 
 const getTimeAsString = seconds => {
   let sec = parseInt(seconds, 10);
+
+  if (sec < 0) return null;
+
   let hr = Math.floor(sec / 3600);
   let min = Math.floor((sec - (hr * 3600)) / 60);
   sec = sec - (hr * 3600) - (min * 60);

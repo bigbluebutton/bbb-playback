@@ -2,9 +2,8 @@
 @import 'src/styles/colors';
 
 $avatar: 2.25rem;
-$gap: .15rem;
 $margin: .5rem;
-$name: 70%;
+$margin-small: .15rem;
 $padding: .75rem;
 
 .chat-wrapper {
@@ -32,6 +31,7 @@ $padding: .75rem;
 
 .avatar {
   border-radius: 50%;
+  cursor: pointer;
   height: $avatar;
   text-align: center;
   width: $avatar;
@@ -57,12 +57,12 @@ $padding: .75rem;
 .info {
   display: flex;
   width: 100%;
-  margin: 0 $gap $gap 0;
+  margin: 0 $margin-small $margin-small 0;
 }
 
 .name {
   font-weight: $font-weight-bold;
-  max-width: $name;
+  max-width: 70%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -71,7 +71,6 @@ $padding: .75rem;
 .time {
   align-items: center;
   color: $gray-light;
-  cursor: pointer;
   display: flex;
   font-size: x-small;
   margin: 0 0 0 $margin;

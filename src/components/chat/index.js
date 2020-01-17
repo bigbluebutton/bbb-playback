@@ -46,7 +46,7 @@ export default class Chat extends Component {
 
       const active = isActive(time, timestamp, clear);
 
-      const color = {
+      const avatar = {
         'background-color': active ? getUserColor(name) : getUserColor(),
       };
 
@@ -55,7 +55,8 @@ export default class Chat extends Component {
           <div className="avatar-wrapper">
             <div
               className="avatar"
-              style={color}
+              onClick={() => this.handleOnClick(timestamp)}
+              style={avatar}
             >
               <span className="initials">
                 {name.slice(0, 2).toLowerCase()}
@@ -67,10 +68,7 @@ export default class Chat extends Component {
               <div className={cx('name', { inactive: !active })}>
                 {name}
               </div>
-              <div
-                className={cx('time', { inactive: !active })}
-                onClick={() => this.handleOnClick(timestamp)}
-              >
+              <div className={cx('time', { inactive: !active })}>
                 {getTimeAsString(timestamp)}
               </div>
             </div>
