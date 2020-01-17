@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import cx from 'classnames';
 import { defineMessages } from 'react-intl';
 import {
   getTimeAsString,
@@ -34,57 +35,52 @@ export default class Chat extends Component {
       time,
     } = this.props;
 
-    const result = [];
-    let i = 0;
-    while (i < chat.length && chat[i].timestamp < time) {
+    return chat.map(item => {
       const {
         clear,
         message,
         name,
         timestamp,
-      } = chat[i];
+      } = item;
 
-      if (clear === -1 || clear >= time) {
-        const style = {
-          'background-color': getUserColor(name),
-        };
+      const cleared = clear !== -1 && clear < time;
+      const inactive = timestamp >= time || cleared;
 
-        result.push(
-          <div className="chat">
-            <div className="avatar-wrapper">
-              <div
-                className="avatar"
-                style={style}
-              >
-                <span className="initials">
-                  {name.slice(0, 2).toLowerCase()}
-                </span>
-              </div>
-            </div>
-            <div className="content">
-              <div className="info">
-                <div className="name">
-                  {name}
-                </div>
-                <div
-                  className="time"
-                  onClick={() => this.handleOnClick(timestamp)}
-                >
-                  {getTimeAsString(timestamp)}
-                </div>
-              </div>
-              <div className="message">
-                {message}
-              </div>
+      const color = {
+        'background-color': inactive ? getUserColor() : getUserColor(name),
+      };
+
+      return (
+        <div className="chat">
+          <div className="avatar-wrapper">
+            <div
+              className="avatar"
+              style={color}
+            >
+              <span className="initials">
+                {name.slice(0, 2).toLowerCase()}
+              </span>
             </div>
           </div>
-        );
-      }
-
-      i++;
-    }
-
-    return result;
+          <div className="content">
+            <div className="info">
+              <div className={cx('name', { inactive })}>
+                {name}
+              </div>
+              <div
+                className={cx('time', { inactive })}
+                onClick={() => this.handleOnClick(timestamp)}
+              >
+                {getTimeAsString(timestamp)}
+              </div>
+            </div>
+            <div className={cx('message', { inactive })}>
+              {message}
+            </div>
+          </div>
+        </div>
+      );
+    });
   }
 
   render() {

@@ -16,6 +16,8 @@ const COLORS = [
   '#1565c0', '#0d47a1', '#0277bd', '#01579b',
 ];
 
+const INACTIVE = '#a7b3bd';
+
 const ERROR = {
   BAD_REQUEST: 400,
   UNAUTHORIZED: 401,
@@ -98,7 +100,13 @@ const getRecordId = match => {
   return null;
 };
 
-const getUserColor = name =>  COLORS[stringHash(name) % COLORS.length];
+const getUserColor = name => {
+  if (name) {
+    return COLORS[stringHash(name) % COLORS.length];
+  } else {
+    return INACTIVE;
+  }
+};
 
 const getTimeAsString = seconds => {
   let sec = parseInt(seconds, 10);

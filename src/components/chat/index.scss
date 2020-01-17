@@ -1,34 +1,40 @@
 @import 'src/styles/fonts';
 @import 'src/styles/colors';
 
+$avatar: 2.25rem;
+$gap: .15rem;
+$margin: .5rem;
+$name: 70%;
+$padding: .75rem;
+
 .chat-wrapper {
   background-color: white;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   font-size: small;
-  padding: .75rem;
+  padding: $padding;
   overflow-y: auto;
   width: 100%;
 }
 
 .chat {
   display: flex;
-  padding: 0 0 .75rem 0;
+  padding: 0 0 $padding 0;
   width: 100%;
 }
 
 .avatar-wrapper {
   display: flex;
   height: 100%;
-  margin: 0 .5rem 0 0;
+  margin: 0 $margin 0 0;
 }
 
 .avatar {
   border-radius: 50%;
-  height: 2.25rem;
+  height: $avatar;
   text-align: center;
-  width: 2.25rem;
+  width: $avatar;
 
   .initials {
     align-items: center;
@@ -51,12 +57,12 @@
 .info {
   display: flex;
   width: 100%;
-  margin: 0 .15rem .15rem 0;
+  margin: 0 $gap $gap 0;
 }
 
 .name {
   font-weight: $font-weight-bold;
-  max-width: 70%;
+  max-width: $name;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -64,13 +70,17 @@
 
 .time {
   align-items: center;
-  color: $gray-lighter;
+  color: $gray-light;
   cursor: pointer;
   display: flex;
   font-size: x-small;
-  margin: 0 0 0 .5rem;
+  margin: 0 0 0 $margin;
 }
 
 .message {
   width: 100%;
+}
+
+.inactive {
+  color: $gray-lighter;
 }
