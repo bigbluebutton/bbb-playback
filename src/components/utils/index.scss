@@ -1,0 +1,19 @@
+@import 'src/styles/fonts';
+@import 'src/styles/icons';
+
+$button-size: 2.25rem;
+$margin: .5rem;
+
+.button-wrapper {
+  display: flex;
+  height: 100%;
+  margin: 0 $margin 0 0
+}
+
+.button {
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: large;
+  height: $button-size;
+  width: $button-size;
+}
