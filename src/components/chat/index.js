@@ -22,6 +22,14 @@ export default class Chat extends Component {
     this.id = 'chat';
   }
 
+  getStyle(active, name) {
+    const style = {
+      'background-color': active ? getUserColor(name) : getUserColor(),
+    };
+
+    return style;
+  }
+
   handleOnClick(timestamp) {
     const { player } = this.props;
 
@@ -45,10 +53,7 @@ export default class Chat extends Component {
       } = item;
 
       const active = isActive(time, timestamp, clear);
-
-      const avatar = {
-        'background-color': active ? getUserColor(name) : getUserColor(),
-      };
+      const style = this.getStyle(active, name);
 
       return (
         <div className="chat">
@@ -56,7 +61,7 @@ export default class Chat extends Component {
             <div
               className="avatar"
               onClick={() => this.handleOnClick(timestamp)}
-              style={avatar}
+              style={style}
             >
               <span className="initials">
                 {name.slice(0, 2).toLowerCase()}
