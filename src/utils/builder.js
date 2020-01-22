@@ -81,7 +81,13 @@ const buildMetadata = result => {
       name,
     } = attr;
 
-    data = { id, name };
+    const epoch = parseInt(recording.start_time.shift(), 10);
+
+    data = {
+      id,
+      name,
+      epoch,
+    };
   }
 
   return data;
