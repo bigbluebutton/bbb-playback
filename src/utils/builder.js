@@ -12,16 +12,21 @@ import {
 } from './data';
 
 const getAttr = data => {
+  if (!data) return {};
+
   const attr = data['$'];
+  if (!attr) return {};
 
   return attr;
 };
 
 const getId = data => {
-  const digits = data.match(/\d/g);
-  const id = digits.join('');
+  if (!data) return -1;
 
-  return parseInt(id, 10);
+  const id = data.match(/\d+$/);
+  if (!id || id.length === 0) return -1;
+
+  return parseInt(id.shift(), 10);
 };
 
 const getNumbers = data => {
@@ -87,7 +92,11 @@ const buildStyle = data => {
   let style = {};
 
   items.forEach(item => {
-    const split = item.split(':').map(i => i.trim());
+    const trimmed = item.trim();
+
+    if (trimmed.length === 0) return;
+
+    const split = trimmed.split(':').map(i => i.trim());
 
     // Remove visibility
     if (split[0] === 'visibility') return;
@@ -165,7 +174,7 @@ const buildCanvases = group => {
         const timestamp = parseFloat(drawAttr.timestamp);
         const clear = parseFloat(drawAttr.undo);
         const style = buildStyle(drawAttr.style);
-        const drawId = getId(drawAttr.shape.split('-').pop());
+        const drawId = getId(drawAttr.shape);
 
         let shape = {};
         if (g.polyline) {
