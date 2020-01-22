@@ -11,6 +11,31 @@ import {
   getFileType,
 } from './data';
 
+const getAttr = data => {
+  const attr = data['$'];
+
+  return attr;
+};
+
+const getId = data => {
+  const digits = data.match(/\d/g);
+  const id = digits.join('');
+
+  return parseInt(id, 10);
+};
+
+const getNumbers = data => {
+  if (!data) return [];
+
+  const trimmed = data.trim().replace(/  +/g, ' ');
+  if (trimmed.length === 0) return [];
+
+  const split = trimmed.split(' ');
+  const numbers = split.map(v => parseFloat(v));
+
+  return numbers;
+};
+
 const buildAlternates = result => {
   let data = [];
 
@@ -44,12 +69,12 @@ const buildMetadata = result => {
   const { recording } = result;
 
   if (recording && recording.meeting) {
-    const meeting = recording.meeting.shift()['$'];
+    const attr = getAttr(recording.meeting.shift());
 
     const {
       id,
       name,
-    } = meeting;
+    } = attr;
 
     data = { id, name };
   }
@@ -78,21 +103,19 @@ const buildSlides = image => {
 
   if (image) {
     image.forEach(img => {
-      const slide = img['$'];
+      const attr = getAttr(img);
       // Get the number from the id name
-      const id = parseInt(slide['id'].match(/\d/g).join(''), 10);
-      const src = slide['xlink:href'];
+      const slideId = getId(attr.id);
+      const src = attr['xlink:href'];
 
       // Skip the logo
       if (!src) return;
 
-      const timestamps = slide['in']
-        .split(' ')
-        .map(v => parseFloat(v));
+      const timestamps = getNumbers(attr.in);
 
       timestamps.forEach(timestamp => {
         slides.push({
-          id,
+          id: slideId,
           src,
           timestamp,
         });
@@ -133,43 +156,38 @@ const buildCanvases = group => {
 
   if (group) {
     canvases = group.map(canvas => {
+      const canvasAttr = getAttr(canvas);
       // Get the number from the id name
-      const canvasId = parseInt(canvas['$'].id
-        .match(/\d/g)
-        .join(''), 10);
+      const canvasId = getId(canvasAttr.id);
 
       let draws = canvas.g.map(g => {
-        const draw = g['$'];
-        const timestamp = parseFloat(draw.timestamp);
-        const clear = parseFloat(draw.undo);
-        const style = buildStyle(draw.style);
-        const drawId = parseInt(draw.shape
-          .split('-')
-          .pop()
-          .match(/\d/g)
-          .join(''), 10);
+        const drawAttr = getAttr(g);
+        const timestamp = parseFloat(drawAttr.timestamp);
+        const clear = parseFloat(drawAttr.undo);
+        const style = buildStyle(drawAttr.style);
+        const drawId = getId(drawAttr.shape.split('-').pop());
 
         let shape = {};
         if (g.polyline) {
           shape.type = 'polyline';
-          shape.data = Object.assign({}, g.polyline.shift()['$']);
+          shape.data = Object.assign({}, getAttr(g.polyline.shift()));
         } else if (g.line) {
           shape.type = 'line';
-          shape.data = Object.assign({}, g.line.shift()['$']);
+          shape.data = Object.assign({}, getAttr(g.line.shift()));
         } else if (g.polygon) {
           shape.type = 'polygon';
-          shape.data = Object.assign({}, g.polygon.shift()['$']);
+          shape.data = Object.assign({}, getAttr(g.polygon.shift()));
         } else if (g.circle) {
           shape.type = 'circle';
-          shape.data = Object.assign({}, g.circle.shift()['$']);
+          shape.data = Object.assign({}, getAttr(g.circle.shift()));
         } else if (g.path) {
           shape.type = 'path';
-          shape.data = Object.assign({}, g.path.shift()['$']);
+          shape.data = Object.assign({}, getAttr(g.path.shift()));
         } else if (g.switch) {
           shape.type = 'switch';
           const foreignObject = g.switch.shift()['foreignObject'].shift();
           const p = foreignObject.p.shift()['_'];
-          shape.data = Object.assign({ p: p ? p : '' }, foreignObject['$']);
+          shape.data = Object.assign({ p: p ? p : '' }, getAttr(foreignObject));
         }
 
         return {
@@ -215,13 +233,11 @@ const buildPanzooms = result => {
 
   if (recording && recording.event) {
     data = recording.event.map(panzoom => {
-      const viewbox = panzoom['viewBox']
-        .shift()
-        .split(' ')
-        .map(v => parseFloat(v));
+      const attr = getAttr(panzoom);
+      const viewbox = getNumbers(panzoom.viewBox.shift());
 
       return {
-        timestamp: parseFloat(panzoom['$'].timestamp),
+        timestamp: parseFloat(attr.timestamp),
         x: viewbox.shift(),
         y: viewbox.shift(),
         width: viewbox.shift(),
@@ -239,13 +255,11 @@ const buildCursor = result => {
 
   if (recording && recording.event) {
     data = recording.event.map(cursor => {
-      const position = cursor['cursor']
-        .shift()
-        .split(' ')
-        .map(v => parseFloat(v));
+      const attr = getAttr(cursor);
+      const position = getNumbers(cursor.cursor.shift());
 
       return {
-        timestamp: parseFloat(cursor['$'].timestamp),
+        timestamp: parseFloat(attr.timestamp),
         x: position.shift(),
         y: position.shift(),
       };
@@ -262,7 +276,7 @@ const buildChat = result => {
   if (popcorn && popcorn.chattimeline) {
     const { chattimeline } = popcorn;
     data = chattimeline.map(chat => {
-      const attr = chat['$'];
+      const attr = getAttr(chat);
       const clear = attr.out ? parseFloat(attr.out) : -1;
 
       return {
@@ -283,7 +297,7 @@ const buildScreenshare = result => {
 
   if (recording && recording.event) {
     data = recording.event.map(screenshare => {
-      const attr = screenshare['$'];
+      const attr = getAttr(screenshare);
 
       return {
         timestamp: parseFloat(attr.start_timestamp),
@@ -374,4 +388,8 @@ export {
   addAlternatesToSlides,
   addAlternatesToThumbnails,
   build,
+  buildStyle,
+  getAttr,
+  getId,
+  getNumbers,
 };

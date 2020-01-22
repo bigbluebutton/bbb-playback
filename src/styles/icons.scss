@@ -12,6 +12,9 @@
   font-family: 'icons';
   height: 100%;
   justify-content: center;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .icon-logout:before {
