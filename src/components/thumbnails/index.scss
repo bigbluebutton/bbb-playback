@@ -1,6 +1,9 @@
 @import 'src/styles/colors';
 @import 'src/styles/sizes';
 
+$thumbnails-wrapper-bottom: $control-bar-height;
+$thumbnails-wrapper-height: 100px;
+
 .thumbnails-wrapper {
   bottom: $thumbnails-wrapper-bottom;
   box-sizing: border-box;

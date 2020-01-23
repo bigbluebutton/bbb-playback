@@ -117,36 +117,48 @@ export default class Player extends Component {
         className="player-wrapper"
         id={this.id}
       >
-        <Thumbnails
+        <header />
+        <section>
+          <div className="top">
+            <Video
+              captions={this.captions}
+              intl={intl}
+              media={media}
+              metadata={this.metadata}
+              onPlayerReady={this.handlePlayerReady}
+              onTimeUpdate={this.handleTimeUpdate}
+            />
+          </div>
+          <div className="bottom">
+            <Chat
+              chat={this.chat}
+              intl={intl}
+              player={video}
+              time={time}
+            />
+          </div>
+        </section>
+        <main>
+          <div className="content">
+            {/*<Presentation
+              canvases={this.canvases}
+              cursor={this.cursor}
+              intl={intl}
+              metadata={this.metadata}
+              panzooms={this.panzooms}
+              slides={this.slides}
+              time={time}
+            />*/}
+          </div>
+        </main>
+        <footer />
+        {/*<Thumbnails
           intl={intl}
           metadata={this.metadata}
           player={video}
           thumbnails={this.thumbnails}
         />
-        <Chat
-          chat={this.chat}
-          intl={intl}
-          player={video}
-          time={time}
-        />
-        <Presentation
-          canvases={this.canvases}
-          cursor={this.cursor}
-          intl={intl}
-          metadata={this.metadata}
-          panzooms={this.panzooms}
-          slides={this.slides}
-          time={time}
-        />
-        <Video
-          captions={this.captions}
-          intl={intl}
-          media={media}
-          metadata={this.metadata}
-          onPlayerReady={this.handlePlayerReady}
-          onTimeUpdate={this.handleTimeUpdate}
-        />
-        { this.screenshare.length > 0 ?
+      { this.screenshare.length > 0 ?
           (
             <Screenshare
               intl={intl}
@@ -155,7 +167,7 @@ export default class Player extends Component {
               onPlayerReady={this.handlePlayerReady}
             />
           ) : null
-        }
+        }*/}
       </div>
     );
   }
