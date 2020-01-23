@@ -72,6 +72,15 @@ $player-wrapper-padding: $control-bar-height;
   }
 }
 
+header {
+  .date,
+  .name {
+    color: white;
+    font-weight: $font-weight-regular;
+    padding: $padding-small;
+  }
+}
+
 @media (min-width: $media-min-width) {
   .player-wrapper {
     grid-template-areas:

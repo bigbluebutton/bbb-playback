@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { defineMessages } from 'react-intl';
+import cx from 'classnames';
 import videojs from 'video.js';
 import './index.scss';
 
@@ -60,6 +61,8 @@ export default class Screenshare extends Component {
   render() {
     const { intl } = this.props;
 
+    const styles = { 'in-main': true };
+
     return (
       <div
         aria-label={intl.formatMessage(intlMessages.aria)}
@@ -68,7 +71,7 @@ export default class Screenshare extends Component {
       >
         <div data-vjs-player>
           <video
-            className="video-js"
+            className={cx('video-js', styles)}
             crossOrigin="anonymous"
             playsInline
             preload="auto"

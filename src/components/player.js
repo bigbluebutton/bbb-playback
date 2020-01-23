@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
-import { defineMessages } from 'react-intl';
+import {
+  FormattedDate,
+  defineMessages,
+} from 'react-intl';
 import Chat from './chat';
 import Presentation from './presentation';
 import Screenshare from './screenshare';
 import Thumbnails from './thumbnails';
 import Video from './video';
+import Button from 'components/utils/button';
 import {
   addAlternatesToSlides,
   addAlternatesToThumbnails,
@@ -101,15 +105,131 @@ export default class Player extends Component {
     }
   }
 
-  render() {
+  renderHeader() {
     const {
-      intl,
+      epoch,
+      name,
+    } = this.metadata;
+
+    return (
+      <header>
+        <div className="left" />
+        <div className="center">
+          <div className="name">
+            {name}
+          </div>
+          <div className="date">
+            <FormattedDate value={new Date(epoch)} />
+          </div>
+        </div>
+        <div className="right" />
+      </header>
+    );
+  }
+
+  renderSection() {
+    const {
       data,
-    } = this.props
+      intl,
+    } = this.props;
 
     const { time } = this.state;
     const { video } = this.player;
     const { media } = data;
+
+    return (
+      <section>
+        <div className="top">
+          <Video
+            captions={this.captions}
+            intl={intl}
+            media={media}
+            metadata={this.metadata}
+            onPlayerReady={this.handlePlayerReady}
+            onTimeUpdate={this.handleTimeUpdate}
+          />
+        </div>
+        <div className="bottom">
+          <Chat
+            chat={this.chat}
+            intl={intl}
+            player={video}
+            time={time}
+          />
+        </div>
+      </section>
+    );
+  }
+
+  renderPresentation() {
+    const { intl } = this.props;
+    const { time } = this.state;
+
+    return (
+      <Presentation
+        canvases={this.canvases}
+        cursor={this.cursor}
+        intl={intl}
+        metadata={this.metadata}
+        panzooms={this.panzooms}
+        slides={this.slides}
+        time={time}
+      />
+    )
+  }
+
+
+  renderScreenshare() {
+    // When there is no screenshare
+    if (this.screenshare.length === 0) return null;
+
+    const {
+      intl,
+      data,
+    } = this.props;
+
+    const { time } = this.state;
+    const { media } = data;
+
+    return (
+      <Screenshare
+        intl={intl}
+        media={media}
+        metadata={this.metadata}
+        onPlayerReady={this.handlePlayerReady}
+      />
+    );
+  }
+
+  renderMain() {
+    return (
+      <main>
+        <div className="content">
+          {this.renderPresentation()}
+          {this.renderScreenshare()}
+       </div>
+      </main>
+    );
+  }
+
+  renderFooter() {
+    return (
+      <footer>
+        <div className="left" />
+        <div className="center" />
+        <div className="right">
+          <Button
+            handleOnClick={() => console.log('click')}
+            ghost
+            type="presentation"
+          />
+        </div>
+      </footer>
+    );
+  }
+
+  render() {
+    const { intl } = this.props
 
     return (
       <div
@@ -117,57 +237,16 @@ export default class Player extends Component {
         className="player-wrapper"
         id={this.id}
       >
-        <header />
-        <section>
-          <div className="top">
-            <Video
-              captions={this.captions}
-              intl={intl}
-              media={media}
-              metadata={this.metadata}
-              onPlayerReady={this.handlePlayerReady}
-              onTimeUpdate={this.handleTimeUpdate}
-            />
-          </div>
-          <div className="bottom">
-            <Chat
-              chat={this.chat}
-              intl={intl}
-              player={video}
-              time={time}
-            />
-          </div>
-        </section>
-        <main>
-          <div className="content">
-            {/*<Presentation
-              canvases={this.canvases}
-              cursor={this.cursor}
-              intl={intl}
-              metadata={this.metadata}
-              panzooms={this.panzooms}
-              slides={this.slides}
-              time={time}
-            />*/}
-          </div>
-        </main>
-        <footer />
-        {/*<Thumbnails
+        {this.renderHeader()}
+        {this.renderSection()}
+        {this.renderMain()}
+        {this.renderFooter()}
+      {/*<Thumbnails
           intl={intl}
           metadata={this.metadata}
           player={video}
           thumbnails={this.thumbnails}
-        />
-      { this.screenshare.length > 0 ?
-          (
-            <Screenshare
-              intl={intl}
-              media={media}
-              metadata={this.metadata}
-              onPlayerReady={this.handlePlayerReady}
-            />
-          ) : null
-        }*/}
+        />*/}
       </div>
     );
   }
