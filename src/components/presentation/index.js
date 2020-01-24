@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { defineMessages } from 'react-intl';
+import cx from 'classnames';
 import Slide from './slide';
 import Whiteboard from './whiteboard';
 import { getCurrentDataIndex } from 'utils/data';
@@ -52,6 +53,7 @@ export default class Presentation extends Component {
 
   render() {
     const {
+      active,
       canvases,
       intl,
       metadata,
@@ -64,7 +66,7 @@ export default class Presentation extends Component {
     return (
       <div
         aria-label={intl.formatMessage(intlMessages.aria)}
-        className="presentation-wrapper"
+        className={cx('presentation-wrapper', { inactive: !active })}
         id={this.id}
       >
         <div className="presentation">

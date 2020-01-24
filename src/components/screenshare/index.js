@@ -59,19 +59,20 @@ export default class Screenshare extends Component {
   }
 
   render() {
-    const { intl } = this.props;
-
-    const styles = { 'in-main': true };
+    const {
+      active,
+      intl,
+    } = this.props;
 
     return (
       <div
         aria-label={intl.formatMessage(intlMessages.aria)}
-        className="screenshare-wrapper"
+        className={cx('screenshare-wrapper', { inactive: !active })}
         id={this.id}
       >
         <div data-vjs-player>
           <video
-            className={cx('video-js', styles)}
+            className={cx('video-js', { 'in-main': true })}
             crossOrigin="anonymous"
             playsInline
             preload="auto"

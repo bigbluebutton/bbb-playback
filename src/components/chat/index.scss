@@ -49,38 +49,40 @@ $avatar-size: 2.25rem;
   }
 }
 
-.content {
-  display: flex;
-  flex-direction: column;
-  width:100%
-}
+.chat {
+  .content {
+    display: flex;
+    flex-direction: column;
+    width:100%
+  }
 
-.info {
-  display: flex;
-  width: 100%;
-  margin: 0 $margin-small $margin-small 0;
-}
+  .info {
+    display: flex;
+    width: 100%;
+    margin: 0 $margin-small $margin-small 0;
+  }
 
-.name {
-  font-weight: $font-weight-bold;
-  max-width: 70%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+  .name {
+    font-weight: $font-weight-bold;
+    max-width: 70%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
-.time {
-  align-items: center;
-  color: $gray-light;
-  display: flex;
-  font-size: x-small;
-  margin: 0 0 0 $margin;
-}
+  .time {
+    align-items: center;
+    color: $gray-light;
+    display: flex;
+    font-size: x-small;
+    margin: 0 0 0 $margin;
+  }
 
-.message {
-  width: 100%;
-}
+  .message {
+    width: 100%;
+  }
 
-.inactive {
-  color: $gray-lighter;
+  .inactive {
+    color: $gray-lighter;
+  }
 }

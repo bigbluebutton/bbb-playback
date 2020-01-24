@@ -22,6 +22,7 @@ import {
   PANZOOMS,
   SCREENSHARE,
   SHAPES,
+  getCurrentDataIndex,
   getFileName,
 } from 'utils/data';
 import Synchronizer from 'utils/synchronizer';
@@ -40,6 +41,7 @@ export default class Player extends Component {
 
     this.state = {
       time: 0,
+      thumbnails: false,
     }
 
     const {
@@ -105,6 +107,42 @@ export default class Player extends Component {
     }
   }
 
+  getActiveMain() {
+    const { time } = this.props;
+
+    const currentDataIndex = getCurrentDataIndex(this.screenshare, time);
+    const screenshare = currentDataIndex ? true : false;
+
+    return {
+      presentation: !screenshare,
+      screenshare,
+    };
+  }
+
+  toggleThumbnails() {
+    const { thumbnails } = this.state;
+
+    this.setState({ thumbnails: !thumbnails });
+  }
+
+  renderThumbnails() {
+    const { thumbnails } = this.state;
+
+    if (!thumbnails) return null;
+
+    const { intl } = this.props;
+    const { video } = this.player;
+
+    return (
+      <Thumbnails
+        intl={intl}
+        metadata={this.metadata}
+        player={video}
+        thumbnails={this.thumbnails}
+      />
+    );
+  }
+
   renderHeader() {
     const {
       epoch,
@@ -117,6 +155,9 @@ export default class Player extends Component {
         <div className="center">
           <div className="name">
             {name}
+          </div>
+          <div className="divider">
+            -
           </div>
           <div className="date">
             <FormattedDate value={new Date(epoch)} />
@@ -161,12 +202,13 @@ export default class Player extends Component {
     );
   }
 
-  renderPresentation() {
+  renderPresentation(active) {
     const { intl } = this.props;
     const { time } = this.state;
 
     return (
       <Presentation
+        active={active}
         canvases={this.canvases}
         cursor={this.cursor}
         intl={intl}
@@ -179,7 +221,7 @@ export default class Player extends Component {
   }
 
 
-  renderScreenshare() {
+  renderScreenshare(active) {
     // When there is no screenshare
     if (this.screenshare.length === 0) return null;
 
@@ -188,11 +230,11 @@ export default class Player extends Component {
       data,
     } = this.props;
 
-    const { time } = this.state;
     const { media } = data;
 
     return (
       <Screenshare
+        active={active}
         intl={intl}
         media={media}
         metadata={this.metadata}
@@ -202,24 +244,32 @@ export default class Player extends Component {
   }
 
   renderMain() {
+    const {
+      presentation,
+      screenshare,
+    } = this.getActiveMain();
+
     return (
       <main>
         <div className="content">
-          {this.renderPresentation()}
-          {this.renderScreenshare()}
+          {this.renderPresentation(presentation)}
+          {this.renderScreenshare(screenshare)}
        </div>
       </main>
     );
   }
 
   renderFooter() {
+    const { thumbnails } = this.state;
+
     return (
       <footer>
         <div className="left" />
         <div className="center" />
         <div className="right">
           <Button
-            handleOnClick={() => console.log('click')}
+            active={thumbnails}
+            handleOnClick={() => this.toggleThumbnails()}
             ghost
             type="presentation"
           />
@@ -241,12 +291,7 @@ export default class Player extends Component {
         {this.renderSection()}
         {this.renderMain()}
         {this.renderFooter()}
-      {/*<Thumbnails
-          intl={intl}
-          metadata={this.metadata}
-          player={video}
-          thumbnails={this.thumbnails}
-        />*/}
+        {this.renderThumbnails()}
       </div>
     );
   }

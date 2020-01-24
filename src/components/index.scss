@@ -74,9 +74,17 @@ $player-wrapper-padding: $control-bar-height;
 
 header {
   .date,
+  .divider,
   .name {
     color: white;
-    font-weight: $font-weight-regular;
+    font-weight: $font-weight-extra-light;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .date,
+  .name {
     padding: $padding-small;
   }
 }
