@@ -27,6 +27,15 @@ footer {
 header {
   background-color: $header-background-color;
   grid-area: header;
+
+  .title {
+    color: white;
+    font-weight: $font-weight-extra-light;
+    overflow: hidden;
+    padding: $padding-small;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
 footer {

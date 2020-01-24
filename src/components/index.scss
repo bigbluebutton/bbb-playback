@@ -3,6 +3,9 @@
 
 $player-wrapper-padding: $control-bar-height;
 
+$loading-dots-height: 20px;
+$loading-dots-width: 20px;
+
 .error-wrapper,
 .loader-wrapper {
   display: flex;
@@ -42,9 +45,9 @@ $player-wrapper-padding: $control-bar-height;
     background-color: white;
     border-radius: 100%;
     display: inline-block;
-    height: 20px;
-    margin: 2px;
-    width: 20px;
+    height: $loading-dots-height;
+    margin: $margin-small;
+    width: $loading-dots-width;
   }
 
   .first {
@@ -69,23 +72,6 @@ $player-wrapper-padding: $control-bar-height;
     40% {
       transform: scale(1);
     }
-  }
-}
-
-header {
-  .date,
-  .divider,
-  .name {
-    color: white;
-    font-weight: $font-weight-extra-light;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .date,
-  .name {
-    padding: $padding-small;
   }
 }
 

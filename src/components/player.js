@@ -136,25 +136,27 @@ export default class Player extends Component {
     );
   }
 
-  renderHeader() {
+  renderTitle() {
     const {
       epoch,
       name,
     } = this.metadata;
 
+    const date = <FormattedDate value={new Date(epoch)} />;
+
+    return (
+      <span className="title">
+        {name} - {date}
+      </span>
+    );
+  }
+
+  renderHeader() {
     return (
       <header>
         <div className="left" />
         <div className="center">
-          <div className="name">
-            {name}
-          </div>
-          <div className="divider">
-            -
-          </div>
-          <div className="date">
-            <FormattedDate value={new Date(epoch)} />
-          </div>
+          {this.renderTitle()}
         </div>
         <div className="right" />
       </header>
