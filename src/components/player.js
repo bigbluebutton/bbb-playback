@@ -75,13 +75,6 @@ export default class Player extends Component {
     // console.log(data);
   }
 
-  shouldComponentUpdate(prevProps, prevState) {
-    const { time } = this.state;
-    if (time !== prevState.time) return true;
-
-    return false;
-  }
-
   handlePlayerReady(media, player) {
     switch (media) {
       case 'video':
