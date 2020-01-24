@@ -22,8 +22,8 @@ import {
   PANZOOMS,
   SCREENSHARE,
   SHAPES,
-  getCurrentDataIndex,
   getFileName,
+  isEnabled,
 } from 'utils/data';
 import Synchronizer from 'utils/synchronizer';
 import './index.scss';
@@ -101,10 +101,9 @@ export default class Player extends Component {
   }
 
   getActiveMain() {
-    const { time } = this.props;
+    const { time } = this.state;
 
-    const currentDataIndex = getCurrentDataIndex(this.screenshare, time);
-    const screenshare = currentDataIndex ? true : false;
+    const screenshare = isEnabled(this.screenshare, time);
 
     return {
       presentation: !screenshare,

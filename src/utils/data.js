@@ -54,6 +54,34 @@ const TYPE = {
   xml: 'text',
 };
 
+const isEnabled = (data, time) => {
+  const array = Array.isArray(data);
+  if (!array) return false;
+
+  const empty = data.length === 0;
+  if (empty) return false;
+
+  for (let index = 0; index < data.length; index++) {
+    const item = data[index];
+    if (item.hasOwnProperty('timestamp') && item.hasOwnProperty('clear')) {
+      // Check if it was activated and did not ended
+      if (isActive(time, item.timestamp, item.clear)) {
+        return true;
+      }
+
+      // Check if we are searching over the present time value
+      if (!isActive(time, item.timestamp)) {
+        return false;
+      }
+    } else {
+      // Invalid item
+      return false;
+    }
+  }
+
+  return false;
+};
+
 const getCurrentDataIndex = (data, time) => {
   const array = Array.isArray(data);
   if (!array) return null;
@@ -150,4 +178,5 @@ export {
   getTimeAsString,
   getUserColor,
   isActive,
+  isEnabled,
 };
