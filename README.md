@@ -1,8 +1,8 @@
 # bbb-playback
 
 ```
-location /playback/presentation/3.0 {
+location /playback/presentation/2.3 {
   root /var/bigbluebutton;
-  try_files $uri /playback/presentation/3.0/index.html;
+  try_files $uri /playback/presentation/2.3/index.html;
 }
 ```

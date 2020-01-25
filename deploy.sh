@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BBB_PLAYBACK_HOMEPAGE=playback/presentation/3.0
+BBB_PLAYBACK_HOMEPAGE=playback/presentation/2.3
 BBB_PLAYBACK=/var/bigbluebutton/$BBB_PLAYBACK_HOMEPAGE
 
 npm run-script build
