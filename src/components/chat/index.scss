@@ -14,6 +14,7 @@ $avatar-size: 2.25rem;
   position: absolute;
   overflow-x: hidden;
   overflow-y: auto;
+  scroll-behavior: smooth;
   top: 0;
   width: 100%;
 }

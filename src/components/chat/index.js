@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import cx from 'classnames';
 import { defineMessages } from 'react-intl';
 import {
+  AUTO_SCROLL,
+  getCurrentDataIndex,
+  getScrollTop,
   getTimeAsString,
   getUserColor,
   isActive,
@@ -22,6 +25,17 @@ export default class Chat extends Component {
     this.id = 'chat';
   }
 
+  componentDidUpdate() {
+    if (!AUTO_SCROLL) return;
+
+    // Auto-scroll can start after getting the first and current nodes
+    if (this.firstNode && this.currentNode) {
+      const { parentNode } = this.currentNode;
+
+      parentNode.scrollTop = getScrollTop(this.firstNode, this.currentNode, 'center');
+    }
+  }
+
   getStyle(active, name) {
     const style = {
       'background-color': active ? getUserColor(name) : getUserColor(),
@@ -38,13 +52,27 @@ export default class Chat extends Component {
     player.currentTime(timestamp);
   }
 
+  // Set node as ref so we can manage auto-scroll
+  setRef(node, index, currentDataIndex) {
+    // Set first node only once
+    if (!this.firstNode && index === 0) {
+      this.firstNode = node;
+    }
+
+    if (index === currentDataIndex) {
+      this.currentNode = node;
+    }
+  }
+
   renderChat() {
     const {
       chat,
       time,
     } = this.props;
 
-    return chat.map(item => {
+    const currentDataIndex = getCurrentDataIndex(chat, time);
+
+    return chat.map((item, index) => {
       const {
         clear,
         message,
@@ -52,11 +80,15 @@ export default class Chat extends Component {
         timestamp,
       } = item;
 
-      const active = isActive(time, timestamp, clear);
+      // Taking advantage of short-circuit
+      const active = index <= currentDataIndex && isActive(time, timestamp, clear);
       const style = this.getStyle(active, name);
 
       return (
-        <div className="chat">
+        <div
+          className="chat"
+          ref={ node => this.setRef(node, index, currentDataIndex)}
+        >
           <div className="avatar-wrapper">
             <div
               className="avatar"

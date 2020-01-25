@@ -1,5 +1,7 @@
 import stringHash from 'string-hash';
 
+const AUTO_SCROLL = true;
+
 const ALTERNATES = 'presentation_text.json';
 const CAPTIONS = 'captions.json';
 const CHAT = 'slides_new.xml';
@@ -152,6 +154,37 @@ const getTimeAsString = seconds => {
   return `${hr}:${min}:${sec}`;
 };
 
+const getScrollTop = (firstNode, currentNode, align) => {
+  if (!currentNode) return 0;
+
+  const {
+    clientHeight,
+    offsetTop,
+    parentNode,
+  } = currentNode;
+
+  if (!firstNode || !parentNode) return 0;
+
+  const spacing = firstNode.offsetTop;
+  const parentHeight = parentNode.clientHeight;
+
+  let verticalOffset = 0;
+  switch (align) {
+    case 'top':
+      verticalOffset = offsetTop - spacing;
+      break;
+    case 'center':
+      verticalOffset = parseInt(offsetTop + (clientHeight - spacing - parentHeight) / 2, 10);
+      break;
+    case 'bottom':
+      verticalOffset = offsetTop + clientHeight - parentHeight;
+      break;
+    default:
+  }
+
+  return verticalOffset;
+};
+
 const isActive = (time, timestamp, clear = -1) => {
   const cleared = clear !== -1 && clear <= time;
   const visible = timestamp <= time;
@@ -160,6 +193,7 @@ const isActive = (time, timestamp, clear = -1) => {
 };
 
 export {
+  AUTO_SCROLL,
   ALTERNATES,
   CAPTIONS,
   CHAT,
@@ -175,6 +209,7 @@ export {
   getFileName,
   getFileType,
   getRecordId,
+  getScrollTop,
   getTimeAsString,
   getUserColor,
   isActive,
