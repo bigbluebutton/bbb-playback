@@ -84,6 +84,7 @@ export default class Presentation extends Component {
             <Whiteboard
               canvases={canvases}
               id={id}
+              metadata={metadata}
               time={time}
             />
           </svg>

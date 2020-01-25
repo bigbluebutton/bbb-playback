@@ -3,6 +3,14 @@ import { isActive } from 'utils/data';
 import './index.scss';
 
 export default class Whiteboard extends Component {
+  constructor(props) {
+    super(props);
+
+    const { metadata } = props;
+
+    this.url = `/presentation/${metadata.id}`;
+  }
+
   renderPolyline(style, data) {
     return <polyline
       style={style}
@@ -60,6 +68,35 @@ export default class Whiteboard extends Component {
     );
   }
 
+  renderPoll(style, data) {
+    const {
+      image,
+      rect,
+    } = data;
+
+    return (
+      <g style={style}>
+        <rect
+          fill={rect.fill}
+          height={rect.height}
+          stroke={rect.stroke}
+          strokeWidth={rect['stroke-width']}
+          width={rect.width}
+          x={rect.x}
+          y={rect.y}
+        />
+        <image
+          height={image.height}
+          transform={image.transform}
+          width={image.width}
+          x={image.x}
+          xlinkHref={`${this.url}/${image['xlink:href']}`}
+          y={image.y}
+        />
+      </g>
+    );
+  }
+
   renderWhiteboard(draws, time) {
     const whiteboard = [];
 
@@ -107,6 +144,9 @@ export default class Whiteboard extends Component {
           break;
         case 'switch':
           whiteboard.push(this.renderSwitch(style, data));
+          break;
+        case 'poll':
+          whiteboard.push(this.renderPoll(style, data));
           break;
         default:
       }

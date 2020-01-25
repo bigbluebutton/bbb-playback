@@ -203,6 +203,11 @@ const buildCanvases = group => {
           const foreignObject = g.switch.shift()['foreignObject'].shift();
           const p = foreignObject.p.shift()['_'];
           shape.data = Object.assign({ p: p ? p : '' }, getAttr(foreignObject));
+        } else if (g.rect && g.image) {
+          shape.type = 'poll';
+          const rect = getAttr(g.rect.shift());
+          const image = getAttr(g.image.shift());
+          shape.data = Object.assign({ rect }, { image });
         }
 
         return {
