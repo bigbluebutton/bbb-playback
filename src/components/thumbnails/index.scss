@@ -1,31 +1,25 @@
 @import 'src/styles/colors';
 @import 'src/styles/sizes';
 
-$thumbnails-wrapper-bottom: 150px;
-$thumbnails-wrapper-height: 100px;
+$thumbnails-wrapper-top: $header-height;
+$thumbnails-wrapper-bottom: calc(#{$control-bar-height} + #{$footer-height});
 
 .thumbnails-wrapper {
   bottom: $thumbnails-wrapper-bottom;
-  box-sizing: border-box;
   display: flex;
-  height: $thumbnails-wrapper-height;
-  padding: calc(#{$thumbnails-wrapper-height} * 0.05);
+  flex-flow: column;
+  overflow-x: hidden;
+  overflow-y: auto;
   position: fixed;
-  overflow-x: auto;
-  overflow-y: hidden;
-  width: 100%;
+  right: 0;
+  top: $thumbnails-wrapper-top;
+  width: auto;
   z-index: 1;
 }
 
 .thumbnail {
+  border: $border-width solid $border-color;
   border-radius: $border-radius;
-  box-sizing: border-box;
   cursor: pointer;
-  height: calc(#{$thumbnails-wrapper-height} * 0.8);
-  margin: calc(#{$thumbnails-wrapper-height} * 0.05);
-  width: auto;
-
-  &:hover {
-    box-shadow: 0 0 $box-shadow-blur-radius 0 $box-shadow-color;
-  }
+  margin: 0 $margin-small $margin-small 0;
 }
