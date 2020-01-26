@@ -60,6 +60,10 @@ section {
     position: relative;
     width: 100%;
   }
+
+  .video-js {
+    background-color: $section-background-color;
+  }
 }
 
 main {
@@ -76,6 +80,10 @@ main {
     .inactive {
       display: none;
     }
+  }
+
+  .video-js {
+    background-color: $main-background-color;
   }
 }
 

@@ -72,7 +72,7 @@ export default class Screenshare extends Component {
       >
         <div data-vjs-player>
           <video
-            className={cx('video-js', { 'in-main': true })}
+            className="video-js"
             crossOrigin="anonymous"
             playsInline
             preload="auto"

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { defineMessages } from 'react-intl';
-import cx from 'classnames';
 import videojs from 'video.js';
 import { video as config } from 'config';
 import './index.scss';
@@ -100,8 +99,6 @@ export default class Video extends Component {
   render() {
     const { intl } = this.props;
 
-    const styles = { 'in-section': true };
-
     return (
       <div
         aria-label={intl.formatMessage(intlMessages.aria)}
@@ -110,7 +107,7 @@ export default class Video extends Component {
       >
         <div data-vjs-player>
           <video
-            className={cx('video-js', styles)}
+            className="video-js"
             crossOrigin="anonymous"
             playsInline
             preload="auto"
