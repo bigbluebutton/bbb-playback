@@ -3,7 +3,6 @@ import cx from 'classnames';
 import { defineMessages } from 'react-intl';
 import {
   AUTO_SCROLL,
-  getCurrentDataIndex,
   getScrollTop,
   getTimeAsString,
   getUserColor,
@@ -25,6 +24,25 @@ export default class Chat extends Component {
     this.id = 'chat';
   }
 
+  shouldComponentUpdate(nextProps) {
+    const {
+      currentDataIndex,
+      clear,
+    } = this.props;
+
+    // New message
+    if (currentDataIndex !== nextProps.currentDataIndex) {
+      return true;
+    }
+
+    // Cleared messages
+    if (!clear && nextProps.clear) {
+      return true;
+    }
+
+    return false;
+  }
+
   componentDidUpdate() {
     if (!AUTO_SCROLL) return;
 
@@ -32,7 +50,7 @@ export default class Chat extends Component {
     if (this.firstNode && this.currentNode) {
       const { parentNode } = this.currentNode;
 
-      parentNode.scrollTop = getScrollTop(this.firstNode, this.currentNode, 'center');
+      parentNode.scrollTop = getScrollTop(this.firstNode, this.currentNode, 'bottom');
     }
   }
 
@@ -53,7 +71,9 @@ export default class Chat extends Component {
   }
 
   // Set node as ref so we can manage auto-scroll
-  setRef(node, index, currentDataIndex) {
+  setRef(node, index) {
+    const { currentDataIndex } = this.props;
+
     // Set first node only once
     if (!this.firstNode && index === 0) {
       this.firstNode = node;
@@ -67,10 +87,9 @@ export default class Chat extends Component {
   renderChat() {
     const {
       chat,
+      currentDataIndex,
       time,
     } = this.props;
-
-    const currentDataIndex = getCurrentDataIndex(chat, time);
 
     return chat.map((item, index) => {
       const {
@@ -87,7 +106,7 @@ export default class Chat extends Component {
       return (
         <div
           className="chat"
-          ref={ node => this.setRef(node, index, currentDataIndex)}
+          ref={ node => this.setRef(node, index)}
         >
           <div className="avatar-wrapper">
             <div

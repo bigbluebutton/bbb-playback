@@ -86,12 +86,12 @@ const isEnabled = (data, time) => {
 
 const getCurrentDataIndex = (data, time) => {
   const array = Array.isArray(data);
-  if (!array) return null;
+  if (!array) return -1;
 
   const empty = data.length === 0;
-  if (empty) return null;
+  if (empty) return -1;
 
-  let currentDataIndex = 0;
+  let currentDataIndex = -1;
   for (let index = 0; index < data.length; index++) {
     const item = data[index];
     if (item.hasOwnProperty('timestamp')) {
@@ -103,7 +103,7 @@ const getCurrentDataIndex = (data, time) => {
       }
     } else {
       // Invalid item
-      return null;
+      return -1;
     }
   }
 

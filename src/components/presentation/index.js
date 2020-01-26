@@ -27,6 +27,8 @@ export default class Presentation extends Component {
     } = this.props;
 
     const currentDataIndex = getCurrentDataIndex(slides, time);
+    if (currentDataIndex === -1) return -1;
+
     const { id } = slides[currentDataIndex];
 
     return id;
@@ -40,6 +42,7 @@ export default class Presentation extends Component {
     } = this.props;
 
     const currentDataIndex = getCurrentDataIndex(panzooms, time);
+    if (currentDataIndex === -1) return '';
 
     const {
       height,

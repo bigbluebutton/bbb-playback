@@ -22,7 +22,9 @@ import {
   PANZOOMS,
   SCREENSHARE,
   SHAPES,
+  getCurrentDataIndex,
   getFileName,
+  isActive,
   isEnabled,
 } from 'utils/data';
 import Synchronizer from 'utils/synchronizer';
@@ -162,36 +164,61 @@ export default class Player extends Component {
     );
   }
 
-  renderSection() {
+  renderVideo() {
     const {
       data,
       intl,
     } = this.props;
 
-    const { time } = this.state;
-    const { video } = this.player;
     const { media } = data;
 
     return (
+      <Video
+        captions={this.captions}
+        intl={intl}
+        media={media}
+        metadata={this.metadata}
+        onPlayerReady={this.handlePlayerReady}
+        onTimeUpdate={this.handleTimeUpdate}
+      />
+    );
+  }
+
+  renderChat() {
+    const { intl } = this.props;
+    const { time } = this.state;
+    const { video } = this.player;
+
+    const currentDataIndex = getCurrentDataIndex(this.chat, time);
+
+    // TODO: Check if we really need to clear the chat
+    let clear = false;
+    if (currentDataIndex !== -1) {
+      const currentChat = this.chat[currentDataIndex];
+      clear = !isActive(time, currentChat.timestamp, currentChat.clear);
+    }
+
+    return (
+      <Chat
+        chat={this.chat}
+        currentDataIndex={currentDataIndex}
+        clear={clear}
+        intl={intl}
+        player={video}
+        time={time}
+      />
+    );
+  }
+
+  renderSection() {
+    return (
       <section>
         <div className="top">
-          <Video
-            captions={this.captions}
-            intl={intl}
-            media={media}
-            metadata={this.metadata}
-            onPlayerReady={this.handlePlayerReady}
-            onTimeUpdate={this.handleTimeUpdate}
-          />
+          {this.renderVideo()}
         </div>
         <div className="bottom">
-          <Chat
-            chat={this.chat}
-            intl={intl}
-            player={video}
-            time={time}
-          />
-        </div>
+          {this.renderChat()}
+       </div>
       </section>
     );
   }

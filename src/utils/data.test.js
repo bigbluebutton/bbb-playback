@@ -16,10 +16,10 @@ it('gets current data index', () => {
   ];
 
   // Under
-  expect(getCurrentDataIndex(data, 0.0)).toEqual(0);
+  expect(getCurrentDataIndex(data, 0.0)).toEqual(-1);
 
   // Bottom boundary
-  expect(getCurrentDataIndex(data, 0.9)).toEqual(0);
+  expect(getCurrentDataIndex(data, 0.9)).toEqual(-1);
   expect(getCurrentDataIndex(data, 1.0)).toEqual(0);
 
   // Top boundary
@@ -30,13 +30,13 @@ it('gets current data index', () => {
   expect(getCurrentDataIndex(data, 3.0)).toEqual(1);
 
   const empty = [];
-  expect(getCurrentDataIndex(empty, 0.0)).toEqual(null);
+  expect(getCurrentDataIndex(empty, 0.0)).toEqual(-1);
 
   const object = { timestamp: 1.2 };
-  expect(getCurrentDataIndex(object, 0.0)).toEqual(null);
+  expect(getCurrentDataIndex(object, 0.0)).toEqual(-1);
 
   const invalid = [{}];
-  expect(getCurrentDataIndex(invalid, 0.0)).toEqual(null);
+  expect(getCurrentDataIndex(invalid, 0.0)).toEqual(-1);
 });
 
 it('gets file name', () => {
