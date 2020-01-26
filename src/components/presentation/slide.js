@@ -38,7 +38,6 @@ export default class Slide extends Component {
       <image
         alt={alt}
         aria-label={intl.formatMessage(intlMessages.aria)}
-        className="slide-wrapper"
         id={this.id}
         xlinkHref={`${this.url}/${src}`}
       />
