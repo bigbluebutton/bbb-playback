@@ -112,15 +112,21 @@ export default class Player extends Component {
   }
 
   renderThumbnails() {
-    const { thumbnails } = this.state;
+    const {
+      time,
+      thumbnails,
+    } = this.state;
 
     if (!thumbnails) return null;
 
     const { intl } = this.props;
     const { video } = this.player;
 
+    const currentDataIndex = getCurrentDataIndex(this.thumbnails, time);
+
     return (
       <Thumbnails
+        currentDataIndex={currentDataIndex}
         intl={intl}
         metadata={this.metadata}
         player={video}

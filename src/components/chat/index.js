@@ -23,6 +23,10 @@ export default class Chat extends Component {
     this.id = 'chat';
   }
 
+  componentDidMount() {
+    this.handleAutoScroll();
+  }
+
   shouldComponentUpdate(nextProps) {
     const { currentDataIndex } = this.props;
 
@@ -34,22 +38,18 @@ export default class Chat extends Component {
   }
 
   componentDidUpdate() {
+    this.handleAutoScroll();
+  }
+
+  handleAutoScroll() {
     if (!config.scroll) return;
 
     // Auto-scroll can start after getting the first and current nodes
     if (this.firstNode && this.currentNode) {
       const { parentNode } = this.currentNode;
 
-      parentNode.scrollTop = getScrollTop(this.firstNode, this.currentNode, 'bottom');
+      parentNode.scrollTop = getScrollTop(this.firstNode, this.currentNode, config.align);
     }
-  }
-
-  getStyle(active, name) {
-    const style = {
-      'background-color': active ? getAvatarColor(name) : getAvatarColor(),
-    };
-
-    return style;
   }
 
   handleOnClick(timestamp) {
@@ -58,6 +58,14 @@ export default class Chat extends Component {
     if (!player) return null;
 
     player.currentTime(timestamp);
+  }
+
+  getStyle(active, name) {
+    const style = {
+      'background-color': active ? getAvatarColor(name) : getAvatarColor(),
+    };
+
+    return style;
   }
 
   // Set node as ref so we can manage auto-scroll

@@ -10,10 +10,10 @@ $avatar-size: 2.25rem;
   display: flex;
   flex-direction: column;
   font-size: small;
-  padding: $padding;
-  position: absolute;
   overflow-x: hidden;
   overflow-y: auto;
+  padding: $padding;
+  position: absolute;
   scroll-behavior: smooth;
   top: 0;
   width: 100%;
@@ -60,7 +60,7 @@ $avatar-size: 2.25rem;
   .info {
     display: flex;
     width: 100%;
-    margin: 0 $margin-small $margin-small 0;
+    margin: 0 $margin-extra-small $margin-extra-small 0;
   }
 
   .name {

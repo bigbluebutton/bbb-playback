@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { defineMessages } from 'react-intl';
+import { thumbnails as config } from 'config';
+import { getScrollTop } from 'utils/data';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -19,6 +21,24 @@ export default class Thumbnails extends Component {
     this.url = `/presentation/${metadata.id}`;
   }
 
+  componentDidMount() {
+    this.handleAutoScroll();
+  }
+
+  shouldComponentUpdate(nextProps) {
+    const { currentDataIndex } = this.props;
+
+    if (currentDataIndex !== nextProps.currentDataIndex) {
+      return true;
+    }
+
+    return false;
+  }
+
+  componentDidUpdate() {
+    this.handleAutoScroll();
+  }
+
   handleOnClick(timestamp) {
     const { player } = this.props;
 
@@ -27,21 +47,46 @@ export default class Thumbnails extends Component {
     player.currentTime(timestamp);
   }
 
+  handleAutoScroll() {
+    if (!config.scroll) return;
+
+    // Auto-scroll can start after getting the first and current nodes
+    if (this.firstNode && this.currentNode) {
+      const { parentNode } = this.currentNode;
+
+      parentNode.scrollTop = getScrollTop(this.firstNode, this.currentNode, config.align);
+    }
+  }
+
+  // Set node as ref so we can manage auto-scroll
+  setRef(node, index) {
+    const { currentDataIndex } = this.props;
+
+    if (index === 0) {
+      this.firstNode = node;
+    }
+
+    if (index === currentDataIndex) {
+      this.currentNode = node;
+    }
+  }
+
   renderThumbnails() {
     const { thumbnails } = this.props;
 
-    return thumbnails.map(thumbnail => {
+    return thumbnails.map((item, index) => {
       const {
         alt,
         src,
         timestamp,
-      } = thumbnail;
+      } = item;
 
       return (
         <img
           alt={alt}
           className="thumbnail"
           onClick={() => this.handleOnClick(timestamp)}
+          ref={ node => this.setRef(node, index)}
           src={`${this.url}/${src}`}
         />
       );

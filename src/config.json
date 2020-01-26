@@ -1,5 +1,6 @@
 {
   "chat": {
+    "align": "bottom",
     "scroll": true
   },
   "colors": {
@@ -50,6 +51,10 @@
     "mp4",
     "webm"
   ],
+  "thumbnails": {
+    "align": "bottom",
+    "scroll": true
+  },
   "video": {
     "rates": [ 0.5, 1, 1.5, 2 ]
   }

@@ -5,21 +5,23 @@ $thumbnails-wrapper-top: $header-height;
 $thumbnails-wrapper-bottom: calc(#{$control-bar-height} + #{$footer-height});
 
 .thumbnails-wrapper {
+  background-color: $blue-lighter;
   bottom: $thumbnails-wrapper-bottom;
+  box-sizing: border-box;
   display: flex;
-  flex-flow: column;
+  flex-direction: column;
   overflow-x: hidden;
   overflow-y: auto;
+  padding: $padding-extra-small;
   position: fixed;
   right: 0;
+  scroll-behavior: smooth;
   top: $thumbnails-wrapper-top;
   width: auto;
   z-index: 1;
 }
 
 .thumbnail {
-  border: $border-width solid $border-color;
-  border-radius: $border-radius;
   cursor: pointer;
-  margin: 0 $margin-small $margin-small 0;
+  padding: 0 0 $padding-extra-small 0;
 }
