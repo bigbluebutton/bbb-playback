@@ -24,7 +24,6 @@ import {
   SHAPES,
   getCurrentDataIndex,
   getFileName,
-  isActive,
   isEnabled,
 } from 'utils/data';
 import Synchronizer from 'utils/synchronizer';
@@ -191,21 +190,12 @@ export default class Player extends Component {
 
     const currentDataIndex = getCurrentDataIndex(this.chat, time);
 
-    // TODO: Check if we really need to clear the chat
-    let clear = false;
-    if (currentDataIndex !== -1) {
-      const currentChat = this.chat[currentDataIndex];
-      clear = !isActive(time, currentChat.timestamp, currentChat.clear);
-    }
-
     return (
       <Chat
         chat={this.chat}
         currentDataIndex={currentDataIndex}
-        clear={clear}
         intl={intl}
         player={video}
-        time={time}
       />
     );
   }

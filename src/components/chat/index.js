@@ -6,7 +6,6 @@ import {
   getScrollTop,
   getTimeAsString,
   getUserColor,
-  isActive,
 } from 'utils/data';
 import './index.scss';
 
@@ -25,18 +24,10 @@ export default class Chat extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    const {
-      currentDataIndex,
-      clear,
-    } = this.props;
+    const { currentDataIndex } = this.props;
 
     // New message
     if (currentDataIndex !== nextProps.currentDataIndex) {
-      return true;
-    }
-
-    // Cleared messages
-    if (!clear && nextProps.clear) {
       return true;
     }
 
@@ -84,55 +75,65 @@ export default class Chat extends Component {
     }
   }
 
+  renderAvatar(active, name, timestamp) {
+    const style = this.getStyle(active, name);
+
+    return (
+      <div className="avatar-wrapper">
+        <div
+          className="avatar"
+          onClick={() => this.handleOnClick(timestamp)}
+          style={style}
+        >
+          <span className="initials">
+            {name.slice(0, 2).toLowerCase()}
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  renderContent(active, name, timestamp, message) {
+    return (
+      <div className="content">
+        <div className="info">
+          <div className={cx('name', { inactive: !active })}>
+            {name}
+          </div>
+          <div className={cx('time', { inactive: !active })}>
+            {getTimeAsString(timestamp)}
+          </div>
+        </div>
+        <div className={cx('message', { inactive: !active })}>
+          {message}
+        </div>
+      </div>
+    );
+  }
+
   renderChat() {
     const {
       chat,
       currentDataIndex,
-      time,
     } = this.props;
 
     return chat.map((item, index) => {
       const {
-        clear,
         message,
         name,
         timestamp,
       } = item;
 
-      // Taking advantage of short-circuit
-      const active = index <= currentDataIndex && isActive(time, timestamp, clear);
-      const style = this.getStyle(active, name);
+      const active = index <= currentDataIndex;
 
       return (
         <div
           className="chat"
           ref={ node => this.setRef(node, index)}
         >
-          <div className="avatar-wrapper">
-            <div
-              className="avatar"
-              onClick={() => this.handleOnClick(timestamp)}
-              style={style}
-            >
-              <span className="initials">
-                {name.slice(0, 2).toLowerCase()}
-              </span>
-            </div>
-          </div>
-          <div className="content">
-            <div className="info">
-              <div className={cx('name', { inactive: !active })}>
-                {name}
-              </div>
-              <div className={cx('time', { inactive: !active })}>
-                {getTimeAsString(timestamp)}
-              </div>
-            </div>
-            <div className={cx('message', { inactive: !active })}>
-              {message}
-            </div>
-          </div>
-        </div>
+          {this.renderAvatar(active, name, timestamp)}
+          {this.renderContent(active, name, timestamp, message)}
+       </div>
       );
     });
   }
