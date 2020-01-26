@@ -111,7 +111,7 @@ export default class Whiteboard extends Component {
 
       const active = isActive(time, timestamp, clear);
 
-      if (!active) break;
+      if (!active) continue;
 
       const j = i + 1;
       let intermediate = false;
@@ -127,6 +127,9 @@ export default class Whiteboard extends Component {
       } = shape;
 
       switch (type) {
+        case 'poll':
+          whiteboard.push(this.renderPoll(style, data));
+          break;
         case 'polyline':
           whiteboard.push(this.renderPolyline(style, data));
           break;
@@ -144,9 +147,6 @@ export default class Whiteboard extends Component {
           break;
         case 'switch':
           whiteboard.push(this.renderSwitch(style, data));
-          break;
-        case 'poll':
-          whiteboard.push(this.renderPoll(style, data));
           break;
         default:
       }
