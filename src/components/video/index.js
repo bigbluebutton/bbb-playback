@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { defineMessages } from 'react-intl';
 import cx from 'classnames';
 import videojs from 'video.js';
+import { video as config } from 'config';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -21,7 +22,6 @@ export default class Video extends Component {
       metadata,
     } = props;
 
-    const playbackRates = [0.5, 1, 1.5, 2];
     const url = `/presentation/${metadata.id}`;
 
     const sources = [
@@ -67,7 +67,7 @@ export default class Video extends Component {
       controls: true,
       fill: true,
       inactivityTimeout: 0,
-      playbackRates,
+      playbackRates: config.rates,
       sources,
       tracks,
     };

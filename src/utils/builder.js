@@ -1,15 +1,6 @@
 import { parseStringPromise } from 'xml2js';
-import {
-  ALTERNATES,
-  CAPTIONS,
-  CHAT,
-  CURSOR,
-  METADATA,
-  PANZOOMS,
-  SCREENSHARE,
-  SHAPES,
-  getFileType,
-} from './data';
+import { files as config } from 'config';
+import { getFileType } from './data';
 
 const getAttr = data => {
   if (!data) return {};
@@ -183,7 +174,12 @@ const buildCanvases = group => {
         const drawId = getId(drawAttr.shape);
 
         let shape = {};
-        if (g.polyline) {
+        if (g.rect && g.image) {
+          shape.type = 'poll';
+          const rect = getAttr(g.rect.shift());
+          const image = getAttr(g.image.shift());
+          shape.data = Object.assign({ rect }, { image });
+        } else if (g.polyline) {
           shape.type = 'polyline';
           shape.data = Object.assign({}, getAttr(g.polyline.shift()));
         } else if (g.line) {
@@ -203,11 +199,6 @@ const buildCanvases = group => {
           const foreignObject = g.switch.shift()['foreignObject'].shift();
           const p = foreignObject.p.shift()['_'];
           shape.data = Object.assign({ p: p ? p : '' }, getAttr(foreignObject));
-        } else if (g.rect && g.image) {
-          shape.type = 'poll';
-          const rect = getAttr(g.rect.shift());
-          const image = getAttr(g.image.shift());
-          shape.data = Object.assign({ rect }, { image });
         }
 
         return {
@@ -336,10 +327,10 @@ const build = (filename, value) => {
 
     if (fileType === 'json') {
       switch (filename) {
-        case ALTERNATES:
+        case config.data.alternates:
           data = buildAlternates(value);
           break;
-        case CAPTIONS:
+        case config.data.captions:
           data = buildCaptions(value);
           break;
         default:
@@ -350,22 +341,22 @@ const build = (filename, value) => {
       // Parse XML data
       parseStringPromise(value).then(result => {
         switch (filename) {
-          case CHAT:
+          case config.data.chat:
             data = buildChat(result);
             break;
-          case CURSOR:
+          case config.data.cursor:
             data = buildCursor(result);
             break;
-          case METADATA:
+          case config.data.metadata:
             data = buildMetadata(result);
             break;
-          case PANZOOMS:
+          case config.data.panzooms:
             data = buildPanzooms(result);
             break;
-          case SCREENSHARE:
+          case config.data.screenshare:
             data = buildScreenshare(result);
             break;
-          case SHAPES:
+          case config.data.shapes:
             data = buildShapes(result);
             break;
           default:

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import cx from 'classnames';
 import { defineMessages } from 'react-intl';
+import { chat as config } from 'config';
 import {
-  AUTO_SCROLL,
+  getAvatarColor,
   getScrollTop,
   getTimeAsString,
-  getUserColor,
 } from 'utils/data';
 import './index.scss';
 
@@ -26,7 +26,6 @@ export default class Chat extends Component {
   shouldComponentUpdate(nextProps) {
     const { currentDataIndex } = this.props;
 
-    // New message
     if (currentDataIndex !== nextProps.currentDataIndex) {
       return true;
     }
@@ -35,7 +34,7 @@ export default class Chat extends Component {
   }
 
   componentDidUpdate() {
-    if (!AUTO_SCROLL) return;
+    if (!config.scroll) return;
 
     // Auto-scroll can start after getting the first and current nodes
     if (this.firstNode && this.currentNode) {
@@ -47,7 +46,7 @@ export default class Chat extends Component {
 
   getStyle(active, name) {
     const style = {
-      'background-color': active ? getUserColor(name) : getUserColor(),
+      'background-color': active ? getAvatarColor(name) : getAvatarColor(),
     };
 
     return style;
@@ -65,8 +64,7 @@ export default class Chat extends Component {
   setRef(node, index) {
     const { currentDataIndex } = this.props;
 
-    // Set first node only once
-    if (!this.firstNode && index === 0) {
+    if (index === 0) {
       this.firstNode = node;
     }
 

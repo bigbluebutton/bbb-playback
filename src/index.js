@@ -2,9 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { IntlProvider } from "react-intl";
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { error } from 'config';
 import Error from 'components/error';
 import Loader from 'components/loader';
-import { ERROR } from 'utils/data';
 import {
   getLocale,
   getMessages,
@@ -26,7 +26,7 @@ ReactDOM.render(
             path="/:recordId"
             component={ Loader }
           />
-          <Route render={(props) => <Error {...props} code={ERROR['NOT_FOUND']} />} />
+          <Route render={(props) => <Error {...props} code={error['NOT_FOUND']} />} />
         </Switch>
       </BrowserRouter>
     </IntlProvider>

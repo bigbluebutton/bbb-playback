@@ -1,28 +1,29 @@
 import React, { Component } from 'react';
+import { colors as config } from 'config';
 import './index.scss';
 
-const BORDER = '.2rem'
-const BLUE = '#0f70d7';
-const TRANSPARENT = 'transparent';
-const WHITE = 'white';
+const BORDER = '.2rem';
 
 export default class Button extends Component {
   getGhost() {
     const { active } = this.props;
+    const { button } = config;
 
     return {
-      'background-color': active ? BLUE : TRANSPARENT,
-      'border': active ? 'none' : `${BORDER} solid ${WHITE}`,
-      'color': WHITE,
+      'background-color': active ? button.default : button.transparent,
+      'border': active ? 'none' : `${BORDER} solid ${button.content}`,
+      'color': button.content,
     };
   }
 
   getSolid() {
     const { color } = this.props;
+    const { button } = config;
+
     return {
-      'background-color': color ? color : TRANSPARENT,
+      'background-color': color ? color : button.transparent,
       'border': 'none',
-      'color': WHITE,
+      'color': button.content,
     };
   }
 

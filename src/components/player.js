@@ -3,6 +3,7 @@ import {
   FormattedDate,
   defineMessages,
 } from 'react-intl';
+import { files as config } from 'config';
 import Chat from './chat';
 import Presentation from './presentation';
 import Screenshare from './screenshare';
@@ -14,14 +15,6 @@ import {
   addAlternatesToThumbnails,
 } from 'utils/builder';
 import {
-  ALTERNATES,
-  CAPTIONS,
-  CHAT,
-  CURSOR,
-  METADATA,
-  PANZOOMS,
-  SCREENSHARE,
-  SHAPES,
   getCurrentDataIndex,
   getFileName,
   isEnabled,
@@ -56,14 +49,14 @@ export default class Player extends Component {
 
     this.id = 'player';
 
-    this.alternates = data[getFileName(ALTERNATES)];
-    this.captions = data[getFileName(CAPTIONS)];
-    this.chat = data[getFileName(CHAT)];
-    this.cursor = data[getFileName(CURSOR)];
-    this.metadata = data[getFileName(METADATA)];
-    this.panzooms = data[getFileName(PANZOOMS)];
-    this.screenshare = data[getFileName(SCREENSHARE)];
-    this.shapes = data[getFileName(SHAPES)];
+    this.alternates = data[getFileName(config.data.alternates)];
+    this.captions = data[getFileName(config.data.captions)];
+    this.chat = data[getFileName(config.data.chat)];
+    this.cursor = data[getFileName(config.data.cursor)];
+    this.metadata = data[getFileName(config.data.metadata)];
+    this.panzooms = data[getFileName(config.data.panzooms)];
+    this.screenshare = data[getFileName(config.data.screenshare)];
+    this.shapes = data[getFileName(config.data.shapes)];
 
     this.canvases = this.shapes.canvases;
     this.slides = addAlternatesToSlides(this.shapes.slides, this.alternates);

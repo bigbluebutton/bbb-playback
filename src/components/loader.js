@@ -3,13 +3,11 @@ import {
   defineMessages,
   injectIntl,
 } from 'react-intl';
+import config from 'config';
 import Error from './error';
 import Player from './player';
 import { build } from 'utils/builder';
 import {
-  ERROR,
-  FILES,
-  MEDIAS,
   getFileName,
   getFileType,
   getRecordId,
@@ -35,7 +33,7 @@ class Loader extends Component {
     this.recordId = getRecordId(match);
 
     this.state = {
-      error: this.recordId ? null : ERROR['NOT_FOUND'],
+      error: this.recordId ? null : config.error['NOT_FOUND'],
       loaded: false,
     };
   }
@@ -43,7 +41,12 @@ class Loader extends Component {
   componentDidMount() {
     if (!this.recordId) return;
 
-    FILES.forEach(file => this.fetchFile(this.recordId, file));
+    const { data } = config.files;
+
+    for (const file in data) {
+      this.fetchFile(this.recordId, data[file]);
+    }
+
     this.fetchMedia();
   }
 
@@ -58,7 +61,7 @@ class Loader extends Component {
           case 'text':
             return response.text();
           default:
-            this.setState({ error: ERROR['BAD_REQUEST'] });
+            this.setState({ error: config.error['BAD_REQUEST'] });
             throw Error(file);
         }
       } else {
@@ -69,12 +72,12 @@ class Loader extends Component {
       build(file, value).then(data => {
         this.data[getFileName(file)] = data;
         this.update();
-      }).catch(error => this.setState({ error: ERROR['BAD_REQUEST'] }));
-    }).catch(error => this.setState({ error: ERROR['NOT_FOUND'] }));
+      }).catch(error => this.setState({ error: config.error['BAD_REQUEST'] }));
+    }).catch(error => this.setState({ error: config.error['NOT_FOUND'] }));
   }
 
   fetchMedia() {
-    const fetches = MEDIAS.map(type => {
+    const fetches = config.medias.map(type => {
       const url = `/presentation/${this.recordId}/video/webcams.${type}`;
       return fetch(url, { method: 'HEAD' });
     });
@@ -84,7 +87,7 @@ class Loader extends Component {
       responses.forEach(response => {
         const { ok, url } = response;
         if (ok) {
-          media.push(MEDIAS.find(type => url.endsWith(type)));
+          media.push(config.medias.find(type => url.endsWith(type)));
         }
       });
 
@@ -93,15 +96,15 @@ class Loader extends Component {
         this.update();
       } else {
         // TODO: Handle audio medias
-        this.setState({ error: ERROR['NOT_FOUND'] });
+        this.setState({ error: config.error['NOT_FOUND'] });
       }
     });
   }
 
   update() {
     this.counter = this.counter + 1;
-    // FILES + MEDIAS
-    if (this.counter > FILES.length) {
+    // TODO: Better control
+    if (this.counter > Object.keys(config.files.data).length) {
       const { loaded } = this.state;
       if (!loaded) this.setState({ loaded: true });
     }

@@ -1,60 +1,5 @@
+import config from 'config';
 import stringHash from 'string-hash';
-
-const AUTO_SCROLL = true;
-
-const ALTERNATES = 'presentation_text.json';
-const CAPTIONS = 'captions.json';
-const CHAT = 'slides_new.xml';
-const CURSOR = 'cursor.xml';
-const METADATA = 'metadata.xml';
-const PANZOOMS = 'panzooms.xml';
-const SCREENSHARE = 'deskshare.xml';
-const SHAPES = 'shapes.svg';
-
-const COLORS = [
-  '#7b1fa2', '#6a1b9a', '#4a148c', '#5e35b1',
-  '#512da8', '#4527a0', '#311b92', '#3949ab',
-  '#303f9f', '#283593', '#1a237e', '#1976d2',
-  '#1565c0', '#0d47a1', '#0277bd', '#01579b',
-];
-
-const INACTIVE = '#a7b3bd';
-
-const ERROR = {
-  BAD_REQUEST: 400,
-  UNAUTHORIZED: 401,
-  PAYMENT_REQUIRED: 402,
-  FORBIDDEN: 403,
-  NOT_FOUND: 404,
-  METHOD_NOT_ALLOWED: 405,
-  NOT_ACCEPTABLE: 406,
-  PROXY_AUTHENTICATION_REQUIRED: 407,
-  REQUEST_TIMEOUT: 408,
-  CONFLICT: 409,
-  GONE: 410,
-};
-
-const FILES = [
-  ALTERNATES,
-  CAPTIONS,
-  CHAT,
-  CURSOR,
-  METADATA,
-  PANZOOMS,
-  SCREENSHARE,
-  SHAPES,
-];
-
-const MEDIAS = [
-  'mp4',
-  'webm',
-];
-
-const TYPE = {
-  json: 'json',
-  svg: 'text',
-  xml: 'text',
-};
 
 const isEnabled = (data, time) => {
   const array = Array.isArray(data);
@@ -112,7 +57,7 @@ const getCurrentDataIndex = (data, time) => {
 
 const getFileName = file => file.split('.').shift();
 
-const getFileType = file => TYPE[file.split('.').pop()];
+const getFileType = file => config.files.type[file.split('.').pop()];
 
 const getRecordId = match => {
   if (match) {
@@ -130,11 +75,16 @@ const getRecordId = match => {
   return null;
 };
 
-const getUserColor = name => {
+const getAvatarColor = name => {
+  const {
+    avatar,
+    inactive,
+  } = config.colors;
+
   if (name) {
-    return COLORS[stringHash(name) % COLORS.length];
+    return avatar[stringHash(name) % avatar.length];
   } else {
-    return INACTIVE;
+    return inactive;
   }
 };
 
@@ -193,25 +143,13 @@ const isActive = (time, timestamp, clear = -1) => {
 };
 
 export {
-  AUTO_SCROLL,
-  ALTERNATES,
-  CAPTIONS,
-  CHAT,
-  CURSOR,
-  ERROR,
-  FILES,
-  MEDIAS,
-  METADATA,
-  PANZOOMS,
-  SCREENSHARE,
-  SHAPES,
+  getAvatarColor,
   getCurrentDataIndex,
   getFileName,
   getFileType,
   getRecordId,
   getScrollTop,
   getTimeAsString,
-  getUserColor,
   isActive,
   isEnabled,
 };
