@@ -9,13 +9,7 @@
       "#512da8", "#4527a0", "#311b92", "#3949ab",
       "#303f9f", "#283593", "#1a237e", "#1976d2",
       "#1565c0", "#0d47a1", "#0277bd", "#01579b"
-    ],
-    "button": {
-      "content": "#ffffff",
-      "default": "#0f70d7",
-      "transparent": "#00000000"
-    },
-    "inactive": "#a7b3bd"
+    ]
   },
   "error": {
     "BAD_REQUEST": 400,

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import cx from 'classnames';
 import { defineMessages } from 'react-intl';
 import { thumbnails as config } from 'config';
 import { getScrollTop } from 'utils/data';
@@ -72,7 +73,10 @@ export default class Thumbnails extends Component {
   }
 
   renderThumbnails() {
-    const { thumbnails } = this.props;
+    const {
+      currentDataIndex,
+      thumbnails,
+    } = this.props;
 
     return thumbnails.map((item, index) => {
       const {
@@ -81,10 +85,12 @@ export default class Thumbnails extends Component {
         timestamp,
       } = item;
 
+      const active = index === currentDataIndex;
+
       return (
         <img
           alt={alt}
-          className="thumbnail"
+          className={cx('thumbnail', { active })}
           onClick={() => this.handleOnClick(timestamp)}
           ref={ node => this.setRef(node, index)}
           src={`${this.url}/${src}`}

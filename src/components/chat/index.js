@@ -60,14 +60,6 @@ export default class Chat extends Component {
     player.currentTime(timestamp);
   }
 
-  getStyle(active, name) {
-    const style = {
-      'background-color': active ? getAvatarColor(name) : getAvatarColor(),
-    };
-
-    return style;
-  }
-
   // Set node as ref so we can manage auto-scroll
   setRef(node, index) {
     const { currentDataIndex } = this.props;
@@ -82,14 +74,12 @@ export default class Chat extends Component {
   }
 
   renderAvatar(active, name, timestamp) {
-    const style = this.getStyle(active, name);
-
     return (
       <div className="avatar-wrapper">
         <div
-          className="avatar"
+          className={cx('avatar', { inactive: !active })}
           onClick={() => this.handleOnClick(timestamp)}
-          style={style}
+          style={{ backgroundColor: getAvatarColor(name) }}
         >
           <span className="initials">
             {name.slice(0, 2).toLowerCase()}

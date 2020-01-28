@@ -29,6 +29,10 @@ $avatar-size: 2.25rem;
   display: flex;
   height: 100%;
   margin: 0 $margin 0 0;
+
+  .inactive {
+    filter: opacity(50%);
+  }
 }
 
 .avatar {
@@ -47,6 +51,10 @@ $avatar-size: 2.25rem;
     justify-content: center;
     text-transform: capitalize;
     width: 100%;
+  }
+
+  &:hover {
+    filter: drop-shadow(0 0 $margin $gray-light);
   }
 }
 

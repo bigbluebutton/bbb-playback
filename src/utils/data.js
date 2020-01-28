@@ -76,16 +76,9 @@ const getRecordId = match => {
 };
 
 const getAvatarColor = name => {
-  const {
-    avatar,
-    inactive,
-  } = config.colors;
+  const { avatar } = config.colors;
 
-  if (name) {
-    return avatar[stringHash(name) % avatar.length];
-  } else {
-    return inactive;
-  }
+  return avatar[stringHash(name) % avatar.length];
 };
 
 const getTimeAsString = seconds => {

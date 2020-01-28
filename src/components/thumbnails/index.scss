@@ -19,9 +19,17 @@ $thumbnails-wrapper-bottom: calc(#{$control-bar-height} + #{$footer-height});
   top: $thumbnails-wrapper-top;
   width: auto;
   z-index: 1;
+
+  .active {
+    filter: opacity(50%);
+  }
 }
 
 .thumbnail {
   cursor: pointer;
   padding: 0 0 $padding-extra-small 0;
+
+  &:hover {
+    filter: opacity(50%);
+  }
 }

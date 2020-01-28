@@ -1,3 +1,4 @@
+@import 'src/styles/colors';
 @import 'src/styles/fonts';
 @import 'src/styles/icons';
 @import 'src/styles/sizes';
@@ -7,13 +8,31 @@ $button-size: 2.75rem;
 .button-wrapper {
   display: flex;
   height: 100%;
-  margin: 0 $margin 0 0
-}
+  margin: 0 $margin 0 0;
 
-.button {
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: large;
-  height: $button-size;
-  width: $button-size;
+  .button {
+    background-color: $blue;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: large;
+    height: $button-size;
+    width: $button-size;
+    color: white;
+
+    &:focus {
+      border: solid $gray-dark;
+      box-shadow: 0 0 0 $margin-extra-small $blue;
+    }
+  }
+
+  .ghost {
+    background-color: transparent;
+    border: solid white;
+
+    &:focus {
+      border: solid white;
+      box-shadow: 0 0 0 $margin-extra-small;
+    }
+  }
 }
