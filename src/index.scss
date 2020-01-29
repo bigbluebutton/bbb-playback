@@ -40,6 +40,14 @@ header {
 footer {
   background-color: $footer-background-color;
   grid-area: footer;
+
+  .button-wrapper {
+    .solid {
+      &:focus {
+        border: solid $footer-background-color;
+      }
+    }
+  }
 }
 
 section {

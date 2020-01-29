@@ -11,27 +11,28 @@ $button-size: 2.75rem;
   margin: 0 $margin 0 0;
 
   .button {
-    background-color: $blue;
-    border: none;
     border-radius: 50%;
     cursor: pointer;
     font-size: large;
     height: $button-size;
     width: $button-size;
     color: white;
+  }
+
+  .solid {
+    background-color: $blue;
+    border: none;
 
     &:focus {
-      border: solid $gray-dark;
       box-shadow: 0 0 0 $margin-extra-small $blue;
     }
   }
 
   .ghost {
     background-color: transparent;
-    border: solid white;
+    border: solid;
 
     &:focus {
-      border: solid white;
       box-shadow: 0 0 0 $margin-extra-small;
     }
   }

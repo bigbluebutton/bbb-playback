@@ -13,10 +13,15 @@ export default class Button extends Component {
 
     if (!handleOnClick) return null;
 
+    const style = {
+      ghost: ghost && !active,
+      solid: !ghost || active,
+    };
+
     return (
       <div className="button-wrapper">
         <button
-          className={cx('button', { ghost: ghost && !active })}
+          className={cx('button', style)}
           onClick={() => handleOnClick()}
         >
           <span className={`icon-${type}`} />

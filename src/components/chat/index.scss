@@ -54,7 +54,7 @@ $avatar-size: 2.25rem;
   }
 
   &:hover {
-    filter: drop-shadow(0 0 $margin $gray-light);
+    box-shadow: 0 0 0 $margin-small $gray-lighter;
   }
 }
 
