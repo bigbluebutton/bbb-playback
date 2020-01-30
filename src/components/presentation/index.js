@@ -29,9 +29,9 @@ export default class Presentation extends Component {
     const currentDataIndex = getCurrentDataIndex(slides, time);
     if (currentDataIndex === -1) return -1;
 
-    const { id } = slides[currentDataIndex];
+    const currentData = slides[currentDataIndex];
 
-    return id;
+    return currentData.id;
   }
 
   getViewBox() {

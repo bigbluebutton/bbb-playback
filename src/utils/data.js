@@ -36,6 +36,7 @@ const getCurrentDataIndex = (data, time) => {
   const empty = data.length === 0;
   if (empty) return -1;
 
+  // TODO: This could use a better search algorithm
   let currentDataIndex = -1;
   for (let index = 0; index < data.length; index++) {
     const item = data[index];
