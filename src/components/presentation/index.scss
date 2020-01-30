@@ -12,6 +12,10 @@
 .presentation {
   height: 100%;
   width: 100%;
+
+  .area {
+    clip-path: url(#clip);
+  }
 }
 
 svg {

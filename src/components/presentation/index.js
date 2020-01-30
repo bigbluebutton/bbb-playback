@@ -51,7 +51,12 @@ export default class Presentation extends Component {
       y,
     } = panzooms[currentDataIndex];
 
-    return `${x} ${y} ${width} ${height}`;
+    return {
+      height,
+      x,
+      width,
+      y,
+    };
   }
 
   render() {
@@ -65,6 +70,12 @@ export default class Presentation extends Component {
     } = this.props;
 
     const id = this.getSlideId();
+    const {
+      height,
+      x,
+      width,
+      y,
+    } = this.getViewBox();
 
     return (
       <div
@@ -74,22 +85,34 @@ export default class Presentation extends Component {
       >
         <div className="presentation">
           <svg
-            viewBox={this.getViewBox()}
+            viewBox={`${x} ${y} ${width} ${height}`}
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
           >
-            <Slide
-              id={id}
-              intl={intl}
-              metadata={metadata}
-              slides={slides}
-            />
-            <Whiteboard
-              canvases={canvases}
-              id={id}
-              metadata={metadata}
-              time={time}
-            />
+            <defs>
+              <clipPath id="clip">
+                <rect
+                  height={height}
+                  x={x}
+                  width={width}
+                  y={y}
+                />
+              </clipPath>
+            </defs>
+            <g className="area">
+              <Slide
+                id={id}
+                intl={intl}
+                metadata={metadata}
+                slides={slides}
+              />
+              <Whiteboard
+                canvases={canvases}
+                id={id}
+                metadata={metadata}
+                time={time}
+              />
+            </g>
           </svg>
         </div>
       </div>

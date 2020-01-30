@@ -110,13 +110,13 @@ const buildSlides = image => {
   if (image) {
     image.forEach(img => {
       const attr = getAttr(img);
-      // Get the number from the id name
-      const slideId = getId(attr.id);
       const src = attr['xlink:href'];
 
       // Skip the logo
       if (!src) return;
 
+      // Get the number from the id name
+      const slideId = getId(attr.id);
       const timestamps = getNumbers(attr.in);
 
       timestamps.forEach(timestamp => {
