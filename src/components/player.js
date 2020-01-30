@@ -87,10 +87,9 @@ export default class Player extends Component {
 
   handleTimeUpdate(value) {
     const { time } = this.state;
-    const roundedValue = Math.round(value);
 
-    if (time !== roundedValue) {
-      this.setState({ time: roundedValue });
+    if (time !== value) {
+      this.setState({ time: value });
     }
   }
 

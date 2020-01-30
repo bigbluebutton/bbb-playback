@@ -34,7 +34,6 @@ export default class Presentation extends Component {
     return id;
   }
 
-  // TODO: Optimize this storing indexes
   getViewBox() {
     const {
       panzooms,
@@ -42,20 +41,44 @@ export default class Presentation extends Component {
     } = this.props;
 
     const currentDataIndex = getCurrentDataIndex(panzooms, time);
-    if (currentDataIndex === -1) return '';
+    if (currentDataIndex === -1) {
+      return {
+        height: 0,
+        x: 0,
+        width: 0,
+        y: 0,
+      };
+    }
 
-    const {
-      height,
-      width,
-      x,
-      y,
-    } = panzooms[currentDataIndex];
+    const currentData = panzooms[currentDataIndex];
 
     return {
-      height,
-      x,
-      width,
-      y,
+      height: currentData.height,
+      x: currentData.x,
+      width: currentData.width,
+      y: currentData.y,
+    };
+  }
+
+  getCursor(viewBox) {
+    const {
+      cursor,
+      time,
+    } = this.props;
+
+    const currentDataIndex = getCurrentDataIndex(cursor, time);
+    if (currentDataIndex === -1) {
+      return {
+        x: -1,
+        y: -1,
+      };
+    }
+
+    const currentData = cursor[currentDataIndex];
+
+    return {
+      x: viewBox.x + (currentData.x * viewBox.width),
+      y: viewBox.y + (currentData.y * viewBox.height),
     };
   }
 
@@ -70,12 +93,8 @@ export default class Presentation extends Component {
     } = this.props;
 
     const id = this.getSlideId();
-    const {
-      height,
-      x,
-      width,
-      y,
-    } = this.getViewBox();
+    const viewBox = this.getViewBox();
+    const cursor = this.getCursor(viewBox);
 
     return (
       <div
@@ -85,17 +104,17 @@ export default class Presentation extends Component {
       >
         <div className="presentation">
           <svg
-            viewBox={`${x} ${y} ${width} ${height}`}
+            viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
           >
             <defs>
               <clipPath id="clip">
                 <rect
-                  height={height}
-                  x={x}
-                  width={width}
-                  y={y}
+                  height={viewBox.height}
+                  x={viewBox.x}
+                  width={viewBox.width}
+                  y={viewBox.y}
                 />
               </clipPath>
             </defs>
@@ -111,6 +130,10 @@ export default class Presentation extends Component {
                 id={id}
                 metadata={metadata}
                 time={time}
+              />
+              <circle
+                className="cursor"
+                style={{ cx: cursor.x, cy: cursor.y }}
               />
             </g>
           </svg>
