@@ -17,13 +17,9 @@ $cursor-size: .5rem;
   height: 100%;
   width: 100%;
 
-  .area {
-    clip-path: url(#clip);
-
-    .cursor {
-      fill: $red;
-      r: $cursor-size;
-    }
+  .cursor {
+    fill: $red;
+    r: $cursor-size;
   }
 }
 

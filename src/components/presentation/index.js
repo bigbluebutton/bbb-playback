@@ -60,6 +60,17 @@ export default class Presentation extends Component {
     };
   }
 
+  buildViewBoxAttr(viewBox) {
+    const {
+      height,
+      x,
+      width,
+      y,
+    } = viewBox;
+
+    return `${x} ${y} ${width} ${height}`;
+  }
+
   getCursor(viewBox) {
     const {
       cursor,
@@ -104,12 +115,12 @@ export default class Presentation extends Component {
       >
         <div className="presentation">
           <svg
-            viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
+            viewBox={this.buildViewBoxAttr(viewBox)}
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
           >
             <defs>
-              <clipPath id="clip">
+              <clipPath id="viewBox">
                 <rect
                   height={viewBox.height}
                   x={viewBox.x}
@@ -118,7 +129,7 @@ export default class Presentation extends Component {
                 />
               </clipPath>
             </defs>
-            <g className="area">
+            <g clipPath="url(#viewBox)">
               <Slide
                 id={id}
                 intl={intl}
