@@ -134,4 +134,12 @@ footer {
   main {
     display: flex;
   }
+
+  @media (max-height: $media-max-height) {
+    section {
+      .top {
+        min-height: calc((#{$video-height} / 8) * 3);
+      }
+    }
+  }
 }

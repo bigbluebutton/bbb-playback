@@ -83,6 +83,12 @@ $loading-dots-width: 20px;
       "section footer";
     grid-template-columns: $section-width auto;
   }
+
+  @media (max-height: $media-max-height) {
+    .player-wrapper {
+      grid-template-columns: $section-width-small auto;
+    }
+  }
 }
 
 

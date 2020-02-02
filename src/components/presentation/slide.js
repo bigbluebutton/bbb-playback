@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { defineMessages } from 'react-intl';
 import './index.scss';
 
@@ -9,7 +9,7 @@ const intlMessages = defineMessages({
   },
 });
 
-export default class Slide extends Component {
+export default class Slide extends PureComponent {
   constructor(props) {
     super(props);
 
