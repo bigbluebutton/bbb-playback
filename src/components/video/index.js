@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { defineMessages } from 'react-intl';
 import videojs from 'video.js';
 import { video as config } from 'config';
@@ -11,7 +11,7 @@ const intlMessages = defineMessages({
   },
 });
 
-export default class Video extends Component {
+export default class Video extends PureComponent {
   constructor(props) {
     super(props);
 

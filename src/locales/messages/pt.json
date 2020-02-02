@@ -2,6 +2,7 @@
   "error.wrapper.aria": "Área do erro",
   "loader.wrapper.aria": "Área do carregador",
   "player.wrapper.aria": "Área do tocador",
+  "player.chat.title": "Chat público",
   "player.chat.wrapper.aria": "Área do chat",
   "player.presentation.wrapper.aria": "Área da apresentação",
   "player.presentation.slide.wrapper.aria": "Área do slide",

@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
-import cx from 'classnames';
 import { defineMessages } from 'react-intl';
 import { chat as config } from 'config';
-import {
-  getAvatarColor,
-  getScrollTop,
-  getTimeAsString,
-} from 'utils/data';
+import Message from './message';
+import { getScrollTop } from 'utils/data';
 import './index.scss';
 
 const intlMessages = defineMessages({
   aria: {
     id: 'player.chat.wrapper.aria',
     description: 'Aria label for the chat wrapper',
+  },
+  title: {
+    id: 'player.chat.title',
+    description: 'Chat title',
   },
 });
 
@@ -73,41 +73,17 @@ export default class Chat extends Component {
     }
   }
 
-  renderAvatar(active, name, timestamp) {
+  renderTitle() {
+    const { intl } = this.props;
+
     return (
-      <div className="avatar-wrapper">
-        <div
-          className={cx('avatar', { inactive: !active })}
-          onClick={() => this.handleOnClick(timestamp)}
-          style={{ backgroundColor: getAvatarColor(name) }}
-        >
-          <span className="initials">
-            {name.slice(0, 2).toLowerCase()}
-          </span>
-        </div>
+      <div className="title">
+        {intl.formatMessage(intlMessages.title)}
       </div>
     );
   }
 
-  renderContent(active, name, timestamp, message) {
-    return (
-      <div className="content">
-        <div className="info">
-          <div className={cx('name', { inactive: !active })}>
-            {name}
-          </div>
-          <div className={cx('time', { inactive: !active })}>
-            {getTimeAsString(timestamp)}
-          </div>
-        </div>
-        <div className={cx('message', { inactive: !active })}>
-          {message}
-        </div>
-      </div>
-    );
-  }
-
-  renderChat() {
+  renderMessages() {
     const {
       chat,
       currentDataIndex,
@@ -123,13 +99,15 @@ export default class Chat extends Component {
       const active = index <= currentDataIndex;
 
       return (
-        <div
-          className="chat"
-          ref={ node => this.setRef(node, index)}
-        >
-          {this.renderAvatar(active, name, timestamp)}
-          {this.renderContent(active, name, timestamp, message)}
-       </div>
+        <span ref={ node => this.setRef(node, index)}>
+          <Message
+            active={active}
+            name={name}
+            onClick={() => this.handleOnClick(timestamp)}
+            text={message}
+            timestamp={timestamp}
+          />
+        </span>
       );
     });
   }
@@ -144,7 +122,12 @@ export default class Chat extends Component {
         className="chat-wrapper"
         id={this.id}
       >
-        {this.renderChat()}
+        {this.renderTitle()}
+        <div className="list">
+          <div className="message-wrapper">
+            {this.renderMessages()}
+          </div>
+        </div>
       </div>
     );
   }

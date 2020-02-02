@@ -30,6 +30,7 @@ header {
 
   .title {
     color: white;
+    font-weight: $font-weight-light;
     overflow: hidden;
     padding: $padding-small;
     text-overflow: ellipsis;
@@ -65,7 +66,6 @@ section {
   .bottom {
     display: flex;
     height: 100%;
-    position: relative;
     width: 100%;
   }
 

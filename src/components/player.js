@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
-import {
-  FormattedDate,
-  defineMessages,
-} from 'react-intl';
+import { defineMessages } from 'react-intl';
 import { files as config } from 'config';
 import Chat from './chat';
+import Footer from './footer';
+import Header from './header';
 import Presentation from './presentation';
 import Screenshare from './screenshare';
 import Thumbnails from './thumbnails';
 import Video from './video';
-import Button from 'components/utils/button';
 import {
   addAlternatesToSlides,
   addAlternatesToThumbnails,
@@ -134,30 +132,17 @@ export default class Player extends Component {
     );
   }
 
-  renderTitle() {
+  renderHeader() {
     const {
       epoch,
       name,
     } = this.metadata;
 
-    const date = <FormattedDate value={new Date(epoch)} />;
-
     return (
-      <span className="title">
-        {name} - {date}
-      </span>
-    );
-  }
-
-  renderHeader() {
-    return (
-      <header>
-        <div className="left" />
-        <div className="center">
-          {this.renderTitle()}
-        </div>
-        <div className="right" />
-      </header>
+      <Header
+        epoch={epoch}
+        name={name}
+      />
     );
   }
 
@@ -272,18 +257,10 @@ export default class Player extends Component {
     const { thumbnails } = this.state;
 
     return (
-      <footer>
-        <div className="left" />
-        <div className="center" />
-        <div className="right">
-          <Button
-            active={thumbnails}
-            handleOnClick={() => this.toggleThumbnails()}
-            ghost
-            type="presentation"
-          />
-        </div>
-      </footer>
+      <Footer
+        thumbnails={thumbnails}
+        toggleThumbnails={() => this.toggleThumbnails()}
+      />
     );
   }
 

@@ -5,11 +5,31 @@
 $avatar-size: 2.25rem;
 
 .chat-wrapper {
+  display: flex;
+  flex-direction: column;
+  font-size: small;
+  height: 100%;
+  width: 100%;
+
+  .title {
+    color: $gray;
+    box-sizing: border-box;
+    font-weight: $font-weight-semi-bold;
+    padding: $padding;
+  }
+
+  .list {
+    height: 100%;
+    position: relative;
+    width: 100%
+  }
+}
+
+.message-wrapper {
   bottom: 0;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  font-size: small;
   overflow-x: hidden;
   overflow-y: auto;
   padding: $padding;
@@ -17,12 +37,12 @@ $avatar-size: 2.25rem;
   scroll-behavior: smooth;
   top: 0;
   width: 100%;
-}
 
-.chat {
-  display: flex;
-  padding: 0 0 $padding 0;
-  width: 100%;
+  .message {
+    display: flex;
+    padding: 0 0 $padding 0;
+    width: 100%;
+  }
 }
 
 .avatar-wrapper {
@@ -58,7 +78,7 @@ $avatar-size: 2.25rem;
   }
 }
 
-.chat {
+.message {
   .content {
     display: flex;
     flex-direction: column;
@@ -87,7 +107,7 @@ $avatar-size: 2.25rem;
     margin: 0 0 0 $margin;
   }
 
-  .message {
+  .text {
     width: 100%;
   }
 

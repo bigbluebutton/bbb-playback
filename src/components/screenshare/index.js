@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { defineMessages } from 'react-intl';
 import cx from 'classnames';
 import videojs from 'video.js';
@@ -11,7 +11,7 @@ const intlMessages = defineMessages({
   },
 });
 
-export default class Screenshare extends Component {
+export default class Screenshare extends PureComponent {
   constructor(props) {
     super(props);
 

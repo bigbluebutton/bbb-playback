@@ -2,6 +2,7 @@
   "error.wrapper.aria": "Error area",
   "loader.wrapper.aria": "Loader area",
   "player.wrapper.aria": "Player area",
+  "player.chat.title": "Public chat",
   "player.chat.wrapper.aria": "Chat area",
   "player.presentation.wrapper.aria": "Presentation area",
   "player.presentation.slide.wrapper.aria": "Slide area",
