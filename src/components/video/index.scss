@@ -28,3 +28,8 @@
   height: 100%;
   width: 100%;
 }
+
+[class^="vjs-text-track-cue"] {
+  inset: auto 0 calc(#{$control-bar-height} * 2) 0 !important;
+  z-index: 2;
+}
