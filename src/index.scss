@@ -61,6 +61,17 @@ section {
     display: flex;
     min-height: calc(#{$video-height} / 2);
     width: 100%;
+
+    .content {
+      display: flex;
+      height: 100%;
+      position: relative;
+      width: 100%;
+
+      .inactive {
+        display: none;
+      }
+    }
   }
 
   .bottom {

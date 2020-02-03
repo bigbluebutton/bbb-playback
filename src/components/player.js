@@ -237,18 +237,24 @@ export default class Player extends Component {
     );
   }
 
-  renderMain() {
+  renderContent() {
     const {
       presentation,
       screenshare,
     } = this.getActiveMain();
 
     return (
+      <div className="content">
+        {this.renderPresentation(presentation)}
+        {this.renderScreenshare(screenshare)}
+      </div>
+    );
+  }
+
+  renderMain() {
+    return (
       <main>
-        <div className="content">
-          {this.renderPresentation(presentation)}
-          {this.renderScreenshare(screenshare)}
-       </div>
+        {this.renderContent()}
       </main>
     );
   }

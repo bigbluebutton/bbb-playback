@@ -8,7 +8,7 @@ $button-size: 2.75rem;
 .button-wrapper {
   display: flex;
   height: 100%;
-  margin: 0 $margin 0 0;
+  margin: 0 $margin 0 $margin;
 
   .button {
     border-radius: 50%;
