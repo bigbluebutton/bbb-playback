@@ -51,8 +51,7 @@ export default class Whiteboard extends Component {
     />;
   }
 
-  renderSwitch(style, data) {
-    // TODO: Check if switch element is really needed
+  renderText(style, data) {
     return (
       <foreignObject
         style={style}
@@ -90,7 +89,7 @@ export default class Whiteboard extends Component {
           transform={image.transform}
           width={image.width}
           x={image.x}
-          xlinkHref={`${this.url}/${image['xlink:href']}`}
+          href={`${this.url}/${image['xlink:href']}`}
           y={image.y}
         />
       </g>
@@ -145,8 +144,8 @@ export default class Whiteboard extends Component {
         case 'circle':
           whiteboard.push(this.renderCircle(style, data));
           break;
-        case 'switch':
-          whiteboard.push(this.renderSwitch(style, data));
+        case 'text':
+          whiteboard.push(this.renderText(style, data));
           break;
         default:
       }

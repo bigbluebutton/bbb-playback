@@ -39,7 +39,7 @@ export default class Slide extends PureComponent {
         alt={alt}
         aria-label={intl.formatMessage(intlMessages.aria)}
         id={this.id}
-        xlinkHref={`${this.url}/${src}`}
+        href={`${this.url}/${src}`}
       />
     );
   }

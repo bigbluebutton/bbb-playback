@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { defineMessages } from 'react-intl';
 import cx from 'classnames';
+import Cursor from './cursor';
 import Slide from './slide';
 import Whiteboard from './whiteboard';
 import { getCurrentDataIndex } from 'utils/data';
@@ -26,8 +27,9 @@ export default class Presentation extends Component {
       time,
     } = this.props;
 
+    const inactive = -1;
     const currentDataIndex = getCurrentDataIndex(slides, time);
-    if (currentDataIndex === -1) return -1;
+    if (currentDataIndex === -1) return inactive;
 
     const currentData = slides[currentDataIndex];
 
@@ -40,15 +42,15 @@ export default class Presentation extends Component {
       time,
     } = this.props;
 
+    const inactive = {
+      height: 0,
+      x: 0,
+      width: 0,
+      y: 0,
+    };
+
     const currentDataIndex = getCurrentDataIndex(panzooms, time);
-    if (currentDataIndex === -1) {
-      return {
-        height: 0,
-        x: 0,
-        width: 0,
-        y: 0,
-      };
-    }
+    if (currentDataIndex === -1) return inactive;
 
     const currentData = panzooms[currentDataIndex];
 
@@ -77,15 +79,16 @@ export default class Presentation extends Component {
       time,
     } = this.props;
 
-    const currentDataIndex = getCurrentDataIndex(cursor, time);
-    if (currentDataIndex === -1) {
-      return {
-        x: -1,
-        y: -1,
-      };
+    const inactive = {
+      x: -1,
+      y: -1,
     }
 
+    const currentDataIndex = getCurrentDataIndex(cursor, time);
+    if (currentDataIndex === -1) return inactive;
+
     const currentData = cursor[currentDataIndex];
+    if (currentData.x === -1 && currentData.y === -1) return inactive;
 
     return {
       x: viewBox.x + (currentData.x * viewBox.width),
@@ -142,10 +145,7 @@ export default class Presentation extends Component {
                 metadata={metadata}
                 time={time}
               />
-              <circle
-                className="cursor"
-                style={{ cx: cursor.x, cy: cursor.y }}
-              />
+              <Cursor cursor={cursor} />
             </g>
           </svg>
         </div>

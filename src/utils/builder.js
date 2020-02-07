@@ -195,7 +195,7 @@ const buildCanvases = group => {
           shape.type = 'path';
           shape.data = Object.assign({}, getAttr(g.path.shift()));
         } else if (g.switch) {
-          shape.type = 'switch';
+          shape.type = 'text';
           const foreignObject = g.switch.shift()['foreignObject'].shift();
           const p = foreignObject.p.shift()['_'];
           shape.data = Object.assign({ p: p ? p : '' }, getAttr(foreignObject));
