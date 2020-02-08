@@ -95,7 +95,8 @@ export default class Whiteboard extends PureComponent {
     );
   }
 
-  renderWhiteboard(draws, first, last) {
+  renderWhiteboard(first, last) {
+    const { draws } = this.props;
     const whiteboard = [];
 
     for (let i = first; i <= last; i++) {
@@ -149,20 +150,15 @@ export default class Whiteboard extends PureComponent {
 
   render() {
     const {
-      canvas,
       first,
       last,
     } = this.props;
 
-    if (!canvas) return null;
-
-    if (first === -1 || last === -1) return null;
-
-    const { draws } = canvas;
+    if (first === -1 && last === -1) return null;
 
     return (
       <g>
-        {this.renderWhiteboard(draws, first, last)}
+        {this.renderWhiteboard(first, last)}
       </g>
     );
   }

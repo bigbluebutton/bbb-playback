@@ -111,7 +111,7 @@ export default class Presentation extends Component {
     const canvas = canvases.find(canvas => id === canvas.id);
     if (!canvas) {
       return {
-        canvas,
+        draws: null,
         first,
         last,
       };
@@ -146,7 +146,7 @@ export default class Presentation extends Component {
     }
 
     return {
-      canvas,
+      draws,
       first,
       last,
     }
@@ -196,7 +196,7 @@ export default class Presentation extends Component {
                 slides={slides}
               />
               <Whiteboard
-                canvas={annotations.canvas}
+                draws={annotations.draws}
                 first={annotations.first}
                 id={id}
                 last={annotations.last}
