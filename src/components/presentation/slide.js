@@ -19,18 +19,29 @@ export default class Slide extends PureComponent {
     this.url = `/presentation/${metadata.id}`;
   }
 
+  getProxy(id) {
+    const { thumbnails } = this.props;
+
+    const thumbnail = thumbnails.find(thumbnails => id === thumbnails.id);
+    if (!thumbnail) return null;
+
+    return (
+      <image
+        href={`${this.url}/${thumbnail.src}`}
+        className="proxy"
+      />
+    );
+  }
+
   render() {
     const {
       id,
       intl,
       slides,
-      thumbnails,
     } = this.props;
 
     const current = slides.find(slide => id === slide.id);
     if (!current) return null;
-
-    const thumbnail = thumbnails.find(thumbnails => id === thumbnails.id);
 
     const {
       alt,
@@ -39,10 +50,7 @@ export default class Slide extends PureComponent {
 
     return (
       <g>
-        <image
-          href={`${this.url}/${thumbnail.src}`}
-          className="thumbnail"
-        />
+        {this.getProxy(id)}
         <image
           alt={alt}
           aria-label={intl.formatMessage(intlMessages.aria)}
