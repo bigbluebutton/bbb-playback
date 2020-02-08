@@ -50,7 +50,7 @@
     "scroll": true
   },
   "video": {
-    "fps": 5,
+    "fps": 30,
     "rates": [ 0.5, 1, 1.5, 2 ]
   }
 }
