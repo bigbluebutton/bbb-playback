@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import './index.scss';
 
-export default class Whiteboard extends PureComponent {
+export default class Canvas extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -95,11 +95,11 @@ export default class Whiteboard extends PureComponent {
     );
   }
 
-  renderWhiteboard(first, last) {
+  renderCanvas(firstDraw, lastDraw) {
     const { draws } = this.props;
-    const whiteboard = [];
+    const canvas = [];
 
-    for (let i = first; i <= last; i++) {
+    for (let i = firstDraw; i <= lastDraw; i++) {
       const {
         id,
         shape,
@@ -108,7 +108,7 @@ export default class Whiteboard extends PureComponent {
 
       const j = i + 1;
       let intermediate = false;
-      if (j <= last) {
+      if (j <= lastDraw) {
         intermediate = draws[j].id === id;
       }
 
@@ -121,44 +121,44 @@ export default class Whiteboard extends PureComponent {
 
       switch (type) {
         case 'poll':
-          whiteboard.push(this.renderPoll(style, data));
+          canvas.push(this.renderPoll(style, data));
           break;
         case 'polyline':
-          whiteboard.push(this.renderPolyline(style, data));
+          canvas.push(this.renderPolyline(style, data));
           break;
         case 'line':
-          whiteboard.push(this.renderLine(style, data));
+          canvas.push(this.renderLine(style, data));
           break;
         case 'polygon':
-          whiteboard.push(this.renderPolygon(style, data));
+          canvas.push(this.renderPolygon(style, data));
           break;
         case 'path':
-          whiteboard.push(this.renderPath(style, data));
+          canvas.push(this.renderPath(style, data));
           break;
         case 'circle':
-          whiteboard.push(this.renderCircle(style, data));
+          canvas.push(this.renderCircle(style, data));
           break;
         case 'text':
-          whiteboard.push(this.renderText(style, data));
+          canvas.push(this.renderText(style, data));
           break;
         default:
       }
     }
 
-    return whiteboard;
+    return canvas;
   }
 
   render() {
     const {
-      first,
-      last,
+      firstDraw,
+      lastDraw,
     } = this.props;
 
-    if (first === -1 && last === -1) return null;
+    if (firstDraw === -1 && lastDraw === -1) return null;
 
     return (
       <g>
-        {this.renderWhiteboard(first, last)}
+        {this.renderCanvas(firstDraw, lastDraw)}
       </g>
     );
   }

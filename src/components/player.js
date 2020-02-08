@@ -14,6 +14,7 @@ import {
 } from 'utils/builder';
 import {
   getCurrentDataIndex,
+  getCurrentDataInterval,
   getFileName,
   isEnabled,
 } from 'utils/data';
@@ -196,21 +197,44 @@ export default class Player extends Component {
     );
   }
 
+  getDraws(slideIndex) {
+    if (slideIndex === -1) return null;
+
+    const slide = this.slides[slideIndex];
+    const canvas = this.canvases.find(canvas => slide.id === canvas.id);
+
+    if (!canvas) return null;
+
+    const { draws } = canvas;
+
+    return draws;
+  }
+
   renderPresentation(active) {
     const { intl } = this.props;
     const { time } = this.state;
 
+    const currentSlideIndex = getCurrentDataIndex(this.slides, time);
+    const currentPanzoomIndex = getCurrentDataIndex(this.panzooms, time);
+    const currentCursorIndex = getCurrentDataIndex(this.cursor, time);
+    const draws = this.getDraws(currentSlideIndex);
+    const currentDrawsInterval = getCurrentDataInterval(draws, time);
+
     return (
       <Presentation
         active={active}
-        canvases={this.canvases}
+        currentCursorIndex={currentCursorIndex}
+        currentPanzoomIndex={currentPanzoomIndex}
+        currentSlideIndex={currentSlideIndex}
         cursor={this.cursor}
+        draws={draws}
+        firstDraw={currentDrawsInterval.first}
         intl={intl}
+        lastDraw={currentDrawsInterval.last}
         metadata={this.metadata}
         panzooms={this.panzooms}
         slides={this.slides}
         thumbnails={this.thumbnails}
-        time={time}
       />
     )
   }

@@ -56,6 +56,40 @@ const getCurrentDataIndex = (data, time) => {
   return currentDataIndex;
 };
 
+const getCurrentDataInterval = (data, time) => {
+  let first = -1;
+  let last = -1;
+
+  if (!data) {
+    return {
+      first,
+      last,
+    };
+  }
+
+  for (let i = 0; i < data.length; i++) {
+    const {
+      clear,
+      timestamp,
+    } = data[i];
+
+    const active = isActive(time, timestamp, clear);
+    if (!active) {
+      if (last !== -1) break;
+      continue;
+    }
+
+    if (first === -1) first = i;
+
+    last = i;
+  }
+
+  return {
+    first,
+    last,
+  }
+};
+
 const getFileName = file => file.split('.').shift();
 
 const getFileType = file => config.files.type[file.split('.').pop()];
@@ -139,6 +173,7 @@ const isActive = (time, timestamp, clear = -1) => {
 export {
   getAvatarColor,
   getCurrentDataIndex,
+  getCurrentDataInterval,
   getFileName,
   getFileType,
   getRecordId,

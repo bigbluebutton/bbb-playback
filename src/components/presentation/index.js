@@ -1,13 +1,9 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { defineMessages } from 'react-intl';
 import cx from 'classnames';
 import Cursor from './cursor';
 import Slide from './slide';
-import Whiteboard from './whiteboard';
-import {
-  getCurrentDataIndex,
-  isActive,
-} from 'utils/data';
+import Canvas from './canvas';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -17,7 +13,7 @@ const intlMessages = defineMessages({
   },
 });
 
-export default class Presentation extends Component {
+export default class Presentation extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -26,23 +22,22 @@ export default class Presentation extends Component {
 
   getSlideId() {
     const {
+      currentSlideIndex,
       slides,
-      time,
     } = this.props;
 
     const inactive = -1;
-    const currentDataIndex = getCurrentDataIndex(slides, time);
-    if (currentDataIndex === -1) return inactive;
+    if (currentSlideIndex === -1) return inactive;
 
-    const currentData = slides[currentDataIndex];
+    const currentData = slides[currentSlideIndex];
 
     return currentData.id;
   }
 
   getViewBox() {
     const {
+      currentPanzoomIndex,
       panzooms,
-      time,
     } = this.props;
 
     const inactive = {
@@ -52,10 +47,9 @@ export default class Presentation extends Component {
       y: 0,
     };
 
-    const currentDataIndex = getCurrentDataIndex(panzooms, time);
-    if (currentDataIndex === -1) return inactive;
+    if (currentPanzoomIndex === -1) return inactive;
 
-    const currentData = panzooms[currentDataIndex];
+    const currentData = panzooms[currentPanzoomIndex];
 
     return {
       height: currentData.height,
@@ -78,8 +72,8 @@ export default class Presentation extends Component {
 
   getCursor(viewBox) {
     const {
+      currentCursorIndex,
       cursor,
-      time,
     } = this.props;
 
     const inactive = {
@@ -87,10 +81,9 @@ export default class Presentation extends Component {
       y: -1,
     }
 
-    const currentDataIndex = getCurrentDataIndex(cursor, time);
-    if (currentDataIndex === -1) return inactive;
+    if (currentCursorIndex === -1) return inactive;
 
-    const currentData = cursor[currentDataIndex];
+    const currentData = cursor[currentCursorIndex];
     if (currentData.x === -1 && currentData.y === -1) return inactive;
 
     return {
@@ -99,73 +92,22 @@ export default class Presentation extends Component {
     };
   }
 
-  getAnnotations(id) {
-    const {
-      canvases,
-      time,
-    } = this.props;
-
-    let first = -1;
-    let last = -1;
-
-    const canvas = canvases.find(canvas => id === canvas.id);
-    if (!canvas) {
-      return {
-        draws: null,
-        first,
-        last,
-      };
-    }
-
-    const { draws } = canvas;
-
-    for (let i = 0; i < draws.length; i++) {
-      const {
-        clear,
-        id,
-        timestamp,
-      } = draws[i];
-
-      const active = isActive(time, timestamp, clear);
-      if (!active) {
-        if (last !== -1) break;
-        continue;
-      }
-
-      if (first === -1) first = i;
-
-      const j = i + 1;
-      let intermediate = false;
-      if (j < draws.length && isActive(time, draws[j].timestamp)) {
-        intermediate = draws[j].id === id;
-      }
-
-      if (intermediate) continue;
-
-      last = i;
-    }
-
-    return {
-      draws,
-      first,
-      last,
-    }
-  }
-
-
   render() {
     const {
       active,
+      draws,
+      firstDraw,
       intl,
+      lastDraw,
       metadata,
       slides,
       thumbnails,
     } = this.props;
 
-    const id = this.getSlideId();
-    const annotations = this.getAnnotations(id);
+    const slideId = this.getSlideId();
     const viewBox = this.getViewBox();
     const cursor = this.getCursor(viewBox);
+    const canvasId = slideId;
 
     return (
       <div
@@ -191,17 +133,17 @@ export default class Presentation extends Component {
             </defs>
             <g clipPath="url(#viewBox)">
               <Slide
-                id={id}
+                id={slideId}
                 intl={intl}
                 metadata={metadata}
                 slides={slides}
                 thumbnails={thumbnails}
               />
-              <Whiteboard
-                draws={annotations.draws}
-                first={annotations.first}
-                id={id}
-                last={annotations.last}
+              <Canvas
+                draws={draws}
+                firstDraw={firstDraw}
+                id={canvasId}
+                lastDraw={lastDraw}
                 metadata={metadata}
               />
               <Cursor

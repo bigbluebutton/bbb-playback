@@ -39,6 +39,8 @@ it('gets current data index', () => {
   expect(getCurrentDataIndex(invalid, 0.0)).toEqual(-1);
 });
 
+// TODO: getCurrentDataInterval
+
 it('gets file name', () => {
   const json = 'name.json'
   expect(getFileName(json)).toEqual('name');
