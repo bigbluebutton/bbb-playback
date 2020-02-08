@@ -141,6 +141,7 @@ const buildThumbnails = slides => {
 
   return slides.reduce((result, slide) => {
     const {
+      id,
       src,
       timestamp,
     } = slide;
@@ -148,6 +149,7 @@ const buildThumbnails = slides => {
     // TODO: Screenshare thumbnail
     if (!src.includes(screenshare)) {
       result.push({
+        id,
         src: src.replace(prefix, url),
         timestamp,
       });

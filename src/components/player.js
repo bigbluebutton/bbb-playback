@@ -209,6 +209,7 @@ export default class Player extends Component {
         metadata={this.metadata}
         panzooms={this.panzooms}
         slides={this.slides}
+        thumbnails={this.thumbnails}
         time={time}
       />
     )

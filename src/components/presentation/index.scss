@@ -21,6 +21,11 @@ $cursor-size: .5rem;
     fill: $red;
     r: $cursor-size;
   }
+
+  .thumbnail {
+    height: 100%;
+    width: 100%;
+  }
 }
 
 svg {

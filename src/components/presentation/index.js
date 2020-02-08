@@ -159,6 +159,7 @@ export default class Presentation extends Component {
       intl,
       metadata,
       slides,
+      thumbnails,
     } = this.props;
 
     const id = this.getSlideId();
@@ -194,6 +195,7 @@ export default class Presentation extends Component {
                 intl={intl}
                 metadata={metadata}
                 slides={slides}
+                thumbnails={thumbnails}
               />
               <Whiteboard
                 draws={annotations.draws}
