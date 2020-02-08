@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
-import { isActive } from 'utils/data';
+import React, { PureComponent } from 'react';
 import './index.scss';
 
-export default class Whiteboard extends Component {
+export default class Whiteboard extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -96,25 +95,19 @@ export default class Whiteboard extends Component {
     );
   }
 
-  renderWhiteboard(draws, time) {
+  renderWhiteboard(draws, first, last) {
     const whiteboard = [];
 
-    for (let i = 0; i < draws.length; i++) {
+    for (let i = first; i <= last; i++) {
       const {
-        clear,
         id,
         shape,
         style,
-        timestamp,
       } = draws[i];
-
-      const active = isActive(time, timestamp, clear);
-
-      if (!active) continue;
 
       const j = i + 1;
       let intermediate = false;
-      if (j < draws.length && isActive(time, draws[j].timestamp)) {
+      if (j <= last) {
         intermediate = draws[j].id === id;
       }
 
@@ -156,19 +149,20 @@ export default class Whiteboard extends Component {
 
   render() {
     const {
-      canvases,
-      id,
-      time,
+      canvas,
+      first,
+      last,
     } = this.props;
 
-    const current = canvases.find(canvas => id === canvas.id);
-    if (!current) return null;
+    if (!canvas) return null;
 
-    const { draws } = current;
+    if (first === -1 || last === -1) return null;
+
+    const { draws } = canvas;
 
     return (
       <g>
-        {this.renderWhiteboard(draws, time)}
+        {this.renderWhiteboard(draws, first, last)}
       </g>
     );
   }

@@ -4,7 +4,10 @@ import cx from 'classnames';
 import Cursor from './cursor';
 import Slide from './slide';
 import Whiteboard from './whiteboard';
-import { getCurrentDataIndex } from 'utils/data';
+import {
+  getCurrentDataIndex,
+  isActive,
+} from 'utils/data';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -96,17 +99,70 @@ export default class Presentation extends Component {
     };
   }
 
-  render() {
+  getAnnotations(id) {
     const {
-      active,
       canvases,
-      intl,
-      metadata,
-      slides,
       time,
     } = this.props;
 
+    let first = -1;
+    let last = -1;
+
+    const canvas = canvases.find(canvas => id === canvas.id);
+    if (!canvas) {
+      return {
+        canvas,
+        first,
+        last,
+      };
+    }
+
+    const { draws } = canvas;
+
+    for (let i = 0; i < draws.length; i++) {
+      const {
+        clear,
+        id,
+        timestamp,
+      } = draws[i];
+
+      const active = isActive(time, timestamp, clear);
+      if (!active) {
+        if (last !== -1) break;
+        continue;
+      }
+
+      if (first === -1) first = i;
+
+      const j = i + 1;
+      let intermediate = false;
+      if (j < draws.length && isActive(time, draws[j].timestamp)) {
+        intermediate = draws[j].id === id;
+      }
+
+      if (intermediate) continue;
+
+      last = i;
+    }
+
+    return {
+      canvas,
+      first,
+      last,
+    }
+  }
+
+
+  render() {
+    const {
+      active,
+      intl,
+      metadata,
+      slides,
+    } = this.props;
+
     const id = this.getSlideId();
+    const annotations = this.getAnnotations(id);
     const viewBox = this.getViewBox();
     const cursor = this.getCursor(viewBox);
 
@@ -140,12 +196,16 @@ export default class Presentation extends Component {
                 slides={slides}
               />
               <Whiteboard
-                canvases={canvases}
+                canvas={annotations.canvas}
+                first={annotations.first}
                 id={id}
+                last={annotations.last}
                 metadata={metadata}
-                time={time}
               />
-              <Cursor cursor={cursor} />
+              <Cursor
+                x={cursor.x}
+                y={cursor.y}
+              />
             </g>
           </svg>
         </div>
