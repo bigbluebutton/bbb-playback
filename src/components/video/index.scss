@@ -27,6 +27,12 @@
   width: 100%;
 }
 
+:not(.vjs-has-started) .vjs-control-bar {
+  display: flex;
+  position: fixed;
+  z-index: 1;
+}
+
 [class^="vjs-text-track-cue"] {
   inset: auto 0 calc(#{$control-bar-height} * 2) 0 !important;
   z-index: 2;
