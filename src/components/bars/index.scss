@@ -1,0 +1,68 @@
+@import 'src/styles/colors';
+@import 'src/styles/fonts';
+@import 'src/styles/sizes';
+
+.information-bar {
+  background-color: $main-background-color;
+  grid-area: information-bar;
+
+  .title {
+    color: white;
+    font-weight: $font-weight-light;
+    overflow: hidden;
+    padding: $padding-small;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .button-wrapper {
+    .solid {
+      &:focus {
+        border: solid $main-background-color;
+      }
+    }
+  }
+}
+
+.action-bar {
+  background-color: $main-background-color;
+  grid-area: action-bar;
+
+  .button-wrapper {
+    .solid {
+      &:focus {
+        border: solid $main-background-color;
+      }
+    }
+  }
+}
+
+.action-bar,
+.information-bar {
+  display: flex;
+  box-sizing: border-box;
+  padding: 0 $padding-small;
+
+  .left,
+  .center,
+  .right {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    height: 100%;
+    padding: $padding-small;
+    width: 100%;
+  }
+
+  .left {
+    justify-content: flex-start;
+  }
+
+  .center {
+    justify-content: center;
+  }
+
+  .right {
+    justify-content: flex-end;
+  }
+}

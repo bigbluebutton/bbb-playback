@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Button from 'components/utils/button';
 import './index.scss';
 
-export default class Footer extends Component {
+export default class ActionBar extends Component {
   shouldComponentUpdate(nextProps) {
     const {
       swap,
@@ -24,7 +24,7 @@ export default class Footer extends Component {
     } = this.props;
 
     return (
-      <footer>
+      <div className="action-bar">
         <div className="left">
           <Button
             handleOnClick={toggleSwap}
@@ -40,7 +40,7 @@ export default class Footer extends Component {
             type="rooms"
           />
         </div>
-      </footer>
+      </div>
     );
   }
 }

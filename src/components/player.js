@@ -3,12 +3,12 @@ import cx from 'classnames';
 import { defineMessages } from 'react-intl';
 import { files as config } from 'config';
 import Chat from './chat';
-import Footer from './footer';
-import Header from './header';
 import Presentation from './presentation';
 import Screenshare from './screenshare';
 import Thumbnails from './thumbnails';
 import Video from './video';
+import ActionBar from 'components/bars/action';
+import InformationBar from 'components/bars/information';
 import {
   addAlternatesToSlides,
   addAlternatesToThumbnails,
@@ -130,14 +130,14 @@ export default class Player extends Component {
     );
   }
 
-  renderHeader() {
+  renderInformationBar() {
     const {
       epoch,
       name,
     } = this.metadata;
 
     return (
-      <Header
+      <InformationBar
         epoch={epoch}
         name={name}
       />
@@ -278,14 +278,14 @@ export default class Player extends Component {
     );
   }
 
-  renderFooter() {
+  renderActionBar() {
     const {
       swap,
       thumbnails,
     } = this.state;
 
     return (
-      <Footer
+      <ActionBar
         swap={swap}
         thumbnails={thumbnails}
         toggleSwap={() => this.toggleSwap()}
@@ -303,11 +303,11 @@ export default class Player extends Component {
         className="player-wrapper"
         id={this.id}
       >
-        {this.renderHeader()}
+        {this.renderInformationBar()}
         {this.renderMedia()}
         {this.renderApplications()}
         {this.renderContent()}
-        {this.renderFooter()}
+        {this.renderActionBar()}
         {this.renderThumbnails()}
       </div>
     );

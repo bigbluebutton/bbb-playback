@@ -4,8 +4,10 @@
 
 $player-wrapper-padding: $control-bar-height;
 
-$loading-dots-height: 20px;
-$loading-dots-width: 20px;
+$loading-dot-size: 20px;
+$loading-dots-width: 100px;
+
+$error-font-size: 5rem;
 
 .error-wrapper,
 .loader-wrapper {
@@ -18,11 +20,11 @@ $loading-dots-width: 20px;
   box-sizing: border-box;
   display: grid;
   grid-template-areas:
-    "header content"
+    "information-bar content"
     "media content"
     "applications content"
     "applications content"
-    "footer content";
+    "action-bar content";
   grid-template-columns: 100% auto;
   grid-template-rows: $header-height auto auto auto $footer-height;
   height: 100%;
@@ -34,24 +36,25 @@ $loading-dots-width: 20px;
 .loading-dots {
   margin: auto;
   text-align: center;
-  width: 100px;
 }
 
 .error-code {
   color: white;
-  font-size: xxx-large;
+  font-size: $error-font-size;
   font-weight: $font-weight-bold;
 }
 
 .loading-dots {
+  width: $loading-dots-width;
+
   div {
     animation: dots 1.4s infinite ease-in-out both;
     background-color: white;
     border-radius: 100%;
     display: inline-block;
-    height: $loading-dots-height;
+    height: $loading-dot-size;
     margin: $margin-extra-small;
-    width: $loading-dots-width;
+    width: $loading-dot-size;
   }
 
   .first {
@@ -137,11 +140,11 @@ $loading-dots-width: 20px;
 @media (min-width: $media-min-width) {
   .player-wrapper {
     grid-template-areas:
-      "media header"
+      "media information-bar"
       "media content"
       "applications content"
       "applications content"
-      "applications footer";
+      "applications action-bar";
     grid-template-columns: $section-width auto;
   }
 

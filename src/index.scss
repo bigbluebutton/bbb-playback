@@ -16,69 +16,6 @@ body {
   overflow: hidden;
 }
 
-header,
-footer {
-  height: 100%;
-  width: 100%;
-}
-
-header {
-  background-color: $header-background-color;
-  grid-area: header;
-
-  .title {
-    color: white;
-    font-weight: $font-weight-light;
-    overflow: hidden;
-    padding: $padding-small;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-}
-
-footer {
-  background-color: $footer-background-color;
-  grid-area: footer;
-
-  .button-wrapper {
-    .solid {
-      &:focus {
-        border: solid $footer-background-color;
-      }
-    }
-  }
-}
-
-header,
-footer {
-  display: flex;
-  box-sizing: border-box;
-  padding: 0 $padding-small;
-
-  .left,
-  .center,
-  .right {
-    align-items: center;
-    box-sizing: border-box;
-    display: flex;
-    height: 100%;
-    padding: $padding-small;
-    width: 100%;
-  }
-
-  .left {
-    justify-content: flex-start;
-  }
-
-  .center {
-    justify-content: center;
-  }
-
-  .right {
-    justify-content: flex-end;
-  }
-}
-
 #root {
   height: 100%;
   width: 100%;

@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { FormattedDate } from 'react-intl';
 import './index.scss';
 
-export default class Footer extends PureComponent {
+export default class InformationBar extends PureComponent {
   renderTitle() {
     const {
       epoch,
@@ -20,13 +20,13 @@ export default class Footer extends PureComponent {
 
   render() {
     return (
-      <header>
+      <div className="information-bar">
         <div className="left" />
         <div className="center">
           {this.renderTitle()}
         </div>
         <div className="right" />
-      </header>
+      </div>
     );
   }
 }
