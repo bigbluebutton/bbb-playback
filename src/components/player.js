@@ -291,7 +291,7 @@ export default class Player extends Component {
   }
 
   render() {
-    const { intl } = this.props
+    const { intl } = this.props;
 
     return (
       <div
