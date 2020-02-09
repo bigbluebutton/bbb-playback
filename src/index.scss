@@ -17,8 +17,6 @@ body {
 }
 
 header,
-section,
-main,
 footer {
   height: 100%;
   width: 100%;
@@ -48,61 +46,6 @@ footer {
         border: solid $footer-background-color;
       }
     }
-  }
-}
-
-section {
-  background-color: $section-background-color;
-  display: flex;
-  grid-area: section;
-  flex-direction: column;
-
-  .top {
-    display: flex;
-    min-height: calc(#{$video-height} / 2);
-    width: 100%;
-
-    .content {
-      display: flex;
-      height: 100%;
-      position: relative;
-      width: 100%;
-
-      .inactive {
-        display: none;
-      }
-    }
-  }
-
-  .bottom {
-    display: flex;
-    height: 100%;
-    width: 100%;
-  }
-
-  .video-js {
-    background-color: $section-background-color;
-  }
-}
-
-main {
-  background-color: $main-background-color;
-  display: none;
-  grid-area: main;
-
-  .content {
-    display: flex;
-    height: 100%;
-    position: relative;
-    width: 100%;
-
-    .inactive {
-      display: none;
-    }
-  }
-
-  .video-js {
-    background-color: $main-background-color;
   }
 }
 
@@ -139,18 +82,4 @@ footer {
 #root {
   height: 100%;
   width: 100%;
-}
-
-@media (min-width: $media-min-width) {
-  main {
-    display: flex;
-  }
-
-  @media (max-height: $media-max-height) {
-    section {
-      .top {
-        min-height: calc((#{$video-height} / 8) * 3);
-      }
-    }
-  }
 }

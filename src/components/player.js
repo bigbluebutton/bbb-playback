@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import cx from 'classnames';
 import { defineMessages } from 'react-intl';
 import { files as config } from 'config';
 import Chat from './chat';
@@ -34,6 +35,7 @@ export default class Player extends Component {
 
     this.state = {
       time: 0,
+      swap: false,
       thumbnails: false,
     }
 
@@ -92,15 +94,10 @@ export default class Player extends Component {
     }
   }
 
-  getActiveMain() {
-    const { time } = this.state;
+  toggleSwap() {
+    const { swap } = this.state;
 
-    const screenshare = isEnabled(this.screenshare, time);
-
-    return {
-      presentation: !screenshare,
-      screenshare,
-    };
+    this.setState({ swap: !swap });
   }
 
   toggleThumbnails() {
@@ -147,53 +144,45 @@ export default class Player extends Component {
     );
   }
 
-  renderVideo() {
+  renderMedia() {
     const {
       data,
       intl,
     } = this.props;
 
+    const { swap } = this.state;
     const { media } = data;
 
     return (
-      <Video
-        captions={this.captions}
-        intl={intl}
-        media={media}
-        metadata={this.metadata}
-        onPlayerReady={this.handlePlayerReady}
-        onTimeUpdate={this.handleTimeUpdate}
-      />
+      <div className={cx('media', { 'swapped-media': swap })}>
+        <Video
+          captions={this.captions}
+          intl={intl}
+          media={media}
+          metadata={this.metadata}
+          onPlayerReady={this.handlePlayerReady}
+          onTimeUpdate={this.handleTimeUpdate}
+        />
+      </div>
     );
   }
 
-  renderChat() {
+  renderApplications() {
     const { intl } = this.props;
     const { time } = this.state;
     const { video } = this.player;
 
-    const currentDataIndex = getCurrentDataIndex(this.chat, time);
+    const currentChatIndex = getCurrentDataIndex(this.chat, time);
 
     return (
-      <Chat
-        chat={this.chat}
-        currentDataIndex={currentDataIndex}
-        intl={intl}
-        player={video}
-      />
-    );
-  }
-
-  renderSection() {
-    return (
-      <section>
-        <div className="top">
-          {this.renderVideo()}
-        </div>
-        <div className="bottom">
-          {this.renderChat()}
-       </div>
-      </section>
+      <div className="applications">
+        <Chat
+          chat={this.chat}
+          currentDataIndex={currentChatIndex}
+          intl={intl}
+          player={video}
+        />
+      </div>
     );
   }
 
@@ -262,34 +251,44 @@ export default class Player extends Component {
     );
   }
 
+  getActiveContent() {
+    const { time } = this.state;
+
+    const screenshare = isEnabled(this.screenshare, time);
+
+    return {
+      presentation: !screenshare,
+      screenshare,
+    };
+  }
+
   renderContent() {
     const {
       presentation,
       screenshare,
-    } = this.getActiveMain();
+    } = this.getActiveContent();
+
+    const { swap } = this.state;
 
     return (
-      <div className="content">
+      <div className={cx('content', { 'swapped-content': swap })}>
         {this.renderPresentation(presentation)}
         {this.renderScreenshare(screenshare)}
       </div>
     );
   }
 
-  renderMain() {
-    return (
-      <main>
-        {this.renderContent()}
-      </main>
-    );
-  }
-
   renderFooter() {
-    const { thumbnails } = this.state;
+    const {
+      swap,
+      thumbnails,
+    } = this.state;
 
     return (
       <Footer
+        swap={swap}
         thumbnails={thumbnails}
+        toggleSwap={() => this.toggleSwap()}
         toggleThumbnails={() => this.toggleThumbnails()}
       />
     );
@@ -305,8 +304,9 @@ export default class Player extends Component {
         id={this.id}
       >
         {this.renderHeader()}
-        {this.renderSection()}
-        {this.renderMain()}
+        {this.renderMedia()}
+        {this.renderApplications()}
+        {this.renderContent()}
         {this.renderFooter()}
         {this.renderThumbnails()}
       </div>

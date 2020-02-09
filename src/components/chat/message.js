@@ -33,7 +33,7 @@ export default class Message extends Component {
 
   renderContent(active, name, timestamp, text) {
     return (
-      <div className="content">
+      <div className="data">
         <div className="info">
           <div className={cx('name', { inactive: !active })}>
             {name}

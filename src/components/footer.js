@@ -4,8 +4,12 @@ import './index.scss';
 
 export default class Footer extends Component {
   shouldComponentUpdate(nextProps) {
-    const { thumbnails } = this.props;
+    const {
+      swap,
+      thumbnails,
+    } = this.props;
 
+    if (swap !== nextProps.swap) return true;
     if (thumbnails !== nextProps.thumbnails) return true;
 
     return false;
@@ -13,20 +17,27 @@ export default class Footer extends Component {
 
   render() {
     const {
+      swap,
       thumbnails,
+      toggleSwap,
       toggleThumbnails,
     } = this.props;
 
     return (
       <footer>
-        <div className="left" />
+        <div className="left">
+          <Button
+            handleOnClick={toggleSwap}
+            type={swap ? 'presentation' : 'video'}
+          />
+        </div>
         <div className="center" />
         <div className="right">
           <Button
             active={thumbnails}
             handleOnClick={toggleThumbnails}
             ghost
-            type="presentation"
+            type="rooms"
           />
         </div>
       </footer>
