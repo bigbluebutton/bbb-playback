@@ -7,8 +7,9 @@ $video-width: 640px;
 
 $section-width: calc(#{$video-width} / 2);
 $section-width-small: calc((#{$video-width} / 8) * 3);
-$header-height: 60px;
-$footer-height: 60px;
+
+$information-bar-height: 60px;
+$action-bar-height: 60px;
 
 $border-radius: .35rem;
 $border-width: .20rem;

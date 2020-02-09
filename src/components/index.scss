@@ -26,7 +26,7 @@ $error-font-size: 5rem;
     "applications content"
     "action-bar content";
   grid-template-columns: 100% auto;
-  grid-template-rows: $header-height auto auto auto $footer-height;
+  grid-template-rows: $information-bar-height auto auto auto $action-bar-height;
   height: 100%;
   padding: 0 0 $player-wrapper-padding 0;
   width: 100%;

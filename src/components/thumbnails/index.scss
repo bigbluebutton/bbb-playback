@@ -1,8 +1,8 @@
 @import 'src/styles/colors';
 @import 'src/styles/sizes';
 
-$thumbnails-wrapper-top: $header-height;
-$thumbnails-wrapper-bottom: calc(#{$control-bar-height} + #{$footer-height});
+$thumbnails-wrapper-top: $information-bar-height;
+$thumbnails-wrapper-bottom: calc(#{$control-bar-height} + #{$action-bar-height});
 $thumbnail-height: 90px;
 
 .thumbnails-wrapper {
