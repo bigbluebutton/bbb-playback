@@ -14,7 +14,6 @@
 }
 
 .video-js .vjs-big-play-button,
-.vjs-has-started .vjs-control-bar,
 .vjs-text-track-display,
 .vjs-loading-spinner,
 .video-js .vjs-modal-dialog {
@@ -28,10 +27,10 @@
   width: 100%;
 }
 
-:not(.vjs-has-started) .vjs-control-bar {
-  display: flex;
-  position: fixed;
-  z-index: 1;
+.vjs-control-bar {
+  display: flex !important;
+  position: fixed !important;
+  z-index: 1 !important;
 }
 
 [class^="vjs-text-track-cue"] {
