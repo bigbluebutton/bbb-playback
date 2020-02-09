@@ -88,12 +88,14 @@ export default class Thumbnails extends Component {
       const active = index === currentDataIndex;
 
       return (
-        <div className="thumbnail-wrapper">
+        <div
+          className="thumbnail-wrapper"
+          ref={ node => this.setRef(node, index)}
+        >
           <img
             alt={alt}
             className={cx('thumbnail', { active })}
             onClick={() => this.handleOnClick(timestamp)}
-            ref={ node => this.setRef(node, index)}
             src={`${this.url}/${src}`}
           />
         </div>
