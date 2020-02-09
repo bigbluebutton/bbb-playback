@@ -5,11 +5,9 @@ import './index.scss';
 export default class ActionBar extends Component {
   shouldComponentUpdate(nextProps) {
     const {
-      swap,
       thumbnails,
     } = this.props;
 
-    if (swap !== nextProps.swap) return true;
     if (thumbnails !== nextProps.thumbnails) return true;
 
     return false;
@@ -17,7 +15,6 @@ export default class ActionBar extends Component {
 
   render() {
     const {
-      swap,
       thumbnails,
       toggleSwap,
       toggleThumbnails,
@@ -28,7 +25,7 @@ export default class ActionBar extends Component {
         <div className="left">
           <Button
             handleOnClick={toggleSwap}
-            type={swap ? 'presentation' : 'video'}
+            type="refresh"
           />
         </div>
         <div className="center" />

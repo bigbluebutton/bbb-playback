@@ -279,14 +279,10 @@ export default class Player extends Component {
   }
 
   renderActionBar() {
-    const {
-      swap,
-      thumbnails,
-    } = this.state;
+    const { thumbnails } = this.state;
 
     return (
       <ActionBar
-        swap={swap}
         thumbnails={thumbnails}
         toggleSwap={() => this.toggleSwap()}
         toggleThumbnails={() => this.toggleThumbnails()}
