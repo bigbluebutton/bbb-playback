@@ -99,7 +99,7 @@ export default class Chat extends Component {
       const active = index <= currentDataIndex;
 
       return (
-        <span ref={ node => this.setRef(node, index)}>
+        <span ref={node => this.setRef(node, index)}>
           <Message
             active={active}
             name={name}

@@ -90,7 +90,7 @@ export default class Thumbnails extends Component {
       return (
         <div
           className="thumbnail-wrapper"
-          ref={ node => this.setRef(node, index)}
+          ref={node => this.setRef(node, index)}
         >
           <img
             alt={alt}

@@ -115,7 +115,7 @@ export default class Video extends PureComponent {
             crossOrigin="anonymous"
             playsInline
             preload="auto"
-            ref={ node => this.node = node }
+            ref={node => this.node = node}
           />
         </div>
       </div>

@@ -76,7 +76,7 @@ export default class Screenshare extends PureComponent {
             crossOrigin="anonymous"
             playsInline
             preload="auto"
-            ref={ node => this.node = node }
+            ref={node => this.node = node}
           />
         </div>
       </div>
