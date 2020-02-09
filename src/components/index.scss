@@ -23,10 +23,9 @@ $error-font-size: 5rem;
     "information-bar content"
     "media content"
     "applications content"
-    "applications content"
     "action-bar content";
   grid-template-columns: 100% auto;
-  grid-template-rows: $information-bar-height auto auto auto $action-bar-height;
+  grid-template-rows: $information-bar-height auto auto $action-bar-height;
   height: 100%;
   padding: 0 0 $player-wrapper-padding 0;
   width: 100%;
@@ -146,6 +145,7 @@ $error-font-size: 5rem;
       "applications content"
       "applications action-bar";
     grid-template-columns: $section-width auto;
+    grid-template-rows: $information-bar-height auto auto auto $action-bar-height;
   }
 
   @media (max-height: $media-max-height) {
