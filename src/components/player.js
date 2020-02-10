@@ -19,6 +19,7 @@ import {
   getFileName,
   isEnabled,
 } from 'utils/data';
+import Monitor from 'utils/monitor';
 import Synchronizer from 'utils/synchronizer';
 import './index.scss';
 
@@ -66,6 +67,8 @@ export default class Player extends Component {
     this.handlePlayerReady = this.handlePlayerReady.bind(this);
     this.handleTimeUpdate = this.handleTimeUpdate.bind(this);
 
+    this.initMonitor(this.metadata.id);
+
     // Uncomment for post-processed data details
     // console.log(data);
   }
@@ -92,6 +95,17 @@ export default class Player extends Component {
     if (time !== value) {
       this.setState({ time: value });
     }
+  }
+
+  initMonitor(id) {
+    this.monitor = new Monitor(id);
+    this.monitor.collect(() => {
+      const { video } = this.player;
+      if (!video) return {};
+
+      const time = video.currentTime();
+      return { time };
+    });
   }
 
   toggleSwap() {

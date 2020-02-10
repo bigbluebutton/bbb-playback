@@ -45,6 +45,11 @@
     "mp4",
     "webm"
   ],
+  "monitor": {
+    "enabled": false,
+    "interval": 60,
+    "url": "/monitor"
+  },
   "thumbnails": {
     "align": "bottom",
     "scroll": true
