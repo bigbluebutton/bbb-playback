@@ -22,13 +22,13 @@ export default class ActionBar extends Component {
 
     return (
       <div className="action-bar">
-        <div className="left">
+        <div className="left" />
+        <div className="center">
           <Button
             handleOnClick={toggleSwap}
             type="refresh"
           />
         </div>
-        <div className="center" />
         <div className="right">
           <Button
             active={thumbnails}
