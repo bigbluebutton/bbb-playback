@@ -32,7 +32,7 @@ $avatar-size: 2.25rem;
   flex-direction: column;
   overflow-x: hidden;
   overflow-y: auto;
-  padding: $padding;
+  padding: $padding 0;
   position: absolute;
   scroll-behavior: smooth;
   top: 0;
@@ -40,7 +40,7 @@ $avatar-size: 2.25rem;
 
   .message {
     display: flex;
-    padding: 0 0 $padding 0;
+    padding: 0 0 $padding $padding;
     width: 100%;
   }
 }
