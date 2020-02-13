@@ -134,7 +134,6 @@ export default class Presentation extends PureComponent {
             <g clipPath="url(#viewBox)">
               <Slide
                 id={slideId}
-                intl={intl}
                 metadata={metadata}
                 slides={slides}
                 thumbnails={thumbnails}

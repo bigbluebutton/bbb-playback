@@ -122,8 +122,10 @@ const buildSlides = image => {
       timestamps.forEach(timestamp => {
         slides.push({
           id: slideId,
+          height: parseInt(attr.height),
           src,
           timestamp,
+          width: parseInt(attr.width),
         });
       });
     });
@@ -370,18 +372,6 @@ const build = (filename, value) => {
   });
 };
 
-const addAlternatesToSlides = (slides, alternates) => {
-  return slides.map(slide => {
-    const { src } = slide;
-    slide.alt = '';
-
-    const found = alternates.find(alt => src === alt.src);
-    if (found) slide.alt = found.text;
-
-    return slide;
-  });
-};
-
 const addAlternatesToThumbnails = (thumbnails, alternates) => {
   const prefix = 'thumbnails/thumb-';
   const url = 'slide-';
@@ -398,7 +388,6 @@ const addAlternatesToThumbnails = (thumbnails, alternates) => {
 };
 
 export {
-  addAlternatesToSlides,
   addAlternatesToThumbnails,
   build,
   buildStyle,

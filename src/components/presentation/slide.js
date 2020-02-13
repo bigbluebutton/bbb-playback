@@ -1,13 +1,5 @@
 import React, { PureComponent } from 'react';
-import { defineMessages } from 'react-intl';
 import './index.scss';
-
-const intlMessages = defineMessages({
-  aria: {
-    id: 'player.presentation.slide.wrapper.aria',
-    description: 'Aria label for the slide wrapper',
-  },
-});
 
 export default class Slide extends PureComponent {
   constructor(props) {
@@ -15,28 +7,34 @@ export default class Slide extends PureComponent {
 
     const { metadata } = props;
 
-    this.id = 'slide';
     this.url = `/presentation/${metadata.id}`;
   }
 
-  getProxy(id) {
+  getProxy(id, height, width) {
     const { thumbnails } = this.props;
 
     const thumbnail = thumbnails.find(thumbnails => id === thumbnails.id);
     if (!thumbnail) return null;
 
     return (
-      <image
-        href={`${this.url}/${thumbnail.src}`}
-        className="proxy"
-      />
+      <foreignObject
+        height={height}
+        x={0}
+        width={width}
+        y={0}
+      >
+        <img
+          alt={thumbnail.alt}
+          className="proxy"
+          src={`${this.url}/${thumbnail.src}`}
+        />
+      </foreignObject>
     );
   }
 
   render() {
     const {
       id,
-      intl,
       slides,
     } = this.props;
 
@@ -44,18 +42,20 @@ export default class Slide extends PureComponent {
     if (!current) return null;
 
     const {
-      alt,
+      height,
       src,
+      width,
     } = current;
 
     return (
       <g>
-        {this.getProxy(id)}
+        {this.getProxy(id, height, width)}
         <image
-          alt={alt}
-          aria-label={intl.formatMessage(intlMessages.aria)}
-          id={this.id}
+          height={height}
           href={`${this.url}/${src}`}
+          x={0}
+          width={width}
+          y={0}
         />
       </g>
     );

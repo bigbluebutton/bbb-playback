@@ -5,7 +5,6 @@
   "player.chat.title": "Public chat",
   "player.chat.wrapper.aria": "Chat area",
   "player.presentation.wrapper.aria": "Presentation area",
-  "player.presentation.slide.wrapper.aria": "Slide area",
   "player.screenshare.wrapper.aria": "Screenshare area",
   "player.thumbnails.wrapper.aria": "Thumbnails area",
   "player.video.wrapper.aria": "Video area"

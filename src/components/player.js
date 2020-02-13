@@ -9,10 +9,7 @@ import Thumbnails from './thumbnails';
 import Video from './video';
 import ActionBar from 'components/bars/action';
 import InformationBar from 'components/bars/information';
-import {
-  addAlternatesToSlides,
-  addAlternatesToThumbnails,
-} from 'utils/builder';
+import { addAlternatesToThumbnails } from 'utils/builder';
 import {
   getCurrentDataIndex,
   getCurrentDataInterval,
@@ -61,7 +58,7 @@ export default class Player extends Component {
     this.shapes = data[getFileName(config.data.shapes)];
 
     this.canvases = this.shapes.canvases;
-    this.slides = addAlternatesToSlides(this.shapes.slides, this.alternates);
+    this.slides = this.shapes.slides;
     this.thumbnails = addAlternatesToThumbnails(this.shapes.thumbnails, this.alternates);
 
     this.handlePlayerReady = this.handlePlayerReady.bind(this);
