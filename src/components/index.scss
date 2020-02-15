@@ -22,7 +22,7 @@ $error-font-size: 5rem;
   grid-template-areas:
     "information-bar content"
     "media content"
-    "applications content"
+    "application content"
     "action-bar content";
   grid-template-columns: 100% auto;
   grid-template-rows: $information-bar-height auto auto $action-bar-height;
@@ -128,10 +128,10 @@ $error-font-size: 5rem;
   }
 }
 
-.applications {
+.application {
   background-color: $section-background-color;
   display: flex;
-  grid-area: applications;
+  grid-area: application;
   height: 100%;
   width: 100%;
 }
@@ -141,9 +141,9 @@ $error-font-size: 5rem;
     grid-template-areas:
       "media information-bar"
       "media content"
-      "applications content"
-      "applications content"
-      "applications action-bar";
+      "application content"
+      "application content"
+      "application action-bar";
     grid-template-columns: $section-width auto;
     grid-template-rows: $information-bar-height auto auto auto $action-bar-height;
   }

@@ -178,7 +178,7 @@ export default class Player extends Component {
     );
   }
 
-  renderApplications() {
+  renderApplication() {
     const { intl } = this.props;
     const { time } = this.state;
     const { video } = this.player;
@@ -186,7 +186,7 @@ export default class Player extends Component {
     const currentChatIndex = getCurrentDataIndex(this.chat, time);
 
     return (
-      <div className="applications">
+      <div className="application">
         <Chat
           chat={this.chat}
           currentDataIndex={currentChatIndex}
@@ -312,7 +312,7 @@ export default class Player extends Component {
       >
         {this.renderInformationBar()}
         {this.renderMedia()}
-        {this.renderApplications()}
+        {this.renderApplication()}
         {this.renderContent()}
         {this.renderActionBar()}
         {this.renderThumbnails()}
