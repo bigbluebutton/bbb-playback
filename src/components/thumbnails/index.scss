@@ -9,8 +9,6 @@ $thumbnail-height: 90px;
   background-color: $blue-lighter;
   bottom: $thumbnails-wrapper-bottom;
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
   overflow-x: hidden;
   overflow-y: auto;
   padding: $padding-extra-small;
