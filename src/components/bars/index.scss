@@ -48,10 +48,14 @@
   .right {
     align-items: center;
     box-sizing: border-box;
-    display: flex;
     height: 100%;
     padding: $padding-small;
-    width: 100%;
+  }
+
+  .left,
+  .right {
+    display: flex;
+    width: 50%;
   }
 
   .left {
@@ -59,7 +63,9 @@
   }
 
   .center {
+    display: grid;
     justify-content: center;
+    width: 100%;
   }
 
   .right {
