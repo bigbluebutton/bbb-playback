@@ -284,6 +284,12 @@ const buildCursor = result => {
   return data;
 };
 
+const clearHyperlink = message => {
+  const regex = /(<a href="(.*)" rel="nofollow"><u>\2<\/u><\/a>)/g;
+
+  return message.replace(regex, '$2');
+};
+
 const buildChat = result => {
   const { popcorn } = result;
   let data = [];
@@ -293,11 +299,12 @@ const buildChat = result => {
     data = chattimeline.map(chat => {
       const attr = getAttr(chat);
       const clear = attr.out ? parseFloat(attr.out) : -1;
+      const message = clearHyperlink(attr.message);
 
       return {
         clear,
         name: attr.name,
-        message: attr.message,
+        message,
         timestamp: parseFloat(attr.in),
       };
     });
