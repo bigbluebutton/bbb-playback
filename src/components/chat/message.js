@@ -16,7 +16,9 @@ export default class Message extends Component {
     return false;
   }
 
-  renderAvatar(active, name, onClick) {
+  renderAvatar(active, name) {
+    const { onClick } = this.props;
+
     return (
       <div className="avatar-wrapper">
         <div
@@ -32,7 +34,25 @@ export default class Message extends Component {
     );
   }
 
-  renderContent(active, name, timestamp, text) {
+  renderHyperlink(active, text) {
+    const options = {
+      className: cx('linkified', { inactive: !active }),
+    };
+
+    return (
+      <Linkify options={options}>
+        {text}
+      </Linkify>
+    );
+  }
+
+  renderContent(active, name) {
+    const {
+      hyperlink,
+      text,
+      timestamp,
+    } = this.props;
+
     return (
       <div className="data">
         <div className="info">
@@ -44,9 +64,7 @@ export default class Message extends Component {
           </div>
         </div>
         <div className={cx('text', { inactive: !active })}>
-          <Linkify options={{ className: cx('linkified', { inactive: !active })}}>
-            {text}
-          </Linkify>
+          {hyperlink ? this.renderHyperlink(active, text) : text}
         </div>
       </div>
     );
@@ -56,15 +74,12 @@ export default class Message extends Component {
     const {
       active,
       name,
-      onClick,
-      text,
-      timestamp,
     } = this.props;
 
     return (
       <div className="message">
-        {this.renderAvatar(active, name, onClick)}
-        {this.renderContent(active, name, timestamp, text)}
+        {this.renderAvatar(active, name)}
+        {this.renderContent(active, name)}
       </div>
     );
   }

@@ -303,6 +303,7 @@ const buildChat = result => {
 
       return {
         clear,
+        hyperlink: message !== attr.message,
         name: attr.name,
         message,
         timestamp: parseFloat(attr.in),
