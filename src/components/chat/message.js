@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Linkify from 'linkifyjs/react';
 import cx from 'classnames';
 import {
   getAvatarColor,
@@ -43,7 +44,9 @@ export default class Message extends Component {
           </div>
         </div>
         <div className={cx('text', { inactive: !active })}>
-          {text}
+          <Linkify options={{ className: cx('linkified', { inactive: !active })}}>
+            {text}
+          </Linkify>
         </div>
       </div>
     );
