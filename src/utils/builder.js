@@ -285,9 +285,9 @@ const buildCursor = result => {
 };
 
 const clearHyperlink = message => {
-  const regex = /(<a href="(.*)" rel="nofollow"><u>\2<\/u><\/a>)/g;
+  const regex = /<a href="(.*)" rel="nofollow"><u>\1<\/u><\/a>/g;
 
-  return message.replace(regex, '$2');
+  return message.replace(regex, '$1');
 };
 
 const buildChat = result => {
