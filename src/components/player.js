@@ -14,6 +14,8 @@ import {
   getCurrentDataIndex,
   getCurrentDataInterval,
   getFileName,
+  getSectionFromLayout,
+  getSwapFromLayout,
   isEnabled,
 } from 'utils/data';
 import Monitor from 'utils/monitor';
@@ -31,16 +33,17 @@ export default class Player extends PureComponent {
   constructor(props) {
     super(props);
 
-    this.state = {
-      time: 0,
-      section: true,
-      swap: false,
-      thumbnails: false,
-    }
-
     const {
       data,
+      layout,
     } = props;
+
+    this.state = {
+      time: 0,
+      section: getSectionFromLayout(layout),
+      swap: getSwapFromLayout(layout),
+      thumbnails: false,
+    }
 
     this.player = {
       video: null,

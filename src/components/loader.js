@@ -10,6 +10,7 @@ import { build } from 'utils/builder';
 import {
   getFileName,
   getFileType,
+  getLayout,
   getRecordId,
 } from 'utils/data';
 import './index.scss';
@@ -25,11 +26,15 @@ class Loader extends PureComponent {
   constructor(props) {
     super(props);
 
-    const { match } = props;
+    const {
+      location,
+      match,
+    } = props;
 
     this.id = 'loader';
     this.counter = 0;
     this.data = {};
+    this.layout = getLayout(location);
     this.recordId = getRecordId(match);
 
     this.state = {
@@ -132,6 +137,7 @@ class Loader extends PureComponent {
         <Player
           data={this.data}
           intl={intl}
+          layout={this.layout}
         />
       );
     }

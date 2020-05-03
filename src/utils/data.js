@@ -1,5 +1,9 @@
 import config from 'config';
+import qs from 'qs';
 import stringHash from 'string-hash';
+
+const MEDIA = 'media';
+const CONTENT = 'content';
 
 const isEnabled = (data, time) => {
   const array = Array.isArray(data);
@@ -94,6 +98,19 @@ const getFileName = file => file.split('.').shift();
 
 const getFileType = file => config.files.type[file.split('.').pop()];
 
+const getLayout = location => {
+  if (location) {
+    const { search } = location;
+    if (search) {
+      const { layout } = qs.parse(search, { ignoreQueryPrefix: true });
+
+      if (layout)  return layout;
+    }
+  }
+
+  return null;
+};
+
 const getRecordId = match => {
   if (match) {
     const { params } = match;
@@ -108,6 +125,38 @@ const getRecordId = match => {
   }
 
   return null;
+};
+
+const getSectionFromLayout = layout => {
+  let section = true;
+
+  switch (layout) {
+    case CONTENT:
+      section = false;
+      break;
+    case MEDIA:
+      section = false;
+      break;
+    default:
+  }
+
+  return section;
+};
+
+const getSwapFromLayout = layout => {
+  let swap = false;
+
+  switch (layout) {
+    case CONTENT:
+      swap = false;
+      break;
+    case MEDIA:
+      swap = true;
+      break;
+    default:
+  }
+
+  return swap;
 };
 
 const getAvatarColor = name => {
@@ -176,8 +225,11 @@ export {
   getCurrentDataInterval,
   getFileName,
   getFileType,
+  getLayout,
   getRecordId,
   getScrollTop,
+  getSectionFromLayout,
+  getSwapFromLayout,
   getTimeAsString,
   isActive,
   isEnabled,
