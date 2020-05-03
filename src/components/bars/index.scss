@@ -2,9 +2,9 @@
 @import 'src/styles/fonts';
 @import 'src/styles/sizes';
 
-.information-bar {
+.navigation-bar {
   background-color: $main-background-color;
-  grid-area: information-bar;
+  grid-area: navigation-bar;
 
   .title {
     color: white;
@@ -38,7 +38,7 @@
 }
 
 .action-bar,
-.information-bar {
+.navigation-bar {
   display: flex;
   box-sizing: border-box;
   padding: 0 $padding-small;

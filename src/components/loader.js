@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   defineMessages,
   injectIntl,
@@ -21,7 +21,7 @@ const intlMessages = defineMessages({
   },
 });
 
-class Loader extends Component {
+class Loader extends PureComponent {
   constructor(props) {
     super(props);
 

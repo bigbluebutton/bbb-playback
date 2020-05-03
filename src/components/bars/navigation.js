@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { FormattedDate } from 'react-intl';
 import './index.scss';
 
-export default class InformationBar extends PureComponent {
+export default class NavigationBar extends PureComponent {
   renderTitle() {
     const {
       epoch,
@@ -20,7 +20,7 @@ export default class InformationBar extends PureComponent {
 
   render() {
     return (
-      <div className="information-bar">
+      <div className="navigation-bar">
         <div className="left" />
         <div className="center">
           {this.renderTitle()}

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import cx from 'classnames';
 import { defineMessages } from 'react-intl';
 import { files as config } from 'config';
@@ -8,7 +8,7 @@ import Screenshare from './screenshare';
 import Thumbnails from './thumbnails';
 import Video from './video';
 import ActionBar from 'components/bars/action';
-import InformationBar from 'components/bars/information';
+import NavigationBar from 'components/bars/navigation';
 import { addAlternatesToThumbnails } from 'utils/builder';
 import {
   getCurrentDataIndex,
@@ -27,7 +27,7 @@ const intlMessages = defineMessages({
   },
 });
 
-export default class Player extends Component {
+export default class Player extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -141,14 +141,14 @@ export default class Player extends Component {
     );
   }
 
-  renderInformationBar() {
+  renderNavigationBar() {
     const {
       epoch,
       name,
     } = this.metadata;
 
     return (
-      <InformationBar
+      <NavigationBar
         epoch={epoch}
         name={name}
       />
@@ -310,7 +310,7 @@ export default class Player extends Component {
         className="player-wrapper"
         id={this.id}
       >
-        {this.renderInformationBar()}
+        {this.renderNavigationBar()}
         {this.renderMedia()}
         {this.renderApplication()}
         {this.renderContent()}

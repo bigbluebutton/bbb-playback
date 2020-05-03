@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import cx from 'classnames';
 import './index.scss';
 
-export default class Button extends Component {
+export default class Button extends PureComponent {
   render() {
     const {
       active,

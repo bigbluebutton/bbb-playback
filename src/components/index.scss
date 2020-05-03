@@ -20,12 +20,12 @@ $error-font-size: 5rem;
   box-sizing: border-box;
   display: grid;
   grid-template-areas:
-    "information-bar content"
+    "navigation-bar content"
     "media content"
     "application content"
     "action-bar content";
   grid-template-columns: 100% auto;
-  grid-template-rows: $information-bar-height auto auto $action-bar-height;
+  grid-template-rows: $navigation-bar-height auto auto $action-bar-height;
   height: 100%;
   padding: 0 0 $player-wrapper-padding 0;
   width: 100%;
@@ -139,13 +139,13 @@ $error-font-size: 5rem;
 @media (min-width: $media-min-width) {
   .player-wrapper {
     grid-template-areas:
-      "media information-bar"
+      "media navigation-bar"
       "media content"
       "application content"
       "application content"
       "application action-bar";
     grid-template-columns: $section-width auto;
-    grid-template-rows: $information-bar-height auto auto auto $action-bar-height;
+    grid-template-rows: $navigation-bar-height auto auto auto $action-bar-height;
   }
 
   @media (max-height: $media-max-height) {
