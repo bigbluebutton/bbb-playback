@@ -33,6 +33,7 @@ export default class Player extends PureComponent {
 
     this.state = {
       time: 0,
+      section: true,
       swap: false,
       thumbnails: false,
     }
@@ -105,6 +106,12 @@ export default class Player extends PureComponent {
     });
   }
 
+  toggleSection() {
+    const { section } = this.state;
+
+    this.setState({ section: !section });
+  }
+
   toggleSwap() {
     const { swap } = this.state;
 
@@ -142,6 +149,7 @@ export default class Player extends PureComponent {
   }
 
   renderNavigationBar() {
+    const { section } = this.state;
     const {
       epoch,
       name,
@@ -151,6 +159,8 @@ export default class Player extends PureComponent {
       <NavigationBar
         epoch={epoch}
         name={name}
+        section={section}
+        toggleSection={() => this.toggleSection()}
       />
     );
   }
@@ -303,11 +313,12 @@ export default class Player extends PureComponent {
 
   render() {
     const { intl } = this.props;
+    const { section } = this.state;
 
     return (
       <div
         aria-label={intl.formatMessage(intlMessages.aria)}
-        className="player-wrapper"
+        className={cx('player-wrapper', { 'hidden-section': !section })}
         id={this.id}
       >
         {this.renderNavigationBar()}

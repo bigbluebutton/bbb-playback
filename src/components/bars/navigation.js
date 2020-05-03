@@ -1,8 +1,23 @@
 import React, { PureComponent } from 'react';
 import { FormattedDate } from 'react-intl';
+import Button from 'components/utils/button';
 import './index.scss';
 
 export default class NavigationBar extends PureComponent {
+  renderSectionToggle() {
+    const {
+      section,
+      toggleSection,
+    } = this.props;
+
+    return (
+      <Button
+        handleOnClick={toggleSection}
+        icon={section ? 'minus' : 'plus'}
+      />
+    );
+  }
+
   renderTitle() {
     const {
       epoch,
@@ -21,7 +36,9 @@ export default class NavigationBar extends PureComponent {
   render() {
     return (
       <div className="navigation-bar">
-        <div className="left" />
+        <div className="left">
+          {this.renderSectionToggle()}
+        </div>
         <div className="center">
           {this.renderTitle()}
         </div>

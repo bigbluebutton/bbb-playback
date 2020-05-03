@@ -26,15 +26,16 @@ export default class ActionBar extends Component {
         <div className="center">
           <Button
             handleOnClick={toggleSwap}
-            type="refresh"
+            icon="refresh"
+            type="solid"
           />
         </div>
         <div className="right">
           <Button
             active={thumbnails}
             handleOnClick={toggleThumbnails}
-            ghost
-            type="rooms"
+            icon="rooms"
+            type="ghost"
           />
         </div>
       </div>

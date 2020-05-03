@@ -19,6 +19,15 @@ $button-size: 2.75rem;
     color: white;
   }
 
+  .default {
+    background-color: transparent;
+    border: none;
+
+    &:focus {
+      box-shadow: 0 0 0 $margin-extra-small;
+    }
+  }
+
   .solid {
     background-color: $blue;
     border: none;

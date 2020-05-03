@@ -31,6 +31,15 @@ $error-font-size: 5rem;
   width: 100%;
 }
 
+.hidden-section {
+  grid-template-areas:
+    "media navigation-bar"
+    "media content"
+    "application content"
+    "application action-bar";
+  grid-template-columns: 0% auto;
+}
+
 .error-code,
 .loading-dots {
   margin: auto;
@@ -148,9 +157,17 @@ $error-font-size: 5rem;
     grid-template-rows: $navigation-bar-height auto auto auto $action-bar-height;
   }
 
+  .hidden-section {
+    grid-template-columns: 0% auto;
+  }
+
   @media (max-height: $media-max-height) {
     .player-wrapper {
       grid-template-columns: $section-width-small auto;
+    }
+
+    .hidden-section {
+      grid-template-columns: 0% auto;
     }
   }
 }
