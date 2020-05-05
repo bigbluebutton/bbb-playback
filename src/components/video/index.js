@@ -34,7 +34,7 @@ export default class Video extends PureComponent {
     ].filter(src => {
       const { type } = src;
 
-      return type.includes(media);
+      return media.find(m => type.includes(m));
     });
 
     const tracks = captions.map(lang => {
