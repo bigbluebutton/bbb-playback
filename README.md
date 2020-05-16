@@ -2,7 +2,7 @@
 
 Clone this repository, install the dependencies and deploy
 ```
-git clone https://github.com/pedrobmarin/bbb-playback.git
+git clone https://github.com/mconf/bbb-playback.git
 cd bbb-playback
 npm install
 ./deploy
