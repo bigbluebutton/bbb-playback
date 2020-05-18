@@ -5,7 +5,7 @@ Clone this repository, install the dependencies and deploy
 git clone https://github.com/mconf/bbb-playback.git
 cd bbb-playback
 npm install
-./deploy
+./deploy.sh
 ```
 
 Include this at the end of `/etc/bigbluebutton/nginx/presentation.nginx`
