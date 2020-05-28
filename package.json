@@ -38,7 +38,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mconf/bbb-playback.git"
+    "url": "git+https://github.com/bigbluebutton/bbb-playback.git"
   },
   "keywords": [
     "bigbluebutton",
@@ -46,6 +46,6 @@
   ],
   "author": "Pedro Beschorner Marin <pedrobmarin@gmail.com>",
   "bugs": {
-    "url": "https://github.com/mconf/bbb-playback/issues"
+    "url": "https://github.com/bigbluebutton/bbb-playback/issues"
   }
 }
