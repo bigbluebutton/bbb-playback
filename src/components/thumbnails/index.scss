@@ -1,0 +1,43 @@
+@import 'src/styles/colors';
+@import 'src/styles/sizes';
+
+$thumbnails-wrapper-top: $navigation-bar-height;
+$thumbnails-wrapper-bottom: calc(#{$control-bar-height} + #{$action-bar-height});
+$thumbnail-height: 90px;
+
+.thumbnails-wrapper {
+  background-color: $blue-lighter;
+  bottom: $thumbnails-wrapper-bottom;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: $padding-extra-small $padding-extra-small 0 $padding-extra-small;
+  position: fixed;
+  right: 0;
+  scroll-behavior: smooth;
+  top: $thumbnails-wrapper-top;
+  width: auto;
+  z-index: 1;
+
+  .active {
+    filter: opacity(50%);
+  }
+}
+
+.thumbnail-wrapper {
+  display: flex;
+  height: $thumbnail-height;
+  justify-content: center;
+  padding: 0 0 $padding-extra-small 0;
+}
+
+.thumbnail {
+  cursor: pointer;
+  display: block;
+  height: 100%;
+  width: auto;
+
+  &:hover {
+    filter: opacity(50%);
+  }
+}

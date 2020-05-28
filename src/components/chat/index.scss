@@ -1,0 +1,121 @@
+@import 'src/styles/fonts';
+@import 'src/styles/colors';
+@import 'src/styles/sizes';
+
+$avatar-size: 2.25rem;
+
+.chat-wrapper {
+  display: flex;
+  flex-direction: column;
+  font-size: small;
+  height: 100%;
+  width: 100%;
+
+  .title {
+    color: $gray;
+    box-sizing: border-box;
+    font-weight: $font-weight-semi-bold;
+    padding: $padding;
+  }
+
+  .list {
+    height: 100%;
+    position: relative;
+    width: 100%
+  }
+}
+
+.message-wrapper {
+  bottom: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: $padding 0 0 0;
+  position: absolute;
+  scroll-behavior: smooth;
+  top: 0;
+  width: 100%;
+
+  .message {
+    box-sizing: border-box;
+    display: flex;
+    padding: 0 0 $padding $padding;
+    width: 100%;
+  }
+}
+
+.avatar-wrapper {
+  display: flex;
+  height: 100%;
+  margin: 0 $margin 0 0;
+
+  .inactive {
+    filter: opacity(50%);
+  }
+}
+
+.avatar {
+  border-radius: 50%;
+  cursor: pointer;
+  height: $avatar-size;
+  text-align: center;
+  width: $avatar-size;
+
+  .initials {
+    align-items: center;
+    color: white;
+    display: flex;
+    font-weight: $font-weight-bold;
+    height: 100%;
+    justify-content: center;
+    text-transform: capitalize;
+    width: 100%;
+  }
+
+  &:hover {
+    box-shadow: 0 0 0 $margin-small $gray-lighter;
+  }
+}
+
+.message {
+  .data {
+    display: flex;
+    flex-direction: column;
+    width:100%
+  }
+
+  .info {
+    display: flex;
+    width: 100%;
+    margin: 0 0 $margin-extra-small 0;
+  }
+
+  .name {
+    font-weight: $font-weight-bold;
+    max-width: 60%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .time {
+    align-items: center;
+    color: $gray-light;
+    display: flex;
+    font-size: x-small;
+    margin: 0 0 0 $margin;
+  }
+
+  .text {
+    box-sizing: border-box;
+    padding: 0 $padding-extra-small 0 0;
+    width: 100%;
+    word-break: break-word;
+  }
+
+  .inactive {
+    color: $gray-lighter;
+  }
+}

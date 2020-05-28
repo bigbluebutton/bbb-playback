@@ -1,0 +1,21 @@
+$control-bar-height: 30px;
+$media-min-width: 600px;
+$media-max-height: 400px;
+
+$video-height: 480px;
+$video-width: 640px;
+
+$section-width: calc(#{$video-width} / 2);
+$section-width-small: calc((#{$video-width} / 8) * 3);
+
+$navigation-bar-height: 60px;
+$action-bar-height: 60px;
+
+$border-radius: .35rem;
+$border-width: .20rem;
+$margin: .5rem;
+$margin-small: .35rem;
+$margin-extra-small: .15rem;
+$padding: .75rem;
+$padding-small: .5rem;
+$padding-extra-small: .25rem;

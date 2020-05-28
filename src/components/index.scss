@@ -1,0 +1,173 @@
+@import 'src/styles/colors';
+@import 'src/styles/fonts';
+@import 'src/styles/sizes';
+
+$player-wrapper-padding: $control-bar-height;
+
+$loading-dot-size: 20px;
+$loading-dots-width: 100px;
+
+$error-font-size: 5rem;
+
+.error-wrapper,
+.loader-wrapper {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.player-wrapper {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-areas:
+    "navigation-bar content"
+    "media content"
+    "application content"
+    "action-bar content";
+  grid-template-columns: 100% auto;
+  grid-template-rows: $navigation-bar-height auto auto $action-bar-height;
+  height: 100%;
+  padding: 0 0 $player-wrapper-padding 0;
+  width: 100%;
+}
+
+.hidden-section {
+  grid-template-areas:
+    "media navigation-bar"
+    "media content"
+    "application content"
+    "application action-bar";
+  grid-template-columns: 0% auto;
+}
+
+.error-code,
+.loading-dots {
+  margin: auto;
+  text-align: center;
+}
+
+.error-code {
+  color: white;
+  font-size: $error-font-size;
+  font-weight: $font-weight-bold;
+}
+
+.loading-dots {
+  width: $loading-dots-width;
+
+  div {
+    animation: dots 1.4s infinite ease-in-out both;
+    background-color: white;
+    border-radius: 100%;
+    display: inline-block;
+    height: $loading-dot-size;
+    margin: $margin-extra-small;
+    width: $loading-dot-size;
+  }
+
+  .first {
+    animation-delay: -0.32s;
+  }
+
+  .second {
+    animation-delay: -0.16s;
+  }
+
+  .third {
+    animation-delay: 0s;
+  }
+
+  @keyframes dots {
+    0%,
+    80%,
+    100% {
+      transform: scale(0);
+    }
+
+    40% {
+      transform: scale(1);
+    }
+  }
+}
+
+.content {
+  background-color: $main-background-color;
+  display: flex;
+  grid-area: content;
+  height: 100%;
+  position: relative;
+  width: 100%;
+
+  .inactive {
+    display: none;
+  }
+
+  .video-js {
+    background-color: $main-background-color;
+  }
+}
+
+.swapped-content {
+  background-color: $section-background-color;
+  grid-area: media;
+
+  .video-js {
+    background-color: $section-background-color;
+  }
+}
+
+.media {
+  background-color: $section-background-color;
+  display: flex;
+  grid-area: media;
+  height: 100%;
+  width: 100%;
+
+  .video-js {
+    background-color: $section-background-color;
+  }
+}
+
+.swapped-media {
+  background-color: $main-background-color;
+  grid-area: content;
+
+  .video-js {
+    background-color: $main-background-color;
+  }
+}
+
+.application {
+  background-color: $section-background-color;
+  display: flex;
+  grid-area: application;
+  height: 100%;
+  width: 100%;
+}
+
+@media (min-width: $media-min-width) {
+  .player-wrapper {
+    grid-template-areas:
+      "media navigation-bar"
+      "media content"
+      "application content"
+      "application content"
+      "application action-bar";
+    grid-template-columns: $section-width auto;
+    grid-template-rows: $navigation-bar-height auto auto auto $action-bar-height;
+  }
+
+  .hidden-section {
+    grid-template-columns: 0% auto;
+  }
+
+  @media (max-height: $media-max-height) {
+    .player-wrapper {
+      grid-template-columns: $section-width-small auto;
+    }
+
+    .hidden-section {
+      grid-template-columns: 0% auto;
+    }
+  }
+}

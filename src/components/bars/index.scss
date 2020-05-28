@@ -1,0 +1,74 @@
+@import 'src/styles/colors';
+@import 'src/styles/fonts';
+@import 'src/styles/sizes';
+
+.navigation-bar {
+  background-color: $main-background-color;
+  grid-area: navigation-bar;
+
+  .title {
+    color: white;
+    font-weight: $font-weight-light;
+    overflow: hidden;
+    padding: $padding-small;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .button-wrapper {
+    .solid {
+      &:focus {
+        border: solid $main-background-color;
+      }
+    }
+  }
+}
+
+.action-bar {
+  background-color: $main-background-color;
+  grid-area: action-bar;
+
+  .button-wrapper {
+    .solid {
+      &:focus {
+        border: solid $main-background-color;
+      }
+    }
+  }
+}
+
+.action-bar,
+.navigation-bar {
+  display: flex;
+  box-sizing: border-box;
+  padding: 0 $padding-small;
+
+  .left,
+  .center,
+  .right {
+    align-items: center;
+    box-sizing: border-box;
+    height: 100%;
+    padding: $padding-small;
+  }
+
+  .left,
+  .right {
+    display: flex;
+    width: 50%;
+  }
+
+  .left {
+    justify-content: flex-start;
+  }
+
+  .center {
+    display: grid;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .right {
+    justify-content: flex-end;
+  }
+}

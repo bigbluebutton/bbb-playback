@@ -1,0 +1,35 @@
+@import 'src/styles/colors';
+
+$cursor-size: .5rem;
+
+.presentation-wrapper {
+  align-items: center;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.presentation {
+  display: flex;
+  height: 100%;
+  width: 100%;
+
+  .cursor {
+    fill: $red;
+    r: $cursor-size;
+  }
+
+  .proxy {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+svg {
+  height: 100%;
+  width: 100%;
+}

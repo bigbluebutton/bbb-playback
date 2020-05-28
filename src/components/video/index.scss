@@ -1,0 +1,39 @@
+@import 'src/styles/colors';
+@import 'src/styles/fonts';
+@import 'src/styles/sizes';
+
+.video-wrapper {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.video-js {
+  font-family: $font-family;
+  font-weight: $font-weight-regular;
+}
+
+.video-js .vjs-big-play-button,
+.vjs-text-track-display,
+.vjs-loading-spinner,
+.video-js .vjs-modal-dialog {
+  position: fixed;
+  z-index: 1;
+}
+
+.vjs-text-track-display,
+.video-js .vjs-modal-dialog {
+  height: 100%;
+  width: 100%;
+}
+
+.vjs-control-bar {
+  display: flex !important;
+  position: fixed !important;
+  z-index: 1 !important;
+}
+
+[class^="vjs-text-track-cue"] {
+  inset: auto 0 calc(#{$control-bar-height} * 2) 0 !important;
+  z-index: 2;
+}
