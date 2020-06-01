@@ -2,7 +2,6 @@
   "error.wrapper.aria": "Error area",
   "loader.wrapper.aria": "Loader area",
   "player.wrapper.aria": "Player area",
-  "player.chat.title": "Public chat",
   "player.chat.wrapper.aria": "Chat area",
   "player.presentation.wrapper.aria": "Presentation area",
   "player.screenshare.wrapper.aria": "Screenshare area",

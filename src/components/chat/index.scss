@@ -1,5 +1,6 @@
 @import 'src/styles/fonts';
 @import 'src/styles/colors';
+@import 'src/styles/icons';
 @import 'src/styles/sizes';
 
 $avatar-size: 2.25rem;
@@ -7,18 +8,24 @@ $avatar-size: 2.25rem;
 .chat-wrapper {
   display: flex;
   flex-direction: column;
-  font-size: small;
   height: 100%;
   width: 100%;
 
-  .title {
-    color: $gray;
+  .header {
     box-sizing: border-box;
-    font-weight: $font-weight-semi-bold;
     padding: $padding;
+
+    .icon {
+      color: $gray;
+      display: flex;
+      font-size: large;
+      font-weight: $font-weight-semi-bold;
+      justify-content: flex-end;
+    }
   }
 
   .list {
+    font-size: small;
     height: 100%;
     position: relative;
     width: 100%

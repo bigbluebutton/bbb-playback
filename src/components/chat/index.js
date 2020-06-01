@@ -10,10 +10,6 @@ const intlMessages = defineMessages({
     id: 'player.chat.wrapper.aria',
     description: 'Aria label for the chat wrapper',
   },
-  title: {
-    id: 'player.chat.title',
-    description: 'Chat title',
-  },
 });
 
 export default class Chat extends Component {
@@ -73,12 +69,12 @@ export default class Chat extends Component {
     }
   }
 
-  renderTitle() {
-    const { intl } = this.props;
-
+  renderHeader() {
     return (
-      <div className="title">
-        {intl.formatMessage(intlMessages.title)}
+      <div className="header">
+        <div className="icon">
+          <span className="icon-group-chat" />
+        </div>
       </div>
     );
   }
@@ -124,7 +120,7 @@ export default class Chat extends Component {
         className="chat-wrapper"
         id={this.id}
       >
-        {this.renderTitle()}
+        {this.renderHeader()}
         <div className="list">
           <div className="message-wrapper">
             {this.renderMessages()}
