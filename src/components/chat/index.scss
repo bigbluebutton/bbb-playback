@@ -48,15 +48,29 @@ $avatar-size: 2.25rem;
   .message {
     box-sizing: border-box;
     display: flex;
-    padding: 0 0 $padding $padding;
     width: 100%;
+
+    [dir="ltr"] & {
+      padding: 0 0 $padding $padding;
+    }
+
+    [dir="rtl"] & {
+      padding: 0 $padding $padding 0;
+    }
   }
 }
 
 .avatar-wrapper {
   display: flex;
   height: 100%;
-  margin: 0 $margin 0 0;
+
+  [dir="ltr"] & {
+    margin: 0 $margin 0 0;
+  }
+
+  [dir="rtl"] & {
+    margin: 0 0 0 $margin;
+  }
 
   .inactive {
     filter: opacity(50%);
@@ -112,14 +126,28 @@ $avatar-size: 2.25rem;
     color: $gray-light;
     display: flex;
     font-size: x-small;
-    margin: 0 0 0 $margin;
+
+    [dir="ltr"] & {
+      margin: 0 0 0 $margin;
+    }
+
+    [dir="rtl"] & {
+      margin: 0 $margin 0 0;
+    }
   }
 
   .text {
     box-sizing: border-box;
-    padding: 0 $padding-extra-small 0 0;
     width: 100%;
     word-break: break-word;
+
+    [dir="ltr"] & {
+      padding: 0 $padding-extra-small 0 0;
+    }
+
+    [dir="rtl"] & {
+      padding: 0 0 0 $padding-extra-small;
+    }
   }
 
   .inactive {

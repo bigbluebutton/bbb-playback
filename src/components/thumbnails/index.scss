@@ -13,11 +13,18 @@ $thumbnail-height: 90px;
   overflow-y: auto;
   padding: $padding-extra-small $padding-extra-small 0 $padding-extra-small;
   position: fixed;
-  right: 0;
   scroll-behavior: smooth;
   top: $thumbnails-wrapper-top;
   width: auto;
   z-index: 1;
+
+  [dir="ltr"] & {
+    right: 0;
+  }
+
+  [dir="rtl"] & {
+    left: 0;
+  }
 
   .active {
     filter: opacity(50%);

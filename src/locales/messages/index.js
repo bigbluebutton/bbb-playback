@@ -1,3 +1,4 @@
+import ar from './ar.json';
 import de from './de.json';
 import en from './en.json';
 import es from './es.json';
@@ -8,6 +9,7 @@ import pt from './pt.json';
 import ru from './ru.json';
 
 export default {
+  ar,
   de,
   en,
   es,
