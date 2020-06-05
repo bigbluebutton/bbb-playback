@@ -165,20 +165,10 @@ const getAvatarColor = name => {
   return avatar[stringHash(name) % avatar.length];
 };
 
-const getTimeAsString = seconds => {
-  let sec = parseInt(seconds, 10);
+const getTimeAsDate = timestamp => {
+  const baseDate = new Date(0);
 
-  if (sec < 0) return null;
-
-  let hr = Math.floor(sec / 3600);
-  let min = Math.floor((sec - (hr * 3600)) / 60);
-  sec = sec - (hr * 3600) - (min * 60);
-
-  if (hr < 10) hr = `0${hr}`;
-  if (min < 10) min = `0${min}`;
-  if (sec < 10) sec = `0${sec}`;
-
-  return `${hr}:${min}:${sec}`;
+  return baseDate.setSeconds(timestamp);
 };
 
 const getScrollTop = (firstNode, currentNode, align) => {
@@ -230,7 +220,7 @@ export {
   getScrollTop,
   getSectionFromLayout,
   getSwapFromLayout,
-  getTimeAsString,
+  getTimeAsDate,
   isActive,
   isEnabled,
 };

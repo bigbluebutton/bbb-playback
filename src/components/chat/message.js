@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import { FormattedTime } from 'react-intl';
 import Linkify from 'linkifyjs/react';
 import cx from 'classnames';
 import {
   getAvatarColor,
-  getTimeAsString,
+  getTimeAsDate,
 } from 'utils/data';
 import './index.scss';
 
@@ -53,6 +54,8 @@ export default class Message extends Component {
       timestamp,
     } = this.props;
 
+    const dateTime = getTimeAsDate(timestamp);
+
     return (
       <div className="data">
         <div className="info">
@@ -60,7 +63,16 @@ export default class Message extends Component {
             {name}
           </div>
           <div className={cx('time', { inactive: !active })}>
-            {getTimeAsString(timestamp)}
+            <time dateTime={dateTime}>
+              <FormattedTime
+                hour12={false}
+                hour='numeric'
+                minute='numeric'
+                second='numeric'
+                timeZone='UTC'
+                value={dateTime}
+              />
+            </time>
           </div>
         </div>
         <div className={cx('text', { inactive: !active })}>

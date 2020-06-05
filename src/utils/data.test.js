@@ -5,7 +5,6 @@ import {
   getFileType,
   getRecordId,
   getScrollTop,
-  getTimeAsString,
   isActive,
   isEnabled,
 } from './data';
@@ -235,21 +234,6 @@ it('checks if data is enabled', () => {
 
   const invalid = [{}];
   expect(isEnabled(invalid, 0.0)).toEqual(false);
-});
-
-it('gets time as a string', () => {
-  // Second
-  expect(getTimeAsString(-1)).toEqual(null);
-  expect(getTimeAsString(0)).toEqual('00:00:00');
-  expect(getTimeAsString(1)).toEqual('00:00:01');
-  // Minute
-  expect(getTimeAsString(59)).toEqual('00:00:59');
-  expect(getTimeAsString(60)).toEqual('00:01:00');
-  expect(getTimeAsString(61)).toEqual('00:01:01');
-  // Hour
-  expect(getTimeAsString(3599)).toEqual('00:59:59');
-  expect(getTimeAsString(3600)).toEqual('01:00:00');
-  expect(getTimeAsString(3601)).toEqual('01:00:01');
 });
 
 it('gets the vertical offset of a scrollable list', () => {
