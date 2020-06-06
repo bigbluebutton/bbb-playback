@@ -63,16 +63,14 @@ export default class Message extends Component {
             {name}
           </div>
           <div className={cx('time', { inactive: !active })}>
-            <time dateTime={milliseconds}>
-              <FormattedTime
-                hour12={false}
-                hour='numeric'
-                minute='numeric'
-                second='numeric'
-                timeZone='UTC'
-                value={milliseconds}
-              />
-            </time>
+            <FormattedTime
+              hour12={false}
+              hour='numeric'
+              minute='numeric'
+              second='numeric'
+              timeZone='UTC'
+              value={milliseconds}
+            />
           </div>
         </div>
         <div className={cx('text', { inactive: !active })}>
