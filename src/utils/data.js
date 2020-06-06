@@ -5,34 +5,6 @@ import stringHash from 'string-hash';
 const MEDIA = 'media';
 const CONTENT = 'content';
 
-const isEnabled = (data, time) => {
-  const array = Array.isArray(data);
-  if (!array) return false;
-
-  const empty = data.length === 0;
-  if (empty) return false;
-
-  for (let index = 0; index < data.length; index++) {
-    const item = data[index];
-    if (item.hasOwnProperty('timestamp') && item.hasOwnProperty('clear')) {
-      // Check if it was activated and did not ended
-      if (isActive(time, item.timestamp, item.clear)) {
-        return true;
-      }
-
-      // Check if we are searching over the present time value
-      if (!isActive(time, item.timestamp)) {
-        return false;
-      }
-    } else {
-      // Invalid item
-      return false;
-    }
-  }
-
-  return false;
-};
-
 const getCurrentDataIndex = (data, time) => {
   const array = Array.isArray(data);
   if (!array) return -1;
@@ -165,12 +137,6 @@ const getAvatarColor = name => {
   return avatar[stringHash(name) % avatar.length];
 };
 
-const getTimeAsDate = timestamp => {
-  const baseDate = new Date(0);
-
-  return baseDate.setSeconds(timestamp);
-};
-
 const getScrollTop = (firstNode, currentNode, align) => {
   if (!currentNode) return 0;
 
@@ -202,11 +168,41 @@ const getScrollTop = (firstNode, currentNode, align) => {
   return verticalOffset;
 };
 
+const getTimestampAsMilliseconds = timestamp => timestamp * 1000;
+
 const isActive = (time, timestamp, clear = -1) => {
   const cleared = clear !== -1 && clear <= time;
   const visible = timestamp <= time;
 
   return visible && !cleared;
+};
+
+const isEnabled = (data, time) => {
+  const array = Array.isArray(data);
+  if (!array) return false;
+
+  const empty = data.length === 0;
+  if (empty) return false;
+
+  for (let index = 0; index < data.length; index++) {
+    const item = data[index];
+    if (item.hasOwnProperty('timestamp') && item.hasOwnProperty('clear')) {
+      // Check if it was activated and did not ended
+      if (isActive(time, item.timestamp, item.clear)) {
+        return true;
+      }
+
+      // Check if we are searching over the present time value
+      if (!isActive(time, item.timestamp)) {
+        return false;
+      }
+    } else {
+      // Invalid item
+      return false;
+    }
+  }
+
+  return false;
 };
 
 export {
@@ -220,7 +216,7 @@ export {
   getScrollTop,
   getSectionFromLayout,
   getSwapFromLayout,
-  getTimeAsDate,
+  getTimestampAsMilliseconds,
   isActive,
   isEnabled,
 };

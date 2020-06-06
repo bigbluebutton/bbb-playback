@@ -4,7 +4,7 @@ import Linkify from 'linkifyjs/react';
 import cx from 'classnames';
 import {
   getAvatarColor,
-  getTimeAsDate,
+  getTimestampAsMilliseconds,
 } from 'utils/data';
 import './index.scss';
 
@@ -54,7 +54,7 @@ export default class Message extends Component {
       timestamp,
     } = this.props;
 
-    const dateTime = getTimeAsDate(timestamp);
+    const milliseconds = getTimestampAsMilliseconds(timestamp);
 
     return (
       <div className="data">
@@ -63,14 +63,14 @@ export default class Message extends Component {
             {name}
           </div>
           <div className={cx('time', { inactive: !active })}>
-            <time dateTime={dateTime}>
+            <time dateTime={milliseconds}>
               <FormattedTime
                 hour12={false}
                 hour='numeric'
                 minute='numeric'
                 second='numeric'
                 timeZone='UTC'
-                value={dateTime}
+                value={milliseconds}
               />
             </time>
           </div>
