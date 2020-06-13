@@ -290,6 +290,15 @@ const clearHyperlink = message => {
   return message.replace(regex, '$1');
 };
 
+const unEscapeStr = function (str) {
+    return str
+            .replace(/(&lt;)/g, '<')
+            .replace(/(&gt;)/g, '>')
+            .replace(/(&quot;)/g, '"')
+            .replace(/(&#39;)/g, "'")
+            .replace(/(&amp;)/g, '&');
+};
+
 const buildChat = result => {
   const { popcorn } = result;
   let data = [];
@@ -299,7 +308,7 @@ const buildChat = result => {
     data = chattimeline.map(chat => {
       const attr = getAttr(chat);
       const clear = attr.out ? parseFloat(attr.out) : -1;
-      const message = clearHyperlink(attr.message);
+      const message = unEscapeStr(clearHyperlink(attr.message));
 
       return {
         clear,
