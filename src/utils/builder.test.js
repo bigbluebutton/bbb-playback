@@ -1,5 +1,6 @@
 import {
   buildStyle,
+  decodeXML,
   getAttr,
   getId,
   getNumbers,
@@ -20,6 +21,33 @@ it('builds style object from a string', () => {
 
   value = 'visibility: hidden;';
   expect(buildStyle(value)).toEqual({});
+});
+
+it('decodes XML predefined entities to character', () => {
+  const entities = {
+    'quot': `"`,
+    '#34': `"`,
+    'amp': `&`,
+    '#38': `&`,
+    'apos': `'`,
+    '#39': `'`,
+    'lt': `<`,
+    '#60': `<`,
+    'gt': `>`,
+    '#62': `>`,
+  };
+
+  for (let entity in entities) {
+    if (Object.prototype.hasOwnProperty.call(entities, entity)) {
+      expect(decodeXML(`&${entity};`)).toEqual(`${entities[entity]}`);
+      expect(decodeXML(` &${entity};`)).toEqual(` ${entities[entity]}`);
+      expect(decodeXML(`&${entity}; `)).toEqual(`${entities[entity]} `);
+      expect(decodeXML(`&${entity};&${entity};`))
+        .toEqual(`${entities[entity]}${entities[entity]}`);
+      expect(decodeXML(`&${entity}; &${entity};`))
+        .toEqual(`${entities[entity]} ${entities[entity]}`);
+    }
+  }
 });
 
 it('gets attributes from a parsed xml node', () => {
