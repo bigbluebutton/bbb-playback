@@ -290,6 +290,15 @@ const clearHyperlink = message => {
   return message.replace(regex, '$1');
 };
 
+const decodeXML = message => {
+  return message
+    .replace(/&(quot|#34);/g, '"')
+    .replace(/&(amp|#38);/g, '&')
+    .replace(/&(apos|#39);/g, "'")
+    .replace(/&(lt|#60);/g, '<')
+    .replace(/&(gt|#62);/g, '>');
+};
+
 const buildChat = result => {
   const { popcorn } = result;
   let data = [];
@@ -299,7 +308,7 @@ const buildChat = result => {
     data = chattimeline.map(chat => {
       const attr = getAttr(chat);
       const clear = attr.out ? parseFloat(attr.out) : -1;
-      const message = clearHyperlink(attr.message);
+      const message = decodeXML(clearHyperlink(attr.message));
 
       return {
         clear,
@@ -399,6 +408,7 @@ export {
   addAlternatesToThumbnails,
   build,
   buildStyle,
+  decodeXML,
   getAttr,
   getId,
   getNumbers,
