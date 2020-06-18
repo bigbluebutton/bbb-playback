@@ -17,7 +17,8 @@ const getCurrentDataIndex = (data, time) => {
   for (let index = 0; index < data.length; index++) {
     const item = data[index];
     if (item.hasOwnProperty('timestamp')) {
-      if (isActive(time, item.timestamp)) {
+      const { timestamp } = item;
+      if (isVisible(time, timestamp)) {
         currentDataIndex = index;
       } else {
         // Timestamp has gone further the current time
@@ -33,34 +34,40 @@ const getCurrentDataIndex = (data, time) => {
 };
 
 const getCurrentDataInterval = (data, time) => {
+  const cleared = [];
   let first = -1;
   let last = -1;
 
   if (!data) {
     return {
+      cleared,
       first,
       last,
     };
   }
 
-  for (let i = 0; i < data.length; i++) {
-    const {
-      clear,
-      timestamp,
-    } = data[i];
+  for (let index = 0; index < data.length; index++) {
+    const item = data[index];
+    if (item.hasOwnProperty('timestamp') && item.hasOwnProperty('clear')) {
+      const {
+        clear,
+        timestamp,
+      } = item;
 
-    const active = isActive(time, timestamp, clear);
-    if (!active) {
-      if (last !== -1) break;
-      continue;
+      if (!isVisible(time, timestamp)) {
+        if (last !== -1) break;
+        continue;
+      }
+
+      if (first === -1) first = index;
+      last = index;
+
+      if (wasCleared(time, clear)) cleared.push(index);
     }
-
-    if (first === -1) first = i;
-
-    last = i;
   }
 
   return {
+    cleared,
     first,
     last,
   }
@@ -171,8 +178,8 @@ const getScrollTop = (firstNode, currentNode, align) => {
 const getTimestampAsMilliseconds = timestamp => timestamp * 1000;
 
 const isActive = (time, timestamp, clear = -1) => {
-  const cleared = clear !== -1 && clear <= time;
-  const visible = timestamp <= time;
+  const cleared = wasCleared(time, clear);
+  const visible = isVisible(time, timestamp);
 
   return visible && !cleared;
 };
@@ -187,13 +194,18 @@ const isEnabled = (data, time) => {
   for (let index = 0; index < data.length; index++) {
     const item = data[index];
     if (item.hasOwnProperty('timestamp') && item.hasOwnProperty('clear')) {
+      const {
+        clear,
+        timestamp,
+      } = item;
+
       // Check if it was activated and did not ended
-      if (isActive(time, item.timestamp, item.clear)) {
+      if (isActive(time, timestamp, clear)) {
         return true;
       }
 
       // Check if we are searching over the present time value
-      if (!isActive(time, item.timestamp)) {
+      if (!isVisible(time, timestamp)) {
         return false;
       }
     } else {
@@ -204,6 +216,10 @@ const isEnabled = (data, time) => {
 
   return false;
 };
+
+const isVisible = (time, timestamp) => timestamp <= time;
+
+const wasCleared = (time, clear) => clear !== -1 && clear <= time;
 
 export {
   getAvatarColor,

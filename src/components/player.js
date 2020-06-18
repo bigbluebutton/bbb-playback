@@ -236,6 +236,7 @@ export default class Player extends PureComponent {
     return (
       <Presentation
         active={active}
+        clearedDraws={currentDrawsInterval.cleared}
         currentCursorIndex={currentCursorIndex}
         currentPanzoomIndex={currentPanzoomIndex}
         currentSlideIndex={currentSlideIndex}

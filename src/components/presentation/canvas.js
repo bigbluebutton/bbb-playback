@@ -95,11 +95,13 @@ export default class Canvas extends PureComponent {
     );
   }
 
-  renderCanvas(firstDraw, lastDraw) {
+  renderCanvas(firstDraw, lastDraw, clearedDraws) {
     const { draws } = this.props;
     const canvas = [];
 
     for (let i = firstDraw; i <= lastDraw; i++) {
+      if (clearedDraws.includes(i)) continue;
+
       const {
         id,
         shape,
@@ -150,6 +152,7 @@ export default class Canvas extends PureComponent {
 
   render() {
     const {
+      clearedDraws,
       firstDraw,
       lastDraw,
     } = this.props;
@@ -158,7 +161,7 @@ export default class Canvas extends PureComponent {
 
     return (
       <g>
-        {this.renderCanvas(firstDraw, lastDraw)}
+        {this.renderCanvas(firstDraw, lastDraw, clearedDraws)}
       </g>
     );
   }

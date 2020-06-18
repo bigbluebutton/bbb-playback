@@ -95,6 +95,7 @@ export default class Presentation extends PureComponent {
   render() {
     const {
       active,
+      clearedDraws,
       draws,
       firstDraw,
       intl,
@@ -139,6 +140,7 @@ export default class Presentation extends PureComponent {
                 thumbnails={thumbnails}
               />
               <Canvas
+                clearedDraws={clearedDraws}
                 draws={draws}
                 firstDraw={firstDraw}
                 id={canvasId}
