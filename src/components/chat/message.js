@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { FormattedTime } from 'react-intl';
 import Linkify from 'linkifyjs/react';
 import cx from 'classnames';
 import {
@@ -9,6 +8,22 @@ import {
 import './index.scss';
 
 export default class Message extends Component {
+  constructor(props) {
+    super(props);
+
+    const options = {
+      hourCycle: 'h23',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      timeZone: 'UTC',
+    };
+
+    // TODO: As soon as react-int fixes FormattedTime
+    // this should come back as it were before
+    this.timeFormatter = new Intl.DateTimeFormat('default', options);
+  }
+
   shouldComponentUpdate(nextProps) {
     const { active } = this.props;
 
@@ -55,6 +70,7 @@ export default class Message extends Component {
     } = this.props;
 
     const milliseconds = getTimestampAsMilliseconds(timestamp);
+    const time = this.timeFormatter.format(milliseconds);
 
     return (
       <div className="data">
@@ -63,14 +79,7 @@ export default class Message extends Component {
             {name}
           </div>
           <div className={cx('time', { inactive: !active })}>
-            <FormattedTime
-              hour12={false}
-              hour='numeric'
-              minute='numeric'
-              second='numeric'
-              timeZone='UTC'
-              value={milliseconds}
-            />
+            {time}
           </div>
         </div>
         <div className={cx('text', { inactive: !active })}>
