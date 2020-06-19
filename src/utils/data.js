@@ -34,17 +34,9 @@ const getCurrentDataIndex = (data, time) => {
 };
 
 const getCurrentDataInterval = (data, time) => {
-  const cleared = [];
-  let first = -1;
-  let last = -1;
+  const currentDataInterval = [];
 
-  if (!data) {
-    return {
-      cleared,
-      first,
-      last,
-    };
-  }
+  if (!data) return currentDataInterval;
 
   for (let index = 0; index < data.length; index++) {
     const item = data[index];
@@ -54,23 +46,13 @@ const getCurrentDataInterval = (data, time) => {
         timestamp,
       } = item;
 
-      if (!isVisible(time, timestamp)) {
-        if (last !== -1) break;
-        continue;
-      }
+      if (!isVisible(time, timestamp)) break;
 
-      if (first === -1) first = index;
-      last = index;
-
-      if (wasCleared(time, clear)) cleared.push(index);
+      currentDataInterval.push(!wasCleared(time, clear));
     }
   }
 
-  return {
-    cleared,
-    first,
-    last,
-  }
+  return currentDataInterval;
 };
 
 const getFileName = file => file.split('.').shift();
@@ -83,7 +65,7 @@ const getLayout = location => {
     if (search) {
       const { layout } = qs.parse(search, { ignoreQueryPrefix: true });
 
-      if (layout)  return layout;
+      if (layout) return layout;
     }
   }
 
@@ -96,10 +78,8 @@ const getRecordId = match => {
     if (params && params.recordId) {
       const { recordId } = params;
       const regex = /^[a-z0-9]{40}-[0-9]{13}$/;
-      if (recordId.match(regex)) {
 
-        return recordId;
-      }
+      if (recordId.match(regex)) return recordId;
     }
   }
 
@@ -200,14 +180,10 @@ const isEnabled = (data, time) => {
       } = item;
 
       // Check if it was activated and did not ended
-      if (isActive(time, timestamp, clear)) {
-        return true;
-      }
+      if (isActive(time, timestamp, clear)) return true;
 
       // Check if we are searching over the present time value
-      if (!isVisible(time, timestamp)) {
-        return false;
-      }
+      if (!isVisible(time, timestamp)) return false;
     } else {
       // Invalid item
       return false;

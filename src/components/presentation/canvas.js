@@ -95,12 +95,12 @@ export default class Canvas extends PureComponent {
     );
   }
 
-  renderCanvas(firstDraw, lastDraw, clearedDraws) {
+  renderCanvas(drawsInterval) {
     const { draws } = this.props;
     const canvas = [];
 
-    for (let i = firstDraw; i <= lastDraw; i++) {
-      if (clearedDraws.includes(i)) continue;
+    for (let i = 0; i < drawsInterval.length; i++) {
+      if (!drawsInterval[i]) continue;
 
       const {
         id,
@@ -110,7 +110,7 @@ export default class Canvas extends PureComponent {
 
       const j = i + 1;
       let intermediate = false;
-      if (j <= lastDraw) {
+      if (j < drawsInterval.length) {
         intermediate = draws[j].id === id;
       }
 
@@ -151,17 +151,13 @@ export default class Canvas extends PureComponent {
   }
 
   render() {
-    const {
-      clearedDraws,
-      firstDraw,
-      lastDraw,
-    } = this.props;
+    const { drawsInterval } = this.props;
 
-    if (firstDraw === -1 && lastDraw === -1) return null;
+    if (drawsInterval.length === 0) return null;
 
     return (
       <g>
-        {this.renderCanvas(firstDraw, lastDraw, clearedDraws)}
+        {this.renderCanvas(drawsInterval)}
       </g>
     );
   }
