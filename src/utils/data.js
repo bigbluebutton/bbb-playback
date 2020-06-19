@@ -32,37 +32,21 @@ const getCurrentDataIndex = (data, time) => {
   return currentDataIndex;
 };
 
-const getCurrentDataInterval = (data, time) => {
-  let first = -1;
-  let last = -1;
+const getCurrentDataActive = (data, time) => {
+  let actives = [];
 
-  if (!data) {
-    return {
-      first,
-      last,
-    };
-  }
-
-  for (let i = 0; i < data.length; i++) {
-    const {
-      clear,
-      timestamp,
-    } = data[i];
-
-    const active = isActive(time, timestamp, clear);
-    if (!active) {
-      if (last !== -1) break;
-      continue;
+  if (data) {
+    for (let i = 0; i < data.length; i++) {
+      const {
+        clear,
+        timestamp,
+      } = data[i];
+      actives[i] = isActive(time, timestamp, clear);
     }
-
-    if (first === -1) first = i;
-
-    last = i;
   }
 
   return {
-    first,
-    last,
+    actives,
   }
 };
 
@@ -208,7 +192,7 @@ const isEnabled = (data, time) => {
 export {
   getAvatarColor,
   getCurrentDataIndex,
-  getCurrentDataInterval,
+  getCurrentDataActive,
   getFileName,
   getFileType,
   getLayout,
