@@ -12,7 +12,7 @@ import NavigationBar from 'components/bars/navigation';
 import { addAlternatesToThumbnails } from 'utils/builder';
 import {
   getCurrentDataIndex,
-  getCurrentDataInterval,
+  getCurrentDataActive,
   getFileName,
   getSectionFromLayout,
   getSwapFromLayout,
@@ -231,7 +231,7 @@ export default class Player extends PureComponent {
     const currentPanzoomIndex = getCurrentDataIndex(this.panzooms, time);
     const currentCursorIndex = getCurrentDataIndex(this.cursor, time);
     const draws = this.getDraws(currentSlideIndex);
-    const currentDrawsInterval = getCurrentDataInterval(draws, time);
+    const currentDrawsArray = getCurrentDataActive(draws, time);
 
     return (
       <Presentation
@@ -241,9 +241,8 @@ export default class Player extends PureComponent {
         currentSlideIndex={currentSlideIndex}
         cursor={this.cursor}
         draws={draws}
-        firstDraw={currentDrawsInterval.first}
         intl={intl}
-        lastDraw={currentDrawsInterval.last}
+        arrayDraw={currentDrawsArray}
         metadata={this.metadata}
         panzooms={this.panzooms}
         slides={this.slides}
