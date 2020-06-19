@@ -241,9 +241,8 @@ export default class Player extends PureComponent {
         currentSlideIndex={currentSlideIndex}
         cursor={this.cursor}
         draws={draws}
-        firstDraw={currentDrawsInterval.first}
+        drawsInterval={currentDrawsInterval}
         intl={intl}
-        lastDraw={currentDrawsInterval.last}
         metadata={this.metadata}
         panzooms={this.panzooms}
         slides={this.slides}

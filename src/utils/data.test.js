@@ -41,59 +41,48 @@ it('gets current data index', () => {
 
 it('gets current data interval', () => {
   const data = [
-    {
-      timestamp: 1.0,
-      clear: 3.0,
-    },
-    {
-      timestamp: 2.0,
-      clear: 3.0,
-    },
-    {
-      timestamp: 4.0,
-      clear: -1,
-    },
-    {
-      timestamp: 5.0,
-      clear: -1,
-    },
+    { timestamp: 1.0, clear: -1 },
+    { timestamp: 2.0, clear: 3.0 },
+    { timestamp: 3.0, clear: 5.0 },
+    { timestamp: 4.0, clear: -1 },
+    { timestamp: 5.0, clear: 6.0 },
   ];
 
-  // Under
-  expect(getCurrentDataInterval(data, 0.0)).toEqual({ first: -1, last: -1 });
+  let result = [];
+  expect(getCurrentDataInterval(data, 0.0)).toEqual(result);
+  expect(getCurrentDataInterval(data, 0.9)).toEqual(result);
 
-  // Bottom boundary
-  expect(getCurrentDataInterval(data, 0.9)).toEqual({ first: -1, last: -1 });
-  expect(getCurrentDataInterval(data, 1.0)).toEqual({ first: 0, last: 0 });
+  result = [ true ];
+  expect(getCurrentDataInterval(data, 1.0)).toEqual(result);
 
-  // Top boundary
-  expect(getCurrentDataInterval(data, 2.0)).toEqual({ first: 0, last: 1 });
-  expect(getCurrentDataInterval(data, 2.1)).toEqual({ first: 0, last: 1 });
+  result = [ true, true ];
+  expect(getCurrentDataInterval(data, 2.0)).toEqual(result);
+  expect(getCurrentDataInterval(data, 2.1)).toEqual(result);
+  expect(getCurrentDataInterval(data, 2.9)).toEqual(result);
 
-  // Clear
-  expect(getCurrentDataInterval(data, 2.9)).toEqual({ first: 0, last: 1 });
-  expect(getCurrentDataInterval(data, 3.0)).toEqual({ first: -1, last: -1 });
-  expect(getCurrentDataInterval(data, 3.1)).toEqual({ first: -1, last: -1 });
+  result = [ true, false, true ];
+  expect(getCurrentDataInterval(data, 3.0)).toEqual(result);
+  expect(getCurrentDataInterval(data, 3.1)).toEqual(result);
+  expect(getCurrentDataInterval(data, 3.9)).toEqual(result);
 
-  // Bottom boundary after clear
-  expect(getCurrentDataInterval(data, 3.9)).toEqual({ first: -1, last: -1 });
-  expect(getCurrentDataInterval(data, 4.0)).toEqual({ first: 2, last: 2 });
+  result = [ true, false, true, true ];
+  expect(getCurrentDataInterval(data, 4.0)).toEqual(result);
+  expect(getCurrentDataInterval(data, 4.9)).toEqual(result);
 
-  // Top boundary after clear
-  expect(getCurrentDataInterval(data, 4.9)).toEqual({ first: 2, last: 2 });
-  expect(getCurrentDataInterval(data, 5.0)).toEqual({ first: 2, last: 3 });
+  result = [ true, false, false, true, true ];
+  expect(getCurrentDataInterval(data, 5.0)).toEqual(result);
 
-  // Above
-  expect(getCurrentDataInterval(data, 6.0)).toEqual({ first: 2, last: 3 });
+  result = [ true, false, false, true, false ];
+  expect(getCurrentDataInterval(data, 6.0)).toEqual(result);
 
   const empty = [];
-  expect(getCurrentDataInterval(empty, 0.0)).toEqual({ first: -1, last: -1 });
+  expect(getCurrentDataInterval(empty, 0.0)).toEqual([]);
 
   const object = { timestamp: 1.2 };
-  expect(getCurrentDataInterval(object, 0.0)).toEqual({ first: -1, last: -1 });
+  expect(getCurrentDataInterval(object, 0.0)).toEqual([]);
 
   const invalid = [{}];
-  expect(getCurrentDataInterval(invalid, 0.0)).toEqual({ first: -1, last: -1 });
+  expect(getCurrentDataInterval(invalid, 0.0)).toEqual([]);
 });
 
 it('gets file name', () => {

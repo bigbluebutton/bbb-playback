@@ -17,7 +17,8 @@ const getCurrentDataIndex = (data, time) => {
   for (let index = 0; index < data.length; index++) {
     const item = data[index];
     if (item.hasOwnProperty('timestamp')) {
-      if (isActive(time, item.timestamp)) {
+      const { timestamp } = item;
+      if (isVisible(time, timestamp)) {
         currentDataIndex = index;
       } else {
         // Timestamp has gone further the current time
@@ -33,37 +34,25 @@ const getCurrentDataIndex = (data, time) => {
 };
 
 const getCurrentDataInterval = (data, time) => {
-  let first = -1;
-  let last = -1;
+  const currentDataInterval = [];
 
-  if (!data) {
-    return {
-      first,
-      last,
-    };
-  }
+  if (!data) return currentDataInterval;
 
-  for (let i = 0; i < data.length; i++) {
-    const {
-      clear,
-      timestamp,
-    } = data[i];
+  for (let index = 0; index < data.length; index++) {
+    const item = data[index];
+    if (item.hasOwnProperty('timestamp') && item.hasOwnProperty('clear')) {
+      const {
+        clear,
+        timestamp,
+      } = item;
 
-    const active = isActive(time, timestamp, clear);
-    if (!active) {
-      if (last !== -1) break;
-      continue;
+      if (!isVisible(time, timestamp)) break;
+
+      currentDataInterval.push(!wasCleared(time, clear));
     }
-
-    if (first === -1) first = i;
-
-    last = i;
   }
 
-  return {
-    first,
-    last,
-  }
+  return currentDataInterval;
 };
 
 const getFileName = file => file.split('.').shift();
@@ -76,7 +65,7 @@ const getLayout = location => {
     if (search) {
       const { layout } = qs.parse(search, { ignoreQueryPrefix: true });
 
-      if (layout)  return layout;
+      if (layout) return layout;
     }
   }
 
@@ -89,10 +78,8 @@ const getRecordId = match => {
     if (params && params.recordId) {
       const { recordId } = params;
       const regex = /^[a-z0-9]{40}-[0-9]{13}$/;
-      if (recordId.match(regex)) {
 
-        return recordId;
-      }
+      if (recordId.match(regex)) return recordId;
     }
   }
 
@@ -171,8 +158,8 @@ const getScrollTop = (firstNode, currentNode, align) => {
 const getTimestampAsMilliseconds = timestamp => timestamp * 1000;
 
 const isActive = (time, timestamp, clear = -1) => {
-  const cleared = clear !== -1 && clear <= time;
-  const visible = timestamp <= time;
+  const cleared = wasCleared(time, clear);
+  const visible = isVisible(time, timestamp);
 
   return visible && !cleared;
 };
@@ -187,15 +174,16 @@ const isEnabled = (data, time) => {
   for (let index = 0; index < data.length; index++) {
     const item = data[index];
     if (item.hasOwnProperty('timestamp') && item.hasOwnProperty('clear')) {
+      const {
+        clear,
+        timestamp,
+      } = item;
+
       // Check if it was activated and did not ended
-      if (isActive(time, item.timestamp, item.clear)) {
-        return true;
-      }
+      if (isActive(time, timestamp, clear)) return true;
 
       // Check if we are searching over the present time value
-      if (!isActive(time, item.timestamp)) {
-        return false;
-      }
+      if (!isVisible(time, timestamp)) return false;
     } else {
       // Invalid item
       return false;
@@ -204,6 +192,10 @@ const isEnabled = (data, time) => {
 
   return false;
 };
+
+const isVisible = (time, timestamp) => timestamp <= time;
+
+const wasCleared = (time, clear) => clear !== -1 && clear <= time;
 
 export {
   getAvatarColor,

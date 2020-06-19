@@ -96,9 +96,8 @@ export default class Presentation extends PureComponent {
     const {
       active,
       draws,
-      firstDraw,
+      drawsInterval,
       intl,
-      lastDraw,
       metadata,
       slides,
       thumbnails,
@@ -140,9 +139,8 @@ export default class Presentation extends PureComponent {
               />
               <Canvas
                 draws={draws}
-                firstDraw={firstDraw}
+                drawsInterval={drawsInterval}
                 id={canvasId}
-                lastDraw={lastDraw}
                 metadata={metadata}
               />
               <Cursor
