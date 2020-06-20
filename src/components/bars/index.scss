@@ -7,12 +7,12 @@
   grid-area: navigation-bar;
 
   .title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
     color: white;
     font-weight: $font-weight-light;
-    overflow: hidden;
     padding: $padding-small;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   .button-wrapper {
