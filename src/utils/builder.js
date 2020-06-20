@@ -66,12 +66,9 @@ const buildMetadata = result => {
 
   if (recording && recording.meeting) {
     const attr = getAttr(recording.meeting.shift());
-
-    const {
-      id,
-      name,
-    } = attr;
-
+    const { id } = attr;
+    const meta = recording.meta.shift();
+    const name = meta.name ? meta.name.shift() : attr.name;
     const epoch = parseInt(recording.start_time.shift(), 10);
 
     data = {
