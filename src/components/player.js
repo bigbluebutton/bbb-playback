@@ -156,12 +156,14 @@ export default class Player extends PureComponent {
     const {
       epoch,
       name,
+      recordName,
     } = this.metadata;
 
     return (
       <NavigationBar
         epoch={epoch}
         name={name}
+        recordName={recordName}
         section={section}
         toggleSection={() => this.toggleSection()}
       />
