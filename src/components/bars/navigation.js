@@ -22,15 +22,24 @@ export default class NavigationBar extends PureComponent {
     const {
       epoch,
       name,
+      recordName,
     } = this.props;
 
     const date = <FormattedDate value={new Date(epoch)} />;
 
+    if (!recordName) {
     return (
       <span className="title">
         {name} - {date}
       </span>
     );
+    } else {
+      return (
+        <span className="title">
+          {recordName} - {name} - {date}
+        </span>
+      );
+    }
   }
 
   render() {
