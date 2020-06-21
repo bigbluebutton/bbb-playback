@@ -5,6 +5,12 @@ import stringHash from 'string-hash';
 const MEDIA = 'media';
 const CONTENT = 'content';
 
+const getAvatarColor = name => {
+  const { avatar } = config.colors;
+
+  return avatar[stringHash(name) % avatar.length];
+};
+
 const getCurrentDataIndex = (data, time) => {
   const array = Array.isArray(data);
   if (!array) return -1;
@@ -63,9 +69,9 @@ const getLayout = location => {
   if (location) {
     const { search } = location;
     if (search) {
-      const { layout } = qs.parse(search, { ignoreQueryPrefix: true });
+      const { l } = qs.parse(search, { ignoreQueryPrefix: true });
 
-      if (layout) return layout;
+      if (l) return l;
     }
   }
 
@@ -118,12 +124,6 @@ const getSwapFromLayout = layout => {
   return swap;
 };
 
-const getAvatarColor = name => {
-  const { avatar } = config.colors;
-
-  return avatar[stringHash(name) % avatar.length];
-};
-
 const getScrollTop = (firstNode, currentNode, align) => {
   if (!currentNode) return 0;
 
@@ -153,6 +153,19 @@ const getScrollTop = (firstNode, currentNode, align) => {
   }
 
   return verticalOffset;
+};
+
+const getTime = location => {
+  if (location) {
+    const { search } = location;
+    if (search) {
+      const { t } = qs.parse(search, { ignoreQueryPrefix: true });
+
+      if (t) return parseTimeToSeconds(t);
+    }
+  }
+
+  return null;
 };
 
 const getTimestampAsMilliseconds = timestamp => timestamp * 1000;
@@ -197,6 +210,51 @@ const isVisible = (time, timestamp) => timestamp <= time;
 
 const wasCleared = (time, clear) => clear !== -1 && clear <= time;
 
+const parseTimeToSeconds = time => {
+  const patterns = [
+    /^(\d+)h(\d+)m(\d+)s$/,
+    /^(\d+)m(\d+)s$/,
+    /^(\d+)s$/,
+  ];
+
+  for (let i = 0; i < patterns.length; i++) {
+    if (time.match(patterns[i])) {
+      const hours = time.match(/(\d+)h/);
+      const minutes = time.match(/(\d+)m/);
+      const seconds = time.match(/(\d+)s/);
+
+      let timeToSeconds = 0;
+
+      if (hours) {
+        const h = parseInt(hours[1]);
+        if (h >= 0) timeToSeconds += h * 3600;
+      }
+
+      if (minutes) {
+        const m = parseInt(minutes[1]);
+        if (m >= 0 && m < 60) {
+          timeToSeconds += m * 60;
+        } else {
+          return null;
+        }
+      }
+
+      if (seconds) {
+        const s = parseInt(seconds[1]);
+        if (s >= 0 && s < 60) {
+          timeToSeconds += s;
+        } else {
+          return null;
+        }
+      }
+
+      return timeToSeconds;
+    }
+  }
+
+  return null;
+};
+
 export {
   getAvatarColor,
   getCurrentDataIndex,
@@ -208,7 +266,9 @@ export {
   getScrollTop,
   getSectionFromLayout,
   getSwapFromLayout,
+  getTime,
   getTimestampAsMilliseconds,
   isActive,
   isEnabled,
+  parseTimeToSeconds,
 };

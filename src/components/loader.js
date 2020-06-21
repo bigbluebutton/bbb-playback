@@ -12,6 +12,7 @@ import {
   getFileType,
   getLayout,
   getRecordId,
+  getTime,
 } from 'utils/data';
 import './index.scss';
 
@@ -36,6 +37,7 @@ class Loader extends PureComponent {
     this.data = {};
     this.layout = getLayout(location);
     this.recordId = getRecordId(match);
+    this.time = getTime(location);
 
     this.state = {
       error: this.recordId ? null : config.error['NOT_FOUND'],
@@ -138,6 +140,7 @@ class Loader extends PureComponent {
           data={this.data}
           intl={intl}
           layout={this.layout}
+          time={this.time}
         />
       );
     }

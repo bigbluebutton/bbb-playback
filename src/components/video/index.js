@@ -77,6 +77,7 @@ export default class Video extends PureComponent {
       const {
         onPlayerReady,
         onTimeUpdate,
+        time,
       } = this.props;
 
       if (onTimeUpdate) {
@@ -88,6 +89,15 @@ export default class Video extends PureComponent {
         });
 
         this.player.on('pause', () => clearInterval());
+      }
+
+      if (time) {
+        this.player.on('loadedmetadata', () => {
+          const duration = this.player.duration();
+          if (time < duration) {
+            this.player.currentTime(time);
+          }
+        });
       }
 
       if (onPlayerReady) onPlayerReady(this.id, this.player);

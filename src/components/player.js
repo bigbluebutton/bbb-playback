@@ -194,6 +194,7 @@ export default class Player extends PureComponent {
     const {
       data,
       intl,
+      time,
     } = this.props;
 
     const { swap } = this.state;
@@ -212,6 +213,7 @@ export default class Player extends PureComponent {
           metadata={this.metadata}
           onPlayerReady={this.handlePlayerReady}
           onTimeUpdate={this.handleTimeUpdate}
+          time={time}
         />
       </div>
     );
