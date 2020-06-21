@@ -7,6 +7,7 @@ import {
   getScrollTop,
   isActive,
   isEnabled,
+  parseTimeToSeconds,
 } from './data';
 
 it('gets current data index', () => {
@@ -238,4 +239,34 @@ it('gets the vertical offset of a scrollable list', () => {
   expect(getScrollTop(firstNode, currentNode, 'top')).toEqual(100);
   expect(getScrollTop(firstNode, currentNode, 'center')).toEqual(55);
   expect(getScrollTop(firstNode, currentNode, 'bottom')).toEqual(10);
+});
+
+it('parses time query to seconds', () => {
+  expect(parseTimeToSeconds('1h0m0s')).toEqual(3600);
+  expect(parseTimeToSeconds('1h0m1s')).toEqual(3601);
+  expect(parseTimeToSeconds('1h1m0s')).toEqual(3660);
+  expect(parseTimeToSeconds('1h1m1s')).toEqual(3661);
+  expect(parseTimeToSeconds('1m0s')).toEqual(60);
+  expect(parseTimeToSeconds('1m1s')).toEqual(61);
+  expect(parseTimeToSeconds('1s')).toEqual(1);
+
+  expect(parseTimeToSeconds('59s')).toEqual(59);
+  expect(parseTimeToSeconds('60s')).toEqual(null);
+  expect(parseTimeToSeconds('-1s')).toEqual(null);
+
+  expect(parseTimeToSeconds('59m0s')).toEqual(3540);
+  expect(parseTimeToSeconds('60m0s')).toEqual(null);
+  expect(parseTimeToSeconds('-1m0s')).toEqual(null);
+
+  expect(parseTimeToSeconds('1h')).toEqual(null);
+  expect(parseTimeToSeconds('1h0m')).toEqual(null);
+  expect(parseTimeToSeconds('1h0s')).toEqual(null);
+
+  expect(parseTimeToSeconds('1m')).toEqual(null);
+
+  expect(parseTimeToSeconds('1s0m0h')).toEqual(null);
+  expect(parseTimeToSeconds('0m0h1s')).toEqual(null);
+  expect(parseTimeToSeconds('0h1s0m')).toEqual(null);
+  expect(parseTimeToSeconds('1m0h')).toEqual(null);
+  expect(parseTimeToSeconds('1s0m')).toEqual(null);
 });
