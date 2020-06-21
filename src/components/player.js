@@ -7,8 +7,9 @@ import Presentation from './presentation';
 import Screenshare from './screenshare';
 import Thumbnails from './thumbnails';
 import Video from './video';
-import ActionBar from 'components/bars/action';
-import NavigationBar from 'components/bars/navigation';
+import ActionBar from './bars/action';
+import NavigationBar from './bars/navigation';
+import Button from './utils/button';
 import { addAlternatesToThumbnails } from 'utils/builder';
 import {
   getCurrentDataIndex,
@@ -39,6 +40,7 @@ export default class Player extends PureComponent {
     } = props;
 
     this.state = {
+      fullscreen: false,
       time: 0,
       section: getSectionFromLayout(layout),
       swap: getSwapFromLayout(layout),
@@ -109,6 +111,12 @@ export default class Player extends PureComponent {
     });
   }
 
+  toggleFullscreen() {
+    const { fullscreen } = this.state;
+
+    this.setState({ fullscreen: !fullscreen });
+  }
+
   toggleSection() {
     const { section } = this.state;
 
@@ -125,6 +133,20 @@ export default class Player extends PureComponent {
     const { thumbnails } = this.state;
 
     this.setState({ thumbnails: !thumbnails });
+  }
+
+  getFullscreenButton() {
+    const { fullscreen } = this.state;
+
+    return (
+      <div className="fullscreen-button">
+        <Button
+          handleOnClick={() => this.toggleFullscreen()}
+          icon={fullscreen ? 'exit-fullscreen' : 'fullscreen'}
+          type="solid"
+        />
+      </div>
+    );
   }
 
   renderThumbnails() {
@@ -177,8 +199,12 @@ export default class Player extends PureComponent {
     const { swap } = this.state;
     const { media } = data;
 
+    let fullscreenButton;
+    if (swap) fullscreenButton = this.getFullscreenButton();
+
     return (
       <div className={cx('media', { 'swapped-media': swap })}>
+        {fullscreenButton}
         <Video
           captions={this.captions}
           intl={intl}
@@ -293,8 +319,12 @@ export default class Player extends PureComponent {
 
     const { swap } = this.state;
 
+    let fullscreenButton;
+    if (!swap) fullscreenButton = this.getFullscreenButton();
+
     return (
       <div className={cx('content', { 'swapped-content': swap })}>
+        {fullscreenButton}
         {this.renderPresentation(presentation)}
         {this.renderScreenshare(screenshare)}
       </div>
@@ -315,12 +345,21 @@ export default class Player extends PureComponent {
 
   render() {
     const { intl } = this.props;
-    const { section } = this.state;
+
+    const {
+      fullscreen,
+      section,
+    } = this.state;
+
+    const styles = {
+      'fullscreen-content': fullscreen,
+      'hidden-section': !section,
+    };
 
     return (
       <div
         aria-label={intl.formatMessage(intlMessages.aria)}
-        className={cx('player-wrapper', { 'hidden-section': !section })}
+        className={cx('player-wrapper', styles)}
         id={this.id}
       >
         {this.renderNavigationBar()}
