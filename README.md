@@ -25,3 +25,35 @@ You will be able to play your recordings using the following URL
 ```
 https://<domain>/playback/presentation/2.3/<recordId>
 ```
+
+## URL query strings
+
+- layout:
+  - `l=media`
+  - `l=content`
+   
+- time:
+  - `t=HhMmSs`
+  - `t=MmSs`
+  - `t=Ss`
+
+## configuration
+
+- chat:
+  - `scroll`: automatic scroll [`true`|`false`]
+  - `align`: scroll align [`top`|`center`|`bottom`]
+
+- colors:
+  - `avatar`: avatar color set
+
+- monitor: posts server playback's usage data
+  - `interval`: post frequency
+  - `url`: server post destiny
+
+- thumbnails:
+  - `scroll`: automatic scroll [`true`|`false`]
+  - `align`: scroll align [`top`|`center`|`bottom`]
+
+- video: primary media configuration
+  - `fps`: frames per second
+  - `rates`: speed rates
