@@ -296,6 +296,19 @@ const decodeXML = message => {
     .replace(/&(gt|#62);/g, '>');
 };
 
+const getInitials = name => {
+  let initials;
+
+  if (name) {
+    initials = name
+      .slice(0,2)
+      .toLowerCase()
+      .trim();
+  }
+
+  return initials;
+};
+
 const buildChat = result => {
   const { popcorn } = result;
   let data = [];
@@ -306,10 +319,12 @@ const buildChat = result => {
       const attr = getAttr(chat);
       const clear = attr.out ? parseFloat(attr.out) : -1;
       const message = decodeXML(clearHyperlink(attr.message));
+      const initials = getInitials(attr.name);
 
       return {
         clear,
         hyperlink: message !== attr.message,
+        initials,
         name: attr.name,
         message,
         timestamp: parseFloat(attr.in),

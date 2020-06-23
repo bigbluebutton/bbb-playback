@@ -88,6 +88,7 @@ export default class Chat extends Component {
     return chat.map((item, index) => {
       const {
         hyperlink,
+        initials,
         message,
         name,
         timestamp,
@@ -100,6 +101,7 @@ export default class Chat extends Component {
           <Message
             active={active}
             hyperlink={hyperlink}
+            initials={initials}
             name={name}
             onClick={() => this.handleOnClick(timestamp)}
             text={message}
