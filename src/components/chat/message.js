@@ -33,7 +33,10 @@ export default class Message extends Component {
   }
 
   renderAvatar(active, name) {
-    const { onClick } = this.props;
+    const {
+      initials,
+      onClick,
+    } = this.props;
 
     return (
       <div className="avatar-wrapper">
@@ -43,7 +46,7 @@ export default class Message extends Component {
           style={{ backgroundColor: getAvatarColor(name) }}
         >
           <span className="initials">
-            {name.slice(0, 2).toLowerCase()}
+            {initials}
           </span>
         </div>
       </div>
