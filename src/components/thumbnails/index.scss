@@ -6,7 +6,7 @@ $thumbnails-wrapper-bottom: calc(#{$control-bar-height} + #{$action-bar-height})
 $thumbnail-height: 90px;
 
 .thumbnails-wrapper {
-  background-color: $blue-lighter;
+  background-color: $thumbnails-background-color;
   bottom: $thumbnails-wrapper-bottom;
   box-sizing: border-box;
   overflow-x: hidden;

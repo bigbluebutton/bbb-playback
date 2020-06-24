@@ -122,6 +122,14 @@ $error-font-size: 5rem;
   .video-js {
     background-color: $main-background-color;
   }
+
+  .button-wrapper {
+    .solid {
+      &:focus {
+        box-shadow: 0 0 0 $margin-extra-small transparentize($button-color, .5);
+      }
+    }
+  }
 }
 
 .swapped-content {
@@ -151,6 +159,14 @@ $error-font-size: 5rem;
 
   .video-js {
     background-color: $main-background-color;
+  }
+
+  .button-wrapper {
+    .solid {
+      &:focus {
+        box-shadow: 0 0 0 $margin-extra-small transparentize($button-color, .5);
+      }
+    }
   }
 }
 
