@@ -126,7 +126,7 @@ $error-font-size: 5rem;
   .button-wrapper {
     .solid {
       &:focus {
-        box-shadow: 0 0 0 $margin-extra-small transparentize($blue, .5);
+        box-shadow: 0 0 0 $margin-extra-small transparentize($button-color, .5);
       }
     }
   }
@@ -164,7 +164,7 @@ $error-font-size: 5rem;
   .button-wrapper {
     .solid {
       &:focus {
-        box-shadow: 0 0 0 $margin-extra-small transparentize($blue, .5);
+        box-shadow: 0 0 0 $margin-extra-small transparentize($button-color, .5);
       }
     }
   }

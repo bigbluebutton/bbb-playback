@@ -19,7 +19,7 @@ $cursor-size: .5rem;
   width: 100%;
 
   .cursor {
-    fill: $red;
+    fill: $cursor-color;
     r: $cursor-size;
   }
 
