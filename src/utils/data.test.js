@@ -30,6 +30,11 @@ it('gets current data index', () => {
   // Above
   expect(getCurrentDataIndex(data, 3.0)).toEqual(1);
 
+  // Single
+  expect(getCurrentDataIndex([{ timestamp: 1.0 }], 0.0)).toEqual(-1);
+  expect(getCurrentDataIndex([{ timestamp: 1.0 }], 1.0)).toEqual(0);
+  expect(getCurrentDataIndex([{ timestamp: 1.0 }], 2.0)).toEqual(0);
+
   const empty = [];
   expect(getCurrentDataIndex(empty, 0.0)).toEqual(-1);
 

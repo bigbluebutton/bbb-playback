@@ -11,6 +11,27 @@ const getAvatarColor = name => {
   return avatar[stringHash(name) % avatar.length];
 };
 
+const isCurrent = (data, index, time) => {
+  if (index < 0 || index >= data.length) return false;
+
+  const item = data[index];
+  if (!item.hasOwnProperty('timestamp')) return false;
+
+  let current = false;
+  if (isVisible(time, item.timestamp)) {
+    if (index + 1 < data.length) {
+      const next = data[index + 1];
+      if (next.hasOwnProperty('timestamp')) {
+        current = !isVisible(time, next.timestamp);
+      }
+    } else {
+      current = true;
+    }
+  }
+
+  return current;
+};
+
 const getCurrentDataIndex = (data, time) => {
   const array = Array.isArray(data);
   if (!array) return -1;
@@ -18,25 +39,26 @@ const getCurrentDataIndex = (data, time) => {
   const empty = data.length === 0;
   if (empty) return -1;
 
-  // TODO: This could use a better search algorithm
-  let currentDataIndex = -1;
-  for (let index = 0; index < data.length; index++) {
-    const item = data[index];
-    if (item.hasOwnProperty('timestamp')) {
-      const { timestamp } = item;
-      if (isVisible(time, timestamp)) {
-        currentDataIndex = index;
-      } else {
-        // Timestamp has gone further the current time
-        break;
-      }
+  let start = 0;
+  let stop = data.length - 1;
+  let middle = Math.floor((start + stop) / 2);
+
+  while (!isCurrent(data, middle, time) && start < stop) {
+    const item = data[middle];
+    if (!item.hasOwnProperty('timestamp')) return -1;
+
+    if (!isVisible(time, item.timestamp)) {
+      stop = middle - 1;
     } else {
-      // Invalid item
-      return -1;
+      start = middle + 1;
     }
+
+    middle = Math.floor((start + stop) / 2);
   }
 
-  return currentDataIndex;
+  const current = isCurrent(data, middle, time);
+
+  return (!current) ? -1 : middle;
 };
 
 const getCurrentDataInterval = (data, time) => {
