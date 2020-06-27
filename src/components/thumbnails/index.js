@@ -86,6 +86,7 @@ export default class Thumbnails extends Component {
       } = item;
 
       const active = index === currentDataIndex;
+      const onClick = () => this.handleOnClick(timestamp);
 
       return (
         <div
@@ -95,8 +96,10 @@ export default class Thumbnails extends Component {
           <img
             alt={alt}
             className={cx('thumbnail', { active })}
-            onClick={() => this.handleOnClick(timestamp)}
+            onClick={onClick}
+            onKeyPress={(e) => e.key === 'Enter' ? onClick() : null}
             src={`${this.url}/${src}`}
+            tabIndex="0"
           />
         </div>
       );
@@ -111,6 +114,7 @@ export default class Thumbnails extends Component {
         aria-label={intl.formatMessage(intlMessages.aria)}
         className="thumbnails-wrapper"
         id={this.id}
+        tabIndex="0"
       >
         {this.renderThumbnails()}
       </div>

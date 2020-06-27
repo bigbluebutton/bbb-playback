@@ -121,6 +121,7 @@ export default class Chat extends Component {
         aria-live="polite"
         className="chat-wrapper"
         id={this.id}
+        tabIndex="0"
       >
         {this.renderHeader()}
         <div className="list">

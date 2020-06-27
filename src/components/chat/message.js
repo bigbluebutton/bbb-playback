@@ -43,7 +43,9 @@ export default class Message extends Component {
         <div
           className={cx('avatar', { inactive: !active })}
           onClick={onClick}
+          onKeyPress={(e) => e.key === 'Enter' ? onClick() : null}
           style={{ backgroundColor: getAvatarColor(name) }}
+          tabIndex="0"
         >
           <span className="initials">
             {initials}
