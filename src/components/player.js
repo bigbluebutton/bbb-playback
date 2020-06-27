@@ -14,6 +14,7 @@ import { addAlternatesToThumbnails } from 'utils/builder';
 import {
   getCurrentDataIndex,
   getCurrentDataInterval,
+  getDraws,
   getFileName,
   getSectionFromLayout,
   getSwapFromLayout,
@@ -135,8 +136,25 @@ export default class Player extends PureComponent {
     this.setState({ thumbnails: !thumbnails });
   }
 
-  getFullscreenButton() {
-    const { fullscreen } = this.state;
+  renderFullscreenButton(layout) {
+    const {
+      fullscreen,
+      swap,
+    } = this.state;
+
+    let visible;
+    switch (layout) {
+      case 'content':
+        visible = !swap;
+        break;
+      case 'media':
+        visible = swap;
+        break;
+      default:
+        visible = false;
+    }
+
+    if (!visible) return null;
 
     return (
       <div className="fullscreen-button">
@@ -200,12 +218,9 @@ export default class Player extends PureComponent {
     const { swap } = this.state;
     const { media } = data;
 
-    let fullscreenButton;
-    if (swap) fullscreenButton = this.getFullscreenButton();
-
     return (
       <div className={cx('media', { 'swapped-media': swap })}>
-        {fullscreenButton}
+        {this.renderFullscreenButton('media')}
         <Video
           captions={this.captions}
           intl={intl}
@@ -238,19 +253,6 @@ export default class Player extends PureComponent {
     );
   }
 
-  getDraws(slideIndex) {
-    if (slideIndex === -1) return null;
-
-    const slide = this.slides[slideIndex];
-    const canvas = this.canvases.find(canvas => slide.id === canvas.id);
-
-    if (!canvas) return null;
-
-    const { draws } = canvas;
-
-    return draws;
-  }
-
   renderPresentation(active) {
     const { intl } = this.props;
     const { time } = this.state;
@@ -258,7 +260,7 @@ export default class Player extends PureComponent {
     const currentSlideIndex = getCurrentDataIndex(this.slides, time);
     const currentPanzoomIndex = getCurrentDataIndex(this.panzooms, time);
     const currentCursorIndex = getCurrentDataIndex(this.cursor, time);
-    const draws = this.getDraws(currentSlideIndex);
+    const draws = getDraws(currentSlideIndex, this.slides, this.canvases);
     const currentDrawsInterval = getCurrentDataInterval(draws, time);
 
     return (
@@ -321,12 +323,9 @@ export default class Player extends PureComponent {
 
     const { swap } = this.state;
 
-    let fullscreenButton;
-    if (!swap) fullscreenButton = this.getFullscreenButton();
-
     return (
       <div className={cx('content', { 'swapped-content': swap })}>
-        {fullscreenButton}
+        {this.renderFullscreenButton('content')}
         {this.renderPresentation(presentation)}
         {this.renderScreenshare(screenshare)}
       </div>
