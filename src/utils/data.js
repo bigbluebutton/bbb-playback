@@ -83,6 +83,19 @@ const getCurrentDataInterval = (data, time) => {
   return currentDataInterval;
 };
 
+const getDraws = (index, slides, canvases) => {
+  if (index < 0 || index >= slides.length) return null;
+
+  const slide = slides[index];
+  const canvas = canvases.find(canvas => slide.id === canvas.id);
+
+  if (!canvas) return null;
+
+  const { draws } = canvas;
+
+  return draws;
+};
+
 const getFileName = file => file.split('.').shift();
 
 const getFileType = file => config.files.type[file.split('.').pop()];
@@ -281,6 +294,7 @@ export {
   getAvatarColor,
   getCurrentDataIndex,
   getCurrentDataInterval,
+  getDraws,
   getFileName,
   getFileType,
   getLayout,

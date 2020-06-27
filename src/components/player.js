@@ -14,6 +14,7 @@ import { addAlternatesToThumbnails } from 'utils/builder';
 import {
   getCurrentDataIndex,
   getCurrentDataInterval,
+  getDraws,
   getFileName,
   getSectionFromLayout,
   getSwapFromLayout,
@@ -238,19 +239,6 @@ export default class Player extends PureComponent {
     );
   }
 
-  getDraws(slideIndex) {
-    if (slideIndex === -1) return null;
-
-    const slide = this.slides[slideIndex];
-    const canvas = this.canvases.find(canvas => slide.id === canvas.id);
-
-    if (!canvas) return null;
-
-    const { draws } = canvas;
-
-    return draws;
-  }
-
   renderPresentation(active) {
     const { intl } = this.props;
     const { time } = this.state;
@@ -258,7 +246,7 @@ export default class Player extends PureComponent {
     const currentSlideIndex = getCurrentDataIndex(this.slides, time);
     const currentPanzoomIndex = getCurrentDataIndex(this.panzooms, time);
     const currentCursorIndex = getCurrentDataIndex(this.cursor, time);
-    const draws = this.getDraws(currentSlideIndex);
+    const draws = getDraws(currentSlideIndex, this.slides, this.canvases);
     const currentDrawsInterval = getCurrentDataInterval(draws, time);
 
     return (
