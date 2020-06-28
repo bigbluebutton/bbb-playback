@@ -12,6 +12,7 @@ import NavigationBar from './bars/navigation';
 import Button from './utils/button';
 import { addAlternatesToThumbnails } from 'utils/builder';
 import {
+  getControlFromLayout,
   getCurrentDataIndex,
   getCurrentDataInterval,
   getDraws,
@@ -41,11 +42,12 @@ export default class Player extends PureComponent {
     } = props;
 
     this.state = {
+      control: getControlFromLayout(layout),
       fullscreen: false,
-      time: 0,
       section: getSectionFromLayout(layout),
       swap: getSwapFromLayout(layout),
       thumbnails: false,
+      time: 0,
     }
 
     this.player = {
@@ -138,9 +140,12 @@ export default class Player extends PureComponent {
 
   renderFullscreenButton(layout) {
     const {
+      control,
       fullscreen,
       swap,
     } = this.state;
+
+    if (!control) return null;
 
     let visible;
     switch (layout) {
@@ -192,7 +197,11 @@ export default class Player extends PureComponent {
   }
 
   renderNavigationBar() {
-    const { section } = this.state;
+    const {
+      control,
+      section,
+    } = this.state;
+
     const {
       epoch,
       name,
@@ -200,6 +209,7 @@ export default class Player extends PureComponent {
 
     return (
       <NavigationBar
+        control={control}
         epoch={epoch}
         name={name}
         section={section}
@@ -333,10 +343,14 @@ export default class Player extends PureComponent {
   }
 
   renderActionBar() {
-    const { thumbnails } = this.state;
+    const {
+      control,
+      thumbnails,
+    } = this.state;
 
     return (
       <ActionBar
+        control={control}
         thumbnails={thumbnails}
         toggleSwap={() => this.toggleSwap()}
         toggleThumbnails={() => this.toggleThumbnails()}
