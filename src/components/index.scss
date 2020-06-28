@@ -201,7 +201,7 @@ $error-font-size: 5rem;
       "application content"
       "application action-bar";
     grid-template-columns: $section-width auto;
-    grid-template-rows: $navigation-bar-height auto auto auto $action-bar-height;
+    grid-template-rows: $navigation-bar-height $media-fit-height auto auto $action-bar-height;
 
     .fullscreen-button {
       visibility: visible;
@@ -220,6 +220,7 @@ $error-font-size: 5rem;
   @media (max-height: $media-max-height) {
     .player-wrapper {
       grid-template-columns: $section-width-small auto;
+      grid-template-rows: $navigation-bar-height $media-fit-height-small auto auto $action-bar-height;
     }
 
     .hidden-section {

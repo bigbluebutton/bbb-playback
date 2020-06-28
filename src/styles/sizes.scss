@@ -8,8 +8,13 @@ $video-width: 640px;
 $section-width: calc(#{$video-width} / 2);
 $section-width-small: calc((#{$video-width} / 8) * 3);
 
-$navigation-bar-height: 60px;
-$action-bar-height: 60px;
+$bar-height: 60px;
+
+$navigation-bar-height: $bar-height;
+$action-bar-height: $bar-height;
+
+$media-fit-height: calc((#{$video-height} / 2) - #{$bar-height});
+$media-fit-height-small: calc(((#{$video-height} / 8) * 3) - #{$bar-height});
 
 $border-radius: .35rem;
 $border-width: .20rem;
