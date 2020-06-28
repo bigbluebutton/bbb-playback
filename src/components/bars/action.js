@@ -13,30 +13,45 @@ export default class ActionBar extends Component {
     return false;
   }
 
-  render() {
+  renderSwapButton() {
+    const { toggleSwap } = this.props;
+
+    return (
+      <Button
+        handleOnClick={toggleSwap}
+        icon="refresh"
+        type="solid"
+      />
+    );
+  }
+
+  renderThumbnailsButton() {
     const {
       thumbnails,
-      toggleSwap,
       toggleThumbnails,
     } = this.props;
+
+    return (
+      <Button
+        active={thumbnails}
+        handleOnClick={toggleThumbnails}
+        icon="rooms"
+        type="ghost"
+      />
+    );
+  }
+
+  render() {
+    const { control } = this.props;
 
     return (
       <div className="action-bar">
         <div className="left" />
         <div className="center">
-          <Button
-            handleOnClick={toggleSwap}
-            icon="refresh"
-            type="solid"
-          />
+          {control ? this.renderSwapButton() : null}
         </div>
         <div className="right">
-          <Button
-            active={thumbnails}
-            handleOnClick={toggleThumbnails}
-            icon="rooms"
-            type="ghost"
-          />
+          {control ? this.renderThumbnailsButton(): null}
         </div>
       </div>
     );

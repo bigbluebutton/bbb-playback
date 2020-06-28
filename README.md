@@ -31,7 +31,8 @@ https://<domain>/playback/presentation/2.3/<recordId>
 - layout:
   - `l=media`
   - `l=content`
-   
+  - `l=disabled`
+
 - time:
   - `t=HhMmSs`
   - `t=MmSs`

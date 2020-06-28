@@ -4,6 +4,7 @@ import stringHash from 'string-hash';
 
 const MEDIA = 'media';
 const CONTENT = 'content';
+const DISABLED = 'disabled';
 
 const getAvatarColor = name => {
   const { avatar } = config.colors;
@@ -30,6 +31,19 @@ const isCurrent = (data, index, time) => {
   }
 
   return current;
+};
+
+const getControlFromLayout = layout => {
+  let control = true;
+
+  switch (layout) {
+    case DISABLED:
+      control = false;
+      break;
+    default:
+  }
+
+  return control;
 };
 
 const getCurrentDataIndex = (data, time) => {
@@ -292,6 +306,7 @@ const parseTimeToSeconds = time => {
 
 export {
   getAvatarColor,
+  getControlFromLayout,
   getCurrentDataIndex,
   getCurrentDataInterval,
   getDraws,

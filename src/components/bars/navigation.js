@@ -34,10 +34,12 @@ export default class NavigationBar extends PureComponent {
   }
 
   render() {
+    const { control } = this.props;
+
     return (
       <div className="navigation-bar">
         <div className="left">
-          {this.renderSectionToggle()}
+          {control ? this.renderSectionToggle() : null}
         </div>
         <div className="center">
           {this.renderTitle()}
