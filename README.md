@@ -38,6 +38,9 @@ https://<domain>/playback/presentation/2.3/<recordId>
   - `t=MmSs`
   - `t=Ss`
 
+- log:
+  - `debug`
+
 ## configuration
 
 - chat:
