@@ -1,6 +1,7 @@
 import config from 'config';
 import qs from 'qs';
 import stringHash from 'string-hash';
+import logger from './logger';
 
 const MEDIA = 'media';
 const CONTENT = 'content';
@@ -13,16 +14,16 @@ const getAvatarColor = name => {
 };
 
 const isCurrent = (data, index, time) => {
-  if (index < 0 || index >= data.length) return false;
+  if (!hasIndex(index, data)) return false;
 
   const item = data[index];
-  if (!item.hasOwnProperty('timestamp')) return false;
+  if (!hasProperty(item, 'timestamp')) return false;
 
   let current = false;
   if (isVisible(time, item.timestamp)) {
     if (index + 1 < data.length) {
       const next = data[index + 1];
-      if (next.hasOwnProperty('timestamp')) {
+      if (hasProperty(next, 'timestamp')) {
         current = !isVisible(time, next.timestamp);
       }
     } else {
@@ -47,11 +48,7 @@ const getControlFromLayout = layout => {
 };
 
 const getCurrentDataIndex = (data, time) => {
-  const array = Array.isArray(data);
-  if (!array) return -1;
-
-  const empty = data.length === 0;
-  if (empty) return -1;
+  if (isEmpty(data)) return -1;
 
   let start = 0;
   let stop = data.length - 1;
@@ -59,7 +56,7 @@ const getCurrentDataIndex = (data, time) => {
 
   while (!isCurrent(data, middle, time) && start < stop) {
     const item = data[middle];
-    if (!item.hasOwnProperty('timestamp')) return -1;
+    if (!hasProperty(item, 'timestamp')) return -1;
 
     if (!isVisible(time, item.timestamp)) {
       stop = middle - 1;
@@ -78,11 +75,11 @@ const getCurrentDataIndex = (data, time) => {
 const getCurrentDataInterval = (data, time) => {
   const currentDataInterval = [];
 
-  if (!data) return currentDataInterval;
+  if (isEmpty(data)) return currentDataInterval;
 
   for (let index = 0; index < data.length; index++) {
     const item = data[index];
-    if (item.hasOwnProperty('timestamp') && item.hasOwnProperty('clear')) {
+    if (hasProperty(item, 'timestamp') && hasProperty(item, 'clear')) {
       const {
         clear,
         timestamp,
@@ -98,9 +95,12 @@ const getCurrentDataInterval = (data, time) => {
 };
 
 const getDraws = (index, slides, canvases) => {
-  if (index < 0 || index >= slides.length) return null;
+  if (!hasIndex(index, slides)) return null;
 
   const slide = slides[index];
+
+  if (isEmpty(canvases)) return null;
+
   const canvas = canvases.find(canvas => slide.id === canvas.id);
 
   if (!canvas) return null;
@@ -137,6 +137,8 @@ const getRecordId = match => {
       if (recordId.match(regex)) return recordId;
     }
   }
+
+  logger.error('missing', 'recordId');
 
   return null;
 };
@@ -199,6 +201,7 @@ const getScrollTop = (firstNode, currentNode, align) => {
       verticalOffset = offsetTop + clientHeight - parentHeight;
       break;
     default:
+      logger.debug('unhandled', align);
   }
 
   return verticalOffset;
@@ -219,6 +222,24 @@ const getTime = location => {
 
 const getTimestampAsMilliseconds = timestamp => timestamp * 1000;
 
+const hasProperty = (object, property) => {
+  if (object && object.hasOwnProperty(property)) return true;
+
+  logger.warn('missing', property, object);
+
+  return false;
+};
+
+const hasIndex = (index, data) => {
+  if (isEmpty(data)) return false;
+
+  if (index >= 0 && index < data.length) return true;
+
+  logger.error('out of bounds', index, data);
+
+  return false;
+};
+
 const isActive = (time, timestamp, clear = -1) => {
   const cleared = wasCleared(time, clear);
   const visible = isVisible(time, timestamp);
@@ -226,16 +247,20 @@ const isActive = (time, timestamp, clear = -1) => {
   return visible && !cleared;
 };
 
-const isEnabled = (data, time) => {
-  const array = Array.isArray(data);
-  if (!array) return false;
+const isEmpty = data => {
+  if (!isValid('array', data)) return false;
 
   const empty = data.length === 0;
-  if (empty) return false;
+
+  return empty;
+};
+
+const isEnabled = (data, time) => {
+  if (isEmpty(data)) return false;
 
   for (let index = 0; index < data.length; index++) {
     const item = data[index];
-    if (item.hasOwnProperty('timestamp') && item.hasOwnProperty('clear')) {
+    if (hasProperty(item, 'timestamp') && hasProperty(item, 'clear')) {
       const {
         clear,
         timestamp,
@@ -253,6 +278,22 @@ const isEnabled = (data, time) => {
   }
 
   return false;
+};
+
+const isValid = (type, data) => {
+  let valid = false;
+
+  switch (type) {
+    case 'array':
+      if (Array.isArray(data)) valid = true;
+      break;
+    default:
+      logger.debug('unhandled', type);
+  }
+
+  if (!valid) logger.error('invalid', type, data);
+
+  return valid;
 };
 
 const isVisible = (time, timestamp) => timestamp <= time;
@@ -319,6 +360,7 @@ export {
   getSwapFromLayout,
   getTime,
   getTimestampAsMilliseconds,
+  hasProperty,
   isActive,
   isEnabled,
   parseTimeToSeconds,
