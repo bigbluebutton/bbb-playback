@@ -21,6 +21,7 @@ import {
   getSwapFromLayout,
   isEnabled,
 } from 'utils/data';
+import logger from 'utils/logger';
 import Monitor from 'utils/monitor';
 import Synchronizer from 'utils/synchronizer';
 import './index.scss';
@@ -75,16 +76,17 @@ export default class Player extends PureComponent {
 
     this.initMonitor(this.metadata.id);
 
-    // Uncomment for post-processed data details
-    // console.log(data);
+    logger.debug('player', data);
   }
 
   handlePlayerReady(media, player) {
     switch (media) {
       case 'video':
+        logger.debug('player', 'ready', 'video');
         this.player.video = player;
         break;
       case 'screenshare':
+        logger.debug('player', 'ready', 'screenshare');
         this.player.screenshare = player;
         break;
       default:

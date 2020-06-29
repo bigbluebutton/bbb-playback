@@ -14,6 +14,7 @@ import {
   getRecordId,
   getTime,
 } from 'utils/data';
+import logger from 'utils/logger';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -61,6 +62,7 @@ class Loader extends PureComponent {
     const url = `/presentation/${recordId}/${file}`;
     fetch(url).then(response => {
       if (response.ok) {
+        logger.debug('loader', file, response);
         const fileType = getFileType(file);
         switch (fileType) {
           case 'json':
@@ -72,11 +74,13 @@ class Loader extends PureComponent {
             throw Error(file);
         }
       } else {
+        logger.error('loader', file, response);
         this.setState({ error: response.status });
         throw Error(response.statusText);
       }
     }).then(value => {
       build(file, value).then(data => {
+        logger.debug('loader', 'builded', file);
         this.data[getFileName(file)] = data;
         this.update();
       }).catch(error => this.setState({ error: config.error['BAD_REQUEST'] }));
@@ -94,6 +98,7 @@ class Loader extends PureComponent {
       responses.forEach(response => {
         const { ok, url } = response;
         if (ok) {
+          logger.debug('loader', 'media', response);
           media.push(config.medias.find(type => url.endsWith(type)));
         }
       });

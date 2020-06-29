@@ -1,6 +1,10 @@
 import { parseStringPromise } from 'xml2js';
 import { files as config } from 'config';
-import { getFileType } from './data';
+import {
+  getFileType,
+  hasProperty,
+} from './data';
+import logger from './logger';
 
 const getAttr = data => {
   if (!data) return {};
@@ -36,11 +40,11 @@ const buildAlternates = result => {
   let data = [];
 
   for (const presentation in result) {
-    if (result.hasOwnProperty(presentation)) {
+    if (hasProperty(result, presentation)) {
       const slides = result[presentation];
 
       for (const slide in slides) {
-        if (slides.hasOwnProperty(slide)) {
+        if (hasProperty(slides, slide)) {
           const text = slides[slide];
 
           data.push({
@@ -64,7 +68,7 @@ const buildMetadata = result => {
   let data = {};
   const { recording } = result;
 
-  if (recording && recording.meeting) {
+  if (hasProperty(recording, 'meeting')) {
     const attr = getAttr(recording.meeting.shift());
     const { id } = attr;
     const meta = recording.meta.shift();
@@ -243,7 +247,7 @@ const buildPanzooms = result => {
   let data = [];
   const { recording } = result;
 
-  if (recording && recording.event) {
+  if (hasProperty(recording, 'event')) {
     data = recording.event.map(panzoom => {
       const attr = getAttr(panzoom);
       const viewbox = getNumbers(panzoom.viewBox.shift());
@@ -265,7 +269,7 @@ const buildCursor = result => {
   let data = [];
   const { recording } = result;
 
-  if (recording && recording.event) {
+  if (hasProperty(recording, 'event')) {
     data = recording.event.map(cursor => {
       const attr = getAttr(cursor);
       const position = getNumbers(cursor.cursor.shift());
@@ -313,7 +317,7 @@ const buildChat = result => {
   const { popcorn } = result;
   let data = [];
 
-  if (popcorn && popcorn.chattimeline) {
+  if (hasProperty(popcorn, 'chattimeline')) {
     const { chattimeline } = popcorn;
     data = chattimeline.map(chat => {
       const attr = getAttr(chat);
@@ -339,7 +343,7 @@ const buildScreenshare = result => {
   let data = [];
   const { recording } = result;
 
-  if (recording && recording.event) {
+  if (hasProperty(recording, 'event')) {
     data = recording.event.map(screenshare => {
       const attr = getAttr(screenshare);
 
@@ -367,6 +371,7 @@ const build = (filename, value) => {
           data = buildCaptions(value);
           break;
         default:
+          logger.debug('unhandled', 'json', filename);
           reject(filename);
       }
       resolve(data);
@@ -393,6 +398,7 @@ const build = (filename, value) => {
             data = buildShapes(result);
             break;
           default:
+            logger.debug('unhandled', 'xml', filename);
             reject(filename);
         }
         resolve(data);
