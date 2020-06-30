@@ -95,15 +95,15 @@ const getCurrentDataInterval = (data, time) => {
 };
 
 const getDraws = (index, slides, canvases) => {
-  if (!hasIndex(index, slides)) return null;
+  if (!hasIndex(index, slides)) return [];
 
   const slide = slides[index];
 
-  if (isEmpty(canvases)) return null;
+  if (isEmpty(canvases)) return [];
 
   const canvas = canvases.find(canvas => slide.id === canvas.id);
 
-  if (!canvas) return null;
+  if (!canvas) return [];
 
   const { draws } = canvas;
 
@@ -231,13 +231,17 @@ const hasProperty = (object, property) => {
 };
 
 const hasIndex = (index, data) => {
+  if (index < 0) return false;
+
   if (isEmpty(data)) return false;
 
-  if (index >= 0 && index < data.length) return true;
+  if (index >= data.length) {
+    logger.error('out of bounds', index, data);
 
-  logger.error('out of bounds', index, data);
+    return false;
+  }
 
-  return false;
+  return true;
 };
 
 const isActive = (time, timestamp, clear = -1) => {
@@ -248,7 +252,7 @@ const isActive = (time, timestamp, clear = -1) => {
 };
 
 const isEmpty = data => {
-  if (!isValid('array', data)) return false;
+  if (!isValid('array', data)) return true;
 
   const empty = data.length === 0;
 
