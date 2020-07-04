@@ -1,3 +1,5 @@
+import logger from './logger';
+
 const STATUSES = [
   'canplay',
   'seeking',
@@ -28,7 +30,7 @@ const EVENTS = [
   'seeking',
   'stalled',
   'suspend',
-  'timeupdate',
+  //'timeupdate',
   'volumechange',
   'waiting',
 ];
@@ -96,8 +98,8 @@ export default class Synchronizer {
     });
 
     EVENTS.forEach(event => {
-      //this.primary.on(event, () => console.log(`primary ${event} ${this.status.primary}`));
-      //this.secondary.on(event, () => console.log(`secondary ${event} ${this.status.secondary}`));
+      this.primary.on(event, () => logger.debug(`primary ${event} ${this.status.primary}`));
+      this.secondary.on(event, () => logger.debug(`secondary ${event} ${this.status.secondary}`));
     });
   }
 }

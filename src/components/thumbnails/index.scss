@@ -1,4 +1,6 @@
 @import 'src/styles/colors';
+@import 'src/styles/fonts';
+@import 'src/styles/icons';
 @import 'src/styles/sizes';
 
 $thumbnails-wrapper-top: $navigation-bar-height;
@@ -47,4 +49,10 @@ $thumbnail-height: 90px;
   &:hover {
     filter: opacity(50%);
   }
+}
+
+.screenshare {
+  color: $gray;
+  font-size: xx-large;
+  font-weight: $font-weight-semi-bold;
 }

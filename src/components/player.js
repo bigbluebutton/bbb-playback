@@ -12,6 +12,7 @@ import NavigationBar from './bars/navigation';
 import Button from './utils/button';
 import { addAlternatesToThumbnails } from 'utils/builder';
 import {
+  getActiveContent,
   getControlFromLayout,
   getCurrentDataIndex,
   getCurrentDataInterval,
@@ -19,7 +20,6 @@ import {
   getFileName,
   getSectionFromLayout,
   getSwapFromLayout,
-  isEnabled,
 } from 'utils/data';
 import logger from 'utils/logger';
 import Monitor from 'utils/monitor';
@@ -90,6 +90,7 @@ export default class Player extends PureComponent {
         this.player.screenshare = player;
         break;
       default:
+        logger.debug('unhandled', media);
     }
 
     if (this.player.video && this.player.screenshare) {
@@ -316,30 +317,19 @@ export default class Player extends PureComponent {
     );
   }
 
-  getActiveContent() {
-    const { time } = this.state;
-
-    const screenshare = isEnabled(this.screenshare, time);
-
-    return {
-      presentation: !screenshare,
-      screenshare,
-    };
-  }
-
   renderContent() {
     const {
-      presentation,
-      screenshare,
-    } = this.getActiveContent();
+      swap,
+      time,
+    } = this.state;
 
-    const { swap } = this.state;
+    const content = getActiveContent(this.screenshare, time);
 
     return (
       <div className={cx('content', { 'swapped-content': swap })}>
         {this.renderFullscreenButton('content')}
-        {this.renderPresentation(presentation)}
-        {this.renderScreenshare(screenshare)}
+        {this.renderPresentation(content === 'presentation')}
+        {this.renderScreenshare(content === 'screenshare')}
       </div>
     );
   }

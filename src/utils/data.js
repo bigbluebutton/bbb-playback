@@ -7,31 +7,19 @@ const MEDIA = 'media';
 const CONTENT = 'content';
 const DISABLED = 'disabled';
 
+const PRESENTATION = 'presentation';
+const SCREENSHARE = 'screenshare';
+
 const getAvatarColor = name => {
   const { avatar } = config.colors;
 
   return avatar[stringHash(name) % avatar.length];
 };
 
-const isCurrent = (data, index, time) => {
-  if (!hasIndex(index, data)) return false;
+const getActiveContent = (screenshare, time) => {
+  const content = isEnabled(screenshare, time) ? SCREENSHARE : PRESENTATION;
 
-  const item = data[index];
-  if (!hasProperty(item, 'timestamp')) return false;
-
-  let current = false;
-  if (isVisible(time, item.timestamp)) {
-    if (index + 1 < data.length) {
-      const next = data[index + 1];
-      if (hasProperty(next, 'timestamp')) {
-        current = !isVisible(time, next.timestamp);
-      }
-    } else {
-      current = true;
-    }
-  }
-
-  return current;
+  return content;
 };
 
 const getControlFromLayout = layout => {
@@ -284,6 +272,27 @@ const isEnabled = (data, time) => {
   return false;
 };
 
+const isCurrent = (data, index, time) => {
+  if (!hasIndex(index, data)) return false;
+
+  const item = data[index];
+  if (!hasProperty(item, 'timestamp')) return false;
+
+  let current = false;
+  if (isVisible(time, item.timestamp)) {
+    if (index + 1 < data.length) {
+      const next = data[index + 1];
+      if (hasProperty(next, 'timestamp')) {
+        current = !isVisible(time, next.timestamp);
+      }
+    } else {
+      current = true;
+    }
+  }
+
+  return current;
+};
+
 const isValid = (type, data) => {
   let valid = false;
 
@@ -351,6 +360,7 @@ const parseTimeToSeconds = time => {
 
 export {
   getAvatarColor,
+  getActiveContent,
   getControlFromLayout,
   getCurrentDataIndex,
   getCurrentDataInterval,
