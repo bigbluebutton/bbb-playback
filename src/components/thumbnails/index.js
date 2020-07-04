@@ -5,6 +5,8 @@ import { thumbnails as config } from 'config';
 import { getScrollTop } from 'utils/data';
 import './index.scss';
 
+const SCREENSHARE = 'deskshare';
+
 const intlMessages = defineMessages({
   aria: {
     id: 'player.thumbnails.wrapper.aria',
@@ -72,6 +74,41 @@ export default class Thumbnails extends Component {
     }
   }
 
+  renderThumbnail(item, active) {
+    const {
+      alt,
+      src,
+      timestamp,
+    } = item;
+
+    const screenshare = src === SCREENSHARE;
+    const onClick = () => this.handleOnClick(timestamp);
+
+    if (screenshare) {
+      return (
+        <div
+          className={cx('thumbnail', { active, screenshare })}
+          onClick={onClick}
+          onKeyPress={(e) => e.key === 'Enter' ? onClick() : null}
+          tabIndex="0"
+        >
+          <span className="icon-desktop" />
+        </div>
+      );
+    }
+
+    return (
+      <img
+        alt={alt}
+        className={cx('thumbnail', { active })}
+        onClick={onClick}
+        onKeyPress={(e) => e.key === 'Enter' ? onClick() : null}
+        src={`${this.url}/${src}`}
+        tabIndex="0"
+      />
+    );
+  }
+
   renderThumbnails() {
     const {
       currentDataIndex,
@@ -79,28 +116,14 @@ export default class Thumbnails extends Component {
     } = this.props;
 
     return thumbnails.map((item, index) => {
-      const {
-        alt,
-        src,
-        timestamp,
-      } = item;
-
       const active = index === currentDataIndex;
-      const onClick = () => this.handleOnClick(timestamp);
 
       return (
         <div
           className="thumbnail-wrapper"
           ref={node => this.setRef(node, index)}
         >
-          <img
-            alt={alt}
-            className={cx('thumbnail', { active })}
-            onClick={onClick}
-            onKeyPress={(e) => e.key === 'Enter' ? onClick() : null}
-            src={`${this.url}/${src}`}
-            tabIndex="0"
-          />
+          {this.renderThumbnail(item, active)}
         </div>
       );
     });

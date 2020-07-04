@@ -149,8 +149,13 @@ const buildThumbnails = slides => {
       timestamp,
     } = slide;
 
-    // TODO: Screenshare thumbnail
-    if (!src.includes(screenshare)) {
+    if (src.includes(screenshare)) {
+      result.push({
+        id,
+        src: screenshare,
+        timestamp,
+      });
+    } else {
       result.push({
         id,
         src: src.replace(prefix, url),
