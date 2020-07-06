@@ -4,7 +4,18 @@ import Button from 'components/utils/button';
 import './index.scss';
 
 export default class NavigationBar extends PureComponent {
-  renderSectionToggle() {
+  renderMoreButton() {
+    const { toggleMore } = this.props;
+
+    return (
+      <Button
+        handleOnClick={toggleMore}
+        icon="vertical-more"
+      />
+    );
+  }
+
+  renderSectionButton() {
     const {
       section,
       toggleSection,
@@ -20,11 +31,11 @@ export default class NavigationBar extends PureComponent {
 
   renderTitle() {
     const {
-      epoch,
       name,
+      start,
     } = this.props;
 
-    const date = <FormattedDate value={new Date(epoch)} />;
+    const date = <FormattedDate value={new Date(start)} />;
 
     return (
       <span className="title">
@@ -39,12 +50,14 @@ export default class NavigationBar extends PureComponent {
     return (
       <div className="navigation-bar">
         <div className="left">
-          {control ? this.renderSectionToggle() : null}
+          {control ? this.renderSectionButton() : null}
         </div>
         <div className="center">
           {this.renderTitle()}
         </div>
-        <div className="right" />
+        <div className="right">
+          {control ? this.renderMoreButton() : null}
+        </div>
       </div>
     );
   }
