@@ -376,6 +376,7 @@ export {
   getTimestampAsMilliseconds,
   hasProperty,
   isActive,
+  isEmpty,
   isEnabled,
   parseTimeToSeconds,
 };

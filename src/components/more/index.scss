@@ -1,0 +1,118 @@
+@import 'src/styles/colors';
+@import 'src/styles/fonts';
+@import 'src/styles/icons';
+@import 'src/styles/sizes';
+
+.more-wrapper {
+  align-items: center;
+  background-color: transparentize($main-background-color, .25);
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 2;
+}
+
+.more {
+  background-color: $section-background-color;
+  border-radius: $border-radius;
+  display: flex;
+  flex-direction: column;
+  max-width: $modal-max-width;
+  max-height: 80%;
+  padding: 0 $padding-small;
+  width: 80%;
+
+  .control {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row-reverse;
+    height: $modal-bar-height;
+    padding: $padding-small;
+    width: 100%;
+
+    .button {
+      color: $gray-light;
+      font-weight: $font-weight-semi-bold;
+    }
+  }
+
+  .header {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    font-weight: $font-weight-regular;
+    padding: 0 0 $padding 0;
+    width: 100%;
+
+    .name {
+      box-sizing: border-box;
+      display: flex;
+      font-size: larger;
+      justify-content: center;
+      overflow: hidden;
+      padding: 0 0 $padding-extra-small 0;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .date {
+      box-sizing: border-box;
+      color: $gray-light;
+      display: flex;
+      font-size: small;
+      padding: 0 $padding-small;
+
+      .item {
+        box-sizing: border-box;
+        padding: 0 $padding-extra-small;
+      }
+    }
+  }
+
+  .body {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    padding: 0 $padding;
+    width: 100%;
+
+    .item {
+      box-sizing: border-box;
+      display: flex;
+      font-size: large;
+      padding: $padding-small 0;
+
+      .value {
+        box-sizing: border-box;
+        padding: 0 $padding;
+      }
+    }
+  }
+
+  .footer {
+    box-sizing: border-box;
+    align-items: center;
+    display: flex;
+    height: $modal-bar-height;
+    padding: 0 $padding;
+    width: 100%;
+
+    .item {
+      box-sizing: border-box;
+      color: $gray-light;
+      display: flex;
+      font-size: small;
+      padding: $padding-extra-small 0;
+      width: 100%;
+
+      .value {
+        box-sizing: border-box;
+        padding: 0 $padding-small;
+      }
+    }
+  }
+}

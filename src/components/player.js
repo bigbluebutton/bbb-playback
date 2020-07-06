@@ -3,6 +3,7 @@ import cx from 'classnames';
 import { defineMessages } from 'react-intl';
 import { files as config } from 'config';
 import Chat from './chat';
+import More from './more';
 import Presentation from './presentation';
 import Screenshare from './screenshare';
 import Thumbnails from './thumbnails';
@@ -20,6 +21,7 @@ import {
   getFileName,
   getSectionFromLayout,
   getSwapFromLayout,
+  isEmpty,
 } from 'utils/data';
 import logger from 'utils/logger';
 import Monitor from 'utils/monitor';
@@ -45,6 +47,7 @@ export default class Player extends PureComponent {
     this.state = {
       control: getControlFromLayout(layout),
       fullscreen: false,
+      more: false,
       section: getSectionFromLayout(layout),
       swap: getSwapFromLayout(layout),
       thumbnails: false,
@@ -123,6 +126,12 @@ export default class Player extends PureComponent {
     this.setState({ fullscreen: !fullscreen });
   }
 
+  toggleMore() {
+    const { more } = this.state;
+
+    this.setState({ more: !more });
+  }
+
   toggleSection() {
     const { section } = this.state;
 
@@ -175,6 +184,22 @@ export default class Player extends PureComponent {
     );
   }
 
+  renderMore() {
+    const { more } = this.state;
+
+    if (!more) return null;
+
+    return (
+      <More
+        captions={!isEmpty(this.captions)}
+        chat={!isEmpty(this.chat)}
+        metadata={this.metadata}
+        screenshare={!isEmpty(this.screenshare)}
+        toggleMore={() => this.toggleMore()}
+      />
+    );
+  }
+
   renderThumbnails() {
     const {
       time,
@@ -206,16 +231,17 @@ export default class Player extends PureComponent {
     } = this.state;
 
     const {
-      epoch,
       name,
+      start,
     } = this.metadata;
 
     return (
       <NavigationBar
         control={control}
-        epoch={epoch}
+        start={start}
         name={name}
         section={section}
+        toggleMore={() => this.toggleMore()}
         toggleSection={() => this.toggleSection()}
       />
     );
@@ -375,6 +401,7 @@ export default class Player extends PureComponent {
         {this.renderContent()}
         {this.renderActionBar()}
         {this.renderThumbnails()}
+        {this.renderMore()}
       </div>
     );
   }
