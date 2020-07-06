@@ -3,8 +3,11 @@ import {
   FormattedDate,
   FormattedTime,
 } from 'react-intl';
+import cx from 'classnames';
 import Button from 'components/utils/button';
 import './index.scss';
+
+const BUILD = process.env.REACT_APP_BBB_PLAYBACK_BUILD;
 
 export default class More extends PureComponent {
   renderDate(metadata) {
@@ -36,17 +39,20 @@ export default class More extends PureComponent {
     );
   }
 
-  renderItem(type, value) {
+  renderItem(key, value) {
     let element;
     if (typeof value === 'boolean') {
-      element = <div className={value ? 'icon-checkmark' : 'icon-close'} />;
+      const icon = value ? 'icon-checkmark' : 'icon-close';
+      element = <div className={cx(icon, { green: value, red: !value})} />;
     } else {
       element = value;
     }
 
     return (
       <div className="item">
-        <div className={`icon-${type}`} />
+        <div className="key">
+          <div className={`icon-${key}`} />
+        </div>
         <div className="value">
           {element}
         </div>
@@ -94,7 +100,7 @@ export default class More extends PureComponent {
           </div>
           {this.renderBody(metadata)}
           <div className="footer">
-            {this.renderItem('settings', 'ddfgsdfg')}
+            {this.renderItem('settings', BUILD)}
           </div>
         </div>
       </div>
