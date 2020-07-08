@@ -3,6 +3,7 @@ import { files as config } from 'config';
 import {
   getFileType,
   hasProperty,
+  isEmpty,
 } from './data';
 import logger from './logger';
 
@@ -13,6 +14,15 @@ const getAttr = data => {
   if (!attr) return {};
 
   return attr;
+};
+
+const getChildren = data => {
+  if (!data) return [];
+
+  const children = data['$$'];
+  if (!children) return [];
+
+  return children;
 };
 
 const getId = data => {
@@ -171,6 +181,26 @@ const buildThumbnails = slides => {
   }, []);
 };
 
+const parseText = data => {
+  let text = '';
+
+  const children = getChildren(data);
+  if (!isEmpty(children)) {
+    const child = children.shift();
+    const grandchildren = getChildren(child);
+    if (!isEmpty(grandchildren)) {
+      text = grandchildren.map(grandchild => {
+        const name = grandchild['#name'];
+        if (name === 'br') return '\r';
+
+        return grandchild['_'];
+      }).join('');
+    }
+  }
+
+  return text;
+};
+
 const buildCanvases = group => {
   let canvases = [];
 
@@ -211,8 +241,8 @@ const buildCanvases = group => {
         } else if (g.switch) {
           shape.type = 'text';
           const foreignObject = g.switch.shift()['foreignObject'].shift();
-          const p = foreignObject.p.shift()['_'];
-          shape.data = Object.assign({ p: p ? p : '' }, getAttr(foreignObject));
+          const text = parseText(foreignObject);
+          shape.data = Object.assign({ text }, getAttr(foreignObject));
         }
 
         return {
@@ -314,7 +344,7 @@ const getInitials = name => {
 
   if (name) {
     initials = name
-      .slice(0,2)
+      .slice(0, 2)
       .toLowerCase()
       .trim();
   }
@@ -366,6 +396,23 @@ const buildScreenshare = result => {
   return data;
 };
 
+const getOptions = filename => {
+  let options = {};
+
+  switch (filename) {
+    case config.data.shapes:
+      options = {
+        explicitChildren: true,
+        preserveChildrenOrder: true,
+        charsAsChildren: true,
+      };
+      break;
+    default:
+  }
+
+  return options;
+};
+
 const build = (filename, value) => {
   return new Promise((resolve, reject) => {
     let data;
@@ -386,7 +433,8 @@ const build = (filename, value) => {
       resolve(data);
     } else {
       // Parse XML data
-      parseStringPromise(value).then(result => {
+      const options = getOptions(filename);
+      parseStringPromise(value, options).then(result => {
         switch (filename) {
           case config.data.chat:
             data = buildChat(result);
