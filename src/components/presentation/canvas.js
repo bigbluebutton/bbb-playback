@@ -59,9 +59,9 @@ export default class Canvas extends PureComponent {
         x={data.x}
         y={data.y}
       >
-        <p xmlns="http://www.w3.org/1999/xhtml">
-          {data.p.split('\r').map(p => <span>{p}<br /></span>)}
-        </p>
+        <div xmlns="http://www.w3.org/1999/xhtml">
+          {data.text.split('\r').map(line => <span>{line}<br /></span>)}
+        </div>
       </foreignObject>
     );
   }
