@@ -4,41 +4,12 @@ import {
   FormattedTime,
 } from 'react-intl';
 import cx from 'classnames';
-import Button from 'components/utils/button';
+import Modal from 'components/utils/modal';
 import './index.scss';
 
 const BUILD = process.env.REACT_APP_BBB_PLAYBACK_BUILD;
 
 export default class More extends PureComponent {
-  renderDate(metadata) {
-    const date = <FormattedDate
-      value={new Date(metadata.start)}
-      day="numeric"
-      month="long"
-      year="numeric"
-    />;
-
-    const start = <FormattedTime value={new Date(metadata.start)} />
-    const end = <FormattedTime value={new Date(metadata.end)} />
-
-    return (
-      <div className="date">
-        <div className="item">
-          {date}
-        </div>
-        <div className="item">
-          {start}
-        </div>
-        <div className="item">
-          -
-        </div>
-        <div className="item">
-          {end}
-        </div>
-      </div>
-    );
-  }
-
   renderItem(key, value) {
     let element;
     if (typeof value === 'boolean') {
@@ -77,6 +48,46 @@ export default class More extends PureComponent {
     );
   }
 
+  renderHeader(metadata) {
+    const {
+      end,
+      name,
+      start,
+    } = metadata;
+
+    const subtitle = [];
+    subtitle.push(
+      <FormattedDate
+        value={new Date(start)}
+        day="numeric"
+        month="long"
+        year="numeric"
+      />
+    );
+
+    subtitle.push(<FormattedTime value={new Date(start)} />);
+    subtitle.push(<FormattedTime value={new Date(end)} />);
+
+    return (
+      <div className="header">
+        <div className="title">
+          {name}
+        </div>
+        <div className="subtitle">
+          {subtitle.map(s => <div className="item">{s}</div>)}
+        </div>
+      </div>
+    );
+  }
+
+  renderFooter() {
+    return (
+      <div className="footer">
+        {this.renderItem('settings', BUILD)}
+      </div>
+    );
+  }
+
   render() {
     const {
       metadata,
@@ -84,26 +95,11 @@ export default class More extends PureComponent {
     } = this.props;
 
     return (
-      <div className="more-wrapper">
-        <div className="more">
-          <div className="control">
-            <Button
-              handleOnClick={toggleMore}
-              icon="close"
-            />
-          </div>
-          <div className="header">
-            <div className="name">
-              {metadata.name}
-            </div>
-            {this.renderDate(metadata)}
-          </div>
-          {this.renderBody(metadata)}
-          <div className="footer">
-            {this.renderItem('settings', BUILD)}
-          </div>
-        </div>
-      </div>
+      <Modal onClose={toggleMore}>
+        {this.renderHeader(metadata)}
+        {this.renderBody(metadata)}
+        {this.renderFooter()}
+      </Modal>
     );
   }
 }

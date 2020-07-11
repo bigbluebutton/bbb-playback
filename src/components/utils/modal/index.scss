@@ -1,0 +1,51 @@
+@import 'src/styles/colors';
+@import 'src/styles/fonts';
+@import 'src/styles/icons';
+@import 'src/styles/sizes';
+
+.modal-wrapper {
+  align-items: center;
+  background-color: transparentize($main-background-color, .25);
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 2;
+}
+
+.modal {
+  background-color: $section-background-color;
+  border-radius: $border-radius;
+  display: flex;
+  flex-direction: column;
+  max-width: $modal-max-width;
+  max-height: 80%;
+  padding: 0 $padding-small;
+  width: 80%;
+
+  .modal-control,
+  .modal-content {
+    box-sizing: border-box;
+    display: flex;
+    width: 100%;
+  }
+
+  .modal-control {
+    flex-direction: row-reverse;
+    height: $modal-bar-height;
+    padding: $padding-small;
+
+    .button {
+      color: $gray-light;
+      font-weight: $font-weight-semi-bold;
+    }
+  }
+
+  .modal-content {
+    flex-direction: column;
+    padding: 0 $padding;
+  }
+}
