@@ -311,8 +311,6 @@ const isValid = (type, data) => {
 
 const isVisible = (time, timestamp) => timestamp <= time;
 
-const wasCleared = (time, clear) => clear !== -1 && clear <= time;
-
 const parseTimeToSeconds = time => {
   const patterns = [
     /^(\d+)h(\d+)m(\d+)s$/,
@@ -358,6 +356,27 @@ const parseTimeToSeconds = time => {
   return null;
 };
 
+const search = (text, data) => {
+  const result = [];
+  const { thumbnails } = data;
+
+  const value = text.toLowerCase();
+  thumbnails.forEach(thumbnail => {
+    const {
+      alt,
+      timestamp,
+    } = thumbnail;
+
+    if (alt.toLowerCase().indexOf(value) !== -1) {
+      result.push(timestamp);
+    }
+  });
+
+  return result;
+};
+
+const wasCleared = (time, clear) => clear !== -1 && clear <= time;
+
 export {
   getAvatarColor,
   getActiveContent,
@@ -378,5 +397,7 @@ export {
   isActive,
   isEmpty,
   isEnabled,
+  isValid,
   parseTimeToSeconds,
+  search,
 };
