@@ -13,6 +13,18 @@ export default class ActionBar extends Component {
     return false;
   }
 
+  renderSearchButton() {
+    const { toggleSearch } = this.props;
+
+    return (
+      <Button
+        handleOnClick={toggleSearch}
+        icon="promote"
+        type="ghost"
+      />
+    );
+  }
+
   renderSwapButton() {
     const { toggleSwap } = this.props;
 
@@ -46,7 +58,9 @@ export default class ActionBar extends Component {
 
     return (
       <div className="action-bar">
-        <div className="left" />
+        <div className="left">
+          {control ? this.renderSearchButton() : null}
+        </div>
         <div className="center">
           {control ? this.renderSwapButton() : null}
         </div>

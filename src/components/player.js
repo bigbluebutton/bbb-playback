@@ -5,6 +5,7 @@ import { files as config } from 'config';
 import Chat from './chat';
 import More from './more';
 import Presentation from './presentation';
+import Search from './search';
 import Screenshare from './screenshare';
 import Thumbnails from './thumbnails';
 import Video from './video';
@@ -47,7 +48,7 @@ export default class Player extends PureComponent {
     this.state = {
       control: getControlFromLayout(layout),
       fullscreen: false,
-      more: false,
+      modal: '',
       section: getSectionFromLayout(layout),
       swap: getSwapFromLayout(layout),
       thumbnails: false,
@@ -126,10 +127,11 @@ export default class Player extends PureComponent {
     this.setState({ fullscreen: !fullscreen });
   }
 
-  toggleMore() {
-    const { more } = this.state;
+  toggleModal(type) {
+    const { modal } = this.state;
+    const open = modal.length > 0;
 
-    this.setState({ more: !more });
+    this.setState({ modal: open ? '' : type });
   }
 
   toggleSection() {
@@ -184,20 +186,34 @@ export default class Player extends PureComponent {
     );
   }
 
-  renderMore() {
-    const { more } = this.state;
+  renderModal() {
+    const { modal } = this.state;
+    const open = modal.length > 0;
 
-    if (!more) return null;
+    if (!open) return null;
 
-    return (
-      <More
-        captions={!isEmpty(this.captions)}
-        chat={!isEmpty(this.chat)}
-        metadata={this.metadata}
-        screenshare={!isEmpty(this.screenshare)}
-        toggleMore={() => this.toggleMore()}
-      />
-    );
+    switch (modal) {
+      case 'more':
+        return (
+          <More
+            captions={!isEmpty(this.captions)}
+            chat={!isEmpty(this.chat)}
+            metadata={this.metadata}
+            screenshare={!isEmpty(this.screenshare)}
+            toggleModal={() => this.toggleModal('more')}
+          />
+        );
+      case 'search':
+        return (
+          <Search
+            metadata={this.metadata}
+            toggleModal={() => this.toggleModal('search')}
+          />
+        );
+      default:
+    }
+
+    return null;
   }
 
   renderThumbnails() {
@@ -241,7 +257,7 @@ export default class Player extends PureComponent {
         start={start}
         name={name}
         section={section}
-        toggleMore={() => this.toggleMore()}
+        toggleMore={() => this.toggleModal('more')}
         toggleSection={() => this.toggleSection()}
       />
     );
@@ -370,6 +386,7 @@ export default class Player extends PureComponent {
       <ActionBar
         control={control}
         thumbnails={thumbnails}
+        toggleSearch={() => this.toggleModal('search')}
         toggleSwap={() => this.toggleSwap()}
         toggleThumbnails={() => this.toggleThumbnails()}
       />
@@ -401,7 +418,7 @@ export default class Player extends PureComponent {
         {this.renderContent()}
         {this.renderActionBar()}
         {this.renderThumbnails()}
-        {this.renderMore()}
+        {this.renderModal()}
       </div>
     );
   }

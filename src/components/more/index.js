@@ -91,11 +91,11 @@ export default class More extends PureComponent {
   render() {
     const {
       metadata,
-      toggleMore,
+      toggleModal,
     } = this.props;
 
     return (
-      <Modal onClose={toggleMore}>
+      <Modal onClose={toggleModal}>
         {this.renderHeader(metadata)}
         {this.renderBody(metadata)}
         {this.renderFooter()}
