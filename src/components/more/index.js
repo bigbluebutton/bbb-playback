@@ -39,7 +39,7 @@ export default class More extends PureComponent {
     } = this.props;
 
     return (
-      <div className="body">
+      <div className="more-body">
         {this.renderItem('user', metadata.participants)}
         {this.renderItem('group-chat', chat)}
         {this.renderItem('desktop', screenshare)}
@@ -69,7 +69,7 @@ export default class More extends PureComponent {
     subtitle.push(<FormattedTime value={new Date(end)} />);
 
     return (
-      <div className="header">
+      <div className="more-header">
         <div className="title">
           {name}
         </div>
@@ -82,7 +82,7 @@ export default class More extends PureComponent {
 
   renderFooter() {
     return (
-      <div className="footer">
+      <div className="more-footer">
         {this.renderItem('settings', BUILD)}
       </div>
     );

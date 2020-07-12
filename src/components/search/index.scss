@@ -3,49 +3,43 @@
 @import 'src/styles/icons';
 @import 'src/styles/sizes';
 
-.header,
-.body,
-.footer {
+.search-body,
+.search-footer {
   box-sizing: border-box;
   display: flex;
   width: 100%;
 }
 
-.header {
-  flex-direction: column;
-  font-weight: $font-weight-regular;
-  padding: 0 0 $padding 0;
-
-  .title,
-  .subtitle {
-    box-sizing: border-box;
-    display: flex;
-    justify-content: center;
-  }
-
-  .title {
-    font-size: larger;
-    overflow: hidden;
-    padding: 0 0 $padding-extra-small 0;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .subtitle {
-    color: $gray-light;
-    font-size: small;
-    padding: 0 $padding-small;
-  }
-}
-
-.body {
-  flex-direction: column;
+.search-body {
+  flex-direction: row;
+  justify-content: space-evenly;
   overflow-x: hidden;
-  overflow-y: auto;
-  padding: 0 $padding;
+  padding: $padding 0;
+
+  input {
+    overflow: hidden;
+  }
+
+  .button-wrapper {
+    .solid {
+      &:focus {
+        box-shadow: 0 0 0 $margin-extra-small transparentize($button-color, .5);
+      }
+    }
+  }
 }
 
-.footer {
+.search-footer {
   align-items: center;
   padding: $padding;
+
+  .result {
+    box-sizing: border-box;
+    color: $gray-light;
+    display: flex;
+    font-size: small;
+    justify-content: flex-end;
+    padding: $padding 0 0 0;
+    width: 100%;
+  }
 }

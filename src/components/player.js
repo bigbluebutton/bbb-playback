@@ -204,10 +204,16 @@ export default class Player extends PureComponent {
           />
         );
       case 'search':
+        const data = { thumbnails: this.thumbnails };
+        const { video } = this.player;
+
+        if (!video) return null;
+
         return (
           <Search
-            metadata={this.metadata}
+            data={data}
             toggleModal={() => this.toggleModal('search')}
+            video={video}
           />
         );
       default:

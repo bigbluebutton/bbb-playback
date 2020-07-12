@@ -20,7 +20,7 @@ export default class ActionBar extends Component {
       <Button
         handleOnClick={toggleSearch}
         icon="promote"
-        type="ghost"
+        type="solid"
       />
     );
   }

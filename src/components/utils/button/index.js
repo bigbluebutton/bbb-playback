@@ -9,6 +9,7 @@ export default class Button extends PureComponent {
   render() {
     const {
       active,
+      disabled,
       handleOnClick,
       icon,
       type,
@@ -20,15 +21,17 @@ export default class Button extends PureComponent {
     const solid = type === SOLID;
 
     const style = {
-      default: !ghost && !solid,
-      ghost: ghost && !active,
-      solid: solid || active,
+      default: !ghost && !solid && !disabled,
+      ghost: ghost && !active && !disabled,
+      solid: (solid || active) && !disabled,
+      disabled,
     };
 
     return (
       <div className="button-wrapper">
         <button
           className={cx('button', style)}
+          disabled={disabled}
           onClick={() => handleOnClick()}
         >
           <span className={`icon-${icon}`} />

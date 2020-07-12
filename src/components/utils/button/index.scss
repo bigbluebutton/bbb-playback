@@ -45,4 +45,10 @@ $button-size: 2.75rem;
       box-shadow: 0 0 0 $margin-extra-small;
     }
   }
+
+  .disabled {
+    background-color: $gray-light;
+    border: none;
+    cursor: not-allowed;
+  }
 }

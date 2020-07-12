@@ -36,9 +36,10 @@ class Marker extends Plugin {
     this.duration = 0;
     this.marker = null;
 
+    this.player.on('loadedmetadata', () => this.duration = this.player.duration());
+
     this.player.ready(() => {
       const properties = { className: 'vjs-marker' };
-      this.duration = this.player.duration();
       this.marker = videojs.dom.createEl('div', properties);
       const seekBarElement = getSeekBarElement(this.player);
       seekBarElement.appendChild(this.marker);
@@ -48,6 +49,7 @@ class Marker extends Plugin {
   add(data) {
     if (!isValid('array', data)) return null;
 
+    this.clear();
     if (!this.marker) return null;
 
     data.forEach((time, index) => {
