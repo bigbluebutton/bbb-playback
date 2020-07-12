@@ -47,6 +47,14 @@ https://<domain>/playback/presentation/2.3/<recordId>
   - `scroll`: automatic scroll [`true`|`false`]
   - `align`: scroll align [`top`|`center`|`bottom`]
 
+- controls:
+  - `about`
+  - `fullscreen`
+  - `search`
+  - `section`
+  - `swap`
+  - `thumbnails`
+
 - colors:
   - `avatar`: avatar color set
 

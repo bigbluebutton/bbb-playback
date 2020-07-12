@@ -1,0 +1,45 @@
+@import 'src/styles/colors';
+@import 'src/styles/fonts';
+@import 'src/styles/icons';
+@import 'src/styles/sizes';
+
+.search-body,
+.search-footer {
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+}
+
+.search-body {
+  flex-direction: row;
+  justify-content: space-evenly;
+  overflow-x: hidden;
+  padding: $padding 0;
+
+  input {
+    overflow: hidden;
+  }
+
+  .button-wrapper {
+    .solid {
+      &:focus {
+        box-shadow: 0 0 0 $margin-extra-small transparentize($button-color, .5);
+      }
+    }
+  }
+}
+
+.search-footer {
+  align-items: center;
+  padding: $padding;
+
+  .result {
+    box-sizing: border-box;
+    color: $gray-light;
+    display: flex;
+    font-size: small;
+    justify-content: flex-end;
+    padding: $padding 0 0 0;
+    width: 100%;
+  }
+}

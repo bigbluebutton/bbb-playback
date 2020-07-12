@@ -1,10 +1,14 @@
 import React, { PureComponent } from 'react';
 import cx from 'classnames';
 import { defineMessages } from 'react-intl';
-import { files as config } from 'config';
+import {
+  controls,
+  files,
+} from 'config';
+import About from './about';
 import Chat from './chat';
-import More from './more';
 import Presentation from './presentation';
+import Search from './search';
 import Screenshare from './screenshare';
 import Thumbnails from './thumbnails';
 import Video from './video';
@@ -47,7 +51,7 @@ export default class Player extends PureComponent {
     this.state = {
       control: getControlFromLayout(layout),
       fullscreen: false,
-      more: false,
+      modal: '',
       section: getSectionFromLayout(layout),
       swap: getSwapFromLayout(layout),
       thumbnails: false,
@@ -61,14 +65,14 @@ export default class Player extends PureComponent {
 
     this.id = 'player';
 
-    this.alternates = data[getFileName(config.data.alternates)];
-    this.captions = data[getFileName(config.data.captions)];
-    this.chat = data[getFileName(config.data.chat)];
-    this.cursor = data[getFileName(config.data.cursor)];
-    this.metadata = data[getFileName(config.data.metadata)];
-    this.panzooms = data[getFileName(config.data.panzooms)];
-    this.screenshare = data[getFileName(config.data.screenshare)];
-    this.shapes = data[getFileName(config.data.shapes)];
+    this.alternates = data[getFileName(files.data.alternates)];
+    this.captions = data[getFileName(files.data.captions)];
+    this.chat = data[getFileName(files.data.chat)];
+    this.cursor = data[getFileName(files.data.cursor)];
+    this.metadata = data[getFileName(files.data.metadata)];
+    this.panzooms = data[getFileName(files.data.panzooms)];
+    this.screenshare = data[getFileName(files.data.screenshare)];
+    this.shapes = data[getFileName(files.data.shapes)];
 
     this.canvases = this.shapes.canvases;
     this.slides = this.shapes.slides;
@@ -126,10 +130,11 @@ export default class Player extends PureComponent {
     this.setState({ fullscreen: !fullscreen });
   }
 
-  toggleMore() {
-    const { more } = this.state;
+  toggleModal(type) {
+    const { modal } = this.state;
+    const open = modal.length > 0;
 
-    this.setState({ more: !more });
+    this.setState({ modal: open ? '' : type });
   }
 
   toggleSection() {
@@ -157,7 +162,7 @@ export default class Player extends PureComponent {
       swap,
     } = this.state;
 
-    if (!control) return null;
+    if (!control || !controls.fullscreen) return null;
 
     let visible;
     switch (layout) {
@@ -184,20 +189,40 @@ export default class Player extends PureComponent {
     );
   }
 
-  renderMore() {
-    const { more } = this.state;
+  renderModal() {
+    const { modal } = this.state;
+    const open = modal.length > 0;
 
-    if (!more) return null;
+    if (!open) return null;
 
-    return (
-      <More
-        captions={!isEmpty(this.captions)}
-        chat={!isEmpty(this.chat)}
-        metadata={this.metadata}
-        screenshare={!isEmpty(this.screenshare)}
-        toggleMore={() => this.toggleMore()}
-      />
-    );
+    switch (modal) {
+      case 'about':
+        return (
+          <About
+            captions={!isEmpty(this.captions)}
+            chat={!isEmpty(this.chat)}
+            metadata={this.metadata}
+            screenshare={!isEmpty(this.screenshare)}
+            toggleModal={() => this.toggleModal('about')}
+          />
+        );
+      case 'search':
+        const data = { thumbnails: this.thumbnails };
+        const { video } = this.player;
+
+        if (!video) return null;
+
+        return (
+          <Search
+            data={data}
+            toggleModal={() => this.toggleModal('search')}
+            video={video}
+          />
+        );
+      default:
+    }
+
+    return null;
   }
 
   renderThumbnails() {
@@ -241,7 +266,7 @@ export default class Player extends PureComponent {
         start={start}
         name={name}
         section={section}
-        toggleMore={() => this.toggleMore()}
+        toggleAbout={() => this.toggleModal('about')}
         toggleSection={() => this.toggleSection()}
       />
     );
@@ -370,6 +395,7 @@ export default class Player extends PureComponent {
       <ActionBar
         control={control}
         thumbnails={thumbnails}
+        toggleSearch={() => this.toggleModal('search')}
         toggleSwap={() => this.toggleSwap()}
         toggleThumbnails={() => this.toggleThumbnails()}
       />
@@ -401,7 +427,7 @@ export default class Player extends PureComponent {
         {this.renderContent()}
         {this.renderActionBar()}
         {this.renderThumbnails()}
-        {this.renderMore()}
+        {this.renderModal()}
       </div>
     );
   }

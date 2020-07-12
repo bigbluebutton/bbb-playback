@@ -1,15 +1,16 @@
 import React, { PureComponent } from 'react';
+import { controls as config } from 'config';
 import { FormattedDate } from 'react-intl';
 import Button from 'components/utils/button';
 import './index.scss';
 
 export default class NavigationBar extends PureComponent {
-  renderMoreButton() {
-    const { toggleMore } = this.props;
+  renderAboutButton() {
+    const { toggleAbout } = this.props;
 
     return (
       <Button
-        handleOnClick={toggleMore}
+        handleOnClick={toggleAbout}
         icon="vertical-more"
       />
     );
@@ -47,16 +48,21 @@ export default class NavigationBar extends PureComponent {
   render() {
     const { control } = this.props;
 
+    const {
+      about,
+      section,
+    } = config;
+
     return (
       <div className="navigation-bar">
         <div className="left">
-          {control ? this.renderSectionButton() : null}
+          {control && section ? this.renderSectionButton() : null}
         </div>
         <div className="center">
           {this.renderTitle()}
         </div>
         <div className="right">
-          {control ? this.renderMoreButton() : null}
+          {control && about ? this.renderAboutButton() : null}
         </div>
       </div>
     );

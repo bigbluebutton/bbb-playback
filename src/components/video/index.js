@@ -3,6 +3,7 @@ import { defineMessages } from 'react-intl';
 import videojs from 'video.js';
 import { video as config } from 'config';
 import './index.scss';
+import 'utils/marker';
 
 const intlMessages = defineMessages({
   aria: {
@@ -67,6 +68,9 @@ export default class Video extends PureComponent {
       fill: true,
       inactivityTimeout: 0,
       playbackRates: config.rates,
+      plugins: {
+        marker: {},
+      },
       sources,
       tracks,
     };

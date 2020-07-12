@@ -11,6 +11,14 @@
       "#1565c0", "#0d47a1", "#0277bd", "#01579b"
     ]
   },
+  "controls": {
+    "about": true,
+    "fullscreen": true,
+    "search": true,
+    "section": true,
+    "swap": true,
+    "thumbnails": true
+  },
   "error": {
     "BAD_REQUEST": 400,
     "UNAUTHORIZED": 401,
