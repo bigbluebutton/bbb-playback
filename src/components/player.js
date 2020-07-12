@@ -1,7 +1,10 @@
 import React, { PureComponent } from 'react';
 import cx from 'classnames';
 import { defineMessages } from 'react-intl';
-import { files as config } from 'config';
+import {
+  controls,
+  files,
+} from 'config';
 import About from './about';
 import Chat from './chat';
 import Presentation from './presentation';
@@ -62,14 +65,14 @@ export default class Player extends PureComponent {
 
     this.id = 'player';
 
-    this.alternates = data[getFileName(config.data.alternates)];
-    this.captions = data[getFileName(config.data.captions)];
-    this.chat = data[getFileName(config.data.chat)];
-    this.cursor = data[getFileName(config.data.cursor)];
-    this.metadata = data[getFileName(config.data.metadata)];
-    this.panzooms = data[getFileName(config.data.panzooms)];
-    this.screenshare = data[getFileName(config.data.screenshare)];
-    this.shapes = data[getFileName(config.data.shapes)];
+    this.alternates = data[getFileName(files.data.alternates)];
+    this.captions = data[getFileName(files.data.captions)];
+    this.chat = data[getFileName(files.data.chat)];
+    this.cursor = data[getFileName(files.data.cursor)];
+    this.metadata = data[getFileName(files.data.metadata)];
+    this.panzooms = data[getFileName(files.data.panzooms)];
+    this.screenshare = data[getFileName(files.data.screenshare)];
+    this.shapes = data[getFileName(files.data.shapes)];
 
     this.canvases = this.shapes.canvases;
     this.slides = this.shapes.slides;
@@ -159,7 +162,7 @@ export default class Player extends PureComponent {
       swap,
     } = this.state;
 
-    if (!control) return null;
+    if (!control || !controls.fullscreen) return null;
 
     let visible;
     switch (layout) {

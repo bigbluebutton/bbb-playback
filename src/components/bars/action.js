@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { controls as config } from 'config';
 import Button from 'components/utils/button';
 import './index.scss';
 
@@ -56,16 +57,22 @@ export default class ActionBar extends Component {
   render() {
     const { control } = this.props;
 
+    const {
+      search,
+      swap,
+      thumbnails,
+    } = config;
+
     return (
       <div className="action-bar">
         <div className="left">
-          {control ? this.renderSearchButton() : null}
+          {control && search ? this.renderSearchButton() : null}
         </div>
         <div className="center">
-          {control ? this.renderSwapButton() : null}
+          {control && swap ? this.renderSwapButton() : null}
         </div>
         <div className="right">
-          {control ? this.renderThumbnailsButton(): null}
+          {control && thumbnails ? this.renderThumbnailsButton(): null}
         </div>
       </div>
     );
