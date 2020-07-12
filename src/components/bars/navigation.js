@@ -4,12 +4,12 @@ import Button from 'components/utils/button';
 import './index.scss';
 
 export default class NavigationBar extends PureComponent {
-  renderMoreButton() {
-    const { toggleMore } = this.props;
+  renderAboutButton() {
+    const { toggleAbout } = this.props;
 
     return (
       <Button
-        handleOnClick={toggleMore}
+        handleOnClick={toggleAbout}
         icon="vertical-more"
       />
     );
@@ -56,7 +56,7 @@ export default class NavigationBar extends PureComponent {
           {this.renderTitle()}
         </div>
         <div className="right">
-          {control ? this.renderMoreButton() : null}
+          {control ? this.renderAboutButton() : null}
         </div>
       </div>
     );

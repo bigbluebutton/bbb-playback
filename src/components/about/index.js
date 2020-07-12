@@ -9,7 +9,7 @@ import './index.scss';
 
 const BUILD = process.env.REACT_APP_BBB_PLAYBACK_BUILD;
 
-export default class More extends PureComponent {
+export default class About extends PureComponent {
   renderItem(key, value) {
     let element;
     if (typeof value === 'boolean') {
@@ -39,7 +39,7 @@ export default class More extends PureComponent {
     } = this.props;
 
     return (
-      <div className="more-body">
+      <div className="about-body">
         {this.renderItem('user', metadata.participants)}
         {this.renderItem('group-chat', chat)}
         {this.renderItem('desktop', screenshare)}
@@ -69,7 +69,7 @@ export default class More extends PureComponent {
     subtitle.push(<FormattedTime value={new Date(end)} />);
 
     return (
-      <div className="more-header">
+      <div className="about-header">
         <div className="title">
           {name}
         </div>
@@ -82,7 +82,7 @@ export default class More extends PureComponent {
 
   renderFooter() {
     return (
-      <div className="more-footer">
+      <div className="about-footer">
         {this.renderItem('settings', BUILD)}
       </div>
     );

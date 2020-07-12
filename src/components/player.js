@@ -2,8 +2,8 @@ import React, { PureComponent } from 'react';
 import cx from 'classnames';
 import { defineMessages } from 'react-intl';
 import { files as config } from 'config';
+import About from './about';
 import Chat from './chat';
-import More from './more';
 import Presentation from './presentation';
 import Search from './search';
 import Screenshare from './screenshare';
@@ -193,14 +193,14 @@ export default class Player extends PureComponent {
     if (!open) return null;
 
     switch (modal) {
-      case 'more':
+      case 'about':
         return (
-          <More
+          <About
             captions={!isEmpty(this.captions)}
             chat={!isEmpty(this.chat)}
             metadata={this.metadata}
             screenshare={!isEmpty(this.screenshare)}
-            toggleModal={() => this.toggleModal('more')}
+            toggleModal={() => this.toggleModal('about')}
           />
         );
       case 'search':
@@ -263,7 +263,7 @@ export default class Player extends PureComponent {
         start={start}
         name={name}
         section={section}
-        toggleMore={() => this.toggleModal('more')}
+        toggleAbout={() => this.toggleModal('about')}
         toggleSection={() => this.toggleSection()}
       />
     );

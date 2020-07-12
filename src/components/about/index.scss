@@ -3,15 +3,15 @@
 @import 'src/styles/icons';
 @import 'src/styles/sizes';
 
-.more-header,
-.more-body,
-.more-footer {
+.about-header,
+.about-body,
+.about-footer {
   box-sizing: border-box;
   display: flex;
   width: 100%;
 }
 
-.more-header {
+.about-header {
   flex-direction: column;
   font-weight: $font-weight-regular;
   padding: 0 0 $padding 0;
@@ -43,7 +43,7 @@
   }
 }
 
-.more-body {
+.about-body {
   flex-wrap: wrap;
   justify-content: space-evenly;
   overflow-x: hidden;
@@ -76,7 +76,7 @@
   }
 }
 
-.more-footer {
+.about-footer {
   align-items: center;
   padding: $padding;
 
