@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
 import { defineMessages } from 'react-intl';
 import videojs from 'video.js';
+import 'utils/videojs';
 import { video as config } from 'config';
 import './index.scss';
-import 'utils/marker';
 
 const intlMessages = defineMessages({
   aria: {
