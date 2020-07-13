@@ -38,21 +38,21 @@ $thumbnail-height: 90px;
   height: $thumbnail-height;
   justify-content: center;
   padding: 0 0 $padding-extra-small 0;
-}
 
-.thumbnail {
-  cursor: pointer;
-  display: block;
-  height: 100%;
-  width: auto;
+  .thumbnail {
+    cursor: pointer;
+    display: block;
+    height: 100%;
+    width: auto;
 
-  &:hover {
-    filter: opacity(50%);
+    &:hover {
+      filter: opacity(50%);
+    }
   }
-}
 
-.screenshare {
-  color: $gray;
-  font-size: xx-large;
-  font-weight: $font-weight-semi-bold;
+  .screenshare {
+    color: $gray;
+    font-size: xx-large;
+    font-weight: $font-weight-semi-bold;
+  }
 }
