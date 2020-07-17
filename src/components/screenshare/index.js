@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { defineMessages } from 'react-intl';
 import cx from 'classnames';
 import videojs from 'video.js';
+import { buildFileURL } from 'utils/data';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -20,14 +21,12 @@ export default class Screenshare extends PureComponent {
       metadata,
     } = props;
 
-    const url = `/presentation/${metadata.id}`;
-
     const sources = [
       {
-        src: `${url}/deskshare/deskshare.mp4`,
+        src: buildFileURL(metadata.id, 'deskshare/deskshare.mp4'),
         type: `video/mp4`,
       }, {
-        src: `${url}/deskshare/deskshare.webm`,
+        src: buildFileURL(metadata.id, 'deskshare/deskshare.webm'),
         type: `video/webm`,
       },
     ].filter(src => {

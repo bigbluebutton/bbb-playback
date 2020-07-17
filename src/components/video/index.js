@@ -3,6 +3,7 @@ import { defineMessages } from 'react-intl';
 import videojs from 'video.js';
 import 'utils/videojs';
 import { video as config } from 'config';
+import { buildFileURL } from 'utils/data';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -22,14 +23,12 @@ export default class Video extends PureComponent {
       metadata,
     } = props;
 
-    const url = `/presentation/${metadata.id}`;
-
     const sources = [
       {
-        src: `${url}/video/webcams.mp4`,
+        src: buildFileURL(metadata.id, 'video/webcams.mp4'),
         type: 'video/mp4',
       }, {
-        src: `${url}/video/webcams.webm`,
+        src: buildFileURL(metadata.id, 'video/webcams.webm'),
         type: 'video/webm',
       },
     ].filter(src => {
@@ -44,11 +43,9 @@ export default class Video extends PureComponent {
         localeName,
       } = lang;
 
-      const src = `/presentation/${metadata.id}/caption_${locale}.vtt`;
-
       return {
         kind: 'captions',
-        src,
+        src: buildFileURL(metadata.id, `caption_${locale}.vtt`),
         srclang: locale,
         label: localeName,
       };
