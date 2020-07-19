@@ -7,6 +7,7 @@ import {
 } from 'config';
 import About from './about';
 import Chat from './chat';
+import Notes from './notes';
 import Presentation from './presentation';
 import Search from './search';
 import Screenshare from './screenshare';
@@ -49,6 +50,7 @@ export default class Player extends PureComponent {
     } = props;
 
     this.state = {
+      application: 'chat',
       control: getControlFromLayout(layout),
       fullscreen: false,
       modal: '',
@@ -70,6 +72,7 @@ export default class Player extends PureComponent {
     this.chat = data[getFileName(files.data.chat)];
     this.cursor = data[getFileName(files.data.cursor)];
     this.metadata = data[getFileName(files.data.metadata)];
+    this.notes = 'notes';
     this.panzooms = data[getFileName(files.data.panzooms)];
     this.screenshare = data[getFileName(files.data.screenshare)];
     this.shapes = data[getFileName(files.data.shapes)];
@@ -122,6 +125,14 @@ export default class Player extends PureComponent {
       const time = video.currentTime();
       return { time };
     });
+  }
+
+  toggleApplication(type) {
+    const { application } = this.state;
+
+    if (application === type) return null;
+
+    this.setState({ application: type });
   }
 
   toggleFullscreen() {
@@ -220,9 +231,8 @@ export default class Player extends PureComponent {
           />
         );
       default:
+        return null;
     }
-
-    return null;
   }
 
   renderThumbnails() {
@@ -298,21 +308,57 @@ export default class Player extends PureComponent {
     );
   }
 
-  renderApplication() {
-    const { intl } = this.props;
-    const { time } = this.state;
-    const { video } = this.player;
-
-    const currentChatIndex = getCurrentDataIndex(this.chat, time);
+  renderApplicationIcon(type) {
+    const { application } = this.state;
+    const active = application === type;
 
     return (
+      <div
+        className={cx('application-icon', { inactive: !active })}
+        onClick={() => active ? null : this.toggleApplication(type)}
+      >
+        <span className={`icon-${type}`} />
+      </div>
+    );
+  }
+
+  renderApplicationContent() {
+    const { intl } = this.props;
+    const { application } = this.state;
+
+    switch (application) {
+      case 'chat':
+        const { time } = this.state;
+        const { video } = this.player;
+        const currentChatIndex = getCurrentDataIndex(this.chat, time);
+
+        return (
+          <Chat
+            chat={this.chat}
+            currentDataIndex={currentChatIndex}
+            intl={intl}
+            player={video}
+          />
+        );
+      case 'notes':
+        return (
+          <Notes
+            notes={this.notes}
+            intl={intl}
+          />
+        );
+      default:
+        return null;
+    }
+  }
+
+  renderApplication() {
+    return (
       <div className="application">
-        <Chat
-          chat={this.chat}
-          currentDataIndex={currentChatIndex}
-          intl={intl}
-          player={video}
-        />
+        <div className="application-control">
+          {this.renderApplicationIcon('chat')}
+        </div>
+        {this.renderApplicationContent()}
       </div>
     );
   }

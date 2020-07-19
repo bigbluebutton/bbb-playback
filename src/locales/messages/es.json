@@ -3,6 +3,7 @@
   "loader.wrapper.aria": "Área del cargador",
   "player.wrapper.aria": "Área de reproductor",
   "player.chat.wrapper.aria": "Área de chat",
+  "player.notes.wrapper.aria": "Área de notas",
   "player.presentation.wrapper.aria": "Área de presentación",
   "player.screenshare.wrapper.aria": "Área de pantalla compartida",
   "player.thumbnails.wrapper.aria": "Área de miniaturas",

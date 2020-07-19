@@ -3,6 +3,7 @@
   "loader.wrapper.aria": "منطقة اللودر",
   "player.wrapper.aria": "منطقة لاعب",
   "player.chat.wrapper.aria": "منطقة الدردشة",
+  "player.notes.wrapper.aria": "منطقة الملاحظات",
   "player.presentation.wrapper.aria": "منطقة العرض",
   "player.screenshare.wrapper.aria": "منطقة مشاركة الشاشة",
   "player.thumbnails.wrapper.aria": "منطقة المصغرات",

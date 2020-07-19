@@ -3,6 +3,7 @@
   "loader.wrapper.aria": "Laderbereich",
   "player.wrapper.aria": "Spielerbereich",
   "player.chat.wrapper.aria": "Chat-Bereich",
+  "player.notes.wrapper.aria": "Notizenbereich",
   "player.presentation.wrapper.aria": "Präsentationsbereich",
   "player.screenshare.wrapper.aria": "Screenshare-Bereich",
   "player.thumbnails.wrapper.aria": "Miniaturansichten",

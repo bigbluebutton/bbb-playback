@@ -11,19 +11,6 @@ $avatar-size: 2.25rem;
   height: 100%;
   width: 100%;
 
-  .header {
-    box-sizing: border-box;
-    padding: $padding;
-
-    .icon {
-      color: $gray;
-      display: flex;
-      font-size: large;
-      font-weight: $font-weight-semi-bold;
-      justify-content: flex-end;
-    }
-  }
-
   .list {
     font-size: small;
     height: 100%;

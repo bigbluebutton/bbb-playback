@@ -69,16 +69,6 @@ export default class Chat extends Component {
     }
   }
 
-  renderHeader() {
-    return (
-      <div className="header">
-        <div className="icon">
-          <span className="icon-group-chat" />
-        </div>
-      </div>
-    );
-  }
-
   renderMessages() {
     const {
       chat,
@@ -123,7 +113,6 @@ export default class Chat extends Component {
         id={this.id}
         tabIndex="0"
       >
-        {this.renderHeader()}
         <div className="list">
           <div className="message-wrapper">
             {this.renderMessages()}

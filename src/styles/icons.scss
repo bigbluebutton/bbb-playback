@@ -81,7 +81,7 @@
   content: "\e90f";
 }
 
-.icon-group-chat:before {
+.icon-chat:before {
   content: "\e910";
 }
 
@@ -117,7 +117,7 @@
   content: "\e918";
 }
 
-.icon-chat:before {
+.icon-message:before {
   content: "\e919";
 }
 
@@ -372,4 +372,8 @@
 .icon-vertical-more:before {
   content: "\e902";
   transform: rotate(90deg);
+}
+
+.icon-notes:before {
+  content: "\e94a";
 }

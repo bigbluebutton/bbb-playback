@@ -173,9 +173,38 @@ $error-font-size: 5rem;
 .application {
   background-color: $section-background-color;
   display: flex;
+  flex-direction: column;
   grid-area: application;
   height: 100%;
   width: 100%;
+
+  .application-control {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row-reverse;
+    padding: $padding;
+
+    .application-icon {
+      box-sizing: border-box;
+      color: $gray;
+      display: flex;
+      font-size: large;
+      font-weight: $font-weight-semi-bold;
+
+      [dir="ltr"] & {
+        padding-left: $padding;
+      }
+
+      [dir="rtl"] & {
+        padding-right: $padding;
+      }
+    }
+
+    .inactive {
+      color: $gray-light;
+      cursor: pointer;
+    }
+  }
 }
 
 .fullscreen-button {

@@ -3,6 +3,7 @@
   "loader.wrapper.aria": "Zone de chargement",
   "player.wrapper.aria": "Zone de lecteur",
   "player.chat.wrapper.aria": "Zone de chat",
+  "player.notes.wrapper.aria": "Zone de notes",
   "player.presentation.wrapper.aria": "Zone de présentation",
   "player.screenshare.wrapper.aria": "Zone de partage d'écran",
   "player.thumbnails.wrapper.aria": "Zone des miniatures",
