@@ -3,21 +3,19 @@ import qs from 'qs';
 import stringHash from 'string-hash';
 import logger from './logger';
 
-const LOCAL = process.env.REACT_APP_NO_ROUTER;
-
-const MEDIA = 'media';
 const CONTENT = 'content';
 const DISABLED = 'disabled';
+const MEDIA = 'media';
+
+const LOCAL = process.env.REACT_APP_NO_ROUTER;
 
 const PRESENTATION = 'presentation';
 const SCREENSHARE = 'screenshare';
 
 const buildFileURL = (recordId, file) => {
-  if (LOCAL) {
-    return file;
-  } else {
-    return `/presentation/${recordId}/${file}`;
-  }
+  if (LOCAL) return file;
+
+  return `/presentation/${recordId}/${file}`;
 };
 
 const getAvatarColor = name => {
@@ -126,10 +124,7 @@ const getLayout = location => {
 };
 
 const getRecordId = match => {
-  if (LOCAL) {
-    logger.debug('local', 'recordId');
-    return 'local';
-  }
+  if (LOCAL) return 'local';
 
   if (match) {
     const { params } = match;
@@ -226,7 +221,9 @@ const getTime = location => {
 const getTimestampAsMilliseconds = timestamp => timestamp * 1000;
 
 const hasProperty = (object, property) => {
-  if (object && object.hasOwnProperty(property)) return true;
+  if (object && object.hasOwnProperty(property)) {
+    if (typeof object[property] !== 'undefined') return true;
+  }
 
   logger.warn('missing', property, object);
 
@@ -393,7 +390,12 @@ const search = (text, data) => {
 const wasCleared = (time, clear) => clear !== -1 && clear <= time;
 
 export {
+  CONTENT,
+  DISABLED,
+  MEDIA,
   LOCAL,
+  PRESENTATION,
+  SCREENSHARE,
   buildFileURL,
   getAvatarColor,
   getActiveContent,

@@ -1,14 +1,80 @@
 import {
+  CONTENT,
+  DISABLED,
+  MEDIA,
+  PRESENTATION,
+  SCREENSHARE,
+  getActiveContent,
+  getControlFromLayout,
   getCurrentDataIndex,
   getCurrentDataInterval,
   getFileName,
   getFileType,
   getRecordId,
   getScrollTop,
+  getSectionFromLayout,
+  getSwapFromLayout,
+  hasProperty,
   isActive,
+  isEmpty,
   isEnabled,
   parseTimeToSeconds,
+  search,
 } from './data';
+
+it('gets the current active content', () => {
+  const screenshare = [
+    {
+      timestamp: 10.0,
+      clear: 25.0,
+    },
+    {
+      timestamp: 30.0,
+      clear: 45.0,
+    },
+  ];
+
+  // Boundaries
+  expect(getActiveContent(screenshare, 9.9)).toEqual(PRESENTATION);
+  expect(getActiveContent(screenshare, 10.0)).toEqual(SCREENSHARE);
+  expect(getActiveContent(screenshare, 24.9)).toEqual(SCREENSHARE);
+  expect(getActiveContent(screenshare, 25.0)).toEqual(PRESENTATION);
+  expect(getActiveContent(screenshare, 29.9)).toEqual(PRESENTATION);
+  expect(getActiveContent(screenshare, 30.0)).toEqual(SCREENSHARE);
+  expect(getActiveContent(screenshare, 44.9)).toEqual(SCREENSHARE);
+  expect(getActiveContent(screenshare, 45.0)).toEqual(PRESENTATION);
+
+  const empty = [];
+  expect(getActiveContent(empty, 0.0)).toEqual(PRESENTATION);
+
+  const object = { timestamp: 1.2 };
+  expect(getActiveContent(empty, 0.0)).toEqual(PRESENTATION);
+
+  const invalid = [{}];
+  expect(getActiveContent(invalid, 0.0)).toEqual(PRESENTATION);
+});
+
+it('gets controls from layout query string', () => {
+  // Enabled
+  expect(getControlFromLayout(CONTENT)).toEqual(true);
+
+  // Disabled
+  expect(getControlFromLayout(DISABLED)).toEqual(false);
+
+  // Enabled
+  expect(getControlFromLayout(MEDIA)).toEqual(true);
+});
+
+it('gets section from layout query string', () => {
+  // Hidden
+  expect(getSectionFromLayout(CONTENT)).toEqual(false);
+
+  // Visible
+  expect(getSectionFromLayout(DISABLED)).toEqual(true);
+
+  // Hidden
+  expect(getSectionFromLayout(MEDIA)).toEqual(false);
+});
 
 it('gets current data index', () => {
   const data = [
@@ -172,6 +238,58 @@ it('gets record id', () => {
   expect(getRecordId({})).toEqual(null);
 });
 
+it('gets the vertical offset of a scrollable list', () => {
+  const parentNode = { clientHeight: 100 };
+  const firstNode = { offsetTop: 0 };
+  const currentNode = {
+    clientHeight: 10,
+    offsetTop: 100,
+    parentNode,
+  };
+
+  // TODO: Add more tests
+  expect(getScrollTop(firstNode, currentNode, 'top')).toEqual(100);
+  expect(getScrollTop(firstNode, currentNode, 'center')).toEqual(55);
+  expect(getScrollTop(firstNode, currentNode, 'bottom')).toEqual(10);
+});
+
+it('gets section from layout query string', () => {
+  // Hidden
+  expect(getSectionFromLayout(CONTENT)).toEqual(false);
+
+  // Visible
+  expect(getSectionFromLayout(DISABLED)).toEqual(true);
+
+  // Hidden
+  expect(getSectionFromLayout(MEDIA)).toEqual(false);
+});
+
+it('gets swap from layout query string', () => {
+  // Inactive
+  expect(getSwapFromLayout(CONTENT)).toEqual(false);
+
+  // Inactive
+  expect(getSwapFromLayout(DISABLED)).toEqual(false);
+
+  // Active
+  expect(getSwapFromLayout(MEDIA)).toEqual(true);
+});
+
+it('checks if object has property', () => {
+  const object = { property: 'value' };
+
+  expect(hasProperty(object, 'property')).toEqual(true);
+  expect(hasProperty(object, undefined)).toEqual(false);
+
+  const missing = { property: undefined };
+  expect(hasProperty(missing, 'property')).toEqual(false);
+  expect(hasProperty(missing, undefined)).toEqual(false);
+
+  const empty = {};
+  expect(hasProperty(empty, 'property')).toEqual(false);
+  expect(hasProperty(empty, undefined)).toEqual(false);
+});
+
 it('checks if data item is active', () => {
   // Not cleared
   expect(isActive(0.9, 1.0)).toEqual(false);
@@ -182,6 +300,12 @@ it('checks if data item is active', () => {
   expect(isActive(1.0, 1.0, 1.1)).toEqual(true);
   expect(isActive(1.1, 1.0, 1.1)).toEqual(false);
   expect(isActive(1.2, 1.0, 1.1)).toEqual(false);
+});
+
+it('checks if data array is empty', () => {
+  expect(isEmpty([1])).toEqual(false);
+  expect(isEmpty([])).toEqual(true);
+  expect(isEmpty(1)).toEqual(true);
 });
 
 it('checks if data is enabled', () => {
@@ -231,21 +355,6 @@ it('checks if data is enabled', () => {
   expect(isEnabled(invalid, 0.0)).toEqual(false);
 });
 
-it('gets the vertical offset of a scrollable list', () => {
-  const parentNode = { clientHeight: 100 };
-  const firstNode = { offsetTop: 0 };
-  const currentNode = {
-    clientHeight: 10,
-    offsetTop: 100,
-    parentNode,
-  };
-
-  // TODO: Add more tests
-  expect(getScrollTop(firstNode, currentNode, 'top')).toEqual(100);
-  expect(getScrollTop(firstNode, currentNode, 'center')).toEqual(55);
-  expect(getScrollTop(firstNode, currentNode, 'bottom')).toEqual(10);
-});
-
 it('parses time query to seconds', () => {
   expect(parseTimeToSeconds('1h0m0s')).toEqual(3600);
   expect(parseTimeToSeconds('1h0m1s')).toEqual(3601);
@@ -274,4 +383,36 @@ it('parses time query to seconds', () => {
   expect(parseTimeToSeconds('0h1s0m')).toEqual(null);
   expect(parseTimeToSeconds('1m0h')).toEqual(null);
   expect(parseTimeToSeconds('1s0m')).toEqual(null);
+});
+
+it('searches text in data collection', () => {
+  const data = {
+    thumbnails: [
+      {
+        alt: 'some text',
+        timestamp: 1.0,
+      },
+      {
+        alt: 'SOME TEXT',
+        timestamp: 2.0,
+      },
+      {
+        alt: 'text',
+        timestamp: 3.0,
+      },
+      {
+        alt: 'TEXT',
+        timestamp: 4.0,
+      },
+    ],
+  }
+
+  // Match
+  expect(search('some', data)).toEqual([ 1.0, 2.0 ]);
+  expect(search('SOME', data)).toEqual([ 1.0, 2.0 ]);
+  expect(search('text', data)).toEqual([ 1.0, 2.0, 3.0, 4.0 ]);
+  expect(search('TEXT', data)).toEqual([ 1.0, 2.0, 3.0, 4.0 ]);
+
+  // Miss
+  expect(search('other', data)).toEqual([]);
 });

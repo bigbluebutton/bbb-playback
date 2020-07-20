@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import cx from 'classnames';
 import { defineMessages } from 'react-intl';
 import { thumbnails as config } from 'config';
-import { getScrollTop, buildFileURL } from 'utils/data';
+import {
+  buildFileURL,
+  getScrollTop,
+} from 'utils/data';
 import './index.scss';
 
 const SCREENSHARE = 'deskshare';
