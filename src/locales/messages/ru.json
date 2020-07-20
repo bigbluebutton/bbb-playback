@@ -3,6 +3,7 @@
   "loader.wrapper.aria": "Зона погрузчика",
   "player.wrapper.aria": "Игровая зона",
   "player.chat.wrapper.aria": "Область чата",
+  "player.notes.wrapper.aria": "Область заметок",
   "player.presentation.wrapper.aria": "Площадь презентации",
   "player.screenshare.wrapper.aria": "Площадь экрана",
   "player.thumbnails.wrapper.aria": "Область миниатюр",

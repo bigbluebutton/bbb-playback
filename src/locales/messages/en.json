@@ -3,6 +3,7 @@
   "loader.wrapper.aria": "Loader area",
   "player.wrapper.aria": "Player area",
   "player.chat.wrapper.aria": "Chat area",
+  "player.notes.wrapper.aria": "Notes area",
   "player.presentation.wrapper.aria": "Presentation area",
   "player.screenshare.wrapper.aria": "Screenshare area",
   "player.thumbnails.wrapper.aria": "Thumbnails area",

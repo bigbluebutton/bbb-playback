@@ -41,7 +41,7 @@ export default class About extends PureComponent {
     return (
       <div className="about-body">
         {this.renderItem('user', metadata.participants)}
-        {this.renderItem('group-chat', chat)}
+        {this.renderItem('chat', chat)}
         {this.renderItem('desktop', screenshare)}
         {this.renderItem('closed-caption', captions)}
       </div>
