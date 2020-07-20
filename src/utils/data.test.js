@@ -65,17 +65,6 @@ it('gets controls from layout query string', () => {
   expect(getControlFromLayout(MEDIA)).toEqual(true);
 });
 
-it('gets section from layout query string', () => {
-  // Hidden
-  expect(getSectionFromLayout(CONTENT)).toEqual(false);
-
-  // Visible
-  expect(getSectionFromLayout(DISABLED)).toEqual(true);
-
-  // Hidden
-  expect(getSectionFromLayout(MEDIA)).toEqual(false);
-});
-
 it('gets current data index', () => {
   const data = [
     { timestamp: 1.0 },
