@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { buildFileURL } from 'utils/data';
 import './index.scss';
 
 export default class Canvas extends PureComponent {
@@ -7,7 +8,7 @@ export default class Canvas extends PureComponent {
 
     const { metadata } = props;
 
-    this.url = `/presentation/${metadata.id}`;
+    this.recordId = metadata.id;
   }
 
   renderPolyline(style, data) {
@@ -88,7 +89,7 @@ export default class Canvas extends PureComponent {
           transform={image.transform}
           width={image.width}
           x={image.x}
-          href={`${this.url}/${image['xlink:href']}`}
+          href={buildFileURL(this.recordId, image['xlink:href'])}
           y={image.y}
         />
       </g>

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import cx from 'classnames';
 import { defineMessages } from 'react-intl';
 import { thumbnails as config } from 'config';
-import { getScrollTop } from 'utils/data';
+import { getScrollTop, buildFileURL } from 'utils/data';
 import './index.scss';
 
 const SCREENSHARE = 'deskshare';
@@ -21,7 +21,7 @@ export default class Thumbnails extends Component {
     const { metadata } = props;
 
     this.id = 'thumbnails';
-    this.url = `/presentation/${metadata.id}`;
+    this.recordId = metadata.id;
   }
 
   componentDidMount() {
@@ -103,7 +103,7 @@ export default class Thumbnails extends Component {
         className={cx('thumbnail', { active })}
         onClick={onClick}
         onKeyPress={(e) => e.key === 'Enter' ? onClick() : null}
-        src={`${this.url}/${src}`}
+        src={buildFileURL(this.recordId, src)}
         tabIndex="0"
       />
     );

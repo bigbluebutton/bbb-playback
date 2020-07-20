@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { buildFileURL } from 'utils/data';
 import './index.scss';
 
 export default class Slide extends PureComponent {
@@ -7,7 +8,7 @@ export default class Slide extends PureComponent {
 
     const { metadata } = props;
 
-    this.url = `/presentation/${metadata.id}`;
+    this.recordId = metadata.id;
   }
 
   getProxy(id, height, width) {
@@ -26,7 +27,7 @@ export default class Slide extends PureComponent {
         <img
           alt={thumbnail.alt}
           className="proxy"
-          src={`${this.url}/${thumbnail.src}`}
+          src={buildFileURL(this.recordId, thumbnail.src)}
         />
       </foreignObject>
     );
@@ -52,7 +53,7 @@ export default class Slide extends PureComponent {
         {this.getProxy(id, height, width)}
         <image
           height={height}
-          href={`${this.url}/${src}`}
+          href={buildFileURL(this.recordId, src)}
           x={0}
           width={width}
           y={0}

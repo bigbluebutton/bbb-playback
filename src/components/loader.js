@@ -8,6 +8,7 @@ import Error from './error';
 import Player from './player';
 import { build } from 'utils/builder';
 import {
+  buildFileURL,
   getFileName,
   getFileType,
   getLayout,
@@ -59,7 +60,7 @@ class Loader extends PureComponent {
   }
 
   fetchFile(recordId, file) {
-    const url = `/presentation/${recordId}/${file}`;
+    const url = buildFileURL(recordId, file);
     fetch(url).then(response => {
       if (response.ok) {
         logger.debug('loader', file, response);
@@ -89,7 +90,7 @@ class Loader extends PureComponent {
 
   fetchMedia() {
     const fetches = config.medias.map(type => {
-      const url = `/presentation/${this.recordId}/video/webcams.${type}`;
+      const url = buildFileURL(this.recordId, `video/webcams.${type}`);
       return fetch(url, { method: 'HEAD' });
     });
 

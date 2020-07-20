@@ -3,12 +3,22 @@ import qs from 'qs';
 import stringHash from 'string-hash';
 import logger from './logger';
 
+const LOCAL = process.env.REACT_APP_NO_ROUTER;
+
 const MEDIA = 'media';
 const CONTENT = 'content';
 const DISABLED = 'disabled';
 
 const PRESENTATION = 'presentation';
 const SCREENSHARE = 'screenshare';
+
+const buildFileURL = (recordId, file) => {
+  if (LOCAL) {
+    return file;
+  } else {
+    return `/presentation/${recordId}/${file}`;
+  }
+};
 
 const getAvatarColor = name => {
   const { avatar } = config.colors;
@@ -116,6 +126,11 @@ const getLayout = location => {
 };
 
 const getRecordId = match => {
+  if (LOCAL) {
+    logger.debug('local', 'recordId');
+    return 'local';
+  }
+
   if (match) {
     const { params } = match;
     if (params && params.recordId) {
@@ -378,6 +393,8 @@ const search = (text, data) => {
 const wasCleared = (time, clear) => clear !== -1 && clear <= time;
 
 export {
+  LOCAL,
+  buildFileURL,
   getAvatarColor,
   getActiveContent,
   getControlFromLayout,
