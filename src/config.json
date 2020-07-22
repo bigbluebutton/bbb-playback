@@ -39,6 +39,7 @@
       "chat": "slides_new.xml",
       "cursor": "cursor.xml",
       "metadata": "metadata.xml",
+      "notes": "notes.json",
       "panzooms": "panzooms.xml",
       "screenshare": "deskshare.xml",
       "shapes": "shapes.svg"

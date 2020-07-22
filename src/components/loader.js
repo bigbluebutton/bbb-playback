@@ -75,9 +75,8 @@ class Loader extends PureComponent {
             throw Error(file);
         }
       } else {
-        logger.error('loader', file, response);
-        this.setState({ error: response.status });
-        throw Error(response.statusText);
+        logger.warn('loader', file, response);
+        return null;
       }
     }).then(value => {
       build(file, value).then(data => {

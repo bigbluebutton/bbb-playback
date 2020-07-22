@@ -35,6 +35,7 @@ export default class About extends PureComponent {
     const {
       captions,
       chat,
+      notes,
       screenshare,
     } = this.props;
 
@@ -42,6 +43,7 @@ export default class About extends PureComponent {
       <div className="about-body">
         {this.renderItem('user', metadata.participants)}
         {this.renderItem('chat', chat)}
+        {this.renderItem('notes', notes)}
         {this.renderItem('desktop', screenshare)}
         {this.renderItem('closed-caption', captions)}
       </div>

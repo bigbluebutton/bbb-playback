@@ -72,7 +72,7 @@ export default class Player extends PureComponent {
     this.chat = data[getFileName(files.data.chat)];
     this.cursor = data[getFileName(files.data.cursor)];
     this.metadata = data[getFileName(files.data.metadata)];
-    this.notes = 'notes';
+    this.notes = data[getFileName(files.data.notes)];
     this.panzooms = data[getFileName(files.data.panzooms)];
     this.screenshare = data[getFileName(files.data.screenshare)];
     this.shapes = data[getFileName(files.data.shapes)];
@@ -213,6 +213,7 @@ export default class Player extends PureComponent {
             captions={!isEmpty(this.captions)}
             chat={!isEmpty(this.chat)}
             metadata={this.metadata}
+            notes={!isEmpty(this.notes)}
             screenshare={!isEmpty(this.screenshare)}
             toggleModal={() => this.toggleModal('about')}
           />
@@ -357,6 +358,7 @@ export default class Player extends PureComponent {
       <div className="application">
         <div className="application-control">
           {this.renderApplicationIcon('chat')}
+          {this.renderApplicationIcon('notes')}
         </div>
         {this.renderApplicationContent()}
       </div>

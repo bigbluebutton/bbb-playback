@@ -47,8 +47,9 @@ const getNumbers = data => {
 };
 
 const buildAlternates = result => {
-  let data = [];
+  if (!result) return [];
 
+  let data = [];
   for (const presentation in result) {
     if (hasProperty(result, presentation)) {
       const slides = result[presentation];
@@ -69,9 +70,14 @@ const buildAlternates = result => {
   return data;
 };
 
+// TODO
 const buildCaptions = result => {
-  // TODO: Restructure JSON data
-  return result;
+  if (!result) return [];
+
+  let data = [];
+  data = result;
+
+  return data;
 };
 
 const buildMetadata = result => {
@@ -95,6 +101,16 @@ const buildMetadata = result => {
       start,
     };
   }
+
+  return data;
+};
+
+// TODO
+const buildNotes = result => {
+  if (!result) return [];
+
+  let data = [];
+  data = result;
 
   return data;
 };
@@ -426,12 +442,20 @@ const build = (filename, value) => {
         case config.data.captions:
           data = buildCaptions(value);
           break;
+        case config.data.notes:
+          data = buildNotes(value);
+          break;
         default:
           logger.debug('unhandled', 'json', filename);
           reject(filename);
       }
       resolve(data);
     } else {
+      if (!value) {
+        logger.error('missing', filename);
+        reject(filename);
+      }
+
       // Parse XML data
       const options = getOptions(filename);
       parseStringPromise(value, options).then(result => {
