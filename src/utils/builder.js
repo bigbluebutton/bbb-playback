@@ -107,10 +107,19 @@ const buildMetadata = result => {
 
 // TODO
 const buildNotes = result => {
-  if (!result) return [];
+  if (!result) return '';
 
-  let data = [];
-  data = result;
+  let data = '';
+  for (let property in result) {
+    if (hasProperty(result, property)) {
+      const prop = result[property];
+      if (hasProperty(prop, 'atext')) {
+        const { text } = prop['atext'];
+        if (text) data = text;
+        break;
+      }
+    }
+  }
 
   return data;
 };
