@@ -292,8 +292,15 @@ it('checks if data item is active', () => {
 });
 
 it('checks if data array is empty', () => {
+  // Array
   expect(isEmpty([1])).toEqual(false);
   expect(isEmpty([])).toEqual(true);
+
+  // String
+  expect(isEmpty('a')).toEqual(false);
+  expect(isEmpty('')).toEqual(true);
+
+  // Invalid
   expect(isEmpty(1)).toEqual(true);
 });
 

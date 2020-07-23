@@ -252,7 +252,9 @@ const isActive = (time, timestamp, clear = -1) => {
 };
 
 const isEmpty = data => {
-  if (!isValid('array', data)) return true;
+  const isArray = isValid('array', data);
+  const isString = isValid('string', data);
+  if (!isArray && !isString) return true;
 
   const empty = data.length === 0;
 
@@ -312,11 +314,12 @@ const isValid = (type, data) => {
     case 'array':
       if (Array.isArray(data)) valid = true;
       break;
+    case 'string':
+      if (typeof data === type) valid = true;
+      break;
     default:
       logger.debug('unhandled', type);
   }
-
-  if (!valid) logger.error('invalid', type, data);
 
   return valid;
 };
