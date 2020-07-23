@@ -124,8 +124,9 @@ $avatar-size: 2.25rem;
 
   .text {
     box-sizing: border-box;
+    overflow-wrap: anywhere;
     width: 100%;
-    word-break: break-word;
+    white-space: pre-wrap;
 
     [dir="ltr"] & {
       padding: 0 $padding-extra-small 0 0;

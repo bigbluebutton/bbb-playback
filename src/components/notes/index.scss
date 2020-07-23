@@ -12,12 +12,13 @@
     display: flex;
     font-size: small;
     overflow-x: hidden;
+    overflow-wrap: anywhere;
     overflow-y: auto;
     padding-top: $padding;
     position: absolute;
     width: 100%;
     top: 0;
-    word-break: break-word;
+    white-space: pre-wrap;
 
     [dir="ltr"] & {
       padding-left: $padding;
