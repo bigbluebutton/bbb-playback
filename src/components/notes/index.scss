@@ -12,7 +12,7 @@
     display: flex;
     font-size: small;
     overflow-x: hidden;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
     overflow-y: auto;
     padding-top: $padding;
     position: absolute;
