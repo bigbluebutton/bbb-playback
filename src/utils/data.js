@@ -286,6 +286,22 @@ const isEnabled = (data, time) => {
   return false;
 };
 
+const isContentVisible = (layout, swap) => {
+  let visible;
+  switch (layout) {
+    case  CONTENT:
+      visible = !swap;
+      break;
+    case MEDIA:
+      visible = swap;
+      break;
+    default:
+      visible = false;
+  }
+
+  return visible;
+};
+
 const isCurrent = (data, index, time) => {
   if (!hasIndex(index, data)) return false;
 
@@ -417,6 +433,7 @@ export {
   getTimestampAsMilliseconds,
   hasProperty,
   isActive,
+  isContentVisible,
   isEmpty,
   isEnabled,
   isValid,

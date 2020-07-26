@@ -11,6 +11,7 @@ import Notes from './notes';
 import Presentation from './presentation';
 import Search from './search';
 import Screenshare from './screenshare';
+import Talkers from './talkers';
 import Thumbnails from './thumbnails';
 import Video from './video';
 import ActionBar from './bars/action';
@@ -18,6 +19,8 @@ import NavigationBar from './bars/navigation';
 import Button from './utils/button';
 import { addAlternatesToThumbnails } from 'utils/builder';
 import {
+  CONTENT,
+  MEDIA,
   getActiveContent,
   getControlFromLayout,
   getCurrentDataIndex,
@@ -26,6 +29,7 @@ import {
   getFileName,
   getSectionFromLayout,
   getSwapFromLayout,
+  isContentVisible,
   isEmpty,
 } from 'utils/data';
 import logger from 'utils/logger';
@@ -76,6 +80,7 @@ export default class Player extends PureComponent {
     this.panzooms = data[getFileName(files.data.panzooms)];
     this.screenshare = data[getFileName(files.data.screenshare)];
     this.shapes = data[getFileName(files.data.shapes)];
+    this.talkers = data[getFileName(files.data.talkers)];
 
     this.canvases = this.shapes.canvases;
     this.slides = this.shapes.slides;
@@ -175,19 +180,7 @@ export default class Player extends PureComponent {
 
     if (!control || !controls.fullscreen) return null;
 
-    let visible;
-    switch (layout) {
-      case 'content':
-        visible = !swap;
-        break;
-      case 'media':
-        visible = swap;
-        break;
-      default:
-        visible = false;
-    }
-
-    if (!visible) return null;
+    if (!isContentVisible(layout, swap)) return null;
 
     return (
       <div className="fullscreen-button">
@@ -234,6 +227,20 @@ export default class Player extends PureComponent {
       default:
         return null;
     }
+  }
+
+  renderTalkers(layout) {
+    const { intl } = this.props;
+    const { swap } = this.state;
+
+    if (!isContentVisible(layout, swap)) return null;
+
+    return (
+      <Talkers
+        intl={intl}
+        talkers={this.talkers}
+      />
+    );
   }
 
   renderThumbnails() {
@@ -295,7 +302,8 @@ export default class Player extends PureComponent {
 
     return (
       <div className={cx('media', { 'swapped-media': swap })}>
-        {this.renderFullscreenButton('media')}
+        {this.renderTalkers(MEDIA)}
+        {this.renderFullscreenButton(MEDIA)}
         <Video
           captions={this.captions}
           intl={intl}
@@ -425,7 +433,8 @@ export default class Player extends PureComponent {
 
     return (
       <div className={cx('content', { 'swapped-content': swap })}>
-        {this.renderFullscreenButton('content')}
+        {this.renderTalkers(CONTENT)}
+        {this.renderFullscreenButton(CONTENT)}
         {this.renderPresentation(content === 'presentation')}
         {this.renderScreenshare(content === 'screenshare')}
       </div>

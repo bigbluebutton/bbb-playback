@@ -6,6 +6,7 @@
   "player.notes.wrapper.aria": "Zone de notes",
   "player.presentation.wrapper.aria": "Zone de présentation",
   "player.screenshare.wrapper.aria": "Zone de partage d'écran",
+  "player.talkers.wrapper.aria": "Zone de causeurs",
   "player.thumbnails.wrapper.aria": "Zone des miniatures",
   "player.video.wrapper.aria": "Zone vidéo"
 }

@@ -6,6 +6,7 @@
   "player.notes.wrapper.aria": "Область заметок",
   "player.presentation.wrapper.aria": "Площадь презентации",
   "player.screenshare.wrapper.aria": "Площадь экрана",
+  "player.talkers.wrapper.aria": "Зона беседы",
   "player.thumbnails.wrapper.aria": "Область миниатюр",
   "player.video.wrapper.aria": "Область видео"
 }
