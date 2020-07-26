@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import { FormattedTime } from 'react-intl';
 import Linkify from 'linkifyjs/react';
 import cx from 'classnames';
-import {
-  getAvatarColor,
-  getTimestampAsMilliseconds,
-} from 'utils/data';
+import Avatar from 'components/utils/avatar';
+import { getTimestampAsMilliseconds } from 'utils/data';
 import './index.scss';
 
 export default class Message extends Component {
@@ -24,18 +22,17 @@ export default class Message extends Component {
     } = this.props;
 
     return (
-      <div className="avatar-wrapper">
-        <div
-          className={cx('avatar', { inactive: !active })}
-          onClick={onClick}
-          onKeyPress={(e) => e.key === 'Enter' ? onClick() : null}
-          style={{ backgroundColor: getAvatarColor(name) }}
-          tabIndex="0"
-        >
-          <span className="initials">
-            {initials}
-          </span>
-        </div>
+      <div
+        className={cx('interactive', { inactive: !active })}
+        onClick={onClick}
+        onKeyPress={(e) => e.key === 'Enter' ? onClick() : null}
+        tabIndex="0"
+      >
+        <Avatar
+          active={active}
+          initials={initials}
+          name={name}
+        />
       </div>
     );
   }
