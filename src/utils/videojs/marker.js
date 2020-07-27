@@ -1,4 +1,4 @@
-import videojs from 'video.js';
+import videojs from 'video.js/core.es.js';
 import { isValid } from 'utils/data';
 import './index.scss';
 

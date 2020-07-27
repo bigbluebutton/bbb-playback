@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { defineMessages } from 'react-intl';
 import cx from 'classnames';
-import videojs from 'video.js';
+import videojs from 'video.js/core.es.js';
 import { buildFileURL } from 'utils/data';
 import './index.scss';
 

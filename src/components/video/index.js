@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { defineMessages } from 'react-intl';
-import videojs from 'video.js';
+import videojs from 'video.js/core.es.js';
 import 'utils/videojs';
 import { video as config } from 'config';
 import { buildFileURL } from 'utils/data';
