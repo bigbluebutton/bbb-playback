@@ -72,7 +72,6 @@ export default class Screenshare extends PureComponent {
         <div data-vjs-player>
           <video
             className="video-js"
-            crossOrigin="anonymous"
             playsInline
             preload="auto"
             ref={node => this.node = node}
