@@ -32,16 +32,20 @@ export default class About extends PureComponent {
   }
 
   renderBody(metadata) {
+    const { content } = this.props;
+
     const {
       captions,
       chat,
       notes,
+      presentation,
       screenshare,
-    } = this.props;
+    } = content;
 
     return (
       <div className="about-body">
         {this.renderItem('user', metadata.participants)}
+        {this.renderItem('presentation', presentation)}
         {this.renderItem('chat', chat)}
         {this.renderItem('notes', notes)}
         {this.renderItem('desktop', screenshare)}

@@ -29,6 +29,7 @@ import {
   getFileName,
   getSectionFromLayout,
   getSwapFromLayout,
+  hasPresentation,
   isContentVisible,
   isEmpty,
 } from 'utils/data';
@@ -86,22 +87,30 @@ export default class Player extends PureComponent {
     this.slides = this.shapes.slides;
     this.thumbnails = addAlternatesToThumbnails(this.shapes.thumbnails, this.alternates);
 
+    this.content = {
+      captions: !isEmpty(this.captions),
+      chat: !isEmpty(this.chat),
+      notes: !isEmpty(this.notes),
+      presentation: hasPresentation(this.slides),
+      screenshare: !isEmpty(this.screenshare),
+    };
+
     this.handlePlayerReady = this.handlePlayerReady.bind(this);
     this.handleTimeUpdate = this.handleTimeUpdate.bind(this);
 
     this.initMonitor(this.metadata.id);
 
-    logger.debug('player', data);
+    logger.debug(this.id, data);
   }
 
   handlePlayerReady(media, player) {
     switch (media) {
       case 'video':
-        logger.debug('player', 'ready', 'video');
+        logger.debug(this.id, 'ready', 'video');
         this.player.video = player;
         break;
       case 'screenshare':
-        logger.debug('player', 'ready', 'screenshare');
+        logger.debug(this.id, 'ready', 'screenshare');
         this.player.screenshare = player;
         break;
       default:
@@ -201,13 +210,11 @@ export default class Player extends PureComponent {
 
     switch (modal) {
       case 'about':
+
         return (
           <About
-            captions={!isEmpty(this.captions)}
-            chat={!isEmpty(this.chat)}
+            content={this.content}
             metadata={this.metadata}
-            notes={!isEmpty(this.notes)}
-            screenshare={!isEmpty(this.screenshare)}
             toggleModal={() => this.toggleModal('about')}
           />
         );
@@ -449,6 +456,7 @@ export default class Player extends PureComponent {
 
     return (
       <ActionBar
+        content={this.content}
         control={control}
         thumbnails={thumbnails}
         toggleSearch={() => this.toggleModal('search')}

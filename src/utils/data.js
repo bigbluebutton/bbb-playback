@@ -220,16 +220,6 @@ const getTime = location => {
 
 const getTimestampAsMilliseconds = timestamp => timestamp * 1000;
 
-const hasProperty = (object, property) => {
-  if (object && object.hasOwnProperty(property)) {
-    if (typeof object[property] !== 'undefined') return true;
-  }
-
-  logger.warn('missing', property, object);
-
-  return false;
-};
-
 const hasIndex = (index, data) => {
   if (index < 0) return false;
 
@@ -242,6 +232,28 @@ const hasIndex = (index, data) => {
   }
 
   return true;
+};
+
+const hasPresentation = slides => {
+  if (isEmpty(slides)) return false;
+
+  for (let i = 0; i < slides.length; i++) {
+    const { src } = slides[i];
+
+    if (src.includes('slide')) return true;
+  }
+
+  return false;
+};
+
+const hasProperty = (object, property) => {
+  if (object && object.hasOwnProperty(property)) {
+    if (typeof object[property] !== 'undefined') return true;
+  }
+
+  logger.warn('missing', property, object);
+
+  return false;
 };
 
 const isActive = (time, timestamp, clear = -1) => {
@@ -431,6 +443,7 @@ export {
   getSwapFromLayout,
   getTime,
   getTimestampAsMilliseconds,
+  hasPresentation,
   hasProperty,
   isActive,
   isContentVisible,

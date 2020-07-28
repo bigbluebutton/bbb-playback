@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import cx from 'classnames';
 import { buildFileURL } from 'utils/data';
 import './index.scss';
 
@@ -17,6 +18,13 @@ export default class Slide extends PureComponent {
     const thumbnail = thumbnails.find(thumbnails => id === thumbnails.id);
     if (!thumbnail) return null;
 
+    const {
+      alt,
+      src,
+    } = thumbnail;
+
+    const logo = src.includes('logo');
+
     return (
       <foreignObject
         height={height}
@@ -25,9 +33,9 @@ export default class Slide extends PureComponent {
         y={0}
       >
         <img
-          alt={thumbnail.alt}
-          className="proxy"
-          src={buildFileURL(this.recordId, thumbnail.src)}
+          alt={alt}
+          className={cx('proxy', { logo })}
+          src={buildFileURL(this.recordId, src)}
         />
       </foreignObject>
     );

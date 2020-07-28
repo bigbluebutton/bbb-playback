@@ -55,7 +55,10 @@ export default class ActionBar extends Component {
   }
 
   render() {
-    const { control } = this.props;
+    const {
+      content,
+      control,
+    } = this.props;
 
     const {
       search,
@@ -63,16 +66,18 @@ export default class ActionBar extends Component {
       thumbnails,
     } = config;
 
+    const { presentation } = content;
+
     return (
       <div className="action-bar">
         <div className="left">
-          {control && search ? this.renderSearchButton() : null}
+          {control && search && presentation ? this.renderSearchButton() : null}
         </div>
         <div className="center">
           {control && swap ? this.renderSwapButton() : null}
         </div>
         <div className="right">
-          {control && thumbnails ? this.renderThumbnailsButton(): null}
+          {control && thumbnails && presentation ? this.renderThumbnailsButton(): null}
         </div>
       </div>
     );
