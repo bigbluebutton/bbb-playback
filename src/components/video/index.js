@@ -3,7 +3,10 @@ import { defineMessages } from 'react-intl';
 import videojs from 'video.js/core.es.js';
 import 'utils/videojs';
 import { video as config } from 'config';
-import { buildFileURL } from 'utils/data';
+import {
+  ID,
+  buildFileURL,
+} from 'utils/data';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -51,7 +54,6 @@ export default class Video extends PureComponent {
       };
     });
 
-    this.id = 'video';
     this.options = {
       controlBar: {
         fullscreenToggle: false,
@@ -101,7 +103,7 @@ export default class Video extends PureComponent {
         });
       }
 
-      if (onPlayerReady) onPlayerReady(this.id, this.player);
+      if (onPlayerReady) onPlayerReady(ID.VIDEO, this.player);
     });
   }
 
@@ -118,7 +120,7 @@ export default class Video extends PureComponent {
       <div
         aria-label={intl.formatMessage(intlMessages.aria)}
         className="video-wrapper"
-        id={this.id}
+        id={ID.VIDEO}
       >
         <div data-vjs-player>
           <video

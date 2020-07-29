@@ -8,6 +8,7 @@ import Error from './error';
 import Player from './player';
 import { build } from 'utils/builder';
 import {
+  ID,
   buildFileURL,
   getFileName,
   getFileType,
@@ -34,7 +35,6 @@ class Loader extends PureComponent {
       match,
     } = props;
 
-    this.id = 'loader';
     this.counter = 0;
     this.data = {};
     this.layout = getLayout(location);
@@ -63,7 +63,7 @@ class Loader extends PureComponent {
     const url = buildFileURL(recordId, file);
     fetch(url).then(response => {
       if (response.ok) {
-        logger.debug('loader', file, response);
+        logger.debug(ID.LOADER, file, response);
         const fileType = getFileType(file);
         switch (fileType) {
           case 'json':
@@ -80,7 +80,7 @@ class Loader extends PureComponent {
       }
     }).then(value => {
       build(file, value).then(data => {
-        logger.debug('loader', 'builded', file);
+        logger.debug(ID.LOADER, 'builded', file);
         this.data[getFileName(file)] = data;
         this.update();
       }).catch(error => this.setState({ error: config.error['BAD_REQUEST'] }));
@@ -98,7 +98,7 @@ class Loader extends PureComponent {
       responses.forEach(response => {
         const { ok, url } = response;
         if (ok) {
-          logger.debug('loader', 'media', response);
+          logger.debug(ID.LOADER, 'media', response);
           media.push(config.medias.find(type => url.endsWith(type)));
         }
       });
@@ -154,7 +154,7 @@ class Loader extends PureComponent {
       <div
         aria-label={intl.formatMessage(intlMessages.aria)}
         className="loader-wrapper"
-        id={this.id}
+        id={ID.LOADER}
       >
         <div className="loading-dots">
           <div className="first" />

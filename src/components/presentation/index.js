@@ -4,6 +4,7 @@ import cx from 'classnames';
 import Cursor from './cursor';
 import Slide from './slide';
 import Canvas from './canvas';
+import { ID } from 'utils/data';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -14,12 +15,6 @@ const intlMessages = defineMessages({
 });
 
 export default class Presentation extends PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.id = 'presentation';
-  }
-
   getSlideId() {
     const {
       currentSlideIndex,
@@ -112,7 +107,7 @@ export default class Presentation extends PureComponent {
       <div
         aria-label={intl.formatMessage(intlMessages.aria)}
         className={cx('presentation-wrapper', { inactive: !active })}
-        id={this.id}
+        id={ID.PRESENTATION}
       >
         <div className="presentation">
           <svg

@@ -2,7 +2,10 @@ import React, { PureComponent } from 'react';
 import { defineMessages } from 'react-intl';
 import cx from 'classnames';
 import Avatar from 'components/utils/avatar';
-import { isEmpty } from 'utils/data';
+import {
+  ID,
+  isEmpty,
+} from 'utils/data';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -13,12 +16,6 @@ const intlMessages = defineMessages({
 });
 
 export default class Talkers extends PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.id = 'talkers';
-  }
-
   renderTalkers(talkers) {
     return (
       <div className="talkers">
@@ -55,7 +52,7 @@ export default class Talkers extends PureComponent {
       <div
         aria-label={intl.formatMessage(intlMessages.aria)}
         className="talkers-wrapper"
-        id={this.id}
+        id={ID.TALKERS}
         tabIndex="0"
       >
         {this.renderTalkers(talkers)}

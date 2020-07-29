@@ -1,9 +1,6 @@
 import {
-  CONTENT,
-  DISABLED,
-  MEDIA,
-  PRESENTATION,
-  SCREENSHARE,
+  ID,
+  LAYOUT,
   getActiveContent,
   getControlFromLayout,
   getCurrentDataIndex,
@@ -21,6 +18,17 @@ import {
   parseTimeToSeconds,
   search,
 } from './data';
+
+const {
+  PRESENTATION,
+  SCREENSHARE,
+} = ID;
+
+const {
+  CONTENT,
+  DISABLED,
+  MEDIA,
+} = LAYOUT;
 
 it('gets the current active content', () => {
   const screenshare = [

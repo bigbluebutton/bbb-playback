@@ -3,14 +3,28 @@ import qs from 'qs';
 import stringHash from 'string-hash';
 import logger from './logger';
 
-const CONTENT = 'content';
-const DISABLED = 'disabled';
-const MEDIA = 'media';
+const LAYOUT = {
+  CONTENT: 'content',
+  DISABLED: 'disabled',
+  MEDIA: 'media',
+};
 
 const LOCAL = process.env.REACT_APP_NO_ROUTER;
 
-const PRESENTATION = 'presentation';
-const SCREENSHARE = 'screenshare';
+const ID = {
+  ABOUT: 'about',
+  CHAT: 'chat',
+  ERROR: 'error',
+  LOADER: 'loader',
+  NOTES: 'notes',
+  PLAYER: 'player',
+  PRESENTATION: 'presentation',
+  SEARCH: 'search',
+  SCREENSHARE: 'screenshare',
+  TALKERS: 'talkers',
+  THUMBNAILS: 'thumbnails',
+  VIDEO: 'video',
+};
 
 const buildFileURL = (recordId, file) => {
   if (LOCAL) return file;
@@ -25,14 +39,19 @@ const getAvatarColor = name => {
 };
 
 const getActiveContent = (screenshare, time) => {
+  const {
+    SCREENSHARE,
+    PRESENTATION,
+  } = ID;
+
   const content = isEnabled(screenshare, time) ? SCREENSHARE : PRESENTATION;
 
   return content;
 };
 
 const getControlFromLayout = layout => {
+  const { DISABLED } = LAYOUT;
   let control = true;
-
   switch (layout) {
     case DISABLED:
       control = false;
@@ -142,8 +161,12 @@ const getRecordId = match => {
 };
 
 const getSectionFromLayout = layout => {
-  let section = true;
+  const {
+    CONTENT,
+    MEDIA,
+  } = LAYOUT;
 
+  let section = true;
   switch (layout) {
     case CONTENT:
       section = false;
@@ -158,8 +181,12 @@ const getSectionFromLayout = layout => {
 };
 
 const getSwapFromLayout = layout => {
-  let swap = false;
+  const {
+    CONTENT,
+    MEDIA,
+  } = LAYOUT;
 
+  let swap = false;
   switch (layout) {
     case CONTENT:
       swap = false;
@@ -299,6 +326,11 @@ const isEnabled = (data, time) => {
 };
 
 const isContentVisible = (layout, swap) => {
+  const {
+    CONTENT,
+    MEDIA,
+  } = LAYOUT;
+
   let visible;
   switch (layout) {
     case  CONTENT:
@@ -421,12 +453,9 @@ const search = (text, data) => {
 const wasCleared = (time, clear) => clear !== -1 && clear <= time;
 
 export {
-  CONTENT,
-  DISABLED,
-  MEDIA,
+  LAYOUT,
   LOCAL,
-  PRESENTATION,
-  SCREENSHARE,
+  ID,
   buildFileURL,
   getAvatarColor,
   getActiveContent,

@@ -19,8 +19,8 @@ import NavigationBar from './bars/navigation';
 import Button from './utils/button';
 import { addAlternatesToThumbnails } from 'utils/builder';
 import {
-  CONTENT,
-  MEDIA,
+  ID,
+  LAYOUT,
   getActiveContent,
   getControlFromLayout,
   getCurrentDataIndex,
@@ -55,7 +55,7 @@ export default class Player extends PureComponent {
     } = props;
 
     this.state = {
-      application: 'chat',
+      application: ID.CHAT,
       control: getControlFromLayout(layout),
       fullscreen: false,
       modal: '',
@@ -69,8 +69,6 @@ export default class Player extends PureComponent {
       video: null,
       screenshare: null,
     };
-
-    this.id = 'player';
 
     this.alternates = data[getFileName(files.data.alternates)];
     this.captions = data[getFileName(files.data.captions)];
@@ -100,17 +98,17 @@ export default class Player extends PureComponent {
 
     this.initMonitor(this.metadata.id);
 
-    logger.debug(this.id, data);
+    logger.debug(ID.PLAYER, data);
   }
 
   handlePlayerReady(media, player) {
     switch (media) {
-      case 'video':
-        logger.debug(this.id, 'ready', 'video');
+      case ID.VIDEO:
+        logger.debug(ID.PLAYER, 'ready', ID.VIDEO);
         this.player.video = player;
         break;
-      case 'screenshare':
-        logger.debug(this.id, 'ready', 'screenshare');
+      case ID.SCREENSHARE:
+        logger.debug(ID.PLAYER, 'ready', ID.SCREENSHARE);
         this.player.screenshare = player;
         break;
       default:
@@ -209,16 +207,15 @@ export default class Player extends PureComponent {
     if (!open) return null;
 
     switch (modal) {
-      case 'about':
-
+      case ID.ABOUT:
         return (
           <About
             content={this.content}
             metadata={this.metadata}
-            toggleModal={() => this.toggleModal('about')}
+            toggleModal={() => this.toggleModal(ID.ABOUT)}
           />
         );
-      case 'search':
+      case ID.SEARCH:
         const data = { thumbnails: this.thumbnails };
         const { video } = this.player;
 
@@ -227,7 +224,7 @@ export default class Player extends PureComponent {
         return (
           <Search
             data={data}
-            toggleModal={() => this.toggleModal('search')}
+            toggleModal={() => this.toggleModal(ID.SEARCH)}
             video={video}
           />
         );
@@ -291,7 +288,7 @@ export default class Player extends PureComponent {
         start={start}
         name={name}
         section={section}
-        toggleAbout={() => this.toggleModal('about')}
+        toggleAbout={() => this.toggleModal(ID.ABOUT)}
         toggleSection={() => this.toggleSection()}
       />
     );
@@ -309,8 +306,8 @@ export default class Player extends PureComponent {
 
     return (
       <div className={cx('media', { 'swapped-media': swap })}>
-        {this.renderTalkers(MEDIA)}
-        {this.renderFullscreenButton(MEDIA)}
+        {this.renderTalkers(LAYOUT.MEDIA)}
+        {this.renderFullscreenButton(LAYOUT.MEDIA)}
         <Video
           captions={this.captions}
           intl={intl}
@@ -343,7 +340,7 @@ export default class Player extends PureComponent {
     const { application } = this.state;
 
     switch (application) {
-      case 'chat':
+      case ID.CHAT:
         const { time } = this.state;
         const { video } = this.player;
         const currentChatIndex = getCurrentDataIndex(this.chat, time);
@@ -356,7 +353,7 @@ export default class Player extends PureComponent {
             player={video}
           />
         );
-      case 'notes':
+      case ID.NOTES:
         return (
           <Notes
             notes={this.notes}
@@ -372,7 +369,7 @@ export default class Player extends PureComponent {
     return (
       <div className="application">
         <div className="application-control">
-          {this.renderApplicationIcon('chat')}
+          {this.renderApplicationIcon(ID.CHAT)}
         </div>
         {this.renderApplicationContent()}
       </div>
@@ -409,8 +406,9 @@ export default class Player extends PureComponent {
 
 
   renderScreenshare(active) {
-    // When there is no screenshare
-    if (this.screenshare.length === 0) return null;
+    const { screenshare } = this.content;
+
+    if (!screenshare) return null;
 
     const {
       intl,
@@ -440,10 +438,10 @@ export default class Player extends PureComponent {
 
     return (
       <div className={cx('content', { 'swapped-content': swap })}>
-        {this.renderTalkers(CONTENT)}
-        {this.renderFullscreenButton(CONTENT)}
-        {this.renderPresentation(content === 'presentation')}
-        {this.renderScreenshare(content === 'screenshare')}
+        {this.renderTalkers(LAYOUT.CONTENT)}
+        {this.renderFullscreenButton(LAYOUT.CONTENT)}
+        {this.renderPresentation(content === ID.PRESENTATION)}
+        {this.renderScreenshare(content === ID.SCREENSHARE)}
       </div>
     );
   }
@@ -459,7 +457,7 @@ export default class Player extends PureComponent {
         content={this.content}
         control={control}
         thumbnails={thumbnails}
-        toggleSearch={() => this.toggleModal('search')}
+        toggleSearch={() => this.toggleModal(ID.SEARCH)}
         toggleSwap={() => this.toggleSwap()}
         toggleThumbnails={() => this.toggleThumbnails()}
       />
@@ -483,7 +481,7 @@ export default class Player extends PureComponent {
       <div
         aria-label={intl.formatMessage(intlMessages.aria)}
         className={cx('player-wrapper', styles)}
-        id={this.id}
+        id={ID.PLAYER}
       >
         {this.renderNavigationBar()}
         {this.renderMedia()}

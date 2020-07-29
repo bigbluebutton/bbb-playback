@@ -3,6 +3,7 @@ import cx from 'classnames';
 import { defineMessages } from 'react-intl';
 import { thumbnails as config } from 'config';
 import {
+  ID,
   buildFileURL,
   getScrollTop,
 } from 'utils/data';
@@ -23,7 +24,6 @@ export default class Thumbnails extends Component {
 
     const { metadata } = props;
 
-    this.id = 'thumbnails';
     this.recordId = metadata.id;
   }
 
@@ -139,7 +139,7 @@ export default class Thumbnails extends Component {
       <div
         aria-label={intl.formatMessage(intlMessages.aria)}
         className="thumbnails-wrapper"
-        id={this.id}
+        id={ID.THUMBNAILS}
         tabIndex="0"
       >
         {this.renderThumbnails()}

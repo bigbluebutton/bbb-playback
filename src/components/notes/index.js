@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { defineMessages } from 'react-intl';
+import { ID } from 'utils/data';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -10,12 +11,6 @@ const intlMessages = defineMessages({
 });
 
 export default class Notes extends PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.id = 'notes';
-  }
-
   render() {
     const {
       intl,
@@ -26,7 +21,7 @@ export default class Notes extends PureComponent {
       <div
         aria-label={intl.formatMessage(intlMessages.aria)}
         className="notes-wrapper"
-        id={this.id}
+        id={ID.NOTES}
         tabIndex="0"
       >
         <div className="notes">
