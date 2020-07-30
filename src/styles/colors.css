@@ -1,0 +1,37 @@
+:root {
+  --gray-darkest: rgb(17, 17, 17);
+  --gray-darker: rgb(6, 23, 42);
+  --gray-dark: rgb(6, 23, 42);
+  --gray: rgb(78, 90, 102);
+  --gray-light: rgb(139, 154, 168);
+  --gray-lighter: rgb(167, 179, 189);
+  --gray-lightest: rgb(212, 217, 223);
+
+  --blue: rgb(15, 112, 215);
+  --blue-light: rgb(84, 161, 243);
+  --blue-lighter: rgb(146, 188, 234);
+  --blue-lightest: rgb(228, 236, 242);
+
+  --red: rgb(223, 39, 33);
+
+  --green: rgb(0, 128, 129);
+
+  --white: rgb(255, 255, 255);
+
+  --button-color: var(--blue);
+  --button-box-shadow-color: rgba(15, 39, 33, .5);
+
+  --cursor-color: var(--red);
+
+  --marker-color: var(--red);
+
+  --modal-background-color: rgba(6, 23, 42, .25);
+
+  --thumbnails-background-color: var(--blue-lighter);
+
+  --body-background-color: var(--gray-dark);
+  --section-background-color: var(--white);
+  --main-background-color: var(--gray-dark);
+
+  --border-color: var(--gray-light);
+}

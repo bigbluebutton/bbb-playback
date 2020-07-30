@@ -232,6 +232,25 @@ const getScrollTop = (firstNode, currentNode, align) => {
   return verticalOffset;
 };
 
+const getStyle = () => {
+  const params = new URLSearchParams(window.location.search);
+
+  let style;
+  if (params && params.has('s')) {
+    const {
+      url,
+      valid,
+    } = config.styles;
+
+    const value = params.get('s');
+    if (valid.includes(value)) {
+      style = `${url}/${value}.css`;
+    }
+  }
+
+  return style;
+};
+
 const getTime = location => {
   if (location) {
     const { search } = location;
@@ -470,6 +489,7 @@ export {
   getScrollTop,
   getSectionFromLayout,
   getSwapFromLayout,
+  getStyle,
   getTime,
   getTimestampAsMilliseconds,
   hasPresentation,

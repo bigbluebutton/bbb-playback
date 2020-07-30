@@ -7,11 +7,15 @@ import {
   getLocale,
   getMessages,
 } from 'locales';
-import { LOCAL } from 'utils/data';
+import {
+  LOCAL,
+  getStyle,
+} from 'utils/data';
 import './index.scss';
 
 const locale = getLocale();
 const messages = getMessages();
+const style = getStyle();
 
 ReactDOM.render(
   (
@@ -19,6 +23,7 @@ ReactDOM.render(
       locale={locale}
       messages={messages[locale]}
     >
+      {style ? <link rel="stylesheet" type="text/css" href={style} /> : null}
       {LOCAL ? <Loader /> : <Router />}
     </IntlProvider>
   ),

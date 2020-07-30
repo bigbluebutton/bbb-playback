@@ -33,6 +33,9 @@ https://<domain>/playback/presentation/2.3/<recordId>
   - `l=content`
   - `l=disabled`
 
+- style: custom style
+  - `s=<name>`
+
 - time:
   - `t=HhMmSs`
   - `t=MmSs`
@@ -61,6 +64,10 @@ https://<domain>/playback/presentation/2.3/<recordId>
 - monitor: posts server playback's usage data
   - `interval`: post frequency
   - `url`: server post destiny
+
+- styles: custom styles
+  - `url`: css files host
+  - `valid`: valid style names
 
 - thumbnails:
   - `scroll`: automatic scroll [`true`|`false`]
