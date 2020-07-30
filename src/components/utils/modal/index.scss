@@ -1,11 +1,10 @@
-@import 'src/styles/colors';
 @import 'src/styles/fonts';
 @import 'src/styles/icons';
 @import 'src/styles/sizes';
 
 .modal-wrapper {
   align-items: center;
-  background-color: transparentize($main-background-color, .25);
+  background-color: var(--modal-background-color);
   display: flex;
   height: 100%;
   justify-content: center;
@@ -17,7 +16,7 @@
 }
 
 .modal {
-  background-color: $section-background-color;
+  background-color: var(--section-background-color);
   border-radius: $border-radius;
   display: flex;
   flex-direction: column;
@@ -39,7 +38,7 @@
     padding: $padding-small;
 
     .button {
-      color: $gray-light;
+      color: var(--gray-light);
       font-weight: $font-weight-semi-bold;
     }
   }

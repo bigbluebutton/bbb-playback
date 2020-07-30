@@ -60,6 +60,10 @@
     "interval": 60,
     "url": "/monitor"
   },
+  "styles": {
+    "url": "HOST",
+    "valid": []
+  },
   "thumbnails": {
     "align": "bottom",
     "scroll": true
