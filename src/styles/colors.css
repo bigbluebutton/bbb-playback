@@ -34,4 +34,21 @@
   --main-background-color: var(--gray-dark);
 
   --border-color: var(--gray-light);
+
+  --avatar-zero-color: rgb(123, 31, 162);
+  --avatar-one-color: rgb(106, 27, 154);
+  --avatar-two-color: rgb(74, 20, 140);
+  --avatar-three-color: rgb(94, 53, 177);
+  --avatar-four-color: rgb(81, 45, 168);
+  --avatar-five-color: rgb(69, 39, 160);
+  --avatar-six-color: rgb(49, 27, 146);
+  --avatar-seven-color: rgb(57, 73, 171);
+  --avatar-eight-color: rgb(48, 63, 159);
+  --avatar-nine-color: rgb(40, 53, 147);
+  --avatar-ten-color: rgb(26, 35, 126);
+  --avatar-eleven-color: rgb(25, 118, 210);
+  --avatar-twelve-color: rgb(21, 101, 192);
+  --avatar-thirteen-color: rgb(13, 71, 161);
+  --avatar-fourteen-color: rgb(2, 119, 189);
+  --avatar-fifteen-color: rgb(1, 87, 155);
 }

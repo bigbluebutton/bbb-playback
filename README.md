@@ -44,7 +44,7 @@ https://<domain>/playback/presentation/2.3/<recordId>
 - log:
   - `debug`
 
-## configuration
+## Configuration
 
 - chat:
   - `scroll`: automatic scroll [`true`|`false`]
@@ -57,9 +57,6 @@ https://<domain>/playback/presentation/2.3/<recordId>
   - `section`
   - `swap`
   - `thumbnails`
-
-- colors:
-  - `avatar`: avatar color set
 
 - monitor: posts server playback's usage data
   - `interval`: post frequency

@@ -32,10 +32,45 @@ const buildFileURL = (recordId, file) => {
   return `/presentation/${recordId}/${file}`;
 };
 
-const getAvatarColor = name => {
-  const { avatar } = config.colors;
-
-  return avatar[stringHash(name) % avatar.length];
+const getAvatarStyle = name => {
+  const index = stringHash(name) % 16;
+  switch (index) {
+    case 0:
+      return 'avatar-zero';
+    case 1:
+      return 'avatar-one';
+    case 2:
+      return 'avatar-two';
+    case 3:
+      return 'avatar-three';
+    case 4:
+      return 'avatar-four';
+    case 5:
+      return 'avatar-five';
+    case 6:
+      return 'avatar-six';
+    case 7:
+      return 'avatar-seven';
+    case 8:
+      return 'avatar-eight';
+    case 9:
+      return 'avatar-nine';
+    case 10:
+      return 'avatar-ten';
+    case 11:
+      return 'avatar-eleven';
+    case 12:
+      return 'avatar-twelve';
+    case 13:
+      return 'avatar-thirteen';
+    case 14:
+      return 'avatar-fourteen';
+    case 15:
+      return 'avatar-fifteen';
+    default:
+      logger.error('out of bounds', index, 'avatar');
+      return 'avatar-zero';
+  }
 };
 
 const getActiveContent = (screenshare, time) => {
@@ -476,7 +511,7 @@ export {
   LOCAL,
   ID,
   buildFileURL,
-  getAvatarColor,
+  getAvatarStyle,
   getActiveContent,
   getControlFromLayout,
   getCurrentDataIndex,
