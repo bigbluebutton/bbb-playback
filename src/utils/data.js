@@ -511,7 +511,7 @@ const skip = (player, data, change) => {
     timestamp = data[index].timestamp;
   }
 
-  if (timestamp) {
+  if (typeof timestamp !== 'undefined') {
     player.video.currentTime(timestamp);
   }
 };

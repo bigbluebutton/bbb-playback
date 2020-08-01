@@ -2,18 +2,35 @@ import { shortcuts as config } from 'config';
 import logger from './logger';
 
 export default class Shortcuts {
-  constructor() {
+  constructor(actions) {
     this.enabled = config.enabled;
-    this.listeners = [];
 
     if (!this.enabled) {
       logger.debug('shortcuts', 'disabled');
+    } else {
+      this.init(actions);
+    }
+  }
+
+  init(actions) {
+    this.listeners = [];
+
+    for (let prop in actions) {
+      const value = actions[prop];
+      if (typeof value === 'function') {
+        const key = config[prop];
+        this.add(key, value);
+      } else {
+        for (let p in value) {
+          const k = config[prop][p];
+          const v = value[p];
+          this.add(k, v);
+        }
+      }
     }
   }
 
   add(key, action) {
-    if (!this.enabled) return null;
-
     if (!key || typeof key !== 'string') {
       logger.warn('shortcuts', 'invalid', 'key');
       return null;

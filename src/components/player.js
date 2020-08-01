@@ -153,37 +153,24 @@ export default class Player extends PureComponent {
   }
 
   initShortcuts() {
-    const {
-      fullscreen,
-      section,
-      slides,
-      swap,
-      thumbnails,
-      video,
-    } = shortcuts;
+    const { seconds } = shortcuts.video;
 
-    this.shortcuts = new Shortcuts();
-    this.shortcuts.add(fullscreen, () => this.toggleFullscreen());
-    this.shortcuts.add(section, () => this.toggleSection());
-    this.shortcuts.add(swap, () => this.toggleSwap());
-    this.shortcuts.add(thumbnails, () => this.toggleThumbnails());
+    const actions = {
+      fullscreen: () => this.toggleFullscreen(),
+      section: () => this.toggleSection(),
+      swap: () => this.toggleSwap(),
+      thumbnails: () => this.toggleThumbnails(),
+      slides: {
+        next: () => skip(this.player, this.slides, +1),
+        previous: () => skip(this.player, this.slides, -1),
+      },
+      video: {
+        backward: () => seek(this.player, -seconds),
+        forward: () => seek(this.player, +seconds),
+      },
+    };
 
-    const {
-      next,
-      previous,
-    } = slides;
-
-    this.shortcuts.add(next, () => skip(this.player, this.slides, +1));
-    this.shortcuts.add(previous, () => skip(this.player, this.slides, -1));
-
-    const {
-      backward,
-      forward,
-      seconds,
-    } = video;
-
-    this.shortcuts.add(backward, () => seek(this.player, -seconds));
-    this.shortcuts.add(forward, () => seek(this.player, +seconds));
+    this.shortcuts = new Shortcuts(actions);
   }
 
   toggleApplication(type) {
