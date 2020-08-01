@@ -476,6 +476,46 @@ const search = (text, data) => {
   return result;
 };
 
+const seek = (player, seconds) => {
+  if (player.video) {
+    const min = 0;
+    const max = player.video.duration();
+    const time = player.video.currentTime() + seconds;
+
+    if (time < min) {
+      player.video.currentTime(min);
+    } else if (time > max) {
+      player.video.currentTime(max);
+    } else {
+      player.video.currentTime(time);
+    }
+  }
+};
+
+const skip = (player, data, change) => {
+  const min = 0;
+  const max = data.length - 1;
+  const time = player.video.currentTime();
+
+  const current = getCurrentDataIndex(data, time);
+  if (current === -1) return null;
+
+  const index = current + change;
+
+  let timestamp;
+  if (index < min) {
+    timestamp = data[min].timestamp;
+  } else if (index > max) {
+    timestamp = data[max].timestamp;
+  } else {
+    timestamp = data[index].timestamp;
+  }
+
+  if (timestamp) {
+    player.video.currentTime(timestamp);
+  }
+};
+
 const wasCleared = (time, clear) => clear !== -1 && clear <= time;
 
 export {
@@ -508,4 +548,6 @@ export {
   isValid,
   parseTimeToSeconds,
   search,
+  seek,
+  skip,
 };

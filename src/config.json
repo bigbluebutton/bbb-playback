@@ -52,6 +52,22 @@
     "interval": 60,
     "url": "/monitor"
   },
+  "shortcuts": {
+    "enabled": true,
+    "fullscreen": "K",
+    "section": "L",
+    "slides": {
+      "next": "ArrowUp",
+      "previous": "ArrowDown"
+    },
+    "swap": "M",
+    "thumbnails": "N",
+    "video": {
+      "backward": "ArrowLeft",
+      "forward": "ArrowRight",
+      "seconds": 15
+    }
+  },
   "styles": {
     "url": "HOST",
     "valid": []

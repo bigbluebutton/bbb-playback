@@ -62,6 +62,19 @@ https://<domain>/playback/presentation/2.3/<recordId>
   - `interval`: post frequency
   - `url`: server post destiny
 
+- shortcuts: alt + shift
+  - `fullscreen`: `K`
+  - `section`: `L`
+  - `slides`: skip
+    - `next`: `ArrowUp`
+    - `previous`: `ArrowDown`
+  - `swap`: `M`
+  - `thumbnails`: `N`
+  - `video`: seek
+    - `backward`: `ArrowLeft`
+    - `forward`: `ArrowRight`
+    - `seconds`: 15
+
 - styles: custom styles
   - `url`: css files host
   - `valid`: valid style names
