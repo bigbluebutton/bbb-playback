@@ -1,4 +1,3 @@
-@import 'src/styles/fonts';
 @import 'src/styles/icons';
 @import 'src/styles/sizes';
 
@@ -39,7 +38,7 @@
 
     .button {
       color: var(--gray-light);
-      font-weight: $font-weight-semi-bold;
+      font-weight: var(--font-weight-semi-bold);
     }
   }
 

@@ -1,4 +1,3 @@
-@import 'src/styles/fonts';
 @import 'src/styles/icons';
 @import 'src/styles/sizes';
 
@@ -52,6 +51,6 @@ $thumbnail-height: 90px;
   .screenshare {
     color: var(--gray);
     font-size: xx-large;
-    font-weight: $font-weight-semi-bold;
+    font-weight: var(--font-weight-semi-bold);
   }
 }
