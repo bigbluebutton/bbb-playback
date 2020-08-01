@@ -4,6 +4,7 @@ import { defineMessages } from 'react-intl';
 import {
   controls,
   files,
+  shortcuts,
 } from 'config';
 import About from './about';
 import Chat from './chat';
@@ -32,9 +33,12 @@ import {
   hasPresentation,
   isContentVisible,
   isEmpty,
+  seek,
+  skip,
 } from 'utils/data';
 import logger from 'utils/logger';
 import Monitor from 'utils/monitor';
+import Shortcuts from 'utils/shortcuts';
 import Synchronizer from 'utils/synchronizer';
 import './index.scss';
 
@@ -96,9 +100,18 @@ export default class Player extends PureComponent {
     this.handlePlayerReady = this.handlePlayerReady.bind(this);
     this.handleTimeUpdate = this.handleTimeUpdate.bind(this);
 
-    this.initMonitor(this.metadata.id);
-
     logger.debug(ID.PLAYER, data);
+  }
+
+  componentDidMount() {
+    this.initMonitor();
+    this.initShortcuts();
+  }
+
+  componentWillUnmount() {
+    if (this.shortcuts) {
+      this.shortcuts.destroy();
+    }
   }
 
   handlePlayerReady(media, player) {
@@ -128,8 +141,8 @@ export default class Player extends PureComponent {
     }
   }
 
-  initMonitor(id) {
-    this.monitor = new Monitor(id);
+  initMonitor() {
+    this.monitor = new Monitor(this.metadata.id);
     this.monitor.collect(() => {
       const { video } = this.player;
       if (!video) return {};
@@ -137,6 +150,40 @@ export default class Player extends PureComponent {
       const time = video.currentTime();
       return { time };
     });
+  }
+
+  initShortcuts() {
+    const {
+      fullscreen,
+      section,
+      slides,
+      swap,
+      thumbnails,
+      video,
+    } = shortcuts;
+
+    this.shortcuts = new Shortcuts();
+    this.shortcuts.add(fullscreen, () => this.toggleFullscreen());
+    this.shortcuts.add(section, () => this.toggleSection());
+    this.shortcuts.add(swap, () => this.toggleSwap());
+    this.shortcuts.add(thumbnails, () => this.toggleThumbnails());
+
+    const {
+      next,
+      previous,
+    } = slides;
+
+    this.shortcuts.add(next, () => skip(this.player, this.slides, +1));
+    this.shortcuts.add(previous, () => skip(this.player, this.slides, -1));
+
+    const {
+      backward,
+      forward,
+      seconds,
+    } = video;
+
+    this.shortcuts.add(backward, () => seek(this.player, -seconds));
+    this.shortcuts.add(forward, () => seek(this.player, +seconds));
   }
 
   toggleApplication(type) {
