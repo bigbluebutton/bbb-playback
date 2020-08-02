@@ -89,7 +89,7 @@ export default class About extends PureComponent {
   renderFooter() {
     return (
       <div className="about-footer">
-        {this.renderItem('settings', BUILD)}
+        {BUILD ? this.renderItem('settings', BUILD) : null}
       </div>
     );
   }
