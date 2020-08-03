@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { defineMessages } from 'react-intl';
 import Button from 'components/utils/button';
 import Modal from 'components/utils/modal';
 import { search } from 'utils/data';
@@ -6,6 +7,13 @@ import './index.scss';
 
 const MIN_LENGTH = 3;
 const MAX_LENGTH = 32;
+
+const intlMessages = defineMessages({
+  search: {
+    id: 'player.search.aria',
+    description: 'Aria label for the search button',
+  },
+});
 
 export default class Search extends PureComponent {
   constructor(props) {
@@ -55,6 +63,7 @@ export default class Search extends PureComponent {
   }
 
   renderBody() {
+    const { intl } = this.props;
     const { disabled } = this.state;
 
     return (
@@ -66,6 +75,7 @@ export default class Search extends PureComponent {
           type="text"
         />
         <Button
+          aria={intl.formatMessage(intlMessages.search)}
           disabled={disabled}
           handleOnClick={(event) => this.handleOnClick(event)}
           icon="promote"
@@ -88,10 +98,16 @@ export default class Search extends PureComponent {
   }
 
   render() {
-    const { toggleModal } = this.props;
+    const {
+      intl,
+      toggleModal,
+    } = this.props;
 
     return (
-      <Modal onClose={toggleModal}>
+      <Modal
+        intl={intl}
+        onClose={toggleModal}
+      >
         {this.renderBody()}
         {this.renderFooter()}
       </Modal>

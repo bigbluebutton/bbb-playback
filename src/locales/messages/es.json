@@ -1,4 +1,12 @@
 {
+  "button.about.aria": "Acerca",
+  "button.close.aria": "Cerrar modal",
+  "button.fullscreen.aria": "Contenido de pantalla completa",
+  "button.restore.aria": "Restaurar contenido",
+  "button.search.aria": "Buscar",
+  "button.section.aria": "Sección lateral",
+  "button.swap.aria": "Intercambiar contenido",
+  "button.thumbnails.aria": "Miniaturas",
   "error.wrapper.aria": "Área de error",
   "loader.wrapper.aria": "Área del cargador",
   "player.wrapper.aria": "Área de reproductor",

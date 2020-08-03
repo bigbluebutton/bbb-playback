@@ -47,6 +47,14 @@ const intlMessages = defineMessages({
     id: 'player.wrapper.aria',
     description: 'Aria label for the player wrapper',
   },
+  fullscreen: {
+    id: 'button.fullscreen.aria',
+    description: 'Aria label for the fullscreen button',
+  },
+  restore: {
+    id: 'button.restore.aria',
+    description: 'Aria label for the restore button',
+  },
 });
 
 export default class Player extends PureComponent {
@@ -223,11 +231,21 @@ export default class Player extends PureComponent {
 
     if (!isContentVisible(layout, swap)) return null;
 
+    const { intl } = this.props;
+
+    const aria = fullscreen
+      ? intl.formatMessage(intlMessages.restore)
+      : intl.formatMessage(intlMessages.fullscreen)
+    ;
+
+    const icon = fullscreen ? 'restore' : 'fullscreen';
+
     return (
       <div className="fullscreen-button">
         <Button
+          aria={aria}
           handleOnClick={() => this.toggleFullscreen()}
-          icon={fullscreen ? 'exit-fullscreen' : 'fullscreen'}
+          icon={icon}
           type="solid"
         />
       </div>
@@ -240,11 +258,14 @@ export default class Player extends PureComponent {
 
     if (!open) return null;
 
+    const { intl } = this.props;
+
     switch (modal) {
       case ID.ABOUT:
         return (
           <About
             content={this.content}
+            intl={intl}
             metadata={this.metadata}
             toggleModal={() => this.toggleModal(ID.ABOUT)}
           />
@@ -258,6 +279,7 @@ export default class Player extends PureComponent {
         return (
           <Search
             data={data}
+            intl={intl}
             toggleModal={() => this.toggleModal(ID.SEARCH)}
             video={video}
           />
@@ -306,6 +328,8 @@ export default class Player extends PureComponent {
   }
 
   renderNavigationBar() {
+    const { intl } = this.props;
+
     const {
       control,
       section,
@@ -319,9 +343,10 @@ export default class Player extends PureComponent {
     return (
       <NavigationBar
         control={control}
-        start={start}
+        intl={intl}
         name={name}
         section={section}
+        start={start}
         toggleAbout={() => this.toggleModal(ID.ABOUT)}
         toggleSection={() => this.toggleSection()}
       />
@@ -481,6 +506,8 @@ export default class Player extends PureComponent {
   }
 
   renderActionBar() {
+    const { intl } = this.props;
+
     const {
       control,
       thumbnails,
@@ -490,6 +517,7 @@ export default class Player extends PureComponent {
       <ActionBar
         content={this.content}
         control={control}
+        intl={intl}
         thumbnails={thumbnails}
         toggleSearch={() => this.toggleModal(ID.SEARCH)}
         toggleSwap={() => this.toggleSwap()}

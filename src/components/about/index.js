@@ -96,12 +96,16 @@ export default class About extends PureComponent {
 
   render() {
     const {
+      intl,
       metadata,
       toggleModal,
     } = this.props;
 
     return (
-      <Modal onClose={toggleModal}>
+      <Modal
+        intl={intl}
+        onClose={toggleModal}
+      >
         {this.renderHeader(metadata)}
         {this.renderBody(metadata)}
         {this.renderFooter()}

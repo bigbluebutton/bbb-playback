@@ -1,4 +1,12 @@
 {
+  "button.about.aria": "Über",
+  "button.close.aria": "Modal schließen",
+  "button.fullscreen.aria": "Vollbildinhalt",
+  "button.restore.aria": "Inhalt wiederherstellen",
+  "button.search.aria": "Suche",
+  "button.section.aria": "Seitenteil",
+  "button.swap.aria": "Inhalte austauschen",
+  "button.thumbnails.aria": "Vorschaubilder",
   "error.wrapper.aria": "Fehlerbereich",
   "loader.wrapper.aria": "Laderbereich",
   "player.wrapper.aria": "Spielerbereich",

@@ -9,6 +9,7 @@ export default class Button extends PureComponent {
   render() {
     const {
       active,
+      aria,
       disabled,
       handleOnClick,
       icon,
@@ -30,6 +31,7 @@ export default class Button extends PureComponent {
     return (
       <div className="button-wrapper">
         <button
+          aria-label={aria}
           className={cx('button', style)}
           disabled={disabled}
           onClick={() => handleOnClick()}

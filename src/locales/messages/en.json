@@ -1,4 +1,12 @@
 {
+  "button.about.aria": "About",
+  "button.close.aria": "Close modal",
+  "button.fullscreen.aria": "Fullscreen content",
+  "button.restore.aria": "Restore content",
+  "button.search.aria": "Search",
+  "button.section.aria": "Side section",
+  "button.swap.aria": "Swap content",
+  "button.thumbnails.aria": "Thumbnails",
   "error.wrapper.aria": "Error area",
   "loader.wrapper.aria": "Loader area",
   "player.wrapper.aria": "Player area",

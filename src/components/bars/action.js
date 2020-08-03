@@ -1,7 +1,23 @@
 import React, { Component } from 'react';
+import { defineMessages } from 'react-intl';
 import { controls as config } from 'config';
 import Button from 'components/utils/button';
 import './index.scss';
+
+const intlMessages = defineMessages({
+  search: {
+    id: 'button.search.aria',
+    description: 'Aria label for the search button',
+  },
+  swap: {
+    id: 'button.swap.aria',
+    description: 'Aria label for the swap button',
+  },
+  thumbnails: {
+    id: 'button.thumbnails.aria',
+    description: 'Aria label for the thumbnails button',
+  },
+});
 
 export default class ActionBar extends Component {
   shouldComponentUpdate(nextProps) {
@@ -15,10 +31,14 @@ export default class ActionBar extends Component {
   }
 
   renderSearchButton() {
-    const { toggleSearch } = this.props;
+    const {
+      intl,
+      toggleSearch,
+    } = this.props;
 
     return (
       <Button
+        aria={intl.formatMessage(intlMessages.search)}
         handleOnClick={toggleSearch}
         icon="promote"
         type="solid"
@@ -27,10 +47,14 @@ export default class ActionBar extends Component {
   }
 
   renderSwapButton() {
-    const { toggleSwap } = this.props;
+    const {
+      intl,
+      toggleSwap,
+    } = this.props;
 
     return (
       <Button
+        aria={intl.formatMessage(intlMessages.swap)}
         handleOnClick={toggleSwap}
         icon="refresh"
         type="solid"
@@ -40,6 +64,7 @@ export default class ActionBar extends Component {
 
   renderThumbnailsButton() {
     const {
+      intl,
       thumbnails,
       toggleThumbnails,
     } = this.props;
@@ -47,6 +72,7 @@ export default class ActionBar extends Component {
     return (
       <Button
         active={thumbnails}
+        aria={intl.formatMessage(intlMessages.thumbnails)}
         handleOnClick={toggleThumbnails}
         icon="rooms"
         type="ghost"

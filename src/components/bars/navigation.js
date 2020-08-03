@@ -1,15 +1,31 @@
 import React, { PureComponent } from 'react';
+import { defineMessages } from 'react-intl';
 import { controls as config } from 'config';
 import { FormattedDate } from 'react-intl';
 import Button from 'components/utils/button';
 import './index.scss';
 
+const intlMessages = defineMessages({
+  about: {
+    id: 'button.about.aria',
+    description: 'Aria label for the about button',
+  },
+  section: {
+    id: 'button.section.aria',
+    description: 'Aria label for the section button',
+  },
+});
+
 export default class NavigationBar extends PureComponent {
   renderAboutButton() {
-    const { toggleAbout } = this.props;
+    const {
+      intl,
+      toggleAbout,
+    } = this.props;
 
     return (
       <Button
+        aria={intl.formatMessage(intlMessages.about)}
         handleOnClick={toggleAbout}
         icon="vertical-more"
       />
@@ -18,12 +34,14 @@ export default class NavigationBar extends PureComponent {
 
   renderSectionButton() {
     const {
+      intl,
       section,
       toggleSection,
     } = this.props;
 
     return (
       <Button
+        aria={intl.formatMessage(intlMessages.section)}
         handleOnClick={toggleSection}
         icon={section ? 'minus' : 'plus'}
       />
