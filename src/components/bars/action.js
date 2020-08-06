@@ -75,7 +75,7 @@ export default class ActionBar extends Component {
         aria={intl.formatMessage(intlMessages.thumbnails)}
         handleOnClick={toggleThumbnails}
         icon="rooms"
-        type="ghost"
+        type="solid"
       />
     );
   }
@@ -97,10 +97,10 @@ export default class ActionBar extends Component {
     return (
       <div className="action-bar">
         <div className="left">
-          {control && search && presentation ? this.renderSearchButton() : null}
+          {control && swap ? this.renderSwapButton() : null}
         </div>
         <div className="center">
-          {control && swap ? this.renderSwapButton() : null}
+          {control && search && presentation ? this.renderSearchButton() : null}
         </div>
         <div className="right">
           {control && thumbnails && presentation ? this.renderThumbnailsButton(): null}

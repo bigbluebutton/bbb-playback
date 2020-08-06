@@ -5,8 +5,7 @@
   grid-area: navigation-bar;
 
   .title {
-    color: white;
-    font-weight: var(--font-weight-light);
+    color: var(--title-color);
     overflow: hidden;
     padding: $padding-small;
     text-overflow: ellipsis;

@@ -14,12 +14,12 @@ $button-size: 2.75rem;
     font-size: large;
     height: $button-size;
     width: $button-size;
-    color: var(--white);
   }
 
   .default {
     background-color: transparent;
     border: none;
+    color: var(--gray);
 
     &:focus {
       box-shadow: 0 0 0 $margin-extra-small;
@@ -29,6 +29,7 @@ $button-size: 2.75rem;
   .solid {
     background-color: var(--button-color);
     border: none;
+    color: var(--white);
 
     &:focus {
       box-shadow: 0 0 0 $margin-extra-small var(--button-color);
@@ -38,6 +39,7 @@ $button-size: 2.75rem;
   .ghost {
     background-color: transparent;
     border: solid;
+    color: var(--gray);
 
     &:focus {
       box-shadow: 0 0 0 $margin-extra-small;
@@ -47,6 +49,7 @@ $button-size: 2.75rem;
   .disabled {
     background-color: var(--gray-light);
     border: none;
+    color: var(--white);
     cursor: not-allowed;
   }
 }

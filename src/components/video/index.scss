@@ -19,6 +19,15 @@
   z-index: 1;
 }
 
+.video-js .vjs-big-play-button {
+  border: none;
+  border-radius: 0;
+  line-height: 1.65em;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .vjs-text-track-display,
 .video-js .vjs-modal-dialog {
   height: 100%;
@@ -26,6 +35,7 @@
 }
 
 .vjs-control-bar {
+  background-color: var(--control-bar-color) !important;
   display: flex !important;
   position: fixed !important;
   z-index: 1 !important;
