@@ -43,7 +43,7 @@ export default class NavigationBar extends PureComponent {
       <Button
         aria={intl.formatMessage(intlMessages.section)}
         handleOnClick={toggleSection}
-        icon={section ? 'minus' : 'plus'}
+        icon={section ? 'left-arrow' : 'right-arrow'}
       />
     );
   }

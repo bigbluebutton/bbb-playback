@@ -4,9 +4,9 @@
     "scroll": true
   },
   "controls": {
-    "about": true,
+    "about": false,
     "fullscreen": true,
-    "search": true,
+    "search": false,
     "section": true,
     "swap": true,
     "thumbnails": true

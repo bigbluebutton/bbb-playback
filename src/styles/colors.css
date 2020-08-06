@@ -16,22 +16,27 @@
 
   --green: rgb(0, 128, 129);
 
+  --white-dark: rgb(243, 246, 249);
   --white: rgb(255, 255, 255);
 
   --button-color: var(--blue);
   --button-box-shadow-color: rgba(15, 39, 33, .5);
 
+  --control-bar-color: var(--gray-dark);
+
   --cursor-color: var(--red);
 
   --marker-color: var(--red);
+
+  --title-color: var(--gray);
 
   --modal-background-color: rgba(6, 23, 42, .25);
 
   --thumbnails-background-color: var(--blue-lighter);
 
-  --body-background-color: var(--gray-dark);
+  --body-background-color: var(--white-dark);
   --section-background-color: var(--white);
-  --main-background-color: var(--gray-dark);
+  --main-background-color: var(--white-dark);
 
   --border-color: var(--gray-light);
 
