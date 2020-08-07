@@ -200,6 +200,7 @@ $error-font-size: 5rem;
       display: flex;
       font-size: large;
       font-weight: var(--font-weight-semi-bold);
+      outline: none;
 
       [dir="ltr"] & {
         padding-left: $padding;

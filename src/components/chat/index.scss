@@ -102,14 +102,17 @@
   }
 
   .interactive {
+    border-radius: 50%;
     display: flex;
+    outline: none;
 
     .avatar {
       cursor: pointer;
+    }
 
-      &:hover {
-        box-shadow: 0 0 0 $margin-small var(--gray-lighter);
-      }
+    &:focus,
+    &:hover {
+      box-shadow: 0 0 0 $margin-small var(--gray-lighter);
     }
   }
 
