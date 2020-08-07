@@ -507,18 +507,13 @@ export default class Player extends PureComponent {
 
   renderActionBar() {
     const { intl } = this.props;
-
-    const {
-      control,
-      thumbnails,
-    } = this.state;
+    const { control } = this.state;
 
     return (
       <ActionBar
         content={this.content}
         control={control}
         intl={intl}
-        thumbnails={thumbnails}
         toggleSearch={() => this.toggleModal(ID.SEARCH)}
         toggleSwap={() => this.toggleSwap()}
         toggleThumbnails={() => this.toggleThumbnails()}

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { defineMessages } from 'react-intl';
 import { controls as config } from 'config';
 import Button from 'components/utils/button';
@@ -19,17 +19,7 @@ const intlMessages = defineMessages({
   },
 });
 
-export default class ActionBar extends Component {
-  shouldComponentUpdate(nextProps) {
-    const {
-      thumbnails,
-    } = this.props;
-
-    if (thumbnails !== nextProps.thumbnails) return true;
-
-    return false;
-  }
-
+export default class ActionBar extends PureComponent {
   renderSearchButton() {
     const {
       intl,
@@ -65,13 +55,11 @@ export default class ActionBar extends Component {
   renderThumbnailsButton() {
     const {
       intl,
-      thumbnails,
       toggleThumbnails,
     } = this.props;
 
     return (
       <Button
-        active={thumbnails}
         aria={intl.formatMessage(intlMessages.thumbnails)}
         handleOnClick={toggleThumbnails}
         icon="rooms"
