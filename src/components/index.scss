@@ -201,6 +201,7 @@ $error-font-size: 5rem;
       font-size: large;
       font-weight: var(--font-weight-semi-bold);
       outline: none;
+      overflow: hidden;
 
       [dir="ltr"] & {
         padding-left: $padding;
