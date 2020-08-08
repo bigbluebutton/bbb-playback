@@ -37,6 +37,15 @@ $error-font-size: 5rem;
   }
 }
 
+.single-content {
+  grid-template-areas:
+    "navigation-bar content"
+    "application content"
+    "application content"
+    "action-bar content";
+  grid-template-rows: $navigation-bar-height auto auto calc(#{$action-bar-height} / 2);
+}
+
 .hidden-section {
   grid-template-areas:
     "media navigation-bar"
@@ -253,6 +262,16 @@ $error-font-size: 5rem;
     }
   }
 
+  .single-content {
+    grid-template-areas:
+      "application navigation-bar"
+      "application content"
+      "application content"
+      "application content"
+      "application action-bar";
+    grid-template-rows: $navigation-bar-height $media-fit-height auto auto calc(#{$action-bar-height} / 2);
+  }
+
   .hidden-section {
     grid-template-columns: 0% auto;
   }
@@ -266,6 +285,10 @@ $error-font-size: 5rem;
     .player-wrapper {
       grid-template-columns: $section-width-small auto;
       grid-template-rows: $navigation-bar-height $media-fit-height-small auto auto $action-bar-height;
+    }
+
+    .single-content {
+      grid-template-rows: $navigation-bar-height $media-fit-height-small auto auto calc(#{$action-bar-height} / 2);
     }
 
     .hidden-section {

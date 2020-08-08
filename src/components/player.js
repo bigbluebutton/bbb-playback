@@ -232,7 +232,14 @@ export default class Player extends PureComponent {
 
     if (!control || !controls.fullscreen) return null;
 
-    if (!isContentVisible(layout, swap)) return null;
+    const {
+      presentation,
+      screenshare,
+    } = this.content;
+
+    const single = !presentation && !screenshare;
+
+    if (!isContentVisible(layout, swap || single)) return null;
 
     const { intl } = this.props;
 
@@ -296,7 +303,14 @@ export default class Player extends PureComponent {
     const { intl } = this.props;
     const { swap } = this.state;
 
-    if (!isContentVisible(layout, swap)) return null;
+    const {
+      presentation,
+      screenshare,
+    } = this.content;
+
+    const single = !presentation && !screenshare;
+
+    if (!isContentVisible(layout, swap || single)) return null;
 
     return (
       <Talkers
@@ -356,7 +370,7 @@ export default class Player extends PureComponent {
     );
   }
 
-  renderMedia() {
+  renderMedia(single) {
     const {
       data,
       intl,
@@ -367,7 +381,7 @@ export default class Player extends PureComponent {
     const { media } = data;
 
     return (
-      <div className={cx('media', { 'swapped-media': swap })}>
+      <div className={cx('media', { 'swapped-media': swap || single })}>
         {this.renderTalkers(LAYOUT.MEDIA)}
         {this.renderFullscreenButton(LAYOUT.MEDIA)}
         <Video
@@ -490,7 +504,9 @@ export default class Player extends PureComponent {
     );
   }
 
-  renderContent() {
+  renderContent(single) {
+    if (single) return null;
+
     const {
       swap,
       time,
@@ -532,9 +548,17 @@ export default class Player extends PureComponent {
       section,
     } = this.state;
 
+    const {
+      presentation,
+      screenshare,
+    } = this.content;
+
+    const single = !presentation && !screenshare;
+
     const styles = {
       'fullscreen-content': fullscreen,
       'hidden-section': !section,
+      'single-content': single,
     };
 
     return (
@@ -544,9 +568,9 @@ export default class Player extends PureComponent {
         id={ID.PLAYER}
       >
         {this.renderNavigationBar()}
-        {this.renderMedia()}
+        {this.renderMedia(single)}
         {this.renderApplication()}
-        {this.renderContent()}
+        {this.renderContent(single)}
         {this.renderActionBar()}
         {this.renderThumbnails()}
         {this.renderModal()}

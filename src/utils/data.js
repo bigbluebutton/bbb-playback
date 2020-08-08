@@ -134,18 +134,20 @@ const getData = (data, id) => {
     case ID.PANZOOMS:
     case ID.SCREENSHARE:
     case ID.TALKERS:
-      if (!file) return [];
+      if (!file || data[getFileName(file)] === null) {
+        return [];
+      }
 
       return data[getFileName(file)];
     case ID.METADATA:
-      if (!file) {
+      if (!file || data[getFileName(file)] === null) {
         logger.error('missing', id);
         return {};
       }
 
       return data[getFileName(file)];
     case ID.SHAPES:
-      if (!file) {
+      if (!file || data[getFileName(file)] === null) {
         return {
           canvases: [],
           slides: [],

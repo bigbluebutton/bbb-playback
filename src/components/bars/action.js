@@ -80,18 +80,23 @@ export default class ActionBar extends PureComponent {
       thumbnails,
     } = config;
 
-    const { presentation } = content;
+    const {
+      presentation,
+      screenshare,
+    } = content;
+
+    const single = !presentation && !screenshare;
 
     return (
       <div className="action-bar">
         <div className="left">
-          {control && swap ? this.renderSwapButton() : null}
+          {control && swap && !single ? this.renderSwapButton() : null}
         </div>
         <div className="center">
-          {control && search && presentation ? this.renderSearchButton() : null}
+          {control && search && !single ? this.renderSearchButton() : null}
         </div>
         <div className="right">
-          {control && thumbnails && presentation ? this.renderThumbnailsButton(): null}
+          {control && thumbnails && !single ? this.renderThumbnailsButton() : null}
         </div>
       </div>
     );
