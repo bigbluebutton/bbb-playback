@@ -3,7 +3,6 @@ import cx from 'classnames';
 import { defineMessages } from 'react-intl';
 import {
   controls,
-  files,
   shortcuts,
 } from 'config';
 import About from './about';
@@ -26,8 +25,8 @@ import {
   getControlFromLayout,
   getCurrentDataIndex,
   getCurrentDataInterval,
+  getData,
   getDraws,
-  getFileName,
   getSectionFromLayout,
   getSwapFromLayout,
   hasPresentation,
@@ -82,16 +81,34 @@ export default class Player extends PureComponent {
       screenshare: null,
     };
 
-    this.alternates = data[getFileName(files.data.alternates)];
-    this.captions = data[getFileName(files.data.captions)];
-    this.chat = data[getFileName(files.data.chat)];
-    this.cursor = data[getFileName(files.data.cursor)];
-    this.metadata = data[getFileName(files.data.metadata)];
-    this.notes = data[getFileName(files.data.notes)];
-    this.panzooms = data[getFileName(files.data.panzooms)];
-    this.screenshare = data[getFileName(files.data.screenshare)];
-    this.shapes = data[getFileName(files.data.shapes)];
-    this.talkers = data[getFileName(files.data.talkers)];
+    this.initData(data);
+
+    this.handlePlayerReady = this.handlePlayerReady.bind(this);
+    this.handleTimeUpdate = this.handleTimeUpdate.bind(this);
+  }
+
+  componentDidMount() {
+    this.initMonitor();
+    this.initShortcuts();
+  }
+
+  componentWillUnmount() {
+    if (this.shortcuts) {
+      this.shortcuts.destroy();
+    }
+  }
+
+  initData(data) {
+    this.alternates = getData(data, ID.ALTERNATES);
+    this.captions = getData(data, ID.CAPTIONS);
+    this.chat = getData(data, ID.CHAT);
+    this.cursor = getData(data, ID.CURSOR);
+    this.metadata = getData(data, ID.METADATA);
+    this.notes = getData(data, ID.NOTES);
+    this.panzooms = getData(data, ID.PANZOOMS);
+    this.screenshare = getData(data, ID.SCREENSHARE);
+    this.shapes = getData(data, ID.SHAPES);
+    this.talkers = getData(data, ID.TALKERS);
 
     this.canvases = this.shapes.canvases;
     this.slides = this.shapes.slides;
@@ -105,21 +122,7 @@ export default class Player extends PureComponent {
       screenshare: !isEmpty(this.screenshare),
     };
 
-    this.handlePlayerReady = this.handlePlayerReady.bind(this);
-    this.handleTimeUpdate = this.handleTimeUpdate.bind(this);
-
     logger.debug(ID.PLAYER, data);
-  }
-
-  componentDidMount() {
-    this.initMonitor();
-    this.initShortcuts();
-  }
-
-  componentWillUnmount() {
-    if (this.shortcuts) {
-      this.shortcuts.destroy();
-    }
   }
 
   handlePlayerReady(media, player) {

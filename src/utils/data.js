@@ -13,14 +13,20 @@ const LOCAL = process.env.REACT_APP_NO_ROUTER;
 
 const ID = {
   ABOUT: 'about',
+  ALTERNATES: 'alternates',
+  CAPTIONS: 'captions',
   CHAT: 'chat',
+  CURSOR: 'cursor',
   ERROR: 'error',
   LOADER: 'loader',
+  METADATA: 'metadata',
   NOTES: 'notes',
+  PANZOOMS: 'panzooms',
   PLAYER: 'player',
   PRESENTATION: 'presentation',
-  SEARCH: 'search',
   SCREENSHARE: 'screenshare',
+  SEARCH: 'search',
+  SHAPES: 'shapes',
   TALKERS: 'talkers',
   THUMBNAILS: 'thumbnails',
   VIDEO: 'video',
@@ -114,6 +120,44 @@ const getCurrentDataInterval = (data, time) => {
   }
 
   return currentDataInterval;
+};
+
+const getData = (data, id) => {
+  const file = config.files.data[id];
+
+  switch (id) {
+    case ID.ALTERNATES:
+    case ID.CAPTIONS:
+    case ID.CHAT:
+    case ID.CURSOR:
+    case ID.NOTES:
+    case ID.PANZOOMS:
+    case ID.SCREENSHARE:
+    case ID.TALKERS:
+      if (!file) return [];
+
+      return data[getFileName(file)];
+    case ID.METADATA:
+      if (!file) {
+        logger.error('missing', id);
+        return {};
+      }
+
+      return data[getFileName(file)];
+    case ID.SHAPES:
+      if (!file) {
+        return {
+          canvases: [],
+          slides: [],
+          thumbnails: [],
+        };
+      }
+
+      return data[getFileName(file)];
+    default:
+      logger.debug('unhandled', id);
+      return [];
+  }
 };
 
 const getDraws = (index, slides, canvases) => {
@@ -528,6 +572,7 @@ export {
   getControlFromLayout,
   getCurrentDataIndex,
   getCurrentDataInterval,
+  getData,
   getDraws,
   getFileName,
   getFileType,
