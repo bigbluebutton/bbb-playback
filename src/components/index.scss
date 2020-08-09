@@ -120,10 +120,25 @@ $error-font-size: 5rem;
 .content {
   background-color: var(--main-background-color);
   display: flex;
+  flex-direction: column;
   grid-area: content;
   height: 100%;
-  position: relative;
   width: 100%;
+
+  .top-content {
+    display: flex;
+    height: 100%;
+    position: relative;
+    width: 100%;
+  }
+
+  .bottom-content {
+    background-color: var(--bottom-content-background-color);
+    display: flex;
+    min-height: $bottom-content-height;
+    position: relative;
+    width: 100%;
+  }
 
   .inactive {
     display: none;

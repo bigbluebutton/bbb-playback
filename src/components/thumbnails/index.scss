@@ -1,58 +1,58 @@
 @import 'src/styles/icons';
 @import 'src/styles/sizes';
 
-$thumbnails-wrapper-top: $navigation-bar-height;
-$thumbnails-wrapper-bottom: calc(#{$control-bar-height} + #{$action-bar-height});
-$thumbnail-height: 90px;
+$thumbnail-height: calc((#{$bottom-content-height} / 10) * 6);
 
 .thumbnails-wrapper {
-  background-color: var(--thumbnails-background-color);
-  bottom: $thumbnails-wrapper-bottom;
-  box-sizing: border-box;
-  overflow-x: hidden;
-  overflow-y: auto;
-  padding: $padding-extra-small $padding-extra-small 0 $padding-extra-small;
-  position: fixed;
+  display: flex;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  position: absolute;
   scroll-behavior: smooth;
-  top: $thumbnails-wrapper-top;
-  width: auto;
-  z-index: 1;
-
-  [dir="ltr"] & {
-    right: 0;
-  }
-
-  [dir="rtl"] & {
-    left: 0;
-  }
+  width: 100%;
 
   .active {
-    filter: opacity(50%);
+    background-color: var(--gray-lighter);
   }
 }
 
 .thumbnail-wrapper {
+  box-sizing: border-box;
+  cursor: pointer;
   display: flex;
-  height: $thumbnail-height;
-  justify-content: center;
-  padding: 0 0 $padding-extra-small 0;
+  padding: $padding-extra-small;
+  outline: none;
 
   .thumbnail {
-    cursor: pointer;
-    display: block;
-    height: 100%;
-    outline: none;
-    width: auto;
+    align-self: flex-start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
-    &:focus,
-    &:hover {
-      filter: opacity(50%);
+    .thumbnail-image {
+      display: block;
+      height: $thumbnail-height;
+      width: auto;
+    }
+
+    .thumbnail-index {
+      color: var(--gray);
+      display: flex;
+      font-size: x-small;
+      font-weight: var(--font-weight-bold);
+      margin-top: $margin-extra-small;
+    }
+
+    .screenshare {
+      color: var(--gray);
+      font-size: xx-large;
+      font-weight: var(--font-weight-semi-bold);
     }
   }
 
-  .screenshare {
-    color: var(--gray);
-    font-size: xx-large;
-    font-weight: var(--font-weight-semi-bold);
+  &:focus,
+  &:hover {
+    background-color: var(--gray-lighter);
   }
 }

@@ -207,6 +207,38 @@ const getSwapFromLayout = layout => {
   return swap;
 };
 
+const getScrollLeft = (firstNode, currentNode, align) => {
+  if (!currentNode) return 0;
+
+  const {
+    clientWidth,
+    offsetLeft,
+    parentNode,
+  } = currentNode;
+
+  if (!firstNode || !parentNode) return 0;
+
+  const spacing = firstNode.offsetLeft;
+  const parentWidth = parentNode.clientWidth;
+
+  let horizontalOffset = 0;
+  switch (align) {
+    case 'left':
+      horizontalOffset = offsetLeft - spacing;
+      break;
+    case 'center':
+      horizontalOffset = parseInt(offsetLeft + (clientWidth - spacing - parentWidth) / 2, 10);
+      break;
+    case 'right':
+      horizontalOffset = offsetLeft + clientWidth - parentWidth;
+      break;
+    default:
+      logger.debug('unhandled', align);
+  }
+
+  return horizontalOffset;
+};
+
 const getScrollTop = (firstNode, currentNode, align) => {
   if (!currentNode) return 0;
 
@@ -226,7 +258,7 @@ const getScrollTop = (firstNode, currentNode, align) => {
     case 'top':
       verticalOffset = offsetTop - spacing;
       break;
-    case 'center':
+    case 'middle':
       verticalOffset = parseInt(offsetTop + (clientHeight - spacing - parentHeight) / 2, 10);
       break;
     case 'bottom':
@@ -533,6 +565,7 @@ export {
   getFileType,
   getLayout,
   getRecordId,
+  getScrollLeft,
   getScrollTop,
   getSectionFromLayout,
   getSwapFromLayout,

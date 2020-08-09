@@ -13,10 +13,6 @@ const intlMessages = defineMessages({
     id: 'button.swap.aria',
     description: 'Aria label for the swap button',
   },
-  thumbnails: {
-    id: 'button.thumbnails.aria',
-    description: 'Aria label for the thumbnails button',
-  },
 });
 
 export default class ActionBar extends PureComponent {
@@ -52,22 +48,6 @@ export default class ActionBar extends PureComponent {
     );
   }
 
-  renderThumbnailsButton() {
-    const {
-      intl,
-      toggleThumbnails,
-    } = this.props;
-
-    return (
-      <Button
-        aria={intl.formatMessage(intlMessages.thumbnails)}
-        handleOnClick={toggleThumbnails}
-        icon="rooms"
-        type="solid"
-      />
-    );
-  }
-
   render() {
     const {
       content,
@@ -77,7 +57,6 @@ export default class ActionBar extends PureComponent {
     const {
       search,
       swap,
-      thumbnails,
     } = config;
 
     const { presentation } = content;
@@ -90,9 +69,7 @@ export default class ActionBar extends PureComponent {
         <div className="center">
           {control && search && presentation ? this.renderSearchButton() : null}
         </div>
-        <div className="right">
-          {control && thumbnails && presentation ? this.renderThumbnailsButton(): null}
-        </div>
+        <div className="right" />
       </div>
     );
   }
