@@ -5,7 +5,7 @@ import { thumbnails as config } from 'config';
 import {
   ID,
   buildFileURL,
-  getScrollTop,
+  getScrollLeft,
 } from 'utils/data';
 import './index.scss';
 
@@ -60,7 +60,7 @@ export default class Thumbnails extends Component {
     if (this.firstNode && this.currentNode) {
       const { parentNode } = this.currentNode;
 
-      parentNode.scrollTop = getScrollTop(this.firstNode, this.currentNode, config.align);
+      parentNode.scrollLeft = getScrollLeft(this.firstNode, this.currentNode, config.align);
     }
   }
 
@@ -77,24 +77,17 @@ export default class Thumbnails extends Component {
     }
   }
 
-  renderThumbnail(item, active) {
+  renderImage(item) {
     const {
       alt,
       src,
-      timestamp,
     } = item;
 
     const screenshare = src === SCREENSHARE;
-    const onClick = () => this.handleOnClick(timestamp);
 
     if (screenshare) {
       return (
-        <div
-          className={cx('thumbnail', { active, screenshare })}
-          onClick={onClick}
-          onKeyPress={(e) => e.key === 'Enter' ? onClick() : null}
-          tabIndex="0"
-        >
+        <div className={cx('thumbnail-image', { screenshare })}>
           <span className="icon-desktop" />
         </div>
       );
@@ -103,11 +96,8 @@ export default class Thumbnails extends Component {
     return (
       <img
         alt={alt}
-        className={cx('thumbnail', { active })}
-        onClick={onClick}
-        onKeyPress={(e) => e.key === 'Enter' ? onClick() : null}
+        className="thumbnail-image"
         src={buildFileURL(this.recordId, src)}
-        tabIndex="0"
       />
     );
   }
@@ -120,13 +110,22 @@ export default class Thumbnails extends Component {
 
     return thumbnails.map((item, index) => {
       const active = index === currentDataIndex;
+      const onClick = () => this.handleOnClick(item.timestamp);
 
       return (
         <div
-          className="thumbnail-wrapper"
+          className={cx('thumbnail-wrapper', { active })}
+          onClick={onClick}
+          onKeyPress={(e) => e.key === 'Enter' ? onClick() : null}
           ref={node => this.setRef(node, index)}
+          tabIndex="0"
         >
-          {this.renderThumbnail(item, active)}
+          <div className="thumbnail">
+            {this.renderImage(item)}
+            <div className="thumbnail-index">
+              {index + 1}
+            </div>
+          </div>
         </div>
       );
     });

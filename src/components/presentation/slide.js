@@ -3,6 +3,8 @@ import cx from 'classnames';
 import { buildFileURL } from 'utils/data';
 import './index.scss';
 
+const SCREENSHARE = 'deskshare';
+
 export default class Slide extends PureComponent {
   constructor(props) {
     super(props);
@@ -22,6 +24,8 @@ export default class Slide extends PureComponent {
       alt,
       src,
     } = thumbnail;
+
+    if (src === SCREENSHARE) return null;
 
     const logo = src.includes('logo');
 

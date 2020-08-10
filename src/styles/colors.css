@@ -32,11 +32,11 @@
 
   --modal-background-color: rgba(6, 23, 42, .25);
 
-  --thumbnails-background-color: var(--blue-lighter);
-
   --body-background-color: var(--white-dark);
   --section-background-color: var(--white);
   --main-background-color: var(--white-dark);
+
+  --bottom-content-background-color: var(--gray-lightest);
 
   --border-color: var(--gray-light);
 

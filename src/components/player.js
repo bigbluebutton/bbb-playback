@@ -73,7 +73,7 @@ export default class Player extends PureComponent {
       modal: '',
       section: getSectionFromLayout(layout),
       swap: getSwapFromLayout(layout),
-      thumbnails: false,
+      thumbnails: true,
       time: 0,
     }
 
@@ -304,14 +304,8 @@ export default class Player extends PureComponent {
   }
 
   renderThumbnails() {
-    const {
-      time,
-      thumbnails,
-    } = this.state;
-
-    if (!thumbnails) return null;
-
     const { intl } = this.props;
+    const { time } = this.state;
     const { video } = this.player;
 
     const currentDataIndex = getCurrentDataIndex(this.thumbnails, time);
@@ -489,18 +483,26 @@ export default class Player extends PureComponent {
 
   renderContent() {
     const {
+      fullscreen,
       swap,
+      thumbnails,
       time,
     } = this.state;
 
     const content = getActiveContent(this.screenshare, time);
+    const bottom = thumbnails && !fullscreen && !swap;
 
     return (
       <div className={cx('content', { 'swapped-content': swap })}>
         {this.renderTalkers(LAYOUT.CONTENT)}
         {this.renderFullscreenButton(LAYOUT.CONTENT)}
-        {this.renderPresentation(content === ID.PRESENTATION)}
-        {this.renderScreenshare(content === ID.SCREENSHARE)}
+        <div className="top-content">
+          {this.renderPresentation(content === ID.PRESENTATION)}
+          {this.renderScreenshare(content === ID.SCREENSHARE)}
+        </div>
+        <div className={cx('bottom-content', { inactive: !bottom })}>
+          {this.renderThumbnails()}
+        </div>
       </div>
     );
   }
@@ -516,7 +518,6 @@ export default class Player extends PureComponent {
         intl={intl}
         toggleSearch={() => this.toggleModal(ID.SEARCH)}
         toggleSwap={() => this.toggleSwap()}
-        toggleThumbnails={() => this.toggleThumbnails()}
       />
     );
   }
@@ -545,7 +546,6 @@ export default class Player extends PureComponent {
         {this.renderApplication()}
         {this.renderContent()}
         {this.renderActionBar()}
-        {this.renderThumbnails()}
         {this.renderModal()}
       </div>
     );
