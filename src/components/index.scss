@@ -18,12 +18,12 @@ $error-font-size: 5rem;
   box-sizing: border-box;
   display: grid;
   grid-template-areas:
-    "navigation-bar content"
+    "top-bar content"
     "media content"
     "application content"
-    "action-bar content";
+    "bottom-bar content";
   grid-template-columns: 100% auto;
-  grid-template-rows: $navigation-bar-height auto auto $action-bar-height;
+  grid-template-rows: $top-bar-height auto auto $bottom-bar-height;
   height: 100%;
   padding: 0 0 $player-wrapper-padding 0;
   width: 100%;
@@ -39,10 +39,10 @@ $error-font-size: 5rem;
 
 .hidden-section {
   grid-template-areas:
-    "media navigation-bar"
+    "media top-bar"
     "media content"
     "application content"
-    "application action-bar";
+    "application bottom-bar";
   grid-template-columns: 0% auto;
 
   .fullscreen-button {
@@ -250,13 +250,13 @@ $error-font-size: 5rem;
 @media (min-width: $media-min-width) {
   .player-wrapper {
     grid-template-areas:
-      "media navigation-bar"
+      "media top-bar"
       "media content"
       "application content"
       "application content"
-      "application action-bar";
+      "application bottom-bar";
     grid-template-columns: $section-width auto;
-    grid-template-rows: $navigation-bar-height $media-fit-height auto auto $action-bar-height;
+    grid-template-rows: $top-bar-height $media-fit-height auto auto $bottom-bar-height;
 
     .fullscreen-button {
       visibility: visible;
@@ -279,7 +279,7 @@ $error-font-size: 5rem;
   @media (max-height: $media-max-height) {
     .player-wrapper {
       grid-template-columns: $section-width-small auto;
-      grid-template-rows: $navigation-bar-height $media-fit-height-small auto auto $action-bar-height;
+      grid-template-rows: $top-bar-height $media-fit-height-small auto auto $bottom-bar-height;
     }
 
     .hidden-section {

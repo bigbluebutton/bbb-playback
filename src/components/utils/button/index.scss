@@ -5,16 +5,17 @@ $button-size: 2.75rem;
 
 .button-wrapper {
   display: flex;
-  height: 100%;
+  height: $button-size;
   margin: 0 $margin 0 $margin;
+  width: $button-size;
 
   .button {
     border-radius: 50%;
     cursor: pointer;
     font-size: large;
-    height: $button-size;
+    height: 100%;
     outline: none;
-    width: $button-size;
+    width: 100%;
   }
 
   .default {

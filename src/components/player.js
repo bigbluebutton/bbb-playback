@@ -15,8 +15,8 @@ import Screenshare from './screenshare';
 import Talkers from './talkers';
 import Thumbnails from './thumbnails';
 import Video from './video';
-import ActionBar from './bars/action';
-import NavigationBar from './bars/navigation';
+import BottomBar from './bars/bottom';
+import TopBar from './bars/top';
 import Button from './utils/button';
 import { addAlternatesToThumbnails } from 'utils/builder';
 import {
@@ -321,7 +321,7 @@ export default class Player extends PureComponent {
     );
   }
 
-  renderNavigationBar() {
+  renderTopBar() {
     const { intl } = this.props;
 
     const {
@@ -335,14 +335,17 @@ export default class Player extends PureComponent {
     } = this.metadata;
 
     return (
-      <NavigationBar
+      <TopBar
+        content={this.content}
         control={control}
         intl={intl}
         name={name}
         section={section}
         start={start}
         toggleAbout={() => this.toggleModal(ID.ABOUT)}
+        toggleSearch={() => this.toggleModal(ID.SEARCH)}
         toggleSection={() => this.toggleSection()}
+        toggleSwap={() => this.toggleSwap()}
       />
     );
   }
@@ -507,19 +510,8 @@ export default class Player extends PureComponent {
     );
   }
 
-  renderActionBar() {
-    const { intl } = this.props;
-    const { control } = this.state;
-
-    return (
-      <ActionBar
-        content={this.content}
-        control={control}
-        intl={intl}
-        toggleSearch={() => this.toggleModal(ID.SEARCH)}
-        toggleSwap={() => this.toggleSwap()}
-      />
-    );
+  renderBottomBar() {
+    return <BottomBar />;
   }
 
   render() {
@@ -541,11 +533,11 @@ export default class Player extends PureComponent {
         className={cx('player-wrapper', styles)}
         id={ID.PLAYER}
       >
-        {this.renderNavigationBar()}
+        {this.renderTopBar()}
         {this.renderMedia()}
         {this.renderApplication()}
         {this.renderContent()}
-        {this.renderActionBar()}
+        {this.renderBottomBar()}
         {this.renderModal()}
       </div>
     );
