@@ -14,8 +14,8 @@ $bottom-content-height: 80px;
 
 $bar-height: 60px;
 
-$navigation-bar-height: $bar-height;
-$action-bar-height: $bar-height;
+$top-bar-height: $bar-height;
+$bottom-bar-height: calc(#{$bar-height} / 3);
 $modal-bar-height: $bar-height;
 
 $media-fit-height: calc((#{$video-height} / 2) - #{$bar-height});

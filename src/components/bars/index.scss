@@ -1,43 +1,10 @@
 @import 'src/styles/sizes';
 
-.navigation-bar {
+.top-bar {
   background-color: var(--main-background-color);
-  grid-area: navigation-bar;
-
-  .title {
-    color: var(--title-color);
-    overflow: hidden;
-    padding: $padding-small;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .button-wrapper {
-    .solid {
-      &:focus {
-        border: solid var(--main-background-color);
-      }
-    }
-  }
-}
-
-.action-bar {
-  background-color: var(--main-background-color);
-  grid-area: action-bar;
-
-  .button-wrapper {
-    .solid {
-      &:focus {
-        border: solid var(--main-background-color);
-      }
-    }
-  }
-}
-
-.action-bar,
-.navigation-bar {
-  display: flex;
   box-sizing: border-box;
+  display: flex;
+  grid-area: top-bar;
   overflow: hidden;
   padding: 0 $padding-small;
 
@@ -69,4 +36,17 @@
   .right {
     justify-content: flex-end;
   }
+
+  .title {
+    color: var(--title-color);
+    overflow: hidden;
+    padding: $padding-small;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.bottom-bar {
+  background-color: var(--main-background-color);
+  grid-area: bottom-bar;
 }

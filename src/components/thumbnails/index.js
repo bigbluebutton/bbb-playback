@@ -88,7 +88,7 @@ export default class Thumbnails extends Component {
     if (screenshare) {
       return (
         <div className={cx('thumbnail-image', { screenshare })}>
-          <span className="icon-desktop" />
+          <span className="icon-screenshare" />
         </div>
       );
     }

@@ -13,7 +13,7 @@ export default class About extends PureComponent {
   renderItem(key, value) {
     let element;
     if (typeof value === 'boolean') {
-      const icon = value ? 'icon-checkmark' : 'icon-close';
+      const icon = value ? 'icon-check' : 'icon-close';
       element = <div className={cx(icon, { green: value, red: !value})} />;
     } else {
       element = value;
@@ -44,12 +44,12 @@ export default class About extends PureComponent {
 
     return (
       <div className="about-body">
-        {this.renderItem('user', metadata.participants)}
+        {this.renderItem('users', metadata.participants)}
         {this.renderItem('presentation', presentation)}
         {this.renderItem('chat', chat)}
         {this.renderItem('notes', notes)}
-        {this.renderItem('desktop', screenshare)}
-        {this.renderItem('closed-caption', captions)}
+        {this.renderItem('screenshare', screenshare)}
+        {this.renderItem('captions', captions)}
       </div>
     );
   }
