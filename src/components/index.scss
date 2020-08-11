@@ -37,6 +37,14 @@ $error-font-size: 5rem;
   }
 }
 
+.single-content {
+  grid-template-areas:
+    "top-bar content"
+    "application content"
+    "application content"
+    "bottom-bar content";
+}
+
 .hidden-section {
   grid-template-areas:
     "media top-bar"
@@ -74,7 +82,7 @@ $error-font-size: 5rem;
 }
 
 .error-code {
-  color: var(--white);
+  color: var(--gray);
   font-size: $error-font-size;
   font-weight: var(--font-weight-bold);
 }
@@ -216,6 +224,7 @@ $error-font-size: 5rem;
       font-size: large;
       font-weight: var(--font-weight-semi-bold);
       outline: none;
+      overflow: hidden;
 
       [dir="ltr"] & {
         padding-left: $padding;
@@ -265,6 +274,15 @@ $error-font-size: 5rem;
     .talkers-wrapper {
       visibility: visible;
     }
+  }
+
+  .single-content {
+    grid-template-areas:
+      "application top-bar"
+      "application content"
+      "application content"
+      "application content"
+      "application bottom-bar";
   }
 
   .hidden-section {

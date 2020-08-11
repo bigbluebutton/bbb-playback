@@ -114,7 +114,12 @@ export default class TopBar extends PureComponent {
       swap,
     } = config;
 
-    const { presentation } = content;
+    const {
+      presentation,
+      screenshare,
+    } = content;
+
+    const single = !presentation && !screenshare;
 
     return (
       <div className="top-bar">
@@ -126,8 +131,8 @@ export default class TopBar extends PureComponent {
           {control && about ? this.renderAboutButton() : null}
         </div>
         <div className="right">
-          {control && search && presentation ? this.renderSearchButton() : null}
-          {control && swap ? this.renderSwapButton() : null}
+          {control && search && !single ? this.renderSearchButton() : null}
+          {control && swap && !single ? this.renderSwapButton() : null}
         </div>
       </div>
     );

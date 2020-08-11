@@ -470,8 +470,9 @@ const build = (filename, value) => {
       resolve(data);
     } else {
       if (!value) {
-        logger.error('missing', filename);
-        reject(filename);
+        logger.warn('missing', filename);
+
+        return resolve(null);
       }
 
       // Parse XML data

@@ -3,7 +3,6 @@ import cx from 'classnames';
 import { defineMessages } from 'react-intl';
 import {
   controls,
-  files,
   shortcuts,
 } from 'config';
 import About from './about';
@@ -26,8 +25,8 @@ import {
   getControlFromLayout,
   getCurrentDataIndex,
   getCurrentDataInterval,
+  getData,
   getDraws,
-  getFileName,
   getSectionFromLayout,
   getSwapFromLayout,
   hasPresentation,
@@ -82,16 +81,34 @@ export default class Player extends PureComponent {
       screenshare: null,
     };
 
-    this.alternates = data[getFileName(files.data.alternates)];
-    this.captions = data[getFileName(files.data.captions)];
-    this.chat = data[getFileName(files.data.chat)];
-    this.cursor = data[getFileName(files.data.cursor)];
-    this.metadata = data[getFileName(files.data.metadata)];
-    this.notes = data[getFileName(files.data.notes)];
-    this.panzooms = data[getFileName(files.data.panzooms)];
-    this.screenshare = data[getFileName(files.data.screenshare)];
-    this.shapes = data[getFileName(files.data.shapes)];
-    this.talkers = data[getFileName(files.data.talkers)];
+    this.initData(data);
+
+    this.handlePlayerReady = this.handlePlayerReady.bind(this);
+    this.handleTimeUpdate = this.handleTimeUpdate.bind(this);
+  }
+
+  componentDidMount() {
+    this.initMonitor();
+    this.initShortcuts();
+  }
+
+  componentWillUnmount() {
+    if (this.shortcuts) {
+      this.shortcuts.destroy();
+    }
+  }
+
+  initData(data) {
+    this.alternates = getData(data, ID.ALTERNATES);
+    this.captions = getData(data, ID.CAPTIONS);
+    this.chat = getData(data, ID.CHAT);
+    this.cursor = getData(data, ID.CURSOR);
+    this.metadata = getData(data, ID.METADATA);
+    this.notes = getData(data, ID.NOTES);
+    this.panzooms = getData(data, ID.PANZOOMS);
+    this.screenshare = getData(data, ID.SCREENSHARE);
+    this.shapes = getData(data, ID.SHAPES);
+    this.talkers = getData(data, ID.TALKERS);
 
     this.canvases = this.shapes.canvases;
     this.slides = this.shapes.slides;
@@ -105,21 +122,7 @@ export default class Player extends PureComponent {
       screenshare: !isEmpty(this.screenshare),
     };
 
-    this.handlePlayerReady = this.handlePlayerReady.bind(this);
-    this.handleTimeUpdate = this.handleTimeUpdate.bind(this);
-
     logger.debug(ID.PLAYER, data);
-  }
-
-  componentDidMount() {
-    this.initMonitor();
-    this.initShortcuts();
-  }
-
-  componentWillUnmount() {
-    if (this.shortcuts) {
-      this.shortcuts.destroy();
-    }
   }
 
   handlePlayerReady(media, player) {
@@ -229,7 +232,14 @@ export default class Player extends PureComponent {
 
     if (!control || !controls.fullscreen) return null;
 
-    if (!isContentVisible(layout, swap)) return null;
+    const {
+      presentation,
+      screenshare,
+    } = this.content;
+
+    const single = !presentation && !screenshare;
+
+    if (!isContentVisible(layout, swap || single)) return null;
 
     const { intl } = this.props;
 
@@ -293,7 +303,14 @@ export default class Player extends PureComponent {
     const { intl } = this.props;
     const { swap } = this.state;
 
-    if (!isContentVisible(layout, swap)) return null;
+    const {
+      presentation,
+      screenshare,
+    } = this.content;
+
+    const single = !presentation && !screenshare;
+
+    if (!isContentVisible(layout, swap || single)) return null;
 
     return (
       <Talkers
@@ -350,7 +367,7 @@ export default class Player extends PureComponent {
     );
   }
 
-  renderMedia() {
+  renderMedia(single) {
     const {
       data,
       intl,
@@ -361,7 +378,7 @@ export default class Player extends PureComponent {
     const { media } = data;
 
     return (
-      <div className={cx('media', { 'swapped-media': swap })}>
+      <div className={cx('media', { 'swapped-media': swap || single })}>
         {this.renderTalkers(LAYOUT.MEDIA)}
         {this.renderFullscreenButton(LAYOUT.MEDIA)}
         <Video
@@ -484,7 +501,9 @@ export default class Player extends PureComponent {
     );
   }
 
-  renderContent() {
+  renderContent(single) {
+    if (single) return null;
+
     const {
       fullscreen,
       swap,
@@ -522,9 +541,17 @@ export default class Player extends PureComponent {
       section,
     } = this.state;
 
+    const {
+      presentation,
+      screenshare,
+    } = this.content;
+
+    const single = !presentation && !screenshare;
+
     const styles = {
       'fullscreen-content': fullscreen,
       'hidden-section': !section,
+      'single-content': single,
     };
 
     return (
@@ -534,9 +561,9 @@ export default class Player extends PureComponent {
         id={ID.PLAYER}
       >
         {this.renderTopBar()}
-        {this.renderMedia()}
+        {this.renderMedia(single)}
         {this.renderApplication()}
-        {this.renderContent()}
+        {this.renderContent(single)}
         {this.renderBottomBar()}
         {this.renderModal()}
       </div>

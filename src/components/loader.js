@@ -80,7 +80,7 @@ class Loader extends PureComponent {
       }
     }).then(value => {
       build(file, value).then(data => {
-        logger.debug(ID.LOADER, 'builded', file);
+        if (data) logger.debug(ID.LOADER, 'builded', file);
         this.data[getFileName(file)] = data;
         this.update();
       }).catch(error => this.setState({ error: config.error['BAD_REQUEST'] }));
