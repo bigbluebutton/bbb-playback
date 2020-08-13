@@ -21,7 +21,7 @@ $button-size: 2.75rem;
   .default {
     background-color: transparent;
     border: none;
-    color: var(--gray);
+    color: var(--button-default-font-color);
 
     &:focus {
       box-shadow: 0 0 0 $margin-extra-small;
@@ -31,7 +31,7 @@ $button-size: 2.75rem;
   .solid {
     background-color: var(--button-color);
     border: none;
-    color: var(--white);
+    color: var(--button-solid-font-color);
 
     &:focus {
       box-shadow: 0 0 0 $margin-extra-small var(--button-color);
@@ -41,7 +41,7 @@ $button-size: 2.75rem;
   .ghost {
     background-color: transparent;
     border: solid;
-    color: var(--gray);
+    color: var(--button-default-font-color);
 
     &:focus {
       box-shadow: 0 0 0 $margin-extra-small;
@@ -51,7 +51,7 @@ $button-size: 2.75rem;
   .disabled {
     background-color: var(--gray-light);
     border: none;
-    color: var(--white);
+    color: var(--button-solid-font-color);
     cursor: not-allowed;
   }
 }

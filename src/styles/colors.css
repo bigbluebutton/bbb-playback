@@ -19,8 +19,30 @@
   --white-dark: rgb(243, 246, 249);
   --white: rgb(255, 255, 255);
 
+  --body-background-color: var(--white-dark);
+
+  --loader-background-color: var(--white-dark);
+  --loading-dots-background-color: var(--gray);
+
+  --error-background-color: var(--white-dark);
+  --error-code-color: var(--gray);
+
   --button-color: var(--blue);
-  --button-box-shadow-color: rgba(15, 39, 33, .5);
+  --button-box-shadow-color: rgba(15, 112, 215, .5);
+  --button-default-font-color: var(--gray);
+  --button-solid-font-color: var(--white);
+
+  --thumbnail-active-background-color: var(--gray-lighter);
+  --thumbnail-font-color: var(--gray);
+
+  --media-background-color: var(--white);
+  --application-background-color: var(--white);
+
+  --top-bar-background-color: var(--white-dark);
+  --bottom-bar-background-color: var(--white-dark);
+
+  --top-content-background-color: var(--white-dark);
+  --bottom-content-background-color: var(--gray-lightest);
 
   --control-bar-color: var(--gray-dark);
 
@@ -28,17 +50,10 @@
 
   --marker-color: var(--red);
 
+  --modal-background-color: var(--white);
+  --modal-wrapper-background-color: rgba(6, 23, 42, .25);
+
   --title-color: var(--gray);
-
-  --modal-background-color: rgba(6, 23, 42, .25);
-
-  --body-background-color: var(--white-dark);
-  --section-background-color: var(--white);
-  --main-background-color: var(--white-dark);
-
-  --bottom-content-background-color: var(--gray-lightest);
-
-  --border-color: var(--gray-light);
 
   --avatar-zero-color: rgb(123, 31, 162);
   --avatar-one-color: rgb(106, 27, 154);
