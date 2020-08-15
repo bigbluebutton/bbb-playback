@@ -19,7 +19,7 @@ $cursor-size: .5rem;
   width: 100%;
 
   .cursor {
-    fill: var(--cursor-color);
+    fill: var(--cursor-fill-color);
     r: $cursor-size;
   }
 

@@ -112,9 +112,14 @@ export default class Thumbnails extends Component {
       const active = index === currentDataIndex;
       const onClick = () => this.handleOnClick(item.timestamp);
 
+      const styles = {
+        active,
+        interactive: true,
+      };
+
       return (
         <div
-          className={cx('thumbnail-wrapper', { active })}
+          className={cx('thumbnail-wrapper', styles)}
           onClick={onClick}
           onKeyPress={(e) => e.key === 'Enter' ? onClick() : null}
           ref={node => this.setRef(node, index)}

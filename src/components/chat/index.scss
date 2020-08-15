@@ -73,9 +73,9 @@
 
   .time {
     align-items: center;
-    color: var(--gray-light);
     display: flex;
     font-size: x-small;
+    opacity: .75;
 
     [dir="ltr"] & {
       margin: 0 0 0 $margin;
@@ -113,7 +113,7 @@
 
     &:focus,
     &:hover {
-      box-shadow: 0 0 0 $margin-small var(--gray-lighter);
+      box-shadow: 0 0 0 $margin-small var(--box-shadow-color);
     }
   }
 

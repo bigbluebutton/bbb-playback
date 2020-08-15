@@ -2,6 +2,7 @@
 
 .top-bar {
   background-color: var(--top-bar-background-color);
+  color: var(--top-bar-color);
   box-sizing: border-box;
   display: flex;
   grid-area: top-bar;
@@ -38,7 +39,6 @@
   }
 
   .title {
-    color: var(--title-color);
     overflow: hidden;
     padding: $padding-small;
     text-overflow: ellipsis;

@@ -13,7 +13,7 @@ $avatar-size: 2.25rem;
 
     .initials {
       align-items: center;
-      color: var(--white);
+      color: var(--avatar-color);
       display: flex;
       height: 100%;
       justify-content: center;
@@ -23,66 +23,66 @@ $avatar-size: 2.25rem;
   }
 
   .avatar-zero {
-    background-color: var(--avatar-zero-color);
+    background-color: var(--avatar-zero-background-color);
   }
 
   .avatar-one {
-    background-color: var(--avatar-one-color);
+    background-color: var(--avatar-one-background-color);
   }
 
   .avatar-two {
-    background-color: var(--avatar-two-color);
+    background-color: var(--avatar-two-background-color);
   }
 
   .avatar-three {
-    background-color: var(--avatar-three-color);
+    background-color: var(--avatar-three-background-color);
   }
 
   .avatar-four {
-    background-color: var(--avatar-four-color);
+    background-color: var(--avatar-four-background-color);
   }
 
   .avatar-five {
-    background-color: var(--avatar-five-color);
+    background-color: var(--avatar-five-background-color);
   }
 
   .avatar-six {
-    background-color: var(--avatar-six-color);
+    background-color: var(--avatar-six-background-color);
   }
 
   .avatar-seven {
-    background-color: var(--avatar-seven-color);
+    background-color: var(--avatar-seven-background-color);
   }
 
   .avatar-eight {
-    background-color: var(--avatar-eight-color);
+    background-color: var(--avatar-eight-background-color);
   }
 
   .avatar-nine {
-    background-color: var(--avatar-nine-color);
+    background-color: var(--avatar-nine-background-color);
   }
 
   .avatar-ten {
-    background-color: var(--avatar-ten-color);
+    background-color: var(--avatar-ten-background-color);
   }
 
   .avatar-eleven {
-    background-color: var(--avatar-eleven-color);
+    background-color: var(--avatar-eleven-background-color);
   }
 
   .avatar-twelve {
-    background-color: var(--avatar-twelve-color);
+    background-color: var(--avatar-twelve-background-color);
   }
 
   .avatar-thirteen {
-    background-color: var(--avatar-thirteen-color);
+    background-color: var(--avatar-thirteen-background-color);
   }
 
   .avatar-fourteen {
-    background-color: var(--avatar-fourteen-color);
+    background-color: var(--avatar-fourteen-background-color);
   }
 
   .avatar-fifteen {
-    background-color: var(--avatar-fifteen-color);
+    background-color: var(--avatar-fifteen-background-color);
   }
 }

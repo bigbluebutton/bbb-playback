@@ -17,6 +17,7 @@
 .modal {
   background-color: var(--modal-background-color);
   border-radius: $border-radius;
+  color: var(--modal-color);
   display: flex;
   flex-direction: column;
   max-width: $modal-max-width;
@@ -37,8 +38,8 @@
     padding: $padding-small;
 
     .button {
-      color: var(--gray-light);
       font-weight: var(--font-weight-semi-bold);
+      opacity: .75;
     }
   }
 

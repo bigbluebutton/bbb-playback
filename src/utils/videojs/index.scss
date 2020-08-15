@@ -7,7 +7,7 @@ $marker-size: .3rem;
 }
 
 .vjs-marker-item {
-  background-color: var(--marker-color);
+  background-color: var(--marker-background-color);
   height: 100%;
   position: absolute;
   width: $marker-size;

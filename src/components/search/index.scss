@@ -21,7 +21,7 @@
   .button-wrapper {
     .solid {
       &:focus {
-        box-shadow: 0 0 0 $margin-extra-small var(--button-box-shadow-color);
+        box-shadow: 0 0 0 $margin-small var(--box-shadow-color);
       }
     }
   }
@@ -33,10 +33,10 @@
 
   .result {
     box-sizing: border-box;
-    color: var(--gray-light);
     display: flex;
     font-size: small;
     justify-content: flex-end;
+    opacity: .75;
     padding: $padding 0 0 0;
     width: 100%;
   }

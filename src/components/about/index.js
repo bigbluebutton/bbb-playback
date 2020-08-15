@@ -21,9 +21,7 @@ export default class About extends PureComponent {
 
     return (
       <div className="item">
-        <div className="key">
-          <div className={`icon-${key}`} />
-        </div>
+        <div className={`icon-${key}`} />
         <div className="value">
           {element}
         </div>

@@ -30,9 +30,9 @@
   }
 
   .subtitle {
-    color: var(--gray-light);
     font-size: small;
     padding: 0 $padding-small;
+    opacity: .75;
 
     .item {
       box-sizing: border-box;
@@ -55,10 +55,6 @@
     font-weight: var(--font-weight-semi-bold);
     padding: $padding-small 0;
 
-    .key {
-      color: var(--gray);
-    }
-
     .value {
       box-sizing: border-box;
       padding: 0 $padding;
@@ -80,10 +76,10 @@
 
   .item {
     box-sizing: border-box;
-    color: var(--gray-light);
     display: flex;
     font-size: small;
     justify-content: flex-end;
+    opacity: .75;
     padding: $padding 0 0 0;
     width: 100%;
 

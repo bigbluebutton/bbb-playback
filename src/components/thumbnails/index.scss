@@ -11,10 +11,6 @@ $thumbnail-height: calc((#{$bottom-content-height} / 10) * 6);
   position: absolute;
   scroll-behavior: smooth;
   width: 100%;
-
-  .active {
-    background-color: var(--thumbnail-active-background-color);
-  }
 }
 
 .thumbnail-wrapper {
@@ -37,7 +33,6 @@ $thumbnail-height: calc((#{$bottom-content-height} / 10) * 6);
     }
 
     .thumbnail-index {
-      color: var(--thumbnail-font-color);
       display: flex;
       font-size: x-small;
       font-weight: var(--font-weight-bold);
@@ -45,14 +40,8 @@ $thumbnail-height: calc((#{$bottom-content-height} / 10) * 6);
     }
 
     .screenshare {
-      color: var(--thumbnail-font-color);
       font-size: xxx-large;
       font-weight: var(--font-weight-semi-bold);
     }
-  }
-
-  &:focus,
-  &:hover {
-    background-color: var(--thumbnail-active-background-color);
   }
 }

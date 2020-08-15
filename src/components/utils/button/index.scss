@@ -19,9 +19,9 @@ $button-size: 2.75rem;
   }
 
   .default {
-    background-color: transparent;
+    background-color: var(--button-default-background-color);
     border: none;
-    color: var(--button-default-font-color);
+    color: var(--button-default-color);
 
     &:focus {
       box-shadow: 0 0 0 $margin-extra-small;
@@ -29,19 +29,19 @@ $button-size: 2.75rem;
   }
 
   .solid {
-    background-color: var(--button-color);
+    background-color: var(--button-solid-background-color);
     border: none;
-    color: var(--button-solid-font-color);
+    color: var(--button-solid-color);
 
     &:focus {
-      box-shadow: 0 0 0 $margin-extra-small var(--button-color);
+      box-shadow: 0 0 0 $margin-extra-small var(--button-solid-background-color);
     }
   }
 
   .ghost {
-    background-color: transparent;
+    background-color: var(--button-ghost-background-color);
     border: solid;
-    color: var(--button-default-font-color);
+    color: var(--button-ghost-color);
 
     &:focus {
       box-shadow: 0 0 0 $margin-extra-small;
@@ -49,9 +49,9 @@ $button-size: 2.75rem;
   }
 
   .disabled {
-    background-color: var(--gray-light);
+    background-color: var(--button-disabled-background-color);
     border: none;
-    color: var(--button-solid-font-color);
+    color: var(--button-disabled-color);
     cursor: not-allowed;
   }
 }
