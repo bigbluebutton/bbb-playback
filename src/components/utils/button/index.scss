@@ -1,7 +1,7 @@
 @import 'src/styles/icons';
 @import 'src/styles/sizes';
 
-$button-size: 2.75rem;
+$button-size: 1.75rem;
 
 .button-wrapper {
   display: flex;
@@ -10,9 +10,8 @@ $button-size: 2.75rem;
   width: $button-size;
 
   .button {
-    border-radius: 50%;
     cursor: pointer;
-    font-size: large;
+    font-size: medium;
     height: 100%;
     outline: none;
     width: 100%;

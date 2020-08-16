@@ -180,7 +180,7 @@ $error-font-size: 5rem;
   .button-wrapper {
     .solid {
       &:focus {
-        box-shadow: 0 0 0 $margin-small var(--box-shadow-color);
+        box-shadow: 0 0 0 $margin-extra-small var(--box-shadow-color);
       }
     }
   }
@@ -222,7 +222,7 @@ $error-font-size: 5rem;
   .button-wrapper {
     .solid {
       &:focus {
-        box-shadow: 0 0 0 $margin-small var(--box-shadow-color);
+        box-shadow: 0 0 0 $margin-extra-small var(--box-shadow-color);
       }
     }
   }
@@ -248,6 +248,7 @@ $error-font-size: 5rem;
       display: flex;
       font-size: large;
       font-weight: var(--font-weight-semi-bold);
+      opacity: .75;
       outline: none;
       overflow: hidden;
 
@@ -262,7 +263,7 @@ $error-font-size: 5rem;
 
     .inactive {
       cursor: pointer;
-      opacity: .75;
+      opacity: .5;
     }
   }
 }

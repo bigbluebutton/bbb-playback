@@ -9,6 +9,7 @@
 }
 
 .search-body {
+  align-items: center;
   flex-direction: row;
   justify-content: space-evenly;
   overflow-x: hidden;
@@ -21,7 +22,7 @@
   .button-wrapper {
     .solid {
       &:focus {
-        box-shadow: 0 0 0 $margin-small var(--box-shadow-color);
+        box-shadow: 0 0 0 $margin-extra-small var(--box-shadow-color);
       }
     }
   }

@@ -78,7 +78,7 @@ export default class Search extends PureComponent {
           aria={intl.formatMessage(intlMessages.search)}
           disabled={disabled}
           handleOnClick={(event) => this.handleOnClick(event)}
-          icon="promote"
+          icon="search"
           type="solid"
         />
       </div>

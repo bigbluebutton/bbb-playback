@@ -33,13 +33,13 @@
   }
 
   .modal-control {
+    align-items: center;
     flex-direction: row-reverse;
     height: $modal-bar-height;
     padding: $padding-small;
 
     .button {
       font-weight: var(--font-weight-semi-bold);
-      opacity: .75;
     }
   }
 
