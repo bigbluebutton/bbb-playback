@@ -47,4 +47,8 @@
     flex-direction: column;
     padding: 0 $padding;
   }
+
+  .active {
+    background-color: var(--modal-active-background-color);
+  }
 }

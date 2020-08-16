@@ -1,5 +1,6 @@
 {
   "button.about.aria": "حول",
+  "button.clear.aria": "مسح البحث",
   "button.close.aria": "إغلاق مشروط",
   "button.fullscreen.aria": "محتوى ملء الشاشة",
   "button.restore.aria": "استعادة المحتوى",

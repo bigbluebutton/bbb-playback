@@ -1,5 +1,6 @@
 {
   "button.about.aria": "À propos",
+  "button.clear.aria": "Effacer la recherche",
   "button.close.aria": "Fermer modal",
   "button.fullscreen.aria": "Contenu plein écran",
   "button.restore.aria": "Restaurer le contenu",

@@ -394,41 +394,6 @@ const isActive = (time, timestamp, clear = -1) => {
   return visible && !cleared;
 };
 
-const isEmpty = data => {
-  const isArray = isValid('array', data);
-  const isString = isValid('string', data);
-  if (!isArray && !isString) return true;
-
-  const empty = data.length === 0;
-
-  return empty;
-};
-
-const isEnabled = (data, time) => {
-  if (isEmpty(data)) return false;
-
-  for (let index = 0; index < data.length; index++) {
-    const item = data[index];
-    if (hasProperty(item, 'timestamp') && hasProperty(item, 'clear')) {
-      const {
-        clear,
-        timestamp,
-      } = item;
-
-      // Check if it was activated and did not ended
-      if (isActive(time, timestamp, clear)) return true;
-
-      // Check if we are searching over the present time value
-      if (!isVisible(time, timestamp)) return false;
-    } else {
-      // Invalid item
-      return false;
-    }
-  }
-
-  return false;
-};
-
 const isContentVisible = (layout, swap) => {
   const {
     CONTENT,
@@ -469,6 +434,56 @@ const isCurrent = (data, index, time) => {
   }
 
   return current;
+};
+
+const isEmpty = data => {
+  const isArray = isValid('array', data);
+  const isString = isValid('string', data);
+  if (!isArray && !isString) return true;
+
+  const empty = data.length === 0;
+
+  return empty;
+};
+
+const isEnabled = (data, time) => {
+  if (isEmpty(data)) return false;
+
+  for (let index = 0; index < data.length; index++) {
+    const item = data[index];
+    if (hasProperty(item, 'timestamp') && hasProperty(item, 'clear')) {
+      const {
+        clear,
+        timestamp,
+      } = item;
+
+      // Check if it was activated and did not ended
+      if (isActive(time, timestamp, clear)) return true;
+
+      // Check if we are searching over the present time value
+      if (!isVisible(time, timestamp)) return false;
+    } else {
+      // Invalid item
+      return false;
+    }
+  }
+
+  return false;
+};
+
+const isEqual = (first, second, type) => {
+  let equal = false;
+
+  switch (type) {
+    case 'array':
+      if (first.length === second.length) {
+        equal = first.every((value, index) => value === second[index])
+      }
+
+      return equal;
+    default:
+      return equal;
+  }
 };
 
 const isValid = (type, data) => {
@@ -535,19 +550,15 @@ const parseTimeToSeconds = time => {
   return null;
 };
 
-const search = (text, data) => {
+const search = (text, thumbnails) => {
   const result = [];
-  const { thumbnails } = data;
 
   const value = text.toLowerCase();
-  thumbnails.forEach(thumbnail => {
-    const {
-      alt,
-      timestamp,
-    } = thumbnail;
+  thumbnails.forEach((thumbnail, index) => {
+    const { alt } = thumbnail;
 
     if (alt.toLowerCase().indexOf(value) !== -1) {
-      result.push(timestamp);
+      result.push(index);
     }
   });
 
@@ -625,6 +636,7 @@ export {
   isContentVisible,
   isEmpty,
   isEnabled,
+  isEqual,
   isValid,
   parseTimeToSeconds,
   search,

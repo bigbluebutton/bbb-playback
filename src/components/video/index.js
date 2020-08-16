@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import { defineMessages } from 'react-intl';
 import videojs from 'video.js/core.es.js';
-import 'utils/videojs';
 import { video as config } from 'config';
 import {
   ID,
@@ -67,9 +66,6 @@ export default class Video extends PureComponent {
       fill: true,
       inactivityTimeout: 0,
       playbackRates: config.rates,
-      plugins: {
-        marker: {},
-      },
       sources,
       tracks,
     };

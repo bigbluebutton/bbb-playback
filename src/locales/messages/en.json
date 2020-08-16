@@ -1,5 +1,6 @@
 {
   "button.about.aria": "About",
+  "button.clear.aria": "Clear search",
   "button.close.aria": "Close modal",
   "button.fullscreen.aria": "Fullscreen content",
   "button.restore.aria": "Restore content",
