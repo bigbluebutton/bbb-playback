@@ -4,7 +4,7 @@
     "scroll": true
   },
   "controls": {
-    "about": false,
+    "about": true,
     "fullscreen": true,
     "search": false,
     "section": true,

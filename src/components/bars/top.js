@@ -1,7 +1,10 @@
 import React, { PureComponent } from 'react';
-import { defineMessages } from 'react-intl';
+import {
+  defineMessages,
+  FormattedDate,
+} from 'react-intl';
+import cx from 'classnames';
 import { controls as config } from 'config';
-import { FormattedDate } from 'react-intl';
 import Button from 'components/utils/button';
 import './index.scss';
 
@@ -25,22 +28,9 @@ const intlMessages = defineMessages({
 });
 
 export default class TopBar extends PureComponent {
-  renderAboutButton() {
-    const {
-      intl,
-      toggleAbout,
-    } = this.props;
+  renderSearchButton(enabled) {
+    if (!enabled) return null;
 
-    return (
-      <Button
-        aria={intl.formatMessage(intlMessages.about)}
-        handleOnClick={toggleAbout}
-        icon="arrow-down"
-      />
-    );
-  }
-
-  renderSearchButton() {
     const {
       intl,
       toggleSearch,
@@ -55,7 +45,9 @@ export default class TopBar extends PureComponent {
     );
   }
 
-  renderSectionButton() {
+  renderSectionButton(enabled) {
+    if (!enabled) return null;
+
     const {
       intl,
       section,
@@ -71,7 +63,9 @@ export default class TopBar extends PureComponent {
     );
   }
 
-  renderSwapButton() {
+  renderSwapButton(enabled) {
+    if (!enabled) return null;
+
     const {
       intl,
       toggleSwap,
@@ -86,13 +80,32 @@ export default class TopBar extends PureComponent {
     );
   }
 
-  renderTitle() {
+  renderTitle(interactive) {
     const {
       name,
       start,
     } = this.props;
 
     const date = <FormattedDate value={new Date(start)} />;
+
+    if (interactive) {
+      const {
+        intl,
+        toggleAbout,
+      } = this.props;
+
+      return (
+        <span
+          aria={intl.formatMessage(intlMessages.about)}
+          className={cx('title', { interactive })}
+          onClick={toggleAbout}
+          onKeyPress={(e) => e.key === 'Enter' ? toggleAbout() : null}
+          tabIndex="0"
+        >
+          {name} - {date}
+        </span>
+      );
+    }
 
     return (
       <span className="title">
@@ -124,15 +137,14 @@ export default class TopBar extends PureComponent {
     return (
       <div className="top-bar">
         <div className="left">
-          {control && section ? this.renderSectionButton() : null}
+          {this.renderSectionButton(control && section)}
         </div>
         <div className="center">
-          {this.renderTitle()}
-          {control && about ? this.renderAboutButton() : null}
+          {this.renderTitle(control && about)}
         </div>
         <div className="right">
-          {control && search && !single ? this.renderSearchButton() : null}
-          {control && swap && !single ? this.renderSwapButton() : null}
+          {this.renderSearchButton(control && search && !single)}
+          {this.renderSwapButton(control && swap && !single)}
         </div>
       </div>
     );

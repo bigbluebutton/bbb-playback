@@ -35,6 +35,7 @@
   --application-background-color: var(--white);
   --application-color: var(--gray-dark);
 
+  --top-bar-active-background-color: var(--gray-lightest);
   --top-bar-background-color: var(--white-dark);
   --top-bar-color: var(--gray);
 
@@ -61,7 +62,7 @@
   --button-solid-color: var(--white);
 
   --modal-background-color: var(--white);
-  --modal-color: var(--gray);
+  --modal-color: var(--gray-dark);
   --modal-wrapper-background-color: rgba(6, 23, 42, .25);
 
   --control-bar-background-color: var(--gray-dark);

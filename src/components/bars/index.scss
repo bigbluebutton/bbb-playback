@@ -44,6 +44,16 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
+  .interactive {
+    cursor: pointer;
+    outline: none;
+
+    &:focus,
+    &:hover {
+      background-color: var(--top-bar-active-background-color);
+    }
+  }
 }
 
 .bottom-bar {
