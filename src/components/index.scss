@@ -162,6 +162,9 @@ $error-font-size: 5rem;
     }
 
     .interactive {
+      cursor: pointer;
+      outline: none;
+
       &:focus,
       &:hover {
         background-color:var(--bottom-content-active-background-color);

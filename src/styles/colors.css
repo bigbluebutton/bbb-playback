@@ -61,6 +61,7 @@
   --button-solid-background-color: var(--blue);
   --button-solid-color: var(--white);
 
+  --modal-active-background-color: var(--gray-lightest);
   --modal-background-color: var(--white);
   --modal-color: var(--gray-dark);
   --modal-wrapper-background-color: rgba(6, 23, 42, .25);
@@ -68,8 +69,6 @@
   --control-bar-background-color: var(--gray-dark);
 
   --cursor-fill-color: var(--red);
-
-  --marker-background-color: var(--red);
 
   --avatar-color: var(--white);
   --avatar-zero-background-color: rgb(123, 31, 162);

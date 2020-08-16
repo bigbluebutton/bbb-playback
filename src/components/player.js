@@ -32,6 +32,7 @@ import {
   hasPresentation,
   isContentVisible,
   isEmpty,
+  isEqual,
   seek,
   skip,
 } from 'utils/data';
@@ -70,6 +71,7 @@ export default class Player extends PureComponent {
       control: getControlFromLayout(layout),
       fullscreen: false,
       modal: '',
+      search: [],
       section: getSectionFromLayout(layout),
       swap: getSwapFromLayout(layout),
       thumbnails: true,
@@ -84,6 +86,7 @@ export default class Player extends PureComponent {
     this.initData(data);
 
     this.handlePlayerReady = this.handlePlayerReady.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
     this.handleTimeUpdate = this.handleTimeUpdate.bind(this);
   }
 
@@ -141,6 +144,14 @@ export default class Player extends PureComponent {
 
     if (this.player.video && this.player.screenshare) {
       this.synchronizer = new Synchronizer(this.player.video, this.player.screenshare);
+    }
+  }
+
+  handleSearch(value) {
+    const { search } = this.state;
+
+    if (!isEqual(search, value, 'array')) {
+      this.setState({ search: value });
     }
   }
 
@@ -281,17 +292,13 @@ export default class Player extends PureComponent {
           />
         );
       case ID.SEARCH:
-        const data = { thumbnails: this.thumbnails };
-        const { video } = this.player;
-
-        if (!video) return null;
-
         return (
           <Search
-            data={data}
             intl={intl}
+            handleSearch={this.handleSearch}
+            metadata={this.metadata}
+            thumbnails={this.thumbnails}
             toggleModal={() => this.toggleModal(ID.SEARCH)}
-            video={video}
           />
         );
       default:
@@ -322,7 +329,12 @@ export default class Player extends PureComponent {
 
   renderThumbnails() {
     const { intl } = this.props;
-    const { time } = this.state;
+
+    const {
+      search,
+      time,
+    } = this.state;
+
     const { video } = this.player;
 
     const currentDataIndex = getCurrentDataIndex(this.thumbnails, time);
@@ -330,9 +342,12 @@ export default class Player extends PureComponent {
     return (
       <Thumbnails
         currentDataIndex={currentDataIndex}
+        handleSearch={this.handleSearch}
+        interactive={true}
         intl={intl}
         metadata={this.metadata}
         player={video}
+        search={search}
         thumbnails={this.thumbnails}
       />
     );
@@ -477,7 +492,6 @@ export default class Player extends PureComponent {
     )
   }
 
-
   renderScreenshare(active) {
     const { screenshare } = this.content;
 
@@ -506,13 +520,14 @@ export default class Player extends PureComponent {
 
     const {
       fullscreen,
+      search,
       swap,
       thumbnails,
       time,
     } = this.state;
 
     const content = getActiveContent(this.screenshare, time);
-    const bottom = thumbnails && !fullscreen && !swap;
+    const bottom = thumbnails && !fullscreen && (!swap || !isEmpty(search));
 
     return (
       <div className={cx('content', { 'swapped-content': swap })}>

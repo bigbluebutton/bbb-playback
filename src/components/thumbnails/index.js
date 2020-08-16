@@ -2,10 +2,13 @@ import React, { Component } from 'react';
 import cx from 'classnames';
 import { defineMessages } from 'react-intl';
 import { thumbnails as config } from 'config';
+import Button from 'components/utils/button';
 import {
   ID,
   buildFileURL,
   getScrollLeft,
+  isEmpty,
+  isEqual,
 } from 'utils/data';
 import './index.scss';
 
@@ -15,6 +18,10 @@ const intlMessages = defineMessages({
   aria: {
     id: 'player.thumbnails.wrapper.aria',
     description: 'Aria label for the thumbnails wrapper',
+  },
+  clear: {
+    id: 'button.clear.aria',
+    description: 'Aria label for the clear button',
   },
 });
 
@@ -32,9 +39,16 @@ export default class Thumbnails extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    const { currentDataIndex } = this.props;
+    const {
+      currentDataIndex,
+      search,
+    } = this.props;
 
     if (currentDataIndex !== nextProps.currentDataIndex) {
+      return true;
+    }
+
+    if (!isEqual(search, nextProps.search)) {
       return true;
     }
 
@@ -77,6 +91,19 @@ export default class Thumbnails extends Component {
     }
   }
 
+  isFiltered(index) {
+    const {
+      interactive,
+      search,
+    } = this.props;
+
+    if (interactive) {
+      return !isEmpty(search) && !search.includes(index);
+    } else {
+      return !search.includes(index);
+    }
+  }
+
   renderImage(item) {
     const {
       alt,
@@ -102,27 +129,16 @@ export default class Thumbnails extends Component {
     );
   }
 
-  renderThumbnails() {
+  renderThumbnail(item, index) {
     const {
       currentDataIndex,
-      thumbnails,
+      interactive,
     } = this.props;
 
-    return thumbnails.map((item, index) => {
-      const active = index === currentDataIndex;
-      const onClick = () => this.handleOnClick(item.timestamp);
-
-      const styles = {
-        active,
-        interactive: true,
-      };
-
+    if (!interactive) {
       return (
         <div
-          className={cx('thumbnail-wrapper', styles)}
-          onClick={onClick}
-          onKeyPress={(e) => e.key === 'Enter' ? onClick() : null}
-          ref={node => this.setRef(node, index)}
+          className="thumbnail-wrapper"
           tabIndex="0"
         >
           <div className="thumbnail">
@@ -133,7 +149,68 @@ export default class Thumbnails extends Component {
           </div>
         </div>
       );
-    });
+    }
+
+    const active = index === currentDataIndex;
+    const onClick = () => this.handleOnClick(item.timestamp);
+
+    const styles = {
+      active,
+      interactive,
+    };
+
+    return (
+      <div
+        className={cx('thumbnail-wrapper', styles)}
+        onClick={onClick}
+        onKeyPress={(e) => e.key === 'Enter' ? onClick() : null}
+        ref={node => this.setRef(node, index)}
+        tabIndex="0"
+      >
+        <div className="thumbnail">
+          {this.renderImage(item)}
+          <div className="thumbnail-index">
+            {index + 1}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderThumbnails() {
+    const { thumbnails } = this.props;
+
+    return thumbnails.reduce((result, item, index) => {
+      if (!this.isFiltered(index)) {
+        result.push(this.renderThumbnail(item, index));
+      }
+
+      return result;
+    }, []);
+  }
+
+  renderClearButton() {
+    const { interactive } = this.props;
+    if (!interactive) return null;
+
+    const { search } = this.props;
+    if (isEmpty(search)) return null;
+
+    const {
+      handleSearch,
+      intl,
+    } = this.props;
+
+    return (
+      <div className="clear-button">
+        <Button
+          aria={intl.formatMessage(intlMessages.clear)}
+          handleOnClick={() => handleSearch ? handleSearch([]) : null}
+          icon="close"
+          type="solid"
+        />
+      </div>
+    );
   }
 
   render() {
@@ -147,6 +224,7 @@ export default class Thumbnails extends Component {
         tabIndex="0"
       >
         {this.renderThumbnails()}
+        {this.renderClearButton()}
       </div>
     );
   }

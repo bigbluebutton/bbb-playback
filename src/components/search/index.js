@@ -1,12 +1,16 @@
 import React, { PureComponent } from 'react';
 import { defineMessages } from 'react-intl';
+import cx from 'classnames';
+import Thumbnails from 'components/thumbnails';
+import { search as config } from 'config';
 import Button from 'components/utils/button';
 import Modal from 'components/utils/modal';
-import { search } from 'utils/data';
+import {
+  isEmpty,
+  isEqual,
+  search,
+} from 'utils/data';
 import './index.scss';
-
-const MIN_LENGTH = 3;
-const MAX_LENGTH = 32;
 
 const intlMessages = defineMessages({
   search: {
@@ -21,10 +25,8 @@ export default class Search extends PureComponent {
 
     this.state = {
       disabled: true,
-      result: 0,
+      search: [],
     };
-
-    this.search = [];
   }
 
   handleOnChange(event) {
@@ -32,17 +34,17 @@ export default class Search extends PureComponent {
 
     const { value } = event.target;
     if (value) {
-      const disabled = value.length < MIN_LENGTH;
+      const disabled = value.length < config.length.min;
       if (!disabled) {
-        const { data } = this.props;
-        this.search = search(value, data);
+        const { thumbnails } = this.props;
+        const result = search(value, thumbnails);
 
-        if (this.state.result !== this.search.length) {
-          this.setState({ result: this.search.length });
+        if (!isEqual(this.state.search, result, 'array')) {
+          this.setState({ search: result });
         }
       } else {
-        if (this.state.result !== 0) {
-          this.setState({ result: 0 });
+        if (!isEmpty(this.state.search)) {
+          this.setState({ search: [] });
         }
       }
 
@@ -54,26 +56,55 @@ export default class Search extends PureComponent {
 
   handleOnClick(event) {
     const {
+      handleSearch,
       toggleModal,
-      video,
     } = this.props;
 
-    video.marker().add(this.search);
+    const { search } = this.state;
+
+    handleSearch(search);
     toggleModal();
   }
 
   renderBody() {
-    const { intl } = this.props;
-    const { disabled } = this.state;
+    const {
+      intl,
+      metadata,
+      thumbnails,
+    } = this.props;
+
+    const { search } = this.state;
 
     return (
       <div className="search-body">
         <input
-          maxLength={MAX_LENGTH}
-          minLength={MIN_LENGTH}
+          maxLength={config.length.max}
+          minLength={config.length.min}
           onChange={(event) => this.handleOnChange(event)}
           type="text"
         />
+        <div className={cx('result', { active: true })}>
+          <Thumbnails
+            currentDataIndex={0}
+            handleSearch={null}
+            interactive={false}
+            intl={intl}
+            metadata={metadata}
+            player={null}
+            search={search}
+            thumbnails={thumbnails}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  renderFooter() {
+    const { intl } = this.props;
+    const { disabled } = this.state;
+
+    return (
+      <div className="search-footer">
         <Button
           aria={intl.formatMessage(intlMessages.search)}
           disabled={disabled}
@@ -81,18 +112,6 @@ export default class Search extends PureComponent {
           icon="search"
           type="solid"
         />
-      </div>
-    );
-  }
-
-  renderFooter() {
-    const { result } = this.state;
-
-    return (
-      <div className="search-footer">
-        <div className="result">
-          {result}
-        </div>
       </div>
     );
   }

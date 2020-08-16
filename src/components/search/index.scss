@@ -1,6 +1,8 @@
 @import 'src/styles/icons';
 @import 'src/styles/sizes';
 
+$result-height: $bottom-content-height;
+
 .search-body,
 .search-footer {
   box-sizing: border-box;
@@ -10,14 +12,31 @@
 
 .search-body {
   align-items: center;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-evenly;
   overflow-x: hidden;
-  padding: $padding 0;
+  padding: 0 $padding;
 
-  input {
+  input[type="text"] {
+    box-sizing: border-box;
+    font-size: large;
     overflow: hidden;
+    width: 100%;
   }
+
+  .result {
+    box-sizing: border-box;
+    height: $result-height;
+    margin: $margin 0 0 0;
+    position: relative;
+    width: 100%;
+  }
+}
+
+.search-footer {
+  align-items: center;
+  justify-content: flex-end;
+  padding: $padding 0;
 
   .button-wrapper {
     .solid {
@@ -25,20 +44,5 @@
         box-shadow: 0 0 0 $margin-extra-small var(--box-shadow-color);
       }
     }
-  }
-}
-
-.search-footer {
-  align-items: center;
-  padding: $padding;
-
-  .result {
-    box-sizing: border-box;
-    display: flex;
-    font-size: small;
-    justify-content: flex-end;
-    opacity: .75;
-    padding: $padding 0 0 0;
-    width: 100%;
   }
 }

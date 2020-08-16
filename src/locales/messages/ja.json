@@ -1,5 +1,6 @@
 {
   "button.about.aria": "約",
+  "button.clear.aria": "検索をクリア",
   "button.close.aria": "モーダルを閉じる",
   "button.fullscreen.aria": "全画面コンテンツ",
   "button.restore.aria": "コンテンツを復元",

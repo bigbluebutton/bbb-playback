@@ -1,5 +1,6 @@
 {
   "button.about.aria": "Около",
+  "button.clear.aria": "Очистить поиск",
   "button.close.aria": "Закрыть модальное",
   "button.fullscreen.aria": "Полноэкранный контент",
   "button.restore.aria": "Восстановить контент",

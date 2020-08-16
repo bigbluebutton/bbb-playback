@@ -6,7 +6,7 @@
   "controls": {
     "about": true,
     "fullscreen": true,
-    "search": false,
+    "search": true,
     "section": true,
     "swap": true,
     "thumbnails": true
@@ -51,6 +51,12 @@
     "enabled": false,
     "interval": 60,
     "url": "/monitor"
+  },
+  "search": {
+    "length": {
+      "min": 3,
+      "max": 32
+    }
   },
   "shortcuts": {
     "enabled": true,
