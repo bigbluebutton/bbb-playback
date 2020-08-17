@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 BBB_PLAYBACK_HOMEPAGE=playback/presentation/2.3
 BBB_PLAYBACK=/var/bigbluebutton/$BBB_PLAYBACK_HOMEPAGE
 

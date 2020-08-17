@@ -7,13 +7,13 @@ $avatar-size: 2.25rem;
 
   .avatar {
     border-radius: 50%;
+    color: var(--avatar-color);
     height: $avatar-size;
     text-align: center;
     width: $avatar-size;
 
     .initials {
       align-items: center;
-      color: var(--avatar-color);
       display: flex;
       height: 100%;
       justify-content: center;

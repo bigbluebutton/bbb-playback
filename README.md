@@ -48,7 +48,7 @@ https://<domain>/playback/presentation/2.3/<recordId>
 
 - chat:
   - `scroll`: automatic scroll [`true`|`false`]
-  - `align`: scroll align [`top`|`center`|`bottom`]
+  - `align`: scroll align [`top`|`middle`|`bottom`]
 
 - controls:
   - `about`
@@ -76,12 +76,13 @@ https://<domain>/playback/presentation/2.3/<recordId>
     - `seconds`: 15
 
 - styles: custom styles
-  - `url`: css files host
+  - `default`: default style
+  - `url`: styles host
   - `valid`: valid style names
 
 - thumbnails:
   - `scroll`: automatic scroll [`true`|`false`]
-  - `align`: scroll align [`top`|`center`|`bottom`]
+  - `align`: scroll align [`left`|`center`|`right`]
 
 - video: primary media configuration
   - `fps`: frames per second

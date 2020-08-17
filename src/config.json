@@ -75,6 +75,7 @@
     }
   },
   "styles": {
+    "default": null,
     "url": "HOST",
     "valid": []
   },

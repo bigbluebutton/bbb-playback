@@ -319,14 +319,12 @@ const getScrollTop = (firstNode, currentNode, align) => {
 
 const getStyle = () => {
   const params = new URLSearchParams(window.location.search);
+  const { styles } = config;
+  const { url } = styles;
 
-  let style;
+  let style = styles.default ? `${url}/${styles.default}.css` : null;
   if (params && params.has('s')) {
-    const {
-      url,
-      valid,
-    } = config.styles;
-
+    const { valid } = styles;
     const value = params.get('s');
     if (valid.includes(value)) {
       style = `${url}/${value}.css`;
