@@ -1,15 +1,35 @@
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
 import './index.scss';
 
+const DEFAULT = 'default';
 const GHOST = 'ghost';
 const SOLID = 'solid';
 
-export default class Button extends PureComponent {
+const propTypes = {
+  active: PropTypes.bool,
+  aria: PropTypes.string,
+  circle: PropTypes.bool,
+  disabled: PropTypes.bool,
+  handleOnClick: PropTypes.func,
+  icon: PropTypes.string,
+  type: PropTypes.string,
+};
+
+const defaultProps = {
+  active: false,
+  circle: false,
+  disabled: false,
+  type: DEFAULT,
+};
+
+class Button extends PureComponent {
   render() {
     const {
       active,
       aria,
+      circle,
       disabled,
       handleOnClick,
       icon,
@@ -25,6 +45,7 @@ export default class Button extends PureComponent {
       default: !ghost && !solid && !disabled,
       ghost: ghost && !active && !disabled,
       solid: (solid || active) && !disabled,
+      circle,
       disabled,
     };
 
@@ -42,3 +63,8 @@ export default class Button extends PureComponent {
     );
   };
 }
+
+Button.propTypes = propTypes;
+Button.defaultProps = defaultProps;
+
+export default Button;

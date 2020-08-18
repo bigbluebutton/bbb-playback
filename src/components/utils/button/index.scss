@@ -1,7 +1,7 @@
 @import 'src/styles/icons';
 @import 'src/styles/sizes';
 
-$button-size: 1.75rem;
+$button-size: 2rem;
 
 .button-wrapper {
   display: flex;
@@ -45,6 +45,10 @@ $button-size: 1.75rem;
     &:focus {
       box-shadow: 0 0 0 $margin-extra-small;
     }
+  }
+
+  .circle {
+    border-radius: 50%;
   }
 
   .disabled {

@@ -39,6 +39,7 @@ export default class TopBar extends PureComponent {
     return (
       <Button
         aria={intl.formatMessage(intlMessages.search)}
+        circle
         handleOnClick={toggleSearch}
         icon="search"
       />
@@ -57,6 +58,7 @@ export default class TopBar extends PureComponent {
     return (
       <Button
         aria={intl.formatMessage(intlMessages.section)}
+        circle
         handleOnClick={toggleSection}
         icon={section ? 'arrow-left' : 'arrow-right'}
       />
@@ -74,6 +76,7 @@ export default class TopBar extends PureComponent {
     return (
       <Button
         aria={intl.formatMessage(intlMessages.swap)}
+        circle
         handleOnClick={toggleSwap}
         icon="swap"
       />

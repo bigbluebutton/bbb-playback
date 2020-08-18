@@ -24,6 +24,7 @@ export default class More extends PureComponent {
           <div className="modal-control">
             <Button
               aria={intl.formatMessage(intlMessages.close)}
+              circle
               handleOnClick={onClose}
               icon="close"
             />
