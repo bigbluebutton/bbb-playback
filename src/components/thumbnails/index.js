@@ -120,10 +120,12 @@ export default class Thumbnails extends Component {
       );
     }
 
+    const logo = src.includes('logo');
+
     return (
       <img
         alt={alt}
-        className="thumbnail-image"
+        className={cx('thumbnail-image', { logo })}
         src={buildFileURL(this.recordId, src)}
       />
     );
