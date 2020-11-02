@@ -167,9 +167,11 @@ it('gets file type', () => {
   const json = 'name.json'
   expect(getFileType(json)).toEqual('json');
   const svg = 'name.svg';
-  expect(getFileType(svg)).toEqual('text');
+  expect(getFileType(svg)).toEqual('svg');
   const xml = 'name.xml';
-  expect(getFileType(xml)).toEqual('text');
+  expect(getFileType(xml)).toEqual('xml');
+  const html = 'name.html';
+  expect(getFileType(html)).toEqual('html');
 });
 
 it('gets record id', () => {

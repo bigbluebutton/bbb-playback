@@ -68,7 +68,11 @@ class Loader extends PureComponent {
         switch (fileType) {
           case 'json':
             return response.json();
-          case 'text':
+          case 'html':
+            return response.text();
+          case 'svg':
+            return response.text();
+          case 'xml':
             return response.text();
           default:
             this.setState({ error: config.error['BAD_REQUEST'] });

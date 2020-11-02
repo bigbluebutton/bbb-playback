@@ -458,6 +458,7 @@ export default class Player extends PureComponent {
       <div className="application">
         <div className="application-control">
           {this.renderApplicationIcon(ID.CHAT)}
+          {this.renderApplicationIcon(ID.NOTES)}
         </div>
         {this.renderApplicationContent()}
       </div>

@@ -241,6 +241,7 @@ $error-font-size: 5rem;
   width: 100%;
 
   .application-control {
+    background-color: var(--application-control-background-color);
     box-sizing: border-box;
     display: flex;
     flex-direction: row-reverse;

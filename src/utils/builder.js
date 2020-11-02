@@ -105,20 +105,16 @@ const buildMetadata = result => {
   return data;
 };
 
-// TODO
 const buildNotes = result => {
   if (!result) return '';
 
+  // Extract the notes' body
+  const regex = /<body>\n.*\n<\/body>/g;
+  const match = result.match(regex);
+
   let data = '';
-  for (let property in result) {
-    if (hasProperty(result, property)) {
-      const prop = result[property];
-      if (hasProperty(prop, 'atext')) {
-        const { text } = prop['atext'];
-        if (text) data = text;
-        break;
-      }
-    }
+  if (!isEmpty(match)) {
+    data = match.shift();
   }
 
   return data;
@@ -457,14 +453,21 @@ const build = (filename, value) => {
         case config.data.captions:
           data = buildCaptions(value);
           break;
-        case config.data.notes:
-          data = buildNotes(value);
-          break;
         case config.data.talkers:
           data = buildTalkers(value);
           break;
         default:
           logger.debug('unhandled', 'json', filename);
+          reject(filename);
+      }
+      resolve(data);
+    } else if (fileType === 'html') {
+      switch (filename) {
+        case config.data.notes:
+          data = buildNotes(value);
+          break;
+        default:
+          logger.debug('unhandled', 'html', filename);
           reject(filename);
       }
       resolve(data);

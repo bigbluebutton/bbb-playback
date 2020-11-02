@@ -34,6 +34,7 @@
 
   --application-background-color: var(--white);
   --application-color: var(--gray-dark);
+  --application-control-background-color: var(--white-dark);
 
   --top-bar-active-background-color: var(--gray-lightest);
   --top-bar-background-color: var(--white-dark);

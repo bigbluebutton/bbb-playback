@@ -180,7 +180,7 @@ const getDraws = (index, slides, canvases) => {
 
 const getFileName = file => file.split('.').shift();
 
-const getFileType = file => config.files.type[file.split('.').pop()];
+const getFileType = file => file.split('.').pop();
 
 const getLayout = location => {
   if (location) {

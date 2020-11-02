@@ -25,7 +25,7 @@ export default class Notes extends PureComponent {
         tabIndex="0"
       >
         <div className="notes">
-          {notes}
+          <div dangerouslySetInnerHTML={{ __html: notes }} />
         </div>
       </div>
     );

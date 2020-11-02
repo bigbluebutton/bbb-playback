@@ -31,16 +31,11 @@
       "chat": "slides_new.xml",
       "cursor": "cursor.xml",
       "metadata": "metadata.xml",
-      "notes": "notes.json",
+      "notes": "notes.html",
       "panzooms": "panzooms.xml",
       "screenshare": "deskshare.xml",
       "shapes": "shapes.svg",
       "talkers": "talkers.json"
-    },
-    "type": {
-      "json": "json",
-      "svg": "text",
-      "xml": "text"
     }
   },
   "medias": [
