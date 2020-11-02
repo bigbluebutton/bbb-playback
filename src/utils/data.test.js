@@ -246,7 +246,7 @@ it('gets the vertical offset of a scrollable list', () => {
 
   // TODO: Add more tests
   expect(getScrollTop(firstNode, currentNode, 'top')).toEqual(100);
-  expect(getScrollTop(firstNode, currentNode, 'center')).toEqual(55);
+  expect(getScrollTop(firstNode, currentNode, 'middle')).toEqual(55);
   expect(getScrollTop(firstNode, currentNode, 'bottom')).toEqual(10);
 });
 
