@@ -390,33 +390,31 @@ it('parses time query to seconds', () => {
 });
 
 it('searches text in data collection', () => {
-  const data = {
-    thumbnails: [
-      {
-        alt: 'some text',
-        timestamp: 1.0,
-      },
-      {
-        alt: 'SOME TEXT',
-        timestamp: 2.0,
-      },
-      {
-        alt: 'text',
-        timestamp: 3.0,
-      },
-      {
-        alt: 'TEXT',
-        timestamp: 4.0,
-      },
-    ],
-  }
+  const thumbnails = [
+    {
+      alt: 'some text',
+      timestamp: 1.0,
+    },
+    {
+      alt: 'SOME TEXT',
+      timestamp: 2.0,
+    },
+    {
+      alt: 'text',
+      timestamp: 3.0,
+    },
+    {
+      alt: 'TEXT',
+      timestamp: 4.0,
+    },
+  ];
 
   // Match
-  expect(search('some', data)).toEqual([ 1.0, 2.0 ]);
-  expect(search('SOME', data)).toEqual([ 1.0, 2.0 ]);
-  expect(search('text', data)).toEqual([ 1.0, 2.0, 3.0, 4.0 ]);
-  expect(search('TEXT', data)).toEqual([ 1.0, 2.0, 3.0, 4.0 ]);
+  expect(search('some', thumbnails)).toEqual([ 0, 1 ]);
+  expect(search('SOME', thumbnails)).toEqual([ 0, 1 ]);
+  expect(search('text', thumbnails)).toEqual([ 0, 1, 2, 3 ]);
+  expect(search('TEXT', thumbnails)).toEqual([ 0, 1, 2, 3 ]);
 
   // Miss
-  expect(search('other', data)).toEqual([]);
+  expect(search('other', thumbnails)).toEqual([]);
 });
