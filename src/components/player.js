@@ -521,14 +521,13 @@ export default class Player extends PureComponent {
 
     const {
       fullscreen,
-      search,
       swap,
       thumbnails,
       time,
     } = this.state;
 
     const content = getActiveContent(this.screenshare, time);
-    const bottom = thumbnails && !fullscreen && (!swap || !isEmpty(search));
+    const bottom = thumbnails && !fullscreen;
 
     return (
       <div className={cx('content', { 'swapped-content': swap })}>
