@@ -62,6 +62,25 @@ const getActiveContent = (screenshare, time) => {
   return content;
 };
 
+const getContentFromData = data => {
+  const captions = getData(data, ID.CAPTIONS);
+  const chat = getData(data, ID.CHAT);
+  const notes = getData(data, ID.NOTES);
+  const screenshare = getData(data, ID.SCREENSHARE);
+  const shapes = getData(data, ID.SHAPES);
+  const slides = shapes.slides;
+
+  const content = {
+    captions: !isEmpty(captions),
+    chat: !isEmpty(chat),
+    notes: !isEmpty(notes),
+    presentation: hasPresentation(slides),
+    screenshare: !isEmpty(screenshare),
+  };
+
+  return content;
+};
+
 const getControlFromLayout = layout => {
   const { DISABLED } = LAYOUT;
   let control = true;
@@ -612,6 +631,7 @@ export {
   buildFileURL,
   getAvatarStyle,
   getActiveContent,
+  getContentFromData,
   getControlFromLayout,
   getCurrentDataIndex,
   getCurrentDataInterval,

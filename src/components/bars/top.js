@@ -119,8 +119,8 @@ export default class TopBar extends PureComponent {
 
   render() {
     const {
-      content,
       control,
+      single,
     } = this.props;
 
     const {
@@ -129,13 +129,6 @@ export default class TopBar extends PureComponent {
       section,
       swap,
     } = config;
-
-    const {
-      presentation,
-      screenshare,
-    } = content;
-
-    const single = !presentation && !screenshare;
 
     return (
       <div className="top-bar">

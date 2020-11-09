@@ -1,10 +1,7 @@
 import React, { PureComponent } from 'react';
 import cx from 'classnames';
 import { defineMessages } from 'react-intl';
-import {
-  controls,
-  shortcuts,
-} from 'config';
+import { shortcuts } from 'config';
 import About from './about';
 import Chat from './chat';
 import Notes from './notes';
@@ -22,20 +19,15 @@ import {
   ID,
   LAYOUT,
   getActiveContent,
-  getControlFromLayout,
   getCurrentDataIndex,
   getCurrentDataInterval,
   getData,
   getDraws,
-  getSectionFromLayout,
-  getSwapFromLayout,
-  hasPresentation,
-  isContentVisible,
-  isEmpty,
   isEqual,
   seek,
   skip,
 } from 'utils/data';
+import Layout from 'utils/layout';
 import logger from 'utils/logger';
 import Monitor from 'utils/monitor';
 import Shortcuts from 'utils/shortcuts';
@@ -66,14 +58,16 @@ export default class Player extends PureComponent {
       layout,
     } = props;
 
+    this.layout = new Layout(data, layout);
+
     this.state = {
       application: ID.CHAT,
-      control: getControlFromLayout(layout),
+      control: this.layout.initControl(),
       fullscreen: false,
       modal: '',
       search: [],
-      section: getSectionFromLayout(layout),
-      swap: getSwapFromLayout(layout),
+      section: this.layout.initSection(),
+      swap: this.layout.initSwap(),
       thumbnails: true,
       time: 0,
     }
@@ -116,14 +110,6 @@ export default class Player extends PureComponent {
     this.canvases = this.shapes.canvases;
     this.slides = this.shapes.slides;
     this.thumbnails = addAlternatesToThumbnails(this.shapes.thumbnails, this.alternates);
-
-    this.content = {
-      captions: !isEmpty(this.captions),
-      chat: !isEmpty(this.chat),
-      notes: !isEmpty(this.notes),
-      presentation: hasPresentation(this.slides),
-      screenshare: !isEmpty(this.screenshare),
-    };
 
     logger.debug(ID.PLAYER, data);
   }
@@ -235,24 +221,10 @@ export default class Player extends PureComponent {
   }
 
   renderFullscreenButton(layout) {
-    const {
-      control,
-      fullscreen,
-      swap,
-    } = this.state;
-
-    if (!control || !controls.fullscreen) return null;
-
-    const {
-      presentation,
-      screenshare,
-    } = this.content;
-
-    const single = !presentation && !screenshare;
-
-    if (!isContentVisible(layout, swap || single)) return null;
+    if (!this.layout.hasFullscreenButton(layout, this.state)) return null;
 
     const { intl } = this.props;
+    const { fullscreen } = this.state;
 
     const aria = fullscreen
       ? intl.formatMessage(intlMessages.restore)
@@ -280,12 +252,13 @@ export default class Player extends PureComponent {
     if (!open) return null;
 
     const { intl } = this.props;
+    const content = this.layout.getContent();
 
     switch (modal) {
       case ID.ABOUT:
         return (
           <About
-            content={this.content}
+            content={content}
             intl={intl}
             metadata={this.metadata}
             toggleModal={() => this.toggleModal(ID.ABOUT)}
@@ -308,16 +281,8 @@ export default class Player extends PureComponent {
 
   renderTalkers(layout) {
     const { intl } = this.props;
-    const { swap } = this.state;
 
-    const {
-      presentation,
-      screenshare,
-    } = this.content;
-
-    const single = !presentation && !screenshare;
-
-    if (!isContentVisible(layout, swap || single)) return null;
+    if (!this.layout.hasTalkers(layout, this.state)) return null;
 
     return (
       <Talkers
@@ -366,13 +331,15 @@ export default class Player extends PureComponent {
       start,
     } = this.metadata;
 
+    const single = this.layout.isSingle();
+
     return (
       <TopBar
-        content={this.content}
         control={control}
         intl={intl}
         name={name}
         section={section}
+        single={single}
         start={start}
         toggleAbout={() => this.toggleModal(ID.ABOUT)}
         toggleSearch={() => this.toggleModal(ID.SEARCH)}
@@ -382,18 +349,17 @@ export default class Player extends PureComponent {
     );
   }
 
-  renderMedia(single) {
+  renderMedia() {
     const {
       data,
       intl,
       time,
     } = this.props;
 
-    const { swap } = this.state;
     const { media } = data;
 
     return (
-      <div className={cx('media', { 'swapped-media': swap || single })}>
+      <div className={cx('media', this.layout.getMediaStyle(this.state))}>
         {this.renderTalkers(LAYOUT.MEDIA)}
         {this.renderFullscreenButton(LAYOUT.MEDIA)}
         <Video
@@ -494,9 +460,7 @@ export default class Player extends PureComponent {
   }
 
   renderScreenshare(active) {
-    const { screenshare } = this.content;
-
-    if (!screenshare) return null;
+    if (!this.layout.hasScreenshare()) return null;
 
     const {
       intl,
@@ -516,28 +480,21 @@ export default class Player extends PureComponent {
     );
   }
 
-  renderContent(single) {
-    if (single) return null;
+  renderContent() {
+    if (this.layout.isSingle()) return null;
 
-    const {
-      fullscreen,
-      swap,
-      thumbnails,
-      time,
-    } = this.state;
-
+    const { time } = this.state;
     const content = getActiveContent(this.screenshare, time);
-    const bottom = thumbnails && !fullscreen;
 
     return (
-      <div className={cx('content', { 'swapped-content': swap })}>
+      <div className={cx('content', this.layout.getContentStyle(this.state))}>
         {this.renderTalkers(LAYOUT.CONTENT)}
         {this.renderFullscreenButton(LAYOUT.CONTENT)}
         <div className="top-content">
           {this.renderPresentation(content === ID.PRESENTATION)}
           {this.renderScreenshare(content === ID.SCREENSHARE)}
         </div>
-        <div className={cx('bottom-content', { inactive: !bottom })}>
+        <div className={cx('bottom-content', this.layout.getBottomContentStyle(this.state))}>
           {this.renderThumbnails()}
         </div>
       </div>
@@ -551,34 +508,16 @@ export default class Player extends PureComponent {
   render() {
     const { intl } = this.props;
 
-    const {
-      fullscreen,
-      section,
-    } = this.state;
-
-    const {
-      presentation,
-      screenshare,
-    } = this.content;
-
-    const single = !presentation && !screenshare;
-
-    const styles = {
-      'fullscreen-content': fullscreen,
-      'hidden-section': !section,
-      'single-content': single,
-    };
-
     return (
       <div
         aria-label={intl.formatMessage(intlMessages.aria)}
-        className={cx('player-wrapper', styles)}
+        className={cx('player-wrapper', this.layout.getPlayerStyle(this.state))}
         id={ID.PLAYER}
       >
         {this.renderTopBar()}
-        {this.renderMedia(single)}
+        {this.renderMedia()}
         {this.renderApplication()}
-        {this.renderContent(single)}
+        {this.renderContent()}
         {this.renderBottomBar()}
         {this.renderModal()}
       </div>
