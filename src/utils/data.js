@@ -9,8 +9,6 @@ const LAYOUT = {
   MEDIA: 'media',
 };
 
-const LOCAL = process.env.REACT_APP_NO_ROUTER;
-
 const ID = {
   ABOUT: 'about',
   ALTERNATES: 'alternates',
@@ -39,8 +37,18 @@ const NUMBERS = [
   'twelve', 'thirteen', 'fourteen', 'fifteen',
 ];
 
+const getRouter = () => {
+  if (typeof process.env.REACT_APP_NO_ROUTER !== 'undefined') {
+    if (process.env.REACT_APP_NO_ROUTER) return false;
+  }
+
+  return true;
+};
+
+const ROUTER = getRouter();
+
 const buildFileURL = (recordId, file) => {
-  if (LOCAL) return file;
+  if (!ROUTER) return file;
 
   return `/presentation/${recordId}/${file}`;
 };
@@ -215,7 +223,7 @@ const getLayout = location => {
 };
 
 const getRecordId = match => {
-  if (LOCAL) return 'local';
+  if (!ROUTER) return 'local';
 
   if (match) {
     const { params } = match;
@@ -626,8 +634,8 @@ const wasCleared = (time, clear) => clear !== -1 && clear <= time;
 
 export {
   LAYOUT,
-  LOCAL,
   ID,
+  ROUTER,
   buildFileURL,
   getAvatarStyle,
   getActiveContent,

@@ -8,7 +8,7 @@ import {
   getMessages,
 } from 'locales';
 import {
-  LOCAL,
+  ROUTER,
   getStyle,
 } from 'utils/data';
 import './index.scss';
@@ -24,7 +24,7 @@ ReactDOM.render(
       messages={messages[locale]}
     >
       {style ? <link rel="stylesheet" type="text/css" href={style} /> : null}
-      {LOCAL ? <Loader /> : <Router />}
+      {ROUTER ? <Router /> : <Loader />}
     </IntlProvider>
   ),
   document.getElementById('root')
