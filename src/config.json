@@ -79,7 +79,7 @@
     "scroll": true
   },
   "video": {
-    "fps": 10,
+    "rps": 10,
     "rates": [ 0.5, 1, 1.5, 2 ]
   }
 }

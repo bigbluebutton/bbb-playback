@@ -84,7 +84,7 @@ export default class Video extends PureComponent {
           setInterval(() => {
             const time = this.player.currentTime();
             onTimeUpdate(time);
-          }, 1000 / config.fps);
+          }, 1000 / config.rps);
         });
 
         this.player.on('pause', () => clearInterval());

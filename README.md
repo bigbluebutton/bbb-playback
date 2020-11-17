@@ -72,7 +72,7 @@ https://<domain>/playback/presentation/2.3/<recordId>
   - `align`: scroll align [`left`|`center`|`right`]
 
 - video: primary media configuration
-  - `fps`: frames per second
+  - `rps`: renders per second
   - `rates`: speed rates
 
 ## Standalone recordings
