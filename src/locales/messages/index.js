@@ -7,6 +7,7 @@ import it from './it.json';
 import ja from './ja.json';
 import pt from './pt.json';
 import ru from './ru.json';
+import tr from './tr.json';
 
 export default {
   ar,
@@ -18,4 +19,5 @@ export default {
   ja,
   pt,
   ru,
+  tr,
 };
