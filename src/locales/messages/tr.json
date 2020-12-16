@@ -1,0 +1,20 @@
+{
+  "button.about.aria": "Hakkında",
+  "button.clear.aria": "Temizle",
+  "button.close.aria": "Kapat",
+  "button.fullscreen.aria": "Tam Ekran",
+  "button.restore.aria": "Geri yükle",
+  "button.search.aria": "Ara",
+  "button.section.aria": "Yan bölüm",
+  "button.swap.aria": "İçeriği değiştir",
+  "error.wrapper.aria": "Hata",
+  "loader.wrapper.aria": "Yükleyici",
+  "player.wrapper.aria": "Oynatıcı alanı",
+  "player.chat.wrapper.aria": "Sohbet",
+  "player.notes.wrapper.aria": "Notlar",
+  "player.presentation.wrapper.aria": "Sunum",
+  "player.screenshare.wrapper.aria": "Ekran paylaşımı",
+  "player.talkers.wrapper.aria": "Eğitmen",
+  "player.thumbnails.wrapper.aria": "Önizleme",
+  "player.video.wrapper.aria": "Video"
+}
