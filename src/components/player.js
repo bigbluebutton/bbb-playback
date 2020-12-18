@@ -419,13 +419,23 @@ export default class Player extends PureComponent {
     }
   }
 
+  renderApplicationControl() {
+    const { control } = this.state;
+
+    if (!control) return null;
+
+    return (
+      <div className="application-control">
+        {this.renderApplicationIcon(ID.CHAT)}
+        {this.renderApplicationIcon(ID.NOTES)}
+      </div>
+    );
+  }
+
   renderApplication() {
     return (
       <div className="application">
-        <div className="application-control">
-          {this.renderApplicationIcon(ID.CHAT)}
-          {this.renderApplicationIcon(ID.NOTES)}
-        </div>
+        {this.renderApplicationControl()}
         {this.renderApplicationContent()}
       </div>
     );
