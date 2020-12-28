@@ -93,15 +93,6 @@ export default class Layout {
     return screenshare;
   }
 
-  hasTalkers(layout, state) {
-    const { swap } = state;
-    const single = this.isSingle();
-
-    if (!isContentVisible(layout, swap || single)) return false;
-
-    return true;
-  }
-
   isSingle() {
     const {
       presentation,

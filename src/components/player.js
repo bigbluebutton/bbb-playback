@@ -8,7 +8,6 @@ import Notes from './notes';
 import Presentation from './presentation';
 import Search from './search';
 import Screenshare from './screenshare';
-import Talkers from './talkers';
 import Thumbnails from './thumbnails';
 import Video from './video';
 import BottomBar from './bars/bottom';
@@ -105,7 +104,6 @@ export default class Player extends PureComponent {
     this.panzooms = getData(data, ID.PANZOOMS);
     this.screenshare = getData(data, ID.SCREENSHARE);
     this.shapes = getData(data, ID.SHAPES);
-    this.talkers = getData(data, ID.TALKERS);
 
     this.canvases = this.shapes.canvases;
     this.slides = this.shapes.slides;
@@ -279,19 +277,6 @@ export default class Player extends PureComponent {
     }
   }
 
-  renderTalkers(layout) {
-    const { intl } = this.props;
-
-    if (!this.layout.hasTalkers(layout, this.state)) return null;
-
-    return (
-      <Talkers
-        intl={intl}
-        talkers={this.talkers}
-      />
-    );
-  }
-
   renderThumbnails() {
     const { intl } = this.props;
 
@@ -360,7 +345,6 @@ export default class Player extends PureComponent {
 
     return (
       <div className={cx('media', this.layout.getMediaStyle(this.state))}>
-        {this.renderTalkers(LAYOUT.MEDIA)}
         {this.renderFullscreenButton(LAYOUT.MEDIA)}
         <Video
           captions={this.captions}
@@ -498,7 +482,6 @@ export default class Player extends PureComponent {
 
     return (
       <div className={cx('content', this.layout.getContentStyle(this.state))}>
-        {this.renderTalkers(LAYOUT.CONTENT)}
         {this.renderFullscreenButton(LAYOUT.CONTENT)}
         <div className="top-content">
           {this.renderPresentation(content === ID.PRESENTATION)}
