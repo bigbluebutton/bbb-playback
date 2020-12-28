@@ -45,6 +45,9 @@ https://<domain>/playback/presentation/2.3/<recordId>
   - `swap`
   - `thumbnails`
 
+- locale:
+  - `default`: fallback [`ar`|`de`|`en`|`es`|`fr`|`it`|`ja`|`pt`|`ru`|`tr`]
+
 - monitor: posts server playback's usage data
   - `interval`: post frequency
   - `url`: server post destiny

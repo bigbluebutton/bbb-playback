@@ -37,6 +37,9 @@
       "shapes": "shapes.svg"
     }
   },
+  "locale": {
+    "default": "en"
+  },
   "medias": [
     "mp4",
     "webm"
