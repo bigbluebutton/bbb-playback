@@ -48,10 +48,6 @@ https://<domain>/playback/presentation/2.3/<recordId>
 - locale:
   - `default`: fallback [`ar`|`de`|`en`|`es`|`fr`|`it`|`ja`|`pt`|`ru`|`tr`]
 
-- monitor: posts server playback's usage data
-  - `interval`: post frequency
-  - `url`: server post destiny
-
 - shortcuts: alt + shift
   - `fullscreen`: `K`
   - `section`: `L`

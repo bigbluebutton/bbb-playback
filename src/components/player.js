@@ -28,7 +28,6 @@ import {
 } from 'utils/data';
 import Layout from 'utils/layout';
 import logger from 'utils/logger';
-import Monitor from 'utils/monitor';
 import Shortcuts from 'utils/shortcuts';
 import Synchronizer from 'utils/synchronizer';
 import './index.scss';
@@ -84,7 +83,6 @@ export default class Player extends PureComponent {
   }
 
   componentDidMount() {
-    this.initMonitor();
     this.initShortcuts();
   }
 
@@ -145,17 +143,6 @@ export default class Player extends PureComponent {
     if (time !== value) {
       this.setState({ time: value });
     }
-  }
-
-  initMonitor() {
-    this.monitor = new Monitor(this.metadata.id);
-    this.monitor.collect(() => {
-      const { video } = this.player;
-      if (!video) return {};
-
-      const time = video.currentTime();
-      return { time };
-    });
   }
 
   initShortcuts() {

@@ -44,11 +44,6 @@
     "mp4",
     "webm"
   ],
-  "monitor": {
-    "enabled": false,
-    "interval": 60,
-    "url": "/monitor"
-  },
   "search": {
     "length": {
       "min": 3,
