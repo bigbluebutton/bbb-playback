@@ -1,10 +1,20 @@
 {
+  "button.about.aria": "حول",
+  "button.clear.aria": "مسح البحث",
+  "button.close.aria": "إغلاق مشروط",
+  "button.fullscreen.aria": "محتوى ملء الشاشة",
+  "button.restore.aria": "استعادة المحتوى",
+  "button.search.aria": "بحث",
+  "button.section.aria": "قسم جانبي",
+  "button.swap.aria": "محتوى المبادلة",
   "error.wrapper.aria": "منطقة الخطأ",
   "loader.wrapper.aria": "منطقة اللودر",
   "player.wrapper.aria": "منطقة لاعب",
   "player.chat.wrapper.aria": "منطقة الدردشة",
+  "player.notes.wrapper.aria": "منطقة الملاحظات",
   "player.presentation.wrapper.aria": "منطقة العرض",
   "player.screenshare.wrapper.aria": "منطقة مشاركة الشاشة",
+  "player.talkers.wrapper.aria": "منطقة المتكلمين",
   "player.thumbnails.wrapper.aria": "منطقة المصغرات",
   "player.video.wrapper.aria": "منطقة الفيديو"
 }

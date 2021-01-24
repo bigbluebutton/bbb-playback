@@ -1,29 +1,12 @@
 import React, { Component } from 'react';
+import { FormattedTime } from 'react-intl';
 import Linkify from 'linkifyjs/react';
 import cx from 'classnames';
-import {
-  getAvatarColor,
-  getTimestampAsMilliseconds,
-} from 'utils/data';
+import Avatar from 'components/utils/avatar';
+import { getTimestampAsMilliseconds } from 'utils/data';
 import './index.scss';
 
 export default class Message extends Component {
-  constructor(props) {
-    super(props);
-
-    const options = {
-      hourCycle: 'h23',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-      timeZone: 'UTC',
-    };
-
-    // TODO: As soon as react-int fixes FormattedTime
-    // this should come back as it were before
-    this.timeFormatter = new Intl.DateTimeFormat('default', options);
-  }
-
   shouldComponentUpdate(nextProps) {
     const { active } = this.props;
 
@@ -33,19 +16,23 @@ export default class Message extends Component {
   }
 
   renderAvatar(active, name) {
-    const { onClick } = this.props;
+    const {
+      initials,
+      onClick,
+    } = this.props;
 
     return (
-      <div className="avatar-wrapper">
-        <div
-          className={cx('avatar', { inactive: !active })}
-          onClick={onClick}
-          style={{ backgroundColor: getAvatarColor(name) }}
-        >
-          <span className="initials">
-            {name.slice(0, 2).toLowerCase()}
-          </span>
-        </div>
+      <div
+        className={cx('interactive', { inactive: !active })}
+        onClick={onClick}
+        onKeyPress={(e) => e.key === 'Enter' ? onClick() : null}
+        tabIndex="0"
+      >
+        <Avatar
+          active={active}
+          initials={initials}
+          name={name}
+        />
       </div>
     );
   }
@@ -70,7 +57,6 @@ export default class Message extends Component {
     } = this.props;
 
     const milliseconds = getTimestampAsMilliseconds(timestamp);
-    const time = this.timeFormatter.format(milliseconds);
 
     return (
       <div className="data">
@@ -79,7 +65,14 @@ export default class Message extends Component {
             {name}
           </div>
           <div className={cx('time', { inactive: !active })}>
-            {time}
+            <FormattedTime
+              hourCycle="h23"
+              hour="numeric"
+              minute="numeric"
+              second="numeric"
+              timeZone="UTC"
+              value={milliseconds}
+            />
           </div>
         </div>
         <div className={cx('text', { inactive: !active })}>

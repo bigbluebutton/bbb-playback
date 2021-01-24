@@ -1,5 +1,6 @@
 import React from 'react';
 import { defineMessages } from 'react-intl';
+import { ID } from 'utils/data';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -15,13 +16,11 @@ export default function Error(props) {
     intl,
   } = props;
 
-  const id = 'error';
-
   return (
     <div
       aria-label={intl.formatMessage(intlMessages.aria)}
       className="error-wrapper"
-      id={id}
+      id={ID.ERROR}
     >
       <div className="error-code">
         {code}

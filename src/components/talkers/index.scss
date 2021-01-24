@@ -1,0 +1,31 @@
+@import 'src/styles/sizes';
+
+.talkers-wrapper {
+  z-index: 1;
+
+  [dir="ltr"] & {
+    left: 0;
+  }
+
+  [dir="rtl"] & {
+    right: 0;
+  }
+
+  .talkers {
+    margin-top: $margin-small;
+    display: flex;
+    flex-direction: column;
+
+    .talker {
+      border-radius: 50%;
+      display: flex;
+      margin: 0 $margin-small $margin-small $margin-small;
+    }
+
+    .inactive {
+      opacity: .5;
+    }
+  }
+}
+
+

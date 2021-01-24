@@ -9,9 +9,9 @@ html {
 }
 
 body {
-  background-color: $body-background-color;
-  font-family: $font-family;
-  font-weight: $font-weight-regular;
+  background-color: var(--body-background-color);
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-regular);
   margin: 0;
   overflow: hidden;
 }

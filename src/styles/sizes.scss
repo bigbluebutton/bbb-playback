@@ -1,6 +1,8 @@
 $control-bar-height: 30px;
-$media-min-width: 600px;
+$media-min-width: 480px;
 $media-max-height: 400px;
+
+$modal-max-width: 320px;
 
 $video-height: 480px;
 $video-width: 640px;
@@ -8,8 +10,16 @@ $video-width: 640px;
 $section-width: calc(#{$video-width} / 2);
 $section-width-small: calc((#{$video-width} / 8) * 3);
 
-$navigation-bar-height: 60px;
-$action-bar-height: 60px;
+$bottom-content-height: 80px;
+
+$bar-height: 60px;
+
+$top-bar-height: $bar-height;
+$bottom-bar-height: calc(#{$bar-height} / 3);
+$modal-bar-height: $bar-height;
+
+$media-fit-height: calc((#{$video-height} / 2) - #{$bar-height});
+$media-fit-height-small: calc(((#{$video-height} / 8) * 3) - #{$bar-height});
 
 $border-radius: .35rem;
 $border-width: .20rem;

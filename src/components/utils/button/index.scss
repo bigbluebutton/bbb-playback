@@ -1,0 +1,60 @@
+@import 'src/styles/icons';
+@import 'src/styles/sizes';
+
+$button-size: 2rem;
+
+.button-wrapper {
+  display: flex;
+  height: $button-size;
+  margin: 0 $margin 0 $margin;
+  width: $button-size;
+
+  .button {
+    cursor: pointer;
+    font-size: medium;
+    height: 100%;
+    outline: none;
+    width: 100%;
+  }
+
+  .default {
+    background-color: var(--button-default-background-color);
+    border: none;
+    color: var(--button-default-color);
+
+    &:focus {
+      box-shadow: 0 0 0 $margin-extra-small;
+    }
+  }
+
+  .solid {
+    background-color: var(--button-solid-background-color);
+    border: none;
+    color: var(--button-solid-color);
+
+    &:focus {
+      box-shadow: 0 0 0 $margin-extra-small var(--button-solid-background-color);
+    }
+  }
+
+  .ghost {
+    background-color: var(--button-ghost-background-color);
+    border: solid;
+    color: var(--button-ghost-color);
+
+    &:focus {
+      box-shadow: 0 0 0 $margin-extra-small;
+    }
+  }
+
+  .circle {
+    border-radius: 50%;
+  }
+
+  .disabled {
+    background-color: var(--button-disabled-background-color);
+    border: none;
+    color: var(--button-disabled-color);
+    cursor: not-allowed;
+  }
+}

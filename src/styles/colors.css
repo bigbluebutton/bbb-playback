@@ -1,0 +1,91 @@
+:root {
+  --gray-darkest: rgb(17, 17, 17);
+  --gray-darker: rgb(6, 23, 42);
+  --gray-dark: rgb(6, 23, 42);
+  --gray: rgb(78, 90, 102);
+  --gray-light: rgb(139, 154, 168);
+  --gray-lighter: rgb(167, 179, 189);
+  --gray-lightest: rgb(212, 217, 223);
+
+  --blue: rgb(15, 112, 215);
+  --blue-light: rgb(84, 161, 243);
+  --blue-lighter: rgb(146, 188, 234);
+  --blue-lightest: rgb(228, 236, 242);
+
+  --red: rgb(223, 39, 33);
+
+  --green: rgb(0, 128, 129);
+
+  --white-dark: rgb(243, 246, 249);
+  --white: rgb(255, 255, 255);
+
+  --body-background-color: var(--white-dark);
+
+  --box-shadow-color: var(--gray-light);
+
+  --loader-background-color: var(--white-dark);
+  --loader-color: var(--gray);
+
+  --error-background-color: var(--white-dark);
+  --error-color: var(--gray);
+
+  --media-background-color: var(--white);
+  --media-color: var(--gray-dark);
+
+  --application-background-color: var(--white);
+  --application-color: var(--gray-dark);
+  --application-control-background-color: var(--white-dark);
+
+  --top-bar-active-background-color: var(--gray-lightest);
+  --top-bar-background-color: var(--white-dark);
+  --top-bar-color: var(--gray);
+
+  --bottom-bar-background-color: var(--white-dark);
+  --bottom-bar-color: var(--gray);
+
+  --top-content-background-color: var(--white-dark);
+  --top-content-color: var(--gray);
+
+  --bottom-content-active-background-color: var(--gray-lighter);
+  --bottom-content-background-color: var(--gray-lightest);
+  --bottom-content-color: var(--gray);
+
+  --button-default-background-color: transparent;
+  --button-default-color: var(--gray);
+
+  --button-disabled-background-color: var(--gray-light);
+  --button-disabled-color: var(--white);
+
+  --button-ghost-background-color: transparent;
+  --button-ghost-color: var(--gray);
+
+  --button-solid-background-color: var(--blue);
+  --button-solid-color: var(--white);
+
+  --modal-active-background-color: var(--gray-lightest);
+  --modal-background-color: var(--white);
+  --modal-color: var(--gray-dark);
+  --modal-wrapper-background-color: rgba(6, 23, 42, .25);
+
+  --control-bar-background-color: var(--gray-dark);
+
+  --cursor-fill-color: var(--red);
+
+  --avatar-color: var(--white);
+  --avatar-zero-background-color: rgb(123, 31, 162);
+  --avatar-one-background-color: rgb(106, 27, 154);
+  --avatar-two-background-color: rgb(74, 20, 140);
+  --avatar-three-background-color: rgb(94, 53, 177);
+  --avatar-four-background-color: rgb(81, 45, 168);
+  --avatar-five-background-color: rgb(69, 39, 160);
+  --avatar-six-background-color: rgb(49, 27, 146);
+  --avatar-seven-background-color: rgb(57, 73, 171);
+  --avatar-eight-background-color: rgb(48, 63, 159);
+  --avatar-nine-background-color: rgb(40, 53, 147);
+  --avatar-ten-background-color: rgb(26, 35, 126);
+  --avatar-eleven-background-color: rgb(25, 118, 210);
+  --avatar-twelve-background-color: rgb(21, 101, 192);
+  --avatar-thirteen-background-color: rgb(13, 71, 161);
+  --avatar-fourteen-background-color: rgb(2, 119, 189);
+  --avatar-fifteen-background-color: rgb(1, 87, 155);
+}

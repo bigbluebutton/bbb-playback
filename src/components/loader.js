@@ -8,11 +8,15 @@ import Error from './error';
 import Player from './player';
 import { build } from 'utils/builder';
 import {
+  ID,
+  buildFileURL,
   getFileName,
   getFileType,
   getLayout,
   getRecordId,
+  getTime,
 } from 'utils/data';
+import logger from 'utils/logger';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -31,11 +35,11 @@ class Loader extends PureComponent {
       match,
     } = props;
 
-    this.id = 'loader';
     this.counter = 0;
     this.data = {};
     this.layout = getLayout(location);
     this.recordId = getRecordId(match);
+    this.time = getTime(location);
 
     this.state = {
       error: this.recordId ? null : config.error['NOT_FOUND'],
@@ -56,25 +60,31 @@ class Loader extends PureComponent {
   }
 
   fetchFile(recordId, file) {
-    const url = `/presentation/${recordId}/${file}`;
+    const url = buildFileURL(recordId, file);
     fetch(url).then(response => {
       if (response.ok) {
+        logger.debug(ID.LOADER, file, response);
         const fileType = getFileType(file);
         switch (fileType) {
           case 'json':
             return response.json();
-          case 'text':
+          case 'html':
+            return response.text();
+          case 'svg':
+            return response.text();
+          case 'xml':
             return response.text();
           default:
             this.setState({ error: config.error['BAD_REQUEST'] });
             throw Error(file);
         }
       } else {
-        this.setState({ error: response.status });
-        throw Error(response.statusText);
+        logger.warn('loader', file, response);
+        return null;
       }
     }).then(value => {
       build(file, value).then(data => {
+        if (data) logger.debug(ID.LOADER, 'builded', file);
         this.data[getFileName(file)] = data;
         this.update();
       }).catch(error => this.setState({ error: config.error['BAD_REQUEST'] }));
@@ -83,7 +93,7 @@ class Loader extends PureComponent {
 
   fetchMedia() {
     const fetches = config.medias.map(type => {
-      const url = `/presentation/${this.recordId}/video/webcams.${type}`;
+      const url = buildFileURL(this.recordId, `video/webcams.${type}`);
       return fetch(url, { method: 'HEAD' });
     });
 
@@ -92,6 +102,7 @@ class Loader extends PureComponent {
       responses.forEach(response => {
         const { ok, url } = response;
         if (ok) {
+          logger.debug(ID.LOADER, 'media', response);
           media.push(config.medias.find(type => url.endsWith(type)));
         }
       });
@@ -138,6 +149,7 @@ class Loader extends PureComponent {
           data={this.data}
           intl={intl}
           layout={this.layout}
+          time={this.time}
         />
       );
     }
@@ -146,7 +158,7 @@ class Loader extends PureComponent {
       <div
         aria-label={intl.formatMessage(intlMessages.aria)}
         className="loader-wrapper"
-        id={this.id}
+        id={ID.LOADER}
       >
         <div className="loading-dots">
           <div className="first" />

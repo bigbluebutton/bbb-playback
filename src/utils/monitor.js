@@ -1,4 +1,5 @@
 import { monitor as config } from 'config';
+import logger from './logger';
 
 export default class Monitor {
   constructor(id) {
@@ -22,6 +23,7 @@ export default class Monitor {
 
     setInterval(() => {
       const message = request();
+      logger.debug('monitor', message);
       this.send(message);
     }, this.interval);
   }

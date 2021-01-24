@@ -1,7 +1,11 @@
 import React, { PureComponent } from 'react';
 import { defineMessages } from 'react-intl';
 import cx from 'classnames';
-import videojs from 'video.js';
+import videojs from 'video.js/core.es.js';
+import {
+  ID,
+  buildFileURL,
+} from 'utils/data';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -20,14 +24,12 @@ export default class Screenshare extends PureComponent {
       metadata,
     } = props;
 
-    const url = `/presentation/${metadata.id}`;
-
     const sources = [
       {
-        src: `${url}/deskshare/deskshare.mp4`,
+        src: buildFileURL(metadata.id, 'deskshare/deskshare.mp4'),
         type: `video/mp4`,
       }, {
-        src: `${url}/deskshare/deskshare.webm`,
+        src: buildFileURL(metadata.id, 'deskshare/deskshare.webm'),
         type: `video/webm`,
       },
     ].filter(src => {
@@ -36,7 +38,6 @@ export default class Screenshare extends PureComponent {
       return media.find(m => type.includes(m));
     });
 
-    this.id = 'screenshare';
     this.options = {
       controls: false,
       fill: true,
@@ -48,7 +49,7 @@ export default class Screenshare extends PureComponent {
     this.player = videojs(this.node, this.options, () => {
       const { onPlayerReady } = this.props;
 
-      if (onPlayerReady) onPlayerReady(this.id, this.player);
+      if (onPlayerReady) onPlayerReady(ID.SCREENSHARE, this.player);
     });
   }
 
@@ -68,12 +69,11 @@ export default class Screenshare extends PureComponent {
       <div
         aria-label={intl.formatMessage(intlMessages.aria)}
         className={cx('screenshare-wrapper', { inactive: !active })}
-        id={this.id}
+        id={ID.SCREENSHARE}
       >
         <div data-vjs-player>
           <video
             className="video-js"
-            crossOrigin="anonymous"
             playsInline
             preload="auto"
             ref={node => this.node = node}

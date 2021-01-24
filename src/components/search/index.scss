@@ -1,0 +1,48 @@
+@import 'src/styles/icons';
+@import 'src/styles/sizes';
+
+$result-height: $bottom-content-height;
+
+.search-body,
+.search-footer {
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+}
+
+.search-body {
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-evenly;
+  overflow-x: hidden;
+  padding: 0 $padding;
+
+  input[type="text"] {
+    box-sizing: border-box;
+    font-size: large;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .result {
+    box-sizing: border-box;
+    height: $result-height;
+    margin: $margin 0 0 0;
+    position: relative;
+    width: 100%;
+  }
+}
+
+.search-footer {
+  align-items: center;
+  justify-content: flex-end;
+  padding: $padding 0;
+
+  .button-wrapper {
+    .solid {
+      &:focus {
+        box-shadow: 0 0 0 $margin-extra-small var(--box-shadow-color);
+      }
+    }
+  }
+}

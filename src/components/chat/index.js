@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import { defineMessages } from 'react-intl';
 import { chat as config } from 'config';
 import Message from './message';
-import { getScrollTop } from 'utils/data';
+import {
+  ID,
+  getScrollTop,
+} from 'utils/data';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -13,12 +16,6 @@ const intlMessages = defineMessages({
 });
 
 export default class Chat extends Component {
-  constructor(props) {
-    super(props);
-
-    this.id = 'chat';
-  }
-
   componentDidMount() {
     this.handleAutoScroll();
   }
@@ -69,16 +66,6 @@ export default class Chat extends Component {
     }
   }
 
-  renderHeader() {
-    return (
-      <div className="header">
-        <div className="icon">
-          <span className="icon-group-chat" />
-        </div>
-      </div>
-    );
-  }
-
   renderMessages() {
     const {
       chat,
@@ -88,6 +75,7 @@ export default class Chat extends Component {
     return chat.map((item, index) => {
       const {
         hyperlink,
+        initials,
         message,
         name,
         timestamp,
@@ -100,6 +88,7 @@ export default class Chat extends Component {
           <Message
             active={active}
             hyperlink={hyperlink}
+            initials={initials}
             name={name}
             onClick={() => this.handleOnClick(timestamp)}
             text={message}
@@ -118,9 +107,9 @@ export default class Chat extends Component {
         aria-label={intl.formatMessage(intlMessages.aria)}
         aria-live="polite"
         className="chat-wrapper"
-        id={this.id}
+        id={ID.CHAT}
+        tabIndex="0"
       >
-        {this.renderHeader()}
         <div className="list">
           <div className="message-wrapper">
             {this.renderMessages()}

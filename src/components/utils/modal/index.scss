@@ -1,0 +1,54 @@
+@import 'src/styles/icons';
+@import 'src/styles/sizes';
+
+.modal-wrapper {
+  align-items: center;
+  background-color: var(--modal-wrapper-background-color);
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 2;
+}
+
+.modal {
+  background-color: var(--modal-background-color);
+  border-radius: $border-radius;
+  color: var(--modal-color);
+  display: flex;
+  flex-direction: column;
+  max-width: $modal-max-width;
+  max-height: 80%;
+  padding: 0 $padding-small;
+  width: 80%;
+
+  .modal-control,
+  .modal-content {
+    box-sizing: border-box;
+    display: flex;
+    width: 100%;
+  }
+
+  .modal-control {
+    align-items: center;
+    flex-direction: row-reverse;
+    height: $modal-bar-height;
+    padding: $padding-small;
+
+    .button {
+      font-weight: var(--font-weight-semi-bold);
+    }
+  }
+
+  .modal-content {
+    flex-direction: column;
+    padding: 0 $padding;
+  }
+
+  .active {
+    background-color: var(--modal-active-background-color);
+  }
+}

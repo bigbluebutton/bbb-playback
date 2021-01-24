@@ -1,50 +1,52 @@
-@import 'src/styles/colors';
+@import 'src/styles/icons';
+@import 'src/styles/images';
 @import 'src/styles/sizes';
 
-$thumbnails-wrapper-top: $navigation-bar-height;
-$thumbnails-wrapper-bottom: calc(#{$control-bar-height} + #{$action-bar-height});
-$thumbnail-height: 90px;
+$thumbnail-height: calc((#{$bottom-content-height} / 10) * 6);
 
 .thumbnails-wrapper {
-  background-color: $blue-lighter;
-  bottom: $thumbnails-wrapper-bottom;
-  box-sizing: border-box;
-  overflow-x: hidden;
-  overflow-y: auto;
-  padding: $padding-extra-small $padding-extra-small 0 $padding-extra-small;
-  position: fixed;
+  display: flex;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  position: absolute;
   scroll-behavior: smooth;
-  top: $thumbnails-wrapper-top;
-  width: auto;
-  z-index: 1;
+  width: 100%;
 
-  [dir="ltr"] & {
-    right: 0;
-  }
-
-  [dir="rtl"] & {
-    left: 0;
-  }
-
-  .active {
-    filter: opacity(50%);
+  .clear-button {
+    box-sizing: border-box;
+    display: flex;
+    padding: $padding 0 0 0;
   }
 }
 
 .thumbnail-wrapper {
+  box-sizing: border-box;
   display: flex;
-  height: $thumbnail-height;
-  justify-content: center;
-  padding: 0 0 $padding-extra-small 0;
-}
+  padding: $padding-extra-small;
 
-.thumbnail {
-  cursor: pointer;
-  display: block;
-  height: 100%;
-  width: auto;
+  .thumbnail {
+    align-self: flex-start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
-  &:hover {
-    filter: opacity(50%);
+    .thumbnail-image {
+      display: block;
+      height: $thumbnail-height;
+      width: auto;
+    }
+
+    .thumbnail-index {
+      display: flex;
+      font-size: x-small;
+      font-weight: var(--font-weight-bold);
+      margin-top: $margin-extra-small;
+    }
+
+    .screenshare {
+      font-size: xxx-large;
+      font-weight: var(--font-weight-semi-bold);
+    }
   }
 }

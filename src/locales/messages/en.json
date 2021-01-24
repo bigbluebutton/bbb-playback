@@ -1,10 +1,20 @@
 {
+  "button.about.aria": "About",
+  "button.clear.aria": "Clear search",
+  "button.close.aria": "Close modal",
+  "button.fullscreen.aria": "Fullscreen content",
+  "button.restore.aria": "Restore content",
+  "button.search.aria": "Search",
+  "button.section.aria": "Side section",
+  "button.swap.aria": "Swap content",
   "error.wrapper.aria": "Error area",
   "loader.wrapper.aria": "Loader area",
   "player.wrapper.aria": "Player area",
   "player.chat.wrapper.aria": "Chat area",
+  "player.notes.wrapper.aria": "Notes area",
   "player.presentation.wrapper.aria": "Presentation area",
   "player.screenshare.wrapper.aria": "Screenshare area",
+  "player.talkers.wrapper.aria": "Talkers area",
   "player.thumbnails.wrapper.aria": "Thumbnails area",
   "player.video.wrapper.aria": "Video area"
 }

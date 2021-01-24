@@ -1,7 +1,11 @@
 import React, { PureComponent } from 'react';
 import { defineMessages } from 'react-intl';
-import videojs from 'video.js';
+import videojs from 'video.js/core.es.js';
 import { video as config } from 'config';
+import {
+  ID,
+  buildFileURL,
+} from 'utils/data';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -21,14 +25,12 @@ export default class Video extends PureComponent {
       metadata,
     } = props;
 
-    const url = `/presentation/${metadata.id}`;
-
     const sources = [
       {
-        src: `${url}/video/webcams.mp4`,
+        src: buildFileURL(metadata.id, 'video/webcams.mp4'),
         type: 'video/mp4',
       }, {
-        src: `${url}/video/webcams.webm`,
+        src: buildFileURL(metadata.id, 'video/webcams.webm'),
         type: 'video/webm',
       },
     ].filter(src => {
@@ -43,17 +45,14 @@ export default class Video extends PureComponent {
         localeName,
       } = lang;
 
-      const src = `/presentation/${metadata.id}/caption_${locale}.vtt`;
-
       return {
         kind: 'captions',
-        src,
+        src: buildFileURL(metadata.id, `caption_${locale}.vtt`),
         srclang: locale,
         label: localeName,
       };
     });
 
-    this.id = 'video';
     this.options = {
       controlBar: {
         fullscreenToggle: false,
@@ -77,6 +76,7 @@ export default class Video extends PureComponent {
       const {
         onPlayerReady,
         onTimeUpdate,
+        time,
       } = this.props;
 
       if (onTimeUpdate) {
@@ -84,13 +84,22 @@ export default class Video extends PureComponent {
           setInterval(() => {
             const time = this.player.currentTime();
             onTimeUpdate(time);
-          }, 1000 / config.fps);
+          }, 1000 / config.rps);
         });
 
         this.player.on('pause', () => clearInterval());
       }
 
-      if (onPlayerReady) onPlayerReady(this.id, this.player);
+      if (time) {
+        this.player.on('loadedmetadata', () => {
+          const duration = this.player.duration();
+          if (time < duration) {
+            this.player.currentTime(time);
+          }
+        });
+      }
+
+      if (onPlayerReady) onPlayerReady(ID.VIDEO, this.player);
     });
   }
 
@@ -107,12 +116,11 @@ export default class Video extends PureComponent {
       <div
         aria-label={intl.formatMessage(intlMessages.aria)}
         className="video-wrapper"
-        id={this.id}
+        id={ID.VIDEO}
       >
         <div data-vjs-player>
           <video
             className="video-js"
-            crossOrigin="anonymous"
             playsInline
             preload="auto"
             ref={node => this.node = node}

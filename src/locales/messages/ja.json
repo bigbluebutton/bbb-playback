@@ -1,10 +1,20 @@
 {
+  "button.about.aria": "約",
+  "button.clear.aria": "検索をクリア",
+  "button.close.aria": "モーダルを閉じる",
+  "button.fullscreen.aria": "全画面コンテンツ",
+  "button.restore.aria": "コンテンツを復元",
+  "button.search.aria": "探す",
+  "button.section.aria": "サイドセクション",
+  "button.swap.aria": "コンテンツを入れ替え",
   "error.wrapper.aria": "エラー領域",
   "loader.wrapper.aria": "ローダーエリア",
   "player.wrapper.aria": "プレイヤーエリア",
   "player.chat.wrapper.aria": "チャットエリア",
+  "player.notes.wrapper.aria": "ノートエリア",
   "player.presentation.wrapper.aria": "プレゼンテーションエリア",
   "player.screenshare.wrapper.aria": "画面共有エリア",
+  "player.talkers.wrapper.aria": "トーカーエリア",
   "player.thumbnails.wrapper.aria": "サムネイルエリア",
   "player.video.wrapper.aria": "ビデオエリア"
 }

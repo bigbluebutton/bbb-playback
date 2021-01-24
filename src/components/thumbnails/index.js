@@ -2,13 +2,26 @@ import React, { Component } from 'react';
 import cx from 'classnames';
 import { defineMessages } from 'react-intl';
 import { thumbnails as config } from 'config';
-import { getScrollTop } from 'utils/data';
+import Button from 'components/utils/button';
+import {
+  ID,
+  buildFileURL,
+  getScrollLeft,
+  isEmpty,
+  isEqual,
+} from 'utils/data';
 import './index.scss';
+
+const SCREENSHARE = 'deskshare';
 
 const intlMessages = defineMessages({
   aria: {
     id: 'player.thumbnails.wrapper.aria',
     description: 'Aria label for the thumbnails wrapper',
+  },
+  clear: {
+    id: 'button.clear.aria',
+    description: 'Aria label for the clear button',
   },
 });
 
@@ -18,8 +31,7 @@ export default class Thumbnails extends Component {
 
     const { metadata } = props;
 
-    this.id = 'thumbnails';
-    this.url = `/presentation/${metadata.id}`;
+    this.recordId = metadata.id;
   }
 
   componentDidMount() {
@@ -27,9 +39,16 @@ export default class Thumbnails extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    const { currentDataIndex } = this.props;
+    const {
+      currentDataIndex,
+      search,
+    } = this.props;
 
     if (currentDataIndex !== nextProps.currentDataIndex) {
+      return true;
+    }
+
+    if (!isEqual(search, nextProps.search)) {
       return true;
     }
 
@@ -55,7 +74,7 @@ export default class Thumbnails extends Component {
     if (this.firstNode && this.currentNode) {
       const { parentNode } = this.currentNode;
 
-      parentNode.scrollTop = getScrollTop(this.firstNode, this.currentNode, config.align);
+      parentNode.scrollLeft = getScrollLeft(this.firstNode, this.currentNode, config.align);
     }
   }
 
@@ -72,35 +91,128 @@ export default class Thumbnails extends Component {
     }
   }
 
-  renderThumbnails() {
+  isFiltered(index) {
     const {
-      currentDataIndex,
-      thumbnails,
+      interactive,
+      search,
     } = this.props;
 
-    return thumbnails.map((item, index) => {
-      const {
-        alt,
-        src,
-        timestamp,
-      } = item;
+    if (interactive) {
+      return !isEmpty(search) && !search.includes(index);
+    } else {
+      return !search.includes(index);
+    }
+  }
 
-      const active = index === currentDataIndex;
+  renderImage(item) {
+    const {
+      alt,
+      src,
+    } = item;
 
+    const screenshare = src === SCREENSHARE;
+
+    if (screenshare) {
+      return (
+        <div className={cx('thumbnail-image', { screenshare })}>
+          <span className="icon-screenshare" />
+        </div>
+      );
+    }
+
+    const logo = src.includes('logo');
+
+    return (
+      <img
+        alt={alt}
+        className={cx('thumbnail-image', { logo })}
+        src={buildFileURL(this.recordId, src)}
+      />
+    );
+  }
+
+  renderThumbnail(item, index) {
+    const {
+      currentDataIndex,
+      interactive,
+    } = this.props;
+
+    if (!interactive) {
       return (
         <div
           className="thumbnail-wrapper"
-          ref={node => this.setRef(node, index)}
+          tabIndex="0"
         >
-          <img
-            alt={alt}
-            className={cx('thumbnail', { active })}
-            onClick={() => this.handleOnClick(timestamp)}
-            src={`${this.url}/${src}`}
-          />
+          <div className="thumbnail">
+            {this.renderImage(item)}
+            <div className="thumbnail-index">
+              {index + 1}
+            </div>
+          </div>
         </div>
       );
-    });
+    }
+
+    const active = index === currentDataIndex;
+    const onClick = () => this.handleOnClick(item.timestamp);
+
+    const styles = {
+      active,
+      interactive,
+    };
+
+    return (
+      <div
+        className={cx('thumbnail-wrapper', styles)}
+        onClick={onClick}
+        onKeyPress={(e) => e.key === 'Enter' ? onClick() : null}
+        ref={node => this.setRef(node, index)}
+        tabIndex="0"
+      >
+        <div className="thumbnail">
+          {this.renderImage(item)}
+          <div className="thumbnail-index">
+            {index + 1}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderThumbnails() {
+    const { thumbnails } = this.props;
+
+    return thumbnails.reduce((result, item, index) => {
+      if (!this.isFiltered(index)) {
+        result.push(this.renderThumbnail(item, index));
+      }
+
+      return result;
+    }, []);
+  }
+
+  renderClearButton() {
+    const { interactive } = this.props;
+    if (!interactive) return null;
+
+    const { search } = this.props;
+    if (isEmpty(search)) return null;
+
+    const {
+      handleSearch,
+      intl,
+    } = this.props;
+
+    return (
+      <div className="clear-button">
+        <Button
+          aria={intl.formatMessage(intlMessages.clear)}
+          handleOnClick={() => handleSearch ? handleSearch([]) : null}
+          icon="close"
+          type="solid"
+        />
+      </div>
+    );
   }
 
   render() {
@@ -110,9 +222,11 @@ export default class Thumbnails extends Component {
       <div
         aria-label={intl.formatMessage(intlMessages.aria)}
         className="thumbnails-wrapper"
-        id={this.id}
+        id={ID.THUMBNAILS}
+        tabIndex="0"
       >
         {this.renderThumbnails()}
+        {this.renderClearButton()}
       </div>
     );
   }

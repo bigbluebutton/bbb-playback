@@ -1,46 +1,12 @@
-@import 'src/styles/colors';
-@import 'src/styles/fonts';
 @import 'src/styles/sizes';
 
-.navigation-bar {
-  background-color: $main-background-color;
-  grid-area: navigation-bar;
-
-  .title {
-    color: white;
-    font-weight: $font-weight-light;
-    overflow: hidden;
-    padding: $padding-small;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .button-wrapper {
-    .solid {
-      &:focus {
-        border: solid $main-background-color;
-      }
-    }
-  }
-}
-
-.action-bar {
-  background-color: $main-background-color;
-  grid-area: action-bar;
-
-  .button-wrapper {
-    .solid {
-      &:focus {
-        border: solid $main-background-color;
-      }
-    }
-  }
-}
-
-.action-bar,
-.navigation-bar {
-  display: flex;
+.top-bar {
+  background-color: var(--top-bar-background-color);
+  color: var(--top-bar-color);
   box-sizing: border-box;
+  display: flex;
+  grid-area: top-bar;
+  overflow: hidden;
   padding: 0 $padding-small;
 
   .left,
@@ -71,4 +37,26 @@
   .right {
     justify-content: flex-end;
   }
+
+  .title {
+    overflow: hidden;
+    padding: $padding-small;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .interactive {
+    cursor: pointer;
+    outline: none;
+
+    &:focus,
+    &:hover {
+      background-color: var(--top-bar-active-background-color);
+    }
+  }
+}
+
+.bottom-bar {
+  background-color: var(--bottom-bar-background-color);
+  grid-area: bottom-bar;
 }

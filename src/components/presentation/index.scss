@@ -1,4 +1,4 @@
-@import 'src/styles/colors';
+@import 'src/styles/images';
 
 $cursor-size: .5rem;
 
@@ -19,7 +19,7 @@ $cursor-size: .5rem;
   width: 100%;
 
   .cursor {
-    fill: $red;
+    fill: var(--cursor-fill-color);
     r: $cursor-size;
   }
 

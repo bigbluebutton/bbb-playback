@@ -3,13 +3,13 @@
     "align": "bottom",
     "scroll": true
   },
-  "colors": {
-    "avatar": [
-      "#7b1fa2", "#6a1b9a", "#4a148c", "#5e35b1",
-      "#512da8", "#4527a0", "#311b92", "#3949ab",
-      "#303f9f", "#283593", "#1a237e", "#1976d2",
-      "#1565c0", "#0d47a1", "#0277bd", "#01579b"
-    ]
+  "controls": {
+    "about": true,
+    "fullscreen": true,
+    "search": true,
+    "section": true,
+    "swap": true,
+    "thumbnails": true
   },
   "error": {
     "BAD_REQUEST": 400,
@@ -31,14 +31,11 @@
       "chat": "slides_new.xml",
       "cursor": "cursor.xml",
       "metadata": "metadata.xml",
+      "notes": "notes.html",
       "panzooms": "panzooms.xml",
       "screenshare": "deskshare.xml",
-      "shapes": "shapes.svg"
-    },
-    "type": {
-      "json": "json",
-      "svg": "text",
-      "xml": "text"
+      "shapes": "shapes.svg",
+      "talkers": "talkers.json"
     }
   },
   "medias": [
@@ -50,12 +47,39 @@
     "interval": 60,
     "url": "/monitor"
   },
+  "search": {
+    "length": {
+      "min": 3,
+      "max": 32
+    }
+  },
+  "shortcuts": {
+    "enabled": true,
+    "fullscreen": "K",
+    "section": "L",
+    "slides": {
+      "next": "ArrowUp",
+      "previous": "ArrowDown"
+    },
+    "swap": "M",
+    "thumbnails": "N",
+    "video": {
+      "backward": "ArrowLeft",
+      "forward": "ArrowRight",
+      "seconds": 15
+    }
+  },
+  "styles": {
+    "default": null,
+    "url": "HOST",
+    "valid": []
+  },
   "thumbnails": {
-    "align": "bottom",
+    "align": "center",
     "scroll": true
   },
   "video": {
-    "fps": 10,
+    "rps": 10,
     "rates": [ 0.5, 1, 1.5, 2 ]
   }
 }

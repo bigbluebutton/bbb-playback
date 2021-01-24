@@ -1,10 +1,20 @@
 {
+  "button.about.aria": "Около",
+  "button.clear.aria": "Очистить поиск",
+  "button.close.aria": "Закрыть модальное",
+  "button.fullscreen.aria": "Полноэкранный контент",
+  "button.restore.aria": "Восстановить контент",
+  "button.search.aria": "Поиск",
+  "button.section.aria": "Боковой раздел",
+  "button.swap.aria": "Обменяться контентом",
   "error.wrapper.aria": "Область ошибок",
   "loader.wrapper.aria": "Зона погрузчика",
   "player.wrapper.aria": "Игровая зона",
   "player.chat.wrapper.aria": "Область чата",
+  "player.notes.wrapper.aria": "Область заметок",
   "player.presentation.wrapper.aria": "Площадь презентации",
   "player.screenshare.wrapper.aria": "Площадь экрана",
+  "player.talkers.wrapper.aria": "Зона беседы",
   "player.thumbnails.wrapper.aria": "Область миниатюр",
   "player.video.wrapper.aria": "Область видео"
 }

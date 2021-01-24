@@ -1,0 +1,33 @@
+@import 'src/styles/sizes';
+
+.notes-wrapper {
+  display: flex;
+  height: 100%;
+  position: relative;
+  width: 100%;
+
+  .notes {
+    bottom: 0;
+    box-sizing: border-box;
+    display: flex;
+    font-size: small;
+    overflow-x: hidden;
+    overflow-wrap: break-word;
+    overflow-y: auto;
+    padding-top: $padding;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    white-space: pre-wrap;
+
+    [dir="ltr"] & {
+      padding-left: $padding;
+      padding-right: $padding-extra-small;
+    }
+
+    [dir="rtl"] & {
+      padding-left: $padding-extra-small;
+      padding-right: $padding;
+    }
+  }
+}

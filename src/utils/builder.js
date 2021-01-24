@@ -1,6 +1,11 @@
 import { parseStringPromise } from 'xml2js';
 import { files as config } from 'config';
-import { getFileType } from './data';
+import {
+  getFileType,
+  hasProperty,
+  isEmpty,
+} from './data';
+import logger from './logger';
 
 const getAttr = data => {
   if (!data) return {};
@@ -9,6 +14,15 @@ const getAttr = data => {
   if (!attr) return {};
 
   return attr;
+};
+
+const getChildren = data => {
+  if (!data) return [];
+
+  const children = data['$$'];
+  if (!children) return [];
+
+  return children;
 };
 
 const getId = data => {
@@ -33,14 +47,15 @@ const getNumbers = data => {
 };
 
 const buildAlternates = result => {
-  let data = [];
+  if (!result) return [];
 
+  let data = [];
   for (const presentation in result) {
-    if (result.hasOwnProperty(presentation)) {
+    if (hasProperty(result, presentation)) {
       const slides = result[presentation];
 
       for (const slide in slides) {
-        if (slides.hasOwnProperty(slide)) {
+        if (hasProperty(slides, slide)) {
           const text = slides[slide];
 
           data.push({
@@ -55,30 +70,51 @@ const buildAlternates = result => {
   return data;
 };
 
+// TODO
 const buildCaptions = result => {
-  // TODO: Restructure JSON data
-  return result;
+  if (!result) return [];
+
+  let data = [];
+  data = result;
+
+  return data;
 };
 
 const buildMetadata = result => {
   let data = {};
   const { recording } = result;
 
-  if (recording && recording.meeting) {
+  if (hasProperty(recording, 'meeting')) {
     const attr = getAttr(recording.meeting.shift());
-
-    const {
-      id,
-      name,
-    } = attr;
-
-    const epoch = parseInt(recording.start_time.shift(), 10);
+    const { id } = attr;
+    const meta = recording.meta.shift();
+    const end = parseInt(recording.end_time.shift(), 10);
+    const name = meta.name ? meta.name.shift() : attr.name;
+    const participants = parseInt(recording.participants.shift(), 10);
+    const start = parseInt(recording.start_time.shift(), 10);
 
     data = {
+      end,
       id,
       name,
-      epoch,
+      participants,
+      start,
     };
+  }
+
+  return data;
+};
+
+const buildNotes = result => {
+  if (!result) return '';
+
+  // Extract the notes' body
+  const regex = /<body>\n.*\n<\/body>/g;
+  const match = result.match(regex);
+
+  let data = '';
+  if (!isEmpty(match)) {
+    data = match.shift();
   }
 
   return data;
@@ -136,6 +172,12 @@ const buildSlides = image => {
   return slides;
 };
 
+const buildTalkers = result => {
+  const data = [];
+
+  return data;
+};
+
 const buildThumbnails = slides => {
   const screenshare = 'deskshare';
   const prefix = 'slide-';
@@ -148,8 +190,13 @@ const buildThumbnails = slides => {
       timestamp,
     } = slide;
 
-    // TODO: Screenshare thumbnail
-    if (!src.includes(screenshare)) {
+    if (src.includes(screenshare)) {
+      result.push({
+        id,
+        src: screenshare,
+        timestamp,
+      });
+    } else {
       result.push({
         id,
         src: src.replace(prefix, url),
@@ -159,6 +206,26 @@ const buildThumbnails = slides => {
 
     return result;
   }, []);
+};
+
+const parseText = data => {
+  let text = '';
+
+  const children = getChildren(data);
+  if (!isEmpty(children)) {
+    const child = children.shift();
+    const grandchildren = getChildren(child);
+    if (!isEmpty(grandchildren)) {
+      text = grandchildren.map(grandchild => {
+        const name = grandchild['#name'];
+        if (name === 'br') return '\r';
+
+        return grandchild['_'];
+      }).join('');
+    }
+  }
+
+  return text;
 };
 
 const buildCanvases = group => {
@@ -201,8 +268,8 @@ const buildCanvases = group => {
         } else if (g.switch) {
           shape.type = 'text';
           const foreignObject = g.switch.shift()['foreignObject'].shift();
-          const p = foreignObject.p.shift()['_'];
-          shape.data = Object.assign({ p: p ? p : '' }, getAttr(foreignObject));
+          const text = parseText(foreignObject);
+          shape.data = Object.assign({ text }, getAttr(foreignObject));
         }
 
         return {
@@ -246,7 +313,7 @@ const buildPanzooms = result => {
   let data = [];
   const { recording } = result;
 
-  if (recording && recording.event) {
+  if (hasProperty(recording, 'event')) {
     data = recording.event.map(panzoom => {
       const attr = getAttr(panzoom);
       const viewbox = getNumbers(panzoom.viewBox.shift());
@@ -268,7 +335,7 @@ const buildCursor = result => {
   let data = [];
   const { recording } = result;
 
-  if (recording && recording.event) {
+  if (hasProperty(recording, 'event')) {
     data = recording.event.map(cursor => {
       const attr = getAttr(cursor);
       const position = getNumbers(cursor.cursor.shift());
@@ -299,20 +366,35 @@ const decodeXML = message => {
     .replace(/&(gt|#62);/g, '>');
 };
 
+const getInitials = name => {
+  let initials;
+
+  if (name) {
+    initials = name
+      .slice(0, 2)
+      .toLowerCase()
+      .trim();
+  }
+
+  return initials;
+};
+
 const buildChat = result => {
   const { popcorn } = result;
   let data = [];
 
-  if (popcorn && popcorn.chattimeline) {
+  if (hasProperty(popcorn, 'chattimeline')) {
     const { chattimeline } = popcorn;
     data = chattimeline.map(chat => {
       const attr = getAttr(chat);
       const clear = attr.out ? parseFloat(attr.out) : -1;
       const message = decodeXML(clearHyperlink(attr.message));
+      const initials = getInitials(attr.name);
 
       return {
         clear,
         hyperlink: message !== attr.message,
+        initials,
         name: attr.name,
         message,
         timestamp: parseFloat(attr.in),
@@ -327,7 +409,7 @@ const buildScreenshare = result => {
   let data = [];
   const { recording } = result;
 
-  if (recording && recording.event) {
+  if (hasProperty(recording, 'event')) {
     data = recording.event.map(screenshare => {
       const attr = getAttr(screenshare);
 
@@ -339,6 +421,23 @@ const buildScreenshare = result => {
   }
 
   return data;
+};
+
+const getOptions = filename => {
+  let options = {};
+
+  switch (filename) {
+    case config.data.shapes:
+      options = {
+        explicitChildren: true,
+        preserveChildrenOrder: true,
+        charsAsChildren: true,
+      };
+      break;
+    default:
+  }
+
+  return options;
 };
 
 const build = (filename, value) => {
@@ -354,13 +453,34 @@ const build = (filename, value) => {
         case config.data.captions:
           data = buildCaptions(value);
           break;
+        case config.data.talkers:
+          data = buildTalkers(value);
+          break;
         default:
+          logger.debug('unhandled', 'json', filename);
+          reject(filename);
+      }
+      resolve(data);
+    } else if (fileType === 'html') {
+      switch (filename) {
+        case config.data.notes:
+          data = buildNotes(value);
+          break;
+        default:
+          logger.debug('unhandled', 'html', filename);
           reject(filename);
       }
       resolve(data);
     } else {
+      if (!value) {
+        logger.warn('missing', filename);
+
+        return resolve(null);
+      }
+
       // Parse XML data
-      parseStringPromise(value).then(result => {
+      const options = getOptions(filename);
+      parseStringPromise(value, options).then(result => {
         switch (filename) {
           case config.data.chat:
             data = buildChat(result);
@@ -381,6 +501,7 @@ const build = (filename, value) => {
             data = buildShapes(result);
             break;
           default:
+            logger.debug('unhandled', 'xml', filename);
             reject(filename);
         }
         resolve(data);

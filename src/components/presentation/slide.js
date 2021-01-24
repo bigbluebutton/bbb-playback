@@ -1,5 +1,9 @@
 import React, { PureComponent } from 'react';
+import cx from 'classnames';
+import { buildFileURL } from 'utils/data';
 import './index.scss';
+
+const SCREENSHARE = 'deskshare';
 
 export default class Slide extends PureComponent {
   constructor(props) {
@@ -7,7 +11,7 @@ export default class Slide extends PureComponent {
 
     const { metadata } = props;
 
-    this.url = `/presentation/${metadata.id}`;
+    this.recordId = metadata.id;
   }
 
   getProxy(id, height, width) {
@@ -15,6 +19,15 @@ export default class Slide extends PureComponent {
 
     const thumbnail = thumbnails.find(thumbnails => id === thumbnails.id);
     if (!thumbnail) return null;
+
+    const {
+      alt,
+      src,
+    } = thumbnail;
+
+    if (src === SCREENSHARE) return null;
+
+    const logo = src.includes('logo');
 
     return (
       <foreignObject
@@ -24,9 +37,9 @@ export default class Slide extends PureComponent {
         y={0}
       >
         <img
-          alt={thumbnail.alt}
-          className="proxy"
-          src={`${this.url}/${thumbnail.src}`}
+          alt={alt}
+          className={cx('proxy', { logo })}
+          src={buildFileURL(this.recordId, src)}
         />
       </foreignObject>
     );
@@ -52,7 +65,7 @@ export default class Slide extends PureComponent {
         {this.getProxy(id, height, width)}
         <image
           height={height}
-          href={`${this.url}/${src}`}
+          href={buildFileURL(this.recordId, src)}
           x={0}
           width={width}
           y={0}

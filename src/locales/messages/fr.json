@@ -1,10 +1,20 @@
 {
+  "button.about.aria": "À propos",
+  "button.clear.aria": "Effacer la recherche",
+  "button.close.aria": "Fermer modal",
+  "button.fullscreen.aria": "Contenu plein écran",
+  "button.restore.aria": "Restaurer le contenu",
+  "button.search.aria": "Chercher",
+  "button.section.aria": "Section latérale",
+  "button.swap.aria": "Contenu d'échange",
   "error.wrapper.aria": "Zone d'erreur",
   "loader.wrapper.aria": "Zone de chargement",
   "player.wrapper.aria": "Zone de lecteur",
   "player.chat.wrapper.aria": "Zone de chat",
+  "player.notes.wrapper.aria": "Zone de notes",
   "player.presentation.wrapper.aria": "Zone de présentation",
   "player.screenshare.wrapper.aria": "Zone de partage d'écran",
+  "player.talkers.wrapper.aria": "Zone de causeurs",
   "player.thumbnails.wrapper.aria": "Zone des miniatures",
   "player.video.wrapper.aria": "Zone vidéo"
 }
