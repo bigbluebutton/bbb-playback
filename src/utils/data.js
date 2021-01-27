@@ -25,7 +25,6 @@ const ID = {
   SCREENSHARE: 'screenshare',
   SEARCH: 'search',
   SHAPES: 'shapes',
-  TALKERS: 'talkers',
   THUMBNAILS: 'thumbnails',
   VIDEO: 'video',
 };

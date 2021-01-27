@@ -24,7 +24,7 @@ https://<domain>/playback/presentation/2.3/<recordId>
   - `s=<name>`
 
 - time:
-  - `t=HhMmSs`
+  - `t=HhMmSs` (e.g., 1h10m5s)
   - `t=MmSs`
   - `t=Ss`
 
@@ -45,9 +45,8 @@ https://<domain>/playback/presentation/2.3/<recordId>
   - `swap`
   - `thumbnails`
 
-- monitor: posts server playback's usage data
-  - `interval`: post frequency
-  - `url`: server post destiny
+- locale:
+  - `default`: fallback [`ar`|`de`|`en`|`es`|`fr`|`it`|`ja`|`pt`|`ru`|`tr`]
 
 - shortcuts: alt + shift
   - `fullscreen`: `K`

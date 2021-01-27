@@ -172,12 +172,6 @@ const buildSlides = image => {
   return slides;
 };
 
-const buildTalkers = result => {
-  const data = [];
-
-  return data;
-};
-
 const buildThumbnails = slides => {
   const screenshare = 'deskshare';
   const prefix = 'slide-';
@@ -452,9 +446,6 @@ const build = (filename, value) => {
           break;
         case config.data.captions:
           data = buildCaptions(value);
-          break;
-        case config.data.talkers:
-          data = buildTalkers(value);
           break;
         default:
           logger.debug('unhandled', 'json', filename);
