@@ -34,19 +34,16 @@
       "notes": "notes.html",
       "panzooms": "panzooms.xml",
       "screenshare": "deskshare.xml",
-      "shapes": "shapes.svg",
-      "talkers": "talkers.json"
+      "shapes": "shapes.svg"
     }
+  },
+  "locale": {
+    "default": "en"
   },
   "medias": [
     "mp4",
     "webm"
   ],
-  "monitor": {
-    "enabled": false,
-    "interval": 60,
-    "url": "/monitor"
-  },
   "search": {
     "length": {
       "min": 3,
@@ -80,6 +77,6 @@
   },
   "video": {
     "rps": 10,
-    "rates": [ 0.5, 1, 1.5, 2 ]
+    "rates": [ 0.5, 1, 1.25, 1.5, 1.75, 2 ]
   }
 }

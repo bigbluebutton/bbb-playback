@@ -172,12 +172,6 @@ const buildSlides = image => {
   return slides;
 };
 
-const buildTalkers = result => {
-  const data = [];
-
-  return data;
-};
-
 const buildThumbnails = slides => {
   const screenshare = 'deskshare';
   const prefix = 'slide-';
@@ -245,11 +239,17 @@ const buildCanvases = group => {
         const drawId = getId(drawAttr.shape);
 
         let shape = {};
-        if (g.rect && g.image) {
+        if (g.image) {
           shape.type = 'poll';
-          const rect = getAttr(g.rect.shift());
           const image = getAttr(g.image.shift());
-          shape.data = Object.assign({ rect }, { image });
+          // TODO: Better adapt for old versions
+          // Versions prior to 2.3 included a rect structure along with an image
+          if (g.rect) {
+            const rect = getAttr(g.rect.shift());
+            shape.data = Object.assign({ rect }, { image });
+          } else {
+            shape.data = Object.assign({ image });
+          }
         } else if (g.polyline) {
           shape.type = 'polyline';
           shape.data = Object.assign({}, getAttr(g.polyline.shift()));
@@ -452,9 +452,6 @@ const build = (filename, value) => {
           break;
         case config.data.captions:
           data = buildCaptions(value);
-          break;
-        case config.data.talkers:
-          data = buildTalkers(value);
           break;
         default:
           logger.debug('unhandled', 'json', filename);

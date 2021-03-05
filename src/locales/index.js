@@ -1,6 +1,5 @@
+import { locale as config } from 'config';
 import messages from './messages';
-
-const DEFAULT_LOCALE = 'en';
 
 const RTL_LOCALES = ['ar'];
 
@@ -17,7 +16,7 @@ const getLocale = () => {
 
   setDirection(locale);
 
-  if (!messages[locale]) return DEFAULT_LOCALE;
+  if (!messages[locale]) return config.default;
 
   return locale;
 };
