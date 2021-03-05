@@ -67,6 +67,62 @@ export default class Canvas extends PureComponent {
     );
   }
 
+  renderMarker(style, data) {
+    const {
+      path,
+      pathStyle,
+      mask,
+      maskPath,
+      maskPathStyle,
+      use,
+    } = data;
+
+    return (
+      <g>
+        <path
+          d={path.d}
+          style={pathStyle}
+        />
+        <mask
+          id={mask.id}
+        >
+          <path
+            d={maskPath.d}
+            style={maskPathStyle}
+          />
+        </mask>
+        <use
+          mask={use['mask']}
+          xlinkHref={use['xlink:href']}
+        />
+      </g>
+    );
+  }
+
+  renderEraser(style, data) {
+    const {
+      clipPath,
+      path,
+      use,
+    } = data;
+
+    return (
+      <g style={style}>
+        <clipPath
+          id={clipPath.id}
+        >
+          <path
+            d={path.d}
+          />
+        </clipPath>
+        <use
+          clip-path={use['clip-path']}
+          xlinkHref={use['xlink:href']}
+        />
+      </g>
+    );
+  }
+
   renderPoll(style, data) {
     const {
       image,
@@ -141,6 +197,12 @@ export default class Canvas extends PureComponent {
       switch (type) {
         case 'poll':
           canvas.push(this.renderPoll(style, data));
+          break;
+        case 'marker':
+          canvas.push(this.renderMarker(style, data));
+          break;
+        case 'eraser':
+          canvas.push(this.renderEraser(style, data));
           break;
         case 'polyline':
           canvas.push(this.renderPolyline(style, data));
