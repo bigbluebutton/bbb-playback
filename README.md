@@ -82,6 +82,17 @@ PUBLIC_URL=. REACT_APP_NO_ROUTER=1 npm run-script build
 ```
 And then copy all of the files from the bbb-playback `build` directory and the files from `/var/bigbluebutton/published/presentation/<recordid>` together into a single directory.
 
+## External recordings
+
+bbb-playback can play recordings hosted somewhere other than the default location. To do this, build the bbb-playback with the following options:
+```
+REACT_APP_MEDIA_ROOT_URL=/different/relative/path/to/presentation/files npm run-script build
+```
+You can also play medias from an external server. Note that you will need to have the `Access-Control-Allow-Origin` header returned on the medias for that to work.
+```
+REACT_APP_MEDIA_ROOT_URL=https://my-media-server.example.com npm run-script build
+```
+
 ## Playing old recordings
 
 At `/etc/bigbluebutton/nginx/presentation.nginx`:

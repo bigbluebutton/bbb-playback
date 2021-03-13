@@ -46,10 +46,12 @@ const getRouter = () => {
 
 const ROUTER = getRouter();
 
+const MEDIA_ROOT_URL = process.env.REACT_APP_MEDIA_ROOT_URL;
+
 const buildFileURL = (recordId, file) => {
   if (!ROUTER) return file;
 
-  return `/presentation/${recordId}/${file}`;
+  return `${MEDIA_ROOT_URL ? MEDIA_ROOT_URL : '/presentation'}/${recordId}/${file}`;
 };
 
 const getAvatarStyle = name => {
