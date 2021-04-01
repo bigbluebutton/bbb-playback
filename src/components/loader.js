@@ -138,7 +138,6 @@ class Loader extends PureComponent {
       return (
         <Error
           code={error}
-          intl={intl}
         />
       );
     }
