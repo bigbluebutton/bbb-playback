@@ -28,6 +28,9 @@ https://<domain>/playback/presentation/2.3/<recordId>
   - `t=MmSs`
   - `t=Ss`
 
+- path:
+  - `p=path/to/recordings`
+
 - log:
   - `debug`
 
