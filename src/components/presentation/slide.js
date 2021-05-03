@@ -58,12 +58,14 @@ export default class Slide extends PureComponent {
       height,
       src,
       width,
+      fullId,
     } = current;
 
     return (
       <g>
         {this.getProxy(id, height, width)}
         <image
+          id={fullId}
           height={height}
           href={buildFileURL(this.recordId, src)}
           x={0}
