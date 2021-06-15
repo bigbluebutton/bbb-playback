@@ -25,7 +25,6 @@ const ID = {
   SCREENSHARE: 'screenshare',
   SEARCH: 'search',
   SHAPES: 'shapes',
-  TALKERS: 'talkers',
   THUMBNAILS: 'thumbnails',
   VIDEO: 'video',
 };
@@ -47,10 +46,21 @@ const getRouter = () => {
 
 const ROUTER = getRouter();
 
+const MEDIA_ROOT_URL = process.env.REACT_APP_MEDIA_ROOT_URL;
+
 const buildFileURL = (recordId, file) => {
   if (!ROUTER) return file;
 
-  return `/presentation/${recordId}/${file}`;
+  const mediaPath = getMediaPath();
+
+  const rootUrl = MEDIA_ROOT_URL ? MEDIA_ROOT_URL : '/presentation';
+  let fileUrl = `${recordId}/${file}`;
+
+  if(mediaPath) {
+    fileUrl = `${mediaPath}/${fileUrl}`;
+  }
+
+  return `${rootUrl}/${fileUrl}`;
 };
 
 const getAvatarStyle = name => {
@@ -362,6 +372,17 @@ const getStyle = () => {
   return style;
 };
 
+const getMediaPath = () => {
+  const params = new URLSearchParams(window.location.search);
+  let mediaPath = "";
+
+  if (params && params.has('p')) {
+    mediaPath = params.get('p');
+  }
+
+  return mediaPath;
+};
+
 const getTime = location => {
   if (location) {
     const { search } = location;
@@ -649,6 +670,7 @@ export {
   getFileName,
   getFileType,
   getLayout,
+  getMediaPath,
   getRecordId,
   getScrollLeft,
   getScrollTop,

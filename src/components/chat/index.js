@@ -16,6 +16,12 @@ const intlMessages = defineMessages({
 });
 
 export default class Chat extends Component {
+  constructor(props) {
+    super(props);
+
+    this.interaction = false;
+  }
+
   componentDidMount() {
     this.handleAutoScroll();
   }
@@ -35,7 +41,7 @@ export default class Chat extends Component {
   }
 
   handleAutoScroll() {
-    if (!config.scroll) return;
+    if (!config.scroll || this.interaction) return;
 
     // Auto-scroll can start after getting the first and current nodes
     if (this.firstNode && this.currentNode) {
@@ -111,7 +117,11 @@ export default class Chat extends Component {
         tabIndex="0"
       >
         <div className="list">
-          <div className="message-wrapper">
+          <div
+            className="message-wrapper"
+            onMouseEnter={() => this.interaction = true}
+            onMouseLeave={() => this.interaction = false}
+          >
             {this.renderMessages()}
           </div>
         </div>

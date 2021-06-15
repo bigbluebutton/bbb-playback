@@ -24,9 +24,12 @@ https://<domain>/playback/presentation/2.3/<recordId>
   - `s=<name>`
 
 - time:
-  - `t=HhMmSs`
+  - `t=HhMmSs` (e.g., 1h10m5s)
   - `t=MmSs`
   - `t=Ss`
+
+- path:
+  - `p=path/to/recordings`
 
 - log:
   - `debug`
@@ -45,9 +48,8 @@ https://<domain>/playback/presentation/2.3/<recordId>
   - `swap`
   - `thumbnails`
 
-- monitor: posts server playback's usage data
-  - `interval`: post frequency
-  - `url`: server post destiny
+- locale:
+  - `default`: fallback [`ar`|`de`|`en`|`es`|`fr`|`it`|`ja`|`pt`|`ru`|`tr`]
 
 - shortcuts: alt + shift
   - `fullscreen`: `K`
@@ -82,6 +84,17 @@ bbb-playback can be used to create a self-contained recording - a single directo
 PUBLIC_URL=. REACT_APP_NO_ROUTER=1 npm run-script build
 ```
 And then copy all of the files from the bbb-playback `build` directory and the files from `/var/bigbluebutton/published/presentation/<recordid>` together into a single directory.
+
+## External recordings
+
+bbb-playback can play recordings hosted somewhere other than the default location. To do this, build the bbb-playback with the following options:
+```
+REACT_APP_MEDIA_ROOT_URL=/different/relative/path/to/presentation/files npm run-script build
+```
+You can also play medias from an external server. Note that you will need to have the `Access-Control-Allow-Origin` header returned on the medias for that to work.
+```
+REACT_APP_MEDIA_ROOT_URL=https://my-media-server.example.com npm run-script build
+```
 
 ## Playing old recordings
 
