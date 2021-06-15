@@ -32,6 +32,7 @@ export default class Thumbnails extends Component {
     const { metadata } = props;
 
     this.recordId = metadata.id;
+    this.interaction = false;
   }
 
   componentDidMount() {
@@ -68,7 +69,7 @@ export default class Thumbnails extends Component {
   }
 
   handleAutoScroll() {
-    if (!config.scroll) return;
+    if (!config.scroll || this.interaction) return;
 
     // Auto-scroll can start after getting the first and current nodes
     if (this.firstNode && this.currentNode) {
@@ -223,6 +224,8 @@ export default class Thumbnails extends Component {
         aria-label={intl.formatMessage(intlMessages.aria)}
         className="thumbnails-wrapper"
         id={ID.THUMBNAILS}
+        onMouseEnter={() => this.interaction = true}
+        onMouseLeave={() => this.interaction = false}
         tabIndex="0"
       >
         {this.renderThumbnails()}

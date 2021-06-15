@@ -73,27 +73,43 @@ export default class Canvas extends PureComponent {
       rect,
     } = data;
 
-    return (
-      <g style={style}>
-        <rect
-          fill={rect.fill}
-          height={rect.height}
-          stroke={rect.stroke}
-          strokeWidth={rect['stroke-width']}
-          width={rect.width}
-          x={rect.x}
-          y={rect.y}
-        />
-        <image
-          height={image.height}
-          transform={image.transform}
-          width={image.width}
-          x={image.x}
-          href={buildFileURL(this.recordId, image['xlink:href'])}
-          y={image.y}
-        />
-      </g>
-    );
+    // TODO: Better adapt for old versions
+    // Versions prior to 2.3 included a rect structure along with an image
+    if (rect) {
+      return (
+        <g style={style}>
+          <rect
+            fill={rect.fill}
+            height={rect.height}
+            stroke={rect.stroke}
+            strokeWidth={rect['stroke-width']}
+            width={rect.width}
+            x={rect.x}
+            y={rect.y}
+          />
+          <image
+            height={image.height}
+            transform={image.transform}
+            width={image.width}
+            x={image.x}
+            href={buildFileURL(this.recordId, image['xlink:href'])}
+            y={image.y}
+          />
+        </g>
+      );
+    } else {
+       return (
+        <g style={style}>
+          <image
+            height={image.height}
+            width={image.width}
+            x={image.x}
+            href={buildFileURL(this.recordId, image['xlink:href'])}
+            y={image.y}
+          />
+        </g>
+      );
+    }
   }
 
   renderCanvas(drawsInterval) {

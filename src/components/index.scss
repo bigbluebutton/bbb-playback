@@ -39,10 +39,6 @@ $error-font-size: 5rem;
   .fullscreen-button {
     visibility: hidden;
   }
-
-  .talkers-wrapper {
-    visibility: hidden;
-  }
 }
 
 .single-content {
@@ -64,10 +60,6 @@ $error-font-size: 5rem;
   .fullscreen-button {
     visibility: visible;
   }
-
-  .talkers-wrapper {
-    visibility: visible;
-  }
 }
 
 .fullscreen-content {
@@ -75,10 +67,6 @@ $error-font-size: 5rem;
   grid-template-rows: 0% auto auto 0%;
 
   .fullscreen-button {
-    visibility: visible;
-  }
-
-  .talkers-wrapper {
     visibility: visible;
   }
 }
@@ -298,10 +286,6 @@ $error-font-size: 5rem;
     grid-template-rows: $top-bar-height $media-fit-height auto auto $bottom-bar-height;
 
     .fullscreen-button {
-      visibility: visible;
-    }
-
-    .talkers-wrapper {
       visibility: visible;
     }
   }

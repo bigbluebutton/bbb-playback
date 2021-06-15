@@ -1,0 +1,19 @@
+{
+  "button.about.aria": "درباره",
+  "button.clear.aria": "پاک کردن جست و جو",
+  "button.close.aria": "بستن",
+  "button.fullscreen.aria": "محتوای تمام صفحه",
+  "button.restore.aria": "بازگرداندن محتوا",
+  "button.search.aria": "جست و جو",
+  "button.section.aria": "بخش کناری",
+  "button.swap.aria": "جا به جایی محتوا",
+  "error.wrapper.aria": "ناحیه خطا",
+  "loader.wrapper.aria": "ناحیه بارگذاری",
+  "player.wrapper.aria": "ناحیه پخش کننده",
+  "player.chat.wrapper.aria": "ناحیه گفت و گو",
+  "player.notes.wrapper.aria": "ناحیه یادداشت ها",
+  "player.presentation.wrapper.aria": "ناحیه ارایه",
+  "player.screenshare.wrapper.aria": "ناحیه اشتراک صفحه",
+  "player.thumbnails.wrapper.aria": "ناحیه بندانگشتی ها",
+  "player.video.wrapper.aria": "ناحیه ویدیو"
+}
