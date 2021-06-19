@@ -33,6 +33,7 @@
       "metadata": "metadata.xml",
       "notes": "notes.html",
       "panzooms": "panzooms.xml",
+      "polls": "polls.json",
       "screenshare": "deskshare.xml",
       "shapes": "shapes.svg"
     }
@@ -77,6 +78,6 @@
   },
   "video": {
     "rps": 10,
-    "rates": [ 0.5, 1, 1.5, 2 ]
+    "rates": [ 0.5, 1, 1.25, 1.5, 1.75, 2 ]
   }
 }

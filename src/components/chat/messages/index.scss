@@ -1,0 +1,122 @@
+@import 'src/styles/sizes';
+
+.message {
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+
+  [dir="ltr"] & {
+    padding: 0 0 $padding $padding;
+  }
+
+  [dir="rtl"] & {
+    padding: 0 $padding $padding 0;
+  }
+
+  .data {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    width:100%;
+
+    [dir="ltr"] & {
+      margin: 0 0 0 $margin;
+    }
+
+    [dir="rtl"] & {
+      margin: 0 $margin 0 0;
+    }
+  }
+
+  .info {
+    display: flex;
+    width: 100%;
+    margin: 0 0 $margin-extra-small 0;
+  }
+
+  .name {
+    font-weight: var(--font-weight-semi-bold);
+    max-width: 60%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .time {
+    align-items: center;
+    display: flex;
+    font-size: x-small;
+    opacity: .75;
+
+    [dir="ltr"] & {
+      margin: 0 0 0 $margin;
+    }
+
+    [dir="rtl"] & {
+      margin: 0 $margin 0 0;
+    }
+  }
+
+  .text {
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    width: 100%;
+    white-space: pre-wrap;
+
+    [dir="ltr"] & {
+      padding: 0 $padding-extra-small 0 0;
+    }
+
+    [dir="rtl"] & {
+      padding: 0 0 0 $padding-extra-small;
+    }
+  }
+
+  .interactive {
+    border-radius: 50%;
+    display: flex;
+    height: max-content;
+    outline: none;
+
+    .avatar {
+      cursor: pointer;
+    }
+
+    &:focus,
+    &:hover {
+      box-shadow: 0 0 0 $margin-small var(--box-shadow-color);
+    }
+  }
+
+  .inactive {
+    opacity: .5;
+  }
+}
+
+.poll-wrapper {
+  background-color: var(--poll-wrapper-background-color);
+  border: $border-width-extra-small solid var(--poll-wrapper-color);
+  padding: $padding-small $padding-small 0 $padding-small;
+
+  [dir="ltr"] & {
+    margin: 0 $margin 0 0;
+  }
+
+  [dir="rtl"] & {
+    margin: 0 0 0 $margin;
+  }
+
+  .poll-options,
+  .poll-question,
+  .poll-result {
+    padding-bottom: $padding-small;
+  }
+
+  .poll-bar {
+    color: var(--poll-bar-color);
+  }
+
+  .poll-label {
+    font-weight: var(--font-weight-semi-bold);
+  }
+}
