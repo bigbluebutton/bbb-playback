@@ -1,10 +1,34 @@
 import {
+  addPollsToChat,
   buildStyle,
   decodeXML,
   getAttr,
   getId,
   getNumbers,
 } from './builder';
+
+it('merges and sorts chat and polls arrays', () => {
+  let chat = [
+    { timestamp: 5.1, type: 'chat' },
+    { timestamp: 11.9, type: 'chat' },
+    { timestamp: 10.1, type: 'chat' },
+  ];
+
+  let polls = [
+    { timestamp: 4.0, type: 'poll' },
+    { timestamp: 16.9, type: 'poll' },
+    { timestamp: 10.1, type: 'poll' },
+  ];
+
+  expect(addPollsToChat(chat, polls)).toEqual([
+    { timestamp: 4.0, type: 'poll' },
+    { timestamp: 5.1, type: 'chat' },
+    { timestamp: 10.1, type: 'chat' },
+    { timestamp: 10.1, type: 'poll' },
+    { timestamp: 11.9, type: 'chat' },
+    { timestamp: 16.9, type: 'poll' },
+  ]);
+});
 
 it('builds style object from a string', () => {
   let value = 'first: 1; second: two; visibility: hidden;';

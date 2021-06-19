@@ -101,7 +101,8 @@ const getBar = (percentage) => {
     bar = FULL_BLOCK.repeat(full);
 
     if (half) {
-      const ltr = document.dir === 'ltr';
+      // Add true fallback for the tests
+      const ltr = document.dir ? document.dir === 'ltr' : true;
       bar = bar.concat(ltr ? LEFT_HALF_BLOCK : RIGHT_HALF_BLOCK);
     }
   }

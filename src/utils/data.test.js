@@ -2,11 +2,15 @@ import {
   ID,
   LAYOUT,
   getActiveContent,
+  getBar,
   getControlFromLayout,
   getCurrentDataIndex,
   getCurrentDataInterval,
   getFileName,
   getFileType,
+  getMessageType,
+  getPercentage,
+  getPollLabel,
   getRecordId,
   getScrollTop,
   getSectionFromLayout,
@@ -32,14 +36,8 @@ const {
 
 it('gets the current active content', () => {
   const screenshare = [
-    {
-      timestamp: 10.0,
-      clear: 25.0,
-    },
-    {
-      timestamp: 30.0,
-      clear: 45.0,
-    },
+    { timestamp: 10.0, clear: 25.0 },
+    { timestamp: 30.0, clear: 45.0 },
   ];
 
   // Boundaries
@@ -60,6 +58,23 @@ it('gets the current active content', () => {
 
   const invalid = [{}];
   expect(getActiveContent(invalid, 0.0)).toEqual(PRESENTATION);
+});
+
+it('get a poll bar from a percentage value', () => {
+  expect(getBar(0))
+    .toEqual('-');
+  expect(getBar(12.5))
+    .toEqual('█');
+  expect(getBar(25))
+    .toEqual('██▌');
+  expect(getBar(50))
+    .toEqual('█████');
+  expect(getBar(75))
+    .toEqual('███████▌');
+  expect(getBar(87.5))
+    .toEqual('████████▌');
+  expect(getBar(100))
+    .toEqual('██████████');
 });
 
 it('gets controls from layout query string', () => {
@@ -172,6 +187,32 @@ it('gets file type', () => {
   expect(getFileType(xml)).toEqual('xml');
   const html = 'name.html';
   expect(getFileType(html)).toEqual('html');
+});
+
+it('gets the chat message type', () => {
+  expect(getMessageType({ message: 'message' })).toEqual(ID.USERS);
+  expect(getMessageType({ question: 'question' })).toEqual(ID.POLLS);
+  expect(getMessageType({})).toEqual('undefined');
+});
+
+it('gets the percentage representation of a value as string', () => {
+  expect(getPercentage(0, 10)).toEqual('0.0');
+  expect(getPercentage(5, 10)).toEqual('50.0');
+  expect(getPercentage(9.9, 10)).toEqual('99.0');
+  expect(getPercentage(25, 10)).toEqual('250.0');
+});
+
+it('gets the locale id for a poll label', () => {
+  expect(getPollLabel('Yes', 'YN')).toEqual('yes');
+  expect(getPollLabel('No', 'YN')).toEqual('no');
+  expect(getPollLabel('Other', 'YN')).toEqual(null);
+  expect(getPollLabel('Yes', 'YNA')).toEqual('yes');
+  expect(getPollLabel('No', 'YNA')).toEqual('no');
+  expect(getPollLabel('Abstention', 'YNA')).toEqual('abstention');
+  expect(getPollLabel('True', 'TF')).toEqual('true');
+  expect(getPollLabel('False', 'TF')).toEqual('false');
+  expect(getPollLabel('Other', 'TF')).toEqual(null);
+  expect(getPollLabel('True', 'X')).toEqual(null);
 });
 
 it('gets record id', () => {
@@ -316,14 +357,8 @@ it('checks if data array is empty', () => {
 
 it('checks if data is enabled', () => {
   const data = [
-    {
-      timestamp: 1.0,
-      clear: 2.0,
-    },
-    {
-      timestamp: 3.0,
-      clear: 4.0,
-    },
+    { timestamp: 1.0, clear: 2.0 },
+    { timestamp: 3.0, clear: 4.0 },
   ];
 
   // Under
@@ -393,22 +428,10 @@ it('parses time query to seconds', () => {
 
 it('searches text in data collection', () => {
   const thumbnails = [
-    {
-      alt: 'some text',
-      timestamp: 1.0,
-    },
-    {
-      alt: 'SOME TEXT',
-      timestamp: 2.0,
-    },
-    {
-      alt: 'text',
-      timestamp: 3.0,
-    },
-    {
-      alt: 'TEXT',
-      timestamp: 4.0,
-    },
+    { alt: 'some text', timestamp: 1.0 },
+    { alt: 'SOME TEXT', timestamp: 2.0 },
+    { alt: 'text', timestamp: 3.0 },
+    { alt: 'TEXT', timestamp: 4.0 },
   ];
 
   // Match
