@@ -1,16 +1,10 @@
 import React, { Component } from 'react';
+import { defineMessages } from 'react-intl';
+import Message from './message';
 import {
-  defineMessages,
-  FormattedTime,
-} from 'react-intl';
-import cx from 'classnames';
-import Avatar from 'components/utils/avatar';
-import {
-  ID,
   getBar,
   getPercentage,
   getPollLabel,
-  getTimestampAsMilliseconds,
 } from 'utils/data';
 import './index.scss';
 
@@ -56,25 +50,6 @@ export default class PollMessage extends Component {
     if (active !== nextProps.active) return true;
 
     return false;
-  }
-
-  renderAvatar(active) {
-    const { onClick } = this.props;
-
-    return (
-      <div
-        className={cx('interactive', { inactive: !active })}
-        onClick={onClick}
-        onKeyPress={(e) => e.key === 'Enter' ? onClick() : null}
-        tabIndex="0"
-      >
-        <Avatar
-          active={active}
-          icon="polls"
-          name={ID.POLLS}
-        />
-      </div>
-    );
   }
 
   renderQuestion(intl) {
@@ -151,38 +126,12 @@ export default class PollMessage extends Component {
     );
   }
 
-  renderContent(active) {
-    const {
-      intl,
-      timestamp,
-    } = this.props;
-
-    const milliseconds = getTimestampAsMilliseconds(timestamp);
-
+  renderContent(intl) {
     return (
-      <div className="data">
-        <div className="info">
-          <div className={cx('name', { inactive: !active })}>
-            {intl.formatMessage(intlMessages.name)}
-          </div>
-          <div className={cx('time', { inactive: !active })}>
-            <FormattedTime
-              hourCycle="h23"
-              hour="numeric"
-              minute="numeric"
-              second="numeric"
-              timeZone="UTC"
-              value={milliseconds}
-            />
-          </div>
-        </div>
-        <div className={cx('text', { inactive: !active })}>
-          <div className="poll-wrapper">
-            {this.renderQuestion(intl)}
-            {this.renderResult()}
-            {this.renderOptions(intl)}
-          </div>
-        </div>
+      <div className="poll-wrapper">
+        {this.renderQuestion(intl)}
+        {this.renderResult()}
+        {this.renderOptions(intl)}
       </div>
     );
   }
@@ -190,13 +139,21 @@ export default class PollMessage extends Component {
   render() {
     const {
       active,
+      intl,
+      onClick,
+      timestamp,
     } = this.props;
 
     return (
-      <div className="message">
-        {this.renderAvatar(active)}
-        {this.renderContent(active)}
-      </div>
+      <Message
+        active={active}
+        icon="polls"
+        onClick={onClick}
+        name={intl.formatMessage(intlMessages.name)}
+        timestamp={timestamp}
+      >
+        {this.renderContent(intl)}
+      </Message>
     );
   }
 }

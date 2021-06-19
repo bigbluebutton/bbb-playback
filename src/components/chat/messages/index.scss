@@ -26,34 +26,6 @@
     [dir="rtl"] & {
       margin: 0 $margin 0 0;
     }
-
-    .poll-wrapper {
-      background-color: var(--poll-wrapper-background-color);
-      border: $border-width-extra-small solid var(--poll-wrapper-color);
-      padding: $padding-small $padding-small 0 $padding-small;
-
-      [dir="ltr"] & {
-        margin: 0 $margin 0 0;
-      }
-
-      [dir="rtl"] & {
-        margin: 0 0 0 $margin;
-      }
-
-      .poll-options,
-      .poll-question,
-      .poll-result {
-        padding-bottom: $padding-small;
-      }
-
-      .poll-bar {
-        color: var(--poll-bar-color);
-      }
-
-      .poll-label {
-        font-weight: var(--font-weight-semi-bold);
-      }
-    }
   }
 
   .info {
@@ -118,5 +90,33 @@
 
   .inactive {
     opacity: .5;
+  }
+}
+
+.poll-wrapper {
+  background-color: var(--poll-wrapper-background-color);
+  border: $border-width-extra-small solid var(--poll-wrapper-color);
+  padding: $padding-small $padding-small 0 $padding-small;
+
+  [dir="ltr"] & {
+    margin: 0 $margin 0 0;
+  }
+
+  [dir="rtl"] & {
+    margin: 0 0 0 $margin;
+  }
+
+  .poll-options,
+  .poll-question,
+  .poll-result {
+    padding-bottom: $padding-small;
+  }
+
+  .poll-bar {
+    color: var(--poll-bar-color);
+  }
+
+  .poll-label {
+    font-weight: var(--font-weight-semi-bold);
   }
 }

@@ -102,7 +102,6 @@ export default class Chat extends Component {
     const {
       answers,
       question,
-      respondents,
       responders,
       timestamp,
       type,
@@ -116,7 +115,6 @@ export default class Chat extends Component {
           intl={intl}
           onClick={() => this.handleOnClick(timestamp)}
           question={question}
-          respondents={respondents}
           responders={responders}
           timestamp={timestamp}
           type={type}

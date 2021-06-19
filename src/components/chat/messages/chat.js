@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { FormattedTime } from 'react-intl';
 import Linkify from 'linkifyjs/react';
 import cx from 'classnames';
-import Avatar from 'components/utils/avatar';
-import { getTimestampAsMilliseconds } from 'utils/data';
+import Message from './message';
 import './index.scss';
 
 export default class ChatMessage extends Component {
@@ -13,28 +11,6 @@ export default class ChatMessage extends Component {
     if (active !== nextProps.active) return true;
 
     return false;
-  }
-
-  renderAvatar(active, name) {
-    const {
-      initials,
-      onClick,
-    } = this.props;
-
-    return (
-      <div
-        className={cx('interactive', { inactive: !active })}
-        onClick={onClick}
-        onKeyPress={(e) => e.key === 'Enter' ? onClick() : null}
-        tabIndex="0"
-      >
-        <Avatar
-          active={active}
-          initials={initials}
-          name={name}
-        />
-      </div>
-    );
   }
 
   renderHyperlink(active, text) {
@@ -49,50 +25,34 @@ export default class ChatMessage extends Component {
     );
   }
 
-  renderContent(active, name) {
+  renderContent(active) {
     const {
       hyperlink,
       text,
-      timestamp,
     } = this.props;
 
-    const milliseconds = getTimestampAsMilliseconds(timestamp);
-
-    return (
-      <div className="data">
-        <div className="info">
-          <div className={cx('name', { inactive: !active })}>
-            {name}
-          </div>
-          <div className={cx('time', { inactive: !active })}>
-            <FormattedTime
-              hourCycle="h23"
-              hour="numeric"
-              minute="numeric"
-              second="numeric"
-              timeZone="UTC"
-              value={milliseconds}
-            />
-          </div>
-        </div>
-        <div className={cx('text', { inactive: !active })}>
-          {hyperlink ? this.renderHyperlink(active, text) : text}
-        </div>
-      </div>
-    );
+    return hyperlink ? this.renderHyperlink(active, text) : text;
   }
 
   render() {
     const {
       active,
+      initials,
+      onClick,
       name,
+      timestamp,
     } = this.props;
 
     return (
-      <div className="message">
-        {this.renderAvatar(active, name)}
-        {this.renderContent(active, name)}
-      </div>
+      <Message
+        active={active}
+        initials={initials}
+        onClick={onClick}
+        name={name}
+        timestamp={timestamp}
+      >
+        {this.renderContent(active)}
+      </Message>
     );
   }
 }
