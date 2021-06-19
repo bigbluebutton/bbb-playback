@@ -80,6 +80,16 @@ const buildCaptions = result => {
   return data;
 };
 
+// TODO
+const buildPolls = result => {
+  if (!result) return [];
+
+  let data = [];
+  data = result;
+
+  return data;
+};
+
 const buildMetadata = result => {
   let data = {};
   const { recording } = result;
@@ -453,6 +463,9 @@ const build = (filename, value) => {
         case config.data.captions:
           data = buildCaptions(value);
           break;
+        case config.data.polls:
+          data = buildPolls(value);
+          break;
         default:
           logger.debug('unhandled', 'json', filename);
           reject(filename);
@@ -522,8 +535,13 @@ const addAlternatesToThumbnails = (thumbnails, alternates) => {
   });
 };
 
+const addPollsToChat = (chat, polls) => {
+  return [...chat, ...polls].sort((a, b) => a.timestamp - b.timestamp);
+};
+
 export {
   addAlternatesToThumbnails,
+  addPollsToChat,
   build,
   buildStyle,
   decodeXML,

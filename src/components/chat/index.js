@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { defineMessages } from 'react-intl';
 import { chat as config } from 'config';
-import Message from './message';
+import ChatMessage from './messages/chat';
+import PollMessage from './messages/poll';
 import {
   ID,
+  getMessageType,
   getScrollTop,
 } from 'utils/data';
 import './index.scss';
@@ -72,36 +74,72 @@ export default class Chat extends Component {
     }
   }
 
-  renderMessages() {
+  renderChatMessage(item, index, active) {
+    const {
+      hyperlink,
+      initials,
+      message,
+      name,
+      timestamp,
+    } = item;
+
+    return (
+      <span ref={node => this.setRef(node, index)}>
+        <ChatMessage
+          active={active}
+          hyperlink={hyperlink}
+          initials={initials}
+          name={name}
+          onClick={() => this.handleOnClick(timestamp)}
+          text={message}
+          timestamp={timestamp}
+        />
+      </span>
+    );
+  }
+
+  renderPollMessage(item, index, active, intl) {
+    const {
+      answers,
+      question,
+      responders,
+      timestamp,
+      type,
+    } = item;
+
+    return (
+      <span ref={node => this.setRef(node, index)}>
+        <PollMessage
+          active={active}
+          answers={answers}
+          intl={intl}
+          onClick={() => this.handleOnClick(timestamp)}
+          question={question}
+          responders={responders}
+          timestamp={timestamp}
+          type={type}
+        />
+      </span>
+    );
+  }
+
+  renderMessages(intl) {
     const {
       chat,
       currentDataIndex,
     } = this.props;
 
     return chat.map((item, index) => {
-      const {
-        hyperlink,
-        initials,
-        message,
-        name,
-        timestamp,
-      } = item;
-
       const active = index <= currentDataIndex;
-
-      return (
-        <span ref={node => this.setRef(node, index)}>
-          <Message
-            active={active}
-            hyperlink={hyperlink}
-            initials={initials}
-            name={name}
-            onClick={() => this.handleOnClick(timestamp)}
-            text={message}
-            timestamp={timestamp}
-          />
-        </span>
-      );
+      const type = getMessageType(item);
+      switch (type) {
+        case ID.CHAT:
+          return this.renderChatMessage(item, index, active);
+        case ID.POLLS:
+          return this.renderPollMessage(item, index, active, intl);
+        default:
+          return <span ref={node => this.setRef(node, index)} />;
+      }
     });
   }
 
@@ -122,7 +160,7 @@ export default class Chat extends Component {
             onMouseEnter={() => this.interaction = true}
             onMouseLeave={() => this.interaction = false}
           >
-            {this.renderMessages()}
+            {this.renderMessages(intl)}
           </div>
         </div>
       </div>

@@ -13,7 +13,10 @@ import Video from './video';
 import BottomBar from './bars/bottom';
 import TopBar from './bars/top';
 import Button from './utils/button';
-import { addAlternatesToThumbnails } from 'utils/builder';
+import {
+  addAlternatesToThumbnails,
+  addPollsToChat,
+} from 'utils/builder';
 import {
   ID,
   LAYOUT,
@@ -95,7 +98,7 @@ export default class Player extends PureComponent {
   initData(data) {
     this.alternates = getData(data, ID.ALTERNATES);
     this.captions = getData(data, ID.CAPTIONS);
-    this.chat = getData(data, ID.CHAT);
+    this.chat = addPollsToChat(getData(data, ID.CHAT), getData(data, ID.POLLS));
     this.cursor = getData(data, ID.CURSOR);
     this.metadata = getData(data, ID.METADATA);
     this.notes = getData(data, ID.NOTES);
