@@ -22,7 +22,9 @@ $media-fit-height: calc((#{$video-height} / 2) - #{$bar-height});
 $media-fit-height-small: calc(((#{$video-height} / 8) * 3) - #{$bar-height});
 
 $border-radius: .35rem;
-$border-width: .20rem;
+$border-width: .2rem;
+$border-width-small: .15rem;
+$border-width-extra-small: .1rem;
 $margin: .5rem;
 $margin-small: .35rem;
 $margin-extra-small: .15rem;

@@ -2,6 +2,7 @@ import config from 'config';
 import qs from 'qs';
 import stringHash from 'string-hash';
 import logger from './logger';
+import { addPollsToChat } from './builder';
 
 const LAYOUT = {
   CONTENT: 'content',
@@ -21,6 +22,7 @@ const ID = {
   NOTES: 'notes',
   PANZOOMS: 'panzooms',
   PLAYER: 'player',
+  POLLS: 'polls',
   PRESENTATION: 'presentation',
   SCREENSHARE: 'screenshare',
   SEARCH: 'search',
@@ -80,9 +82,35 @@ const getActiveContent = (screenshare, time) => {
   return content;
 };
 
+const FULL_BLOCK = '█';
+const LEFT_HALF_BLOCK = '▌';
+const RIGHT_HALF_BLOCK = '▐';
+const EMPTY_BLOCK = '-';
+
+const getBar = (percentage) => {
+  const p = parseInt(percentage);
+
+  let bar;
+  if (p === 0) {
+    bar = EMPTY_BLOCK;
+  } else {
+    const full = p / 10;
+    const half = (p % 10) > 2;
+
+    bar = FULL_BLOCK.repeat(full);
+
+    if (half) {
+      const ltr = document.dir === 'ltr';
+      bar = bar.concat(ltr ? LEFT_HALF_BLOCK : RIGHT_HALF_BLOCK);
+    }
+  }
+
+  return bar;
+};
+
 const getContentFromData = data => {
   const captions = getData(data, ID.CAPTIONS);
-  const chat = getData(data, ID.CHAT);
+  const chat = addPollsToChat(getData(data, ID.CHAT), getData(data, ID.POOLS));
   const notes = getData(data, ID.NOTES);
   const screenshare = getData(data, ID.SCREENSHARE);
   const shapes = getData(data, ID.SHAPES);
@@ -169,6 +197,7 @@ const getData = (data, id) => {
     case ID.CURSOR:
     case ID.NOTES:
     case ID.PANZOOMS:
+    case ID.POLLS:
     case ID.SCREENSHARE:
     case ID.TALKERS:
       if (!file || data[getFileName(file)] === null) {
@@ -230,6 +259,34 @@ const getLayout = location => {
   }
 
   return null;
+};
+
+const getPercentage = (value, total) => {
+  if (total === 0) return 0;
+
+  return ((value / total) * 100).toFixed(1);
+};
+
+const POLL_TYPES = {
+  YN: 'YN',
+  YNA: 'YNA',
+  TF: 'TF',
+};
+
+const POLL_KEYS = [
+  'Yes',
+  'No',
+  'Abstention',
+  'True',
+  'False',
+];
+
+const getPollLabel = (key, type) => {
+  if (!POLL_TYPES[type]) return null;
+
+  if (!POLL_KEYS.includes(key)) return null;
+
+  return key.toLowerCase();
 };
 
 const getRecordId = match => {
@@ -381,6 +438,13 @@ const getMediaPath = () => {
   }
 
   return mediaPath;
+};
+
+const getMessageType = (item) => {
+  if (typeof item.message === 'string') return ID.CHAT;
+  if (typeof item.question === 'string') return ID.POLLS;
+
+  return 'undefined';
 };
 
 const getTime = location => {
@@ -661,6 +725,7 @@ export {
   buildFileURL,
   getAvatarStyle,
   getActiveContent,
+  getBar,
   getContentFromData,
   getControlFromLayout,
   getCurrentDataIndex,
@@ -671,6 +736,9 @@ export {
   getFileType,
   getLayout,
   getMediaPath,
+  getMessageType,
+  getPercentage,
+  getPollLabel,
   getRecordId,
   getScrollLeft,
   getScrollTop,

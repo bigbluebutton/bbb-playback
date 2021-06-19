@@ -6,7 +6,7 @@ import Avatar from 'components/utils/avatar';
 import { getTimestampAsMilliseconds } from 'utils/data';
 import './index.scss';
 
-export default class Message extends Component {
+export default class ChatMessage extends Component {
   shouldComponentUpdate(nextProps) {
     const { active } = this.props;
 
