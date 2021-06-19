@@ -28,6 +28,7 @@ const ID = {
   SEARCH: 'search',
   SHAPES: 'shapes',
   THUMBNAILS: 'thumbnails',
+  USERS: 'users',
   VIDEO: 'video',
 };
 
@@ -441,7 +442,7 @@ const getMediaPath = () => {
 };
 
 const getMessageType = (item) => {
-  if (typeof item.message === 'string') return ID.CHAT;
+  if (typeof item.message === 'string') return ID.USERS;
   if (typeof item.question === 'string') return ID.POLLS;
 
   return 'undefined';

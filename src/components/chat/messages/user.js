@@ -4,7 +4,7 @@ import cx from 'classnames';
 import Message from './message';
 import './index.scss';
 
-export default class ChatMessage extends Component {
+export default class UserMessage extends Component {
   shouldComponentUpdate(nextProps) {
     const { active } = this.props;
 

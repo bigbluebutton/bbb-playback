@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { defineMessages } from 'react-intl';
 import { chat as config } from 'config';
-import ChatMessage from './messages/chat';
+import UserMessage from './messages/user';
 import PollMessage from './messages/poll';
 import {
   ID,
@@ -74,7 +74,7 @@ export default class Chat extends Component {
     }
   }
 
-  renderChatMessage(item, index, active) {
+  renderUserMessage(item, index, active) {
     const {
       hyperlink,
       initials,
@@ -85,7 +85,7 @@ export default class Chat extends Component {
 
     return (
       <span ref={node => this.setRef(node, index)}>
-        <ChatMessage
+        <UserMessage
           active={active}
           hyperlink={hyperlink}
           initials={initials}
@@ -133,8 +133,8 @@ export default class Chat extends Component {
       const active = index <= currentDataIndex;
       const type = getMessageType(item);
       switch (type) {
-        case ID.CHAT:
-          return this.renderChatMessage(item, index, active);
+        case ID.USERS:
+          return this.renderUserMessage(item, index, active);
         case ID.POLLS:
           return this.renderPollMessage(item, index, active, intl);
         default:
