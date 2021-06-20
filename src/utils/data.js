@@ -2,7 +2,6 @@ import config from 'config';
 import qs from 'qs';
 import stringHash from 'string-hash';
 import logger from './logger';
-import { addPollsToChat } from './builder';
 
 const LAYOUT = {
   CONTENT: 'content',
@@ -112,8 +111,9 @@ const getBar = (percentage) => {
 
 const getContentFromData = data => {
   const captions = getData(data, ID.CAPTIONS);
-  const chat = addPollsToChat(getData(data, ID.CHAT), getData(data, ID.POOLS));
+  const chat = getData(data, ID.CHAT);
   const notes = getData(data, ID.NOTES);
+  const polls = getData(data, ID.POOLS);
   const screenshare = getData(data, ID.SCREENSHARE);
   const shapes = getData(data, ID.SHAPES);
   const slides = shapes.slides;
@@ -122,6 +122,7 @@ const getContentFromData = data => {
     captions: !isEmpty(captions),
     chat: !isEmpty(chat),
     notes: !isEmpty(notes),
+    polls: !isEmpty(polls),
     presentation: hasPresentation(slides),
     screenshare: !isEmpty(screenshare),
   };

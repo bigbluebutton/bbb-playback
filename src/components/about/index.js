@@ -1,113 +1,124 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import {
   FormattedDate,
   FormattedTime,
 } from 'react-intl';
 import cx from 'classnames';
 import Modal from 'components/utils/modal';
+import { ID } from 'utils/data';
 import './index.scss';
 
 const BUILD = process.env.REACT_APP_BBB_PLAYBACK_BUILD;
 
-export default class About extends PureComponent {
-  renderItem(key, value) {
-    let element;
-    if (typeof value === 'boolean') {
-      const icon = value ? 'icon-check' : 'icon-close';
-      element = <div className={cx(icon, { green: value, red: !value})} />;
-    } else {
-      element = value;
-    }
+const CONTENT = [
+  ID.USERS,
+  ID.PRESENTATION,
+  ID.CHAT,
+  ID.POLLS,
+  ID.NOTES,
+  ID.SCREENSHARE,
+  ID.CAPTIONS,
+];
 
-    return (
-      <div className="item">
-        <div className={`icon-${key}`} />
-        <div className="value">
-          {element}
-        </div>
+const Body = ({ content, users }) => {
+  const data = {
+    ...content,
+    users,
+  };
+
+  return (
+    <div className="about-body">
+      {CONTENT.map((item) => (
+        <Item
+          icon={item}
+          key={item}
+          value={data[item]}
+        />
+      ))}
+    </div>
+  );
+};
+
+const Header = ({ metadata }) => {
+  const {
+    end,
+    name,
+    start,
+  } = metadata;
+
+  const subtitle = [];
+  subtitle.push(
+    <FormattedDate
+      value={new Date(start)}
+      day="numeric"
+      month="long"
+      year="numeric"
+    />
+  );
+
+  subtitle.push(<FormattedTime value={new Date(start)} />);
+  subtitle.push(<FormattedTime value={new Date(end)} />);
+
+  return (
+    <div className="about-header">
+      <div className="title">
+        {name}
       </div>
-    );
+      <div className="subtitle">
+        {subtitle.map(s => <div className="item">{s}</div>)}
+      </div>
+    </div>
+  );
+};
+
+const Footer = () => {
+  return (
+    <div className="about-footer">
+      {BUILD ? <Item key={'settings'} value={BUILD} /> : null}
+    </div>
+  );
+};
+
+const Item = ({ icon, value }) => {
+  let element;
+  if (typeof value === 'boolean') {
+    const icon = value ? 'icon-check' : 'icon-close';
+    element = <div className={cx(icon, { green: value, red: !value})} />;
+  } else {
+    element = value;
   }
 
-  renderBody(metadata) {
-    const { content } = this.props;
-
-    const {
-      captions,
-      chat,
-      notes,
-      presentation,
-      screenshare,
-    } = content;
-
-    return (
-      <div className="about-body">
-        {this.renderItem('users', metadata.participants)}
-        {this.renderItem('presentation', presentation)}
-        {this.renderItem('chat', chat)}
-        {this.renderItem('notes', notes)}
-        {this.renderItem('screenshare', screenshare)}
-        {this.renderItem('captions', captions)}
+  return (
+    <div className="item">
+      <div className={`icon-${icon}`} />
+      <div className="value">
+        {element}
       </div>
-    );
-  }
+    </div>
+  );
+};
 
-  renderHeader(metadata) {
-    const {
-      end,
-      name,
-      start,
-    } = metadata;
+const About = (props) => {
+  const {
+    content,
+    intl,
+    metadata,
+    toggleModal,
+  } = props;
 
-    const subtitle = [];
-    subtitle.push(
-      <FormattedDate
-        value={new Date(start)}
-        day="numeric"
-        month="long"
-        year="numeric"
+  return (
+    <Modal
+      intl={intl}
+      onClose={toggleModal}
+    >
+      <Header metadata={metadata} />
+      <Body
+        content={content}
+        users={metadata.participants}
       />
-    );
+      <Footer />
+    </Modal>
+  );
+};
 
-    subtitle.push(<FormattedTime value={new Date(start)} />);
-    subtitle.push(<FormattedTime value={new Date(end)} />);
-
-    return (
-      <div className="about-header">
-        <div className="title">
-          {name}
-        </div>
-        <div className="subtitle">
-          {subtitle.map(s => <div className="item">{s}</div>)}
-        </div>
-      </div>
-    );
-  }
-
-  renderFooter() {
-    return (
-      <div className="about-footer">
-        {BUILD ? this.renderItem('settings', BUILD) : null}
-      </div>
-    );
-  }
-
-  render() {
-    const {
-      intl,
-      metadata,
-      toggleModal,
-    } = this.props;
-
-    return (
-      <Modal
-        intl={intl}
-        onClose={toggleModal}
-      >
-        {this.renderHeader(metadata)}
-        {this.renderBody(metadata)}
-        {this.renderFooter()}
-      </Modal>
-    );
-  }
-}
+export default About;
