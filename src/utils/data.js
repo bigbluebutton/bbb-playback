@@ -26,6 +26,7 @@ const ID = {
   SCREENSHARE: 'screenshare',
   SEARCH: 'search',
   SHAPES: 'shapes',
+  SWAP: 'swap',
   THUMBNAILS: 'thumbnails',
   USERS: 'users',
   VIDEO: 'video',

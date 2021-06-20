@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import {
   defineMessages,
   FormattedDate,
@@ -6,6 +6,7 @@ import {
 import cx from 'classnames';
 import { controls as config } from 'config';
 import Button from 'components/utils/button';
+import { ID } from 'utils/data';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -27,88 +28,49 @@ const intlMessages = defineMessages({
   },
 });
 
-export default class TopBar extends PureComponent {
-  renderSearchButton(enabled) {
-    if (!enabled) return null;
+const SearchButton = ({ intl, enabled, toggleSearch }) => {
+  if (!enabled) return null;
 
-    const {
-      intl,
-      toggleSearch,
-    } = this.props;
+  return (
+    <Button
+      aria={intl.formatMessage(intlMessages.search)}
+      circle
+      handleOnClick={toggleSearch}
+      icon={ID.SEARCH}
+    />
+  );
+};
 
-    return (
-      <Button
-        aria={intl.formatMessage(intlMessages.search)}
-        circle
-        handleOnClick={toggleSearch}
-        icon="search"
-      />
-    );
-  }
+const SectionButton = ({ intl, enabled, section, toggleSection }) => {
+  if (!enabled) return null;
 
-  renderSectionButton(enabled) {
-    if (!enabled) return null;
+  return (
+    <Button
+      aria={intl.formatMessage(intlMessages.section)}
+      circle
+      handleOnClick={toggleSection}
+      icon={section ? 'arrow-left' : 'arrow-right'}
+    />
+  );
+};
 
-    const {
-      intl,
-      section,
-      toggleSection,
-    } = this.props;
+const SwapButton = ({ intl, enabled, toggleSwap }) => {
+  if (!enabled) return null;
 
-    return (
-      <Button
-        aria={intl.formatMessage(intlMessages.section)}
-        circle
-        handleOnClick={toggleSection}
-        icon={section ? 'arrow-left' : 'arrow-right'}
-      />
-    );
-  }
+  return (
+    <Button
+      aria={intl.formatMessage(intlMessages.swap)}
+      circle
+      handleOnClick={toggleSwap}
+      icon={ID.SWAP}
+    />
+  );
+};
 
-  renderSwapButton(enabled) {
-    if (!enabled) return null;
+const Title = ({ interactive, intl, name, start, toggleAbout }) => {
+  const date = <FormattedDate value={new Date(start)} />;
 
-    const {
-      intl,
-      toggleSwap,
-    } = this.props;
-
-    return (
-      <Button
-        aria={intl.formatMessage(intlMessages.swap)}
-        circle
-        handleOnClick={toggleSwap}
-        icon="swap"
-      />
-    );
-  }
-
-  renderTitle(interactive) {
-    const {
-      name,
-      start,
-    } = this.props;
-
-    const date = <FormattedDate value={new Date(start)} />;
-
-    if (interactive) {
-      const {
-        intl,
-        toggleAbout,
-      } = this.props;
-
-      return (
-        <span
-          aria={intl.formatMessage(intlMessages.about)}
-          className={cx('title', { interactive })}
-          onClick={toggleAbout}
-          onKeyPress={(e) => e.key === 'Enter' ? toggleAbout() : null}
-          tabIndex="0"
-        >
-          {name} - {date}
-        </span>
-      );
-    }
+  if (!interactive) {
 
     return (
       <span className="title">
@@ -117,32 +79,66 @@ export default class TopBar extends PureComponent {
     );
   }
 
-  render() {
-    const {
-      control,
-      single,
-    } = this.props;
-
-    const {
-      about,
-      search,
-      section,
-      swap,
-    } = config;
-
-    return (
-      <div className="top-bar">
-        <div className="left">
-          {this.renderSectionButton(control && section)}
-        </div>
-        <div className="center">
-          {this.renderTitle(control && about)}
-        </div>
-        <div className="right">
-          {this.renderSearchButton(control && search && !single)}
-          {this.renderSwapButton(control && swap && !single)}
-        </div>
-      </div>
-    );
-  }
+  return (
+    <span
+      aria={intl.formatMessage(intlMessages.about)}
+      className={cx('title', { interactive })}
+      onClick={toggleAbout}
+      onKeyPress={(e) => e.key === 'Enter' ? toggleAbout() : null}
+      tabIndex="0"
+    >
+      {name} - {date}
+    </span>
+  );
 }
+
+const TopBar = (props) => {
+  const {
+    control,
+    intl,
+    single,
+  } = props;
+
+  const {
+    about,
+    search,
+    section,
+    swap,
+  } = config;
+
+  return (
+    <div className="top-bar">
+      <div className="left">
+        <SectionButton
+          intl={intl}
+          enabled={control && section}
+          section={props.section}
+          toggleSection={props.toggleSection}
+        />
+      </div>
+      <div className="center">
+        <Title
+          interactive={control && about}
+          intl={intl}
+          name={props.name}
+          start={props.start}
+          toggleAbout={props.toggleAbout}
+        />
+      </div>
+      <div className="right">
+        <SearchButton
+          intl={intl}
+          enabled={control && search && !single}
+          toggleSearch={props.toggleSearch}
+        />
+        <SwapButton
+          intl={intl}
+          enabled={control && swap && !single}
+          toggleSwap={props.toggleSwap}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default TopBar;
