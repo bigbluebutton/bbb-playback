@@ -3,11 +3,7 @@ import qs from 'qs';
 import stringHash from 'string-hash';
 import logger from './logger';
 
-const LAYOUT = {
-  CONTENT: 'content',
-  DISABLED: 'disabled',
-  MEDIA: 'media',
-};
+const BUILD = process.env.REACT_APP_BBB_PLAYBACK_BUILD;
 
 const ID = {
   ABOUT: 'about',
@@ -25,11 +21,18 @@ const ID = {
   PRESENTATION: 'presentation',
   SCREENSHARE: 'screenshare',
   SEARCH: 'search',
+  SETTINGS: 'settings',
   SHAPES: 'shapes',
   SWAP: 'swap',
   THUMBNAILS: 'thumbnails',
   USERS: 'users',
   VIDEO: 'video',
+};
+
+const LAYOUT = {
+  CONTENT: 'content',
+  DISABLED: 'disabled',
+  MEDIA: 'media',
 };
 
 const NUMBERS = [
@@ -723,8 +726,9 @@ const skip = (player, data, change) => {
 const wasCleared = (time, clear) => clear !== -1 && clear <= time;
 
 export {
-  LAYOUT,
+  BUILD,
   ID,
+  LAYOUT,
   ROUTER,
   buildFileURL,
   getAvatarStyle,

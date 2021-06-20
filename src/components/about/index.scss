@@ -1,8 +1,6 @@
-@import 'src/styles/icons';
 @import 'src/styles/sizes';
 
 .about-header,
-.about-body,
 .about-footer {
   box-sizing: border-box;
   display: flex;
@@ -36,35 +34,6 @@
     .item {
       box-sizing: border-box;
       padding: 0 $padding-extra-small;
-    }
-  }
-}
-
-.about-body {
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  overflow-x: hidden;
-  overflow-y: auto;
-  padding: 0 $padding;
-
-  .item {
-    box-sizing: border-box;
-    display: flex;
-    font-size: large;
-    font-weight: var(--font-weight-semi-bold);
-    padding: $padding-small 0;
-
-    .value {
-      box-sizing: border-box;
-      padding: 0 $padding;
-    }
-
-    .green {
-      color: var(--green);
-    }
-
-    .red {
-      color: var(--red);
     }
   }
 }
