@@ -1,5 +1,5 @@
 import React from 'react';
-import Item from './body/item';
+import Item from './item';
 import {
   BUILD,
   ID,
