@@ -1,5 +1,8 @@
 import React from 'react';
-import { defineMessages, useIntl } from 'react-intl';
+import {
+  defineMessages,
+  useIntl,
+} from 'react-intl';
 import { ID } from 'utils/data';
 import './index.scss';
 
@@ -10,11 +13,8 @@ const intlMessages = defineMessages({
   },
 });
 
-export default function Error(props) {
+const Error = ({ code }) => {
   const intl = useIntl();
-  const {
-    code,
-  } = props;
 
   return (
     <div
@@ -27,4 +27,6 @@ export default function Error(props) {
       </div>
     </div>
   );
-}
+};
+
+export default Error;

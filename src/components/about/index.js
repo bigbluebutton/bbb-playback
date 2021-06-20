@@ -8,16 +8,12 @@ import './index.scss';
 const About = (props) => {
   const {
     content,
-    intl,
     metadata,
     toggleModal,
   } = props;
 
   return (
-    <Modal
-      intl={intl}
-      onClose={toggleModal}
-    >
+    <Modal onClose={toggleModal}>
       <Header metadata={metadata} />
       <Body
         content={content}

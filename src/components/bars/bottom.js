@@ -5,4 +5,7 @@ const Bottom = () => {
   return <div className="bottom-bar" />;
 };
 
-export default Bottom;
+// Avoid re-render
+const areEqual = () => true;
+
+export default React.memo(Bottom, areEqual);

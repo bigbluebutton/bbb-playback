@@ -1,5 +1,8 @@
 import React from 'react';
-import { defineMessages } from 'react-intl';
+import {
+  defineMessages,
+  useIntl,
+} from 'react-intl';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -9,7 +12,9 @@ const intlMessages = defineMessages({
   },
 });
 
-const Question = ({ intl, question }) => {
+const Question = ({ question }) => {
+  const intl = useIntl();
+
   if (question.length === 0) return null;
 
   return (

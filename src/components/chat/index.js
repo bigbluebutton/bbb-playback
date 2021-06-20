@@ -98,7 +98,7 @@ export default class Chat extends Component {
     );
   }
 
-  renderPollMessage(item, index, active, intl) {
+  renderPollMessage(item, index, active) {
     const {
       answers,
       question,
@@ -112,7 +112,6 @@ export default class Chat extends Component {
         <PollMessage
           active={active}
           answers={answers}
-          intl={intl}
           onClick={() => this.handleOnClick(timestamp)}
           question={question}
           responders={responders}
@@ -123,7 +122,7 @@ export default class Chat extends Component {
     );
   }
 
-  renderMessages(intl) {
+  renderMessages() {
     const {
       chat,
       currentDataIndex,
@@ -136,7 +135,7 @@ export default class Chat extends Component {
         case ID.USERS:
           return this.renderUserMessage(item, index, active);
         case ID.POLLS:
-          return this.renderPollMessage(item, index, active, intl);
+          return this.renderPollMessage(item, index, active);
         default:
           return <span ref={node => this.setRef(node, index)} />;
       }
@@ -160,7 +159,7 @@ export default class Chat extends Component {
             onMouseEnter={() => this.interaction = true}
             onMouseLeave={() => this.interaction = false}
           >
-            {this.renderMessages(intl)}
+            {this.renderMessages()}
           </div>
         </div>
       </div>

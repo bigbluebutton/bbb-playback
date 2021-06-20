@@ -239,7 +239,6 @@ export default class Player extends PureComponent {
 
     if (!open) return null;
 
-    const { intl } = this.props;
     const content = this.layout.getContent();
 
     switch (modal) {
@@ -247,7 +246,6 @@ export default class Player extends PureComponent {
         return (
           <About
             content={content}
-            intl={intl}
             metadata={this.metadata}
             toggleModal={() => this.toggleModal(ID.ABOUT)}
           />
@@ -255,7 +253,6 @@ export default class Player extends PureComponent {
       case ID.SEARCH:
         return (
           <Search
-            intl={intl}
             handleSearch={this.handleSearch}
             metadata={this.metadata}
             thumbnails={this.thumbnails}
@@ -294,8 +291,6 @@ export default class Player extends PureComponent {
   }
 
   renderTopBar() {
-    const { intl } = this.props;
-
     const {
       control,
       section,
@@ -311,7 +306,6 @@ export default class Player extends PureComponent {
     return (
       <TopBar
         control={control}
-        intl={intl}
         name={name}
         section={section}
         single={single}

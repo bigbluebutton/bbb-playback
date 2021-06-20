@@ -1,5 +1,8 @@
 import React from 'react';
-import { defineMessages } from 'react-intl';
+import {
+  defineMessages,
+  useIntl,
+} from 'react-intl';
 import { getPollLabel } from 'utils/data';
 import './index.scss';
 
@@ -30,7 +33,9 @@ const intlMessages = defineMessages({
   },
 });
 
-const Options = ({ answers, intl, type }) => {
+const Options = ({ answers, type }) => {
+  const intl = useIntl();
+
   if (answers.length === 0) return null;
 
   return (

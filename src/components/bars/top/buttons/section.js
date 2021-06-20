@@ -1,5 +1,8 @@
 import React from 'react';
-import { defineMessages } from 'react-intl';
+import {
+  defineMessages,
+  useIntl,
+} from 'react-intl';
 import Button from 'components/utils/button';
 
 const intlMessages = defineMessages({
@@ -9,7 +12,9 @@ const intlMessages = defineMessages({
   },
 });
 
-const Section = ({ intl, enabled, section, toggleSection }) => {
+const Section = ({ enabled, section, toggleSection }) => {
+  const intl = useIntl();
+
   if (!enabled) return null;
 
   return (

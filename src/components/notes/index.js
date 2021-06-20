@@ -1,5 +1,8 @@
 import React from 'react';
-import { defineMessages } from 'react-intl';
+import {
+  defineMessages,
+  useIntl,
+} from 'react-intl';
 import { ID } from 'utils/data';
 import './index.scss';
 
@@ -10,7 +13,9 @@ const intlMessages = defineMessages({
   },
 });
 
-const Notes = ({ intl, notes }) => {
+const Notes = ({ notes }) => {
+  const intl = useIntl();
+
   return (
     <div
       aria-label={intl.formatMessage(intlMessages.aria)}

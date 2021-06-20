@@ -9,7 +9,6 @@ import './index.scss';
 const Top = (props) => {
   const {
     control,
-    intl,
     single,
   } = props;
 
@@ -24,7 +23,6 @@ const Top = (props) => {
     <div className="top-bar">
       <div className="left">
         <SectionButton
-          intl={intl}
           enabled={control && section}
           section={props.section}
           toggleSection={props.toggleSection}
@@ -33,7 +31,6 @@ const Top = (props) => {
       <div className="center">
         <Title
           interactive={control && about}
-          intl={intl}
           name={props.name}
           start={props.start}
           toggleAbout={props.toggleAbout}
@@ -41,12 +38,10 @@ const Top = (props) => {
       </div>
       <div className="right">
         <SearchButton
-          intl={intl}
           enabled={control && search && !single}
           toggleSearch={props.toggleSearch}
         />
         <SwapButton
-          intl={intl}
           enabled={control && swap && !single}
           toggleSwap={props.toggleSwap}
         />

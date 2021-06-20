@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   defineMessages,
+  useIntl,
   FormattedDate,
 } from 'react-intl';
 import cx from 'classnames';
@@ -13,7 +14,8 @@ const intlMessages = defineMessages({
   },
 });
 
-const Title = ({ interactive, intl, name, start, toggleAbout }) => {
+const Title = ({ interactive, name, start, toggleAbout }) => {
+  const intl = useIntl();
   const date = <FormattedDate value={new Date(start)} />;
 
   if (!interactive) {

@@ -1,5 +1,8 @@
 import React from 'react';
-import { defineMessages } from 'react-intl';
+import {
+  defineMessages,
+  useIntl,
+} from 'react-intl';
 import Options from './options';
 import Question from './question';
 import Result from './result';
@@ -15,10 +18,8 @@ const intlMessages = defineMessages({
 });
 
 const Poll = (props) => {
-  const {
-    answers,
-    intl,
-  } = props;
+  const { answers } = props;
+  const intl = useIntl();
 
   return (
     <Message
@@ -29,17 +30,13 @@ const Poll = (props) => {
       timestamp={props.timestamp}
     >
       <div className="poll-wrapper">
-        <Question
-          intl={intl}
-          question={props.question}
-        />
+        <Question question={props.question} />
         <Result
           answers={answers}
           responders={props.responders}
         />
         <Options
           answers={answers}
-          intl={intl}
           type={props.type}
         />
       </div>

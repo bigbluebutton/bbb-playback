@@ -1,5 +1,8 @@
 import React, { PureComponent } from 'react';
-import { defineMessages } from 'react-intl';
+import {
+  defineMessages,
+  injectIntl,
+} from 'react-intl';
 import cx from 'classnames';
 import Thumbnails from 'components/thumbnails';
 import { search as config } from 'config';
@@ -19,7 +22,7 @@ const intlMessages = defineMessages({
   },
 });
 
-export default class Search extends PureComponent {
+class Search extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -117,19 +120,15 @@ export default class Search extends PureComponent {
   }
 
   render() {
-    const {
-      intl,
-      toggleModal,
-    } = this.props;
+    const { toggleModal } = this.props;
 
     return (
-      <Modal
-        intl={intl}
-        onClose={toggleModal}
-      >
+      <Modal onClose={toggleModal}>
         {this.renderBody()}
         {this.renderFooter()}
       </Modal>
     );
   }
-}
+};
+
+export default injectIntl(Search);

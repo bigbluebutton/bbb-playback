@@ -1,5 +1,8 @@
 import React from 'react';
-import { defineMessages } from 'react-intl';
+import {
+  defineMessages,
+  useIntl,
+} from 'react-intl';
 import Button from 'components/utils/button';
 import { ID } from 'utils/data';
 
@@ -10,7 +13,9 @@ const intlMessages = defineMessages({
   },
 });
 
-const Swap = ({ intl, enabled, toggleSwap }) => {
+const Swap = ({ enabled, toggleSwap }) => {
+  const intl = useIntl();
+
   if (!enabled) return null;
 
   return (

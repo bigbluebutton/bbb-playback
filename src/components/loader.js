@@ -135,11 +135,7 @@ class Loader extends PureComponent {
     } = this.state;
 
     if (error) {
-      return (
-        <Error
-          code={error}
-        />
-      );
+      return <Error code={error} />;
     }
 
     if (loaded) {
