@@ -6,7 +6,7 @@ import {
 import Options from './options';
 import Question from './question';
 import Result from './result';
-import Message from '../message';
+import Message from 'components/chat/messages/message';
 import { ID } from 'utils/data';
 import './index.scss';
 

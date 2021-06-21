@@ -5,12 +5,7 @@ import Header from './header';
 import Modal from 'components/utils/modal';
 import './index.scss';
 
-const About = (props) => {
-  const {
-    content,
-    metadata,
-    toggleModal,
-  } = props;
+const About = ({ content, metadata, toggleModal }) => {
 
   return (
     <Modal onClose={toggleModal}>

@@ -1,6 +1,6 @@
 import React from 'react';
 import Text from './text';
-import Message from '../message';
+import Message from 'components/chat/messages/message';
 
 const User = (props) => {
   const { active } = props;

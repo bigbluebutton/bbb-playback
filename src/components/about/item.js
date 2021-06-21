@@ -6,7 +6,13 @@ const Item = ({ icon, value }) => {
   let element;
   if (typeof value === 'boolean') {
     const icon = value ? 'icon-check' : 'icon-close';
-    element = <div className={cx(icon, { green: value, red: !value})} />;
+
+    const style = {
+      green: value,
+      red: !value,
+    };
+
+    element = <div className={cx(icon, style)} />;
   } else {
     element = value;
   }

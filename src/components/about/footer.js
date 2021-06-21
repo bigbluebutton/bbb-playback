@@ -9,7 +9,14 @@ import './index.scss';
 const Footer = () => {
   return (
     <div className="about-footer">
-      {BUILD ? <Item icon={ID.SETTINGS} value={BUILD} /> : null}
+      {BUILD ? (
+        <Item
+          icon={ID.SETTINGS}
+          value={BUILD}
+        />
+      ) : (
+        null
+      )}
     </div>
   );
 };
