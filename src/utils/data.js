@@ -117,7 +117,7 @@ const getContentFromData = data => {
   const captions = getData(data, ID.CAPTIONS);
   const chat = getData(data, ID.CHAT);
   const notes = getData(data, ID.NOTES);
-  const polls = getData(data, ID.POOLS);
+  const polls = getData(data, ID.POLLS);
   const screenshare = getData(data, ID.SCREENSHARE);
   const shapes = getData(data, ID.SHAPES);
   const slides = shapes.slides;
