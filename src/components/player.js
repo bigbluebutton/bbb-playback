@@ -2,16 +2,16 @@ import React, { PureComponent } from 'react';
 import cx from 'classnames';
 import { defineMessages } from 'react-intl';
 import { shortcuts } from 'config';
-import About from './about';
 import Chat from './chat';
 import Notes from './notes';
 import Presentation from './presentation';
-import Search from './search';
 import Screenshare from './screenshare';
 import Thumbnails from './thumbnails';
 import Video from './video';
 import BottomBar from './bars/bottom';
 import TopBar from './bars/top';
+import AboutModal from './modals/about';
+import SearchModal from './modals/search';
 import Button from './utils/button';
 import {
   addAlternatesToThumbnails,
@@ -244,7 +244,7 @@ export default class Player extends PureComponent {
     switch (modal) {
       case ID.ABOUT:
         return (
-          <About
+          <AboutModal
             content={content}
             metadata={this.metadata}
             toggleModal={() => this.toggleModal(ID.ABOUT)}
@@ -252,7 +252,7 @@ export default class Player extends PureComponent {
         );
       case ID.SEARCH:
         return (
-          <Search
+          <SearchModal
             handleSearch={this.handleSearch}
             metadata={this.metadata}
             thumbnails={this.thumbnails}
