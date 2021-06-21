@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import cx from 'classnames';
-import { defineMessages } from 'react-intl';
+import {
+  defineMessages,
+  injectIntl,
+} from 'react-intl';
 import { thumbnails as config } from 'config';
 import Button from 'components/utils/button';
 import {
@@ -25,7 +28,7 @@ const intlMessages = defineMessages({
   },
 });
 
-export default class Thumbnails extends Component {
+class Thumbnails extends Component {
   constructor(props) {
     super(props);
 
@@ -233,4 +236,6 @@ export default class Thumbnails extends Component {
       </div>
     );
   }
-}
+};
+
+export default injectIntl(Thumbnails);

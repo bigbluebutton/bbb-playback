@@ -22,6 +22,8 @@
   "player.notes.wrapper.aria": "ノートエリア",
   "player.presentation.wrapper.aria": "プレゼンテーションエリア",
   "player.screenshare.wrapper.aria": "画面共有エリア",
+  "player.search.modal.title": "Search",
+  "player.search.modal.subtitle": "Find presentation slides content",
   "player.thumbnails.wrapper.aria": "サムネイルエリア",
   "player.video.wrapper.aria": "ビデオエリア"
 }

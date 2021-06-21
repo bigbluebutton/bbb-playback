@@ -265,8 +265,6 @@ export default class Player extends PureComponent {
   }
 
   renderThumbnails() {
-    const { intl } = this.props;
-
     const {
       search,
       time,
@@ -281,7 +279,6 @@ export default class Player extends PureComponent {
         currentDataIndex={currentDataIndex}
         handleSearch={this.handleSearch}
         interactive={true}
-        intl={intl}
         metadata={this.metadata}
         player={video}
         search={search}

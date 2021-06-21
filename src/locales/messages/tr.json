@@ -22,6 +22,8 @@
   "player.notes.wrapper.aria": "Notlar",
   "player.presentation.wrapper.aria": "Sunum",
   "player.screenshare.wrapper.aria": "Ekran paylaşımı",
+  "player.search.modal.title": "Search",
+  "player.search.modal.subtitle": "Find presentation slides content",
   "player.thumbnails.wrapper.aria": "Önizleme",
   "player.video.wrapper.aria": "Video"
 }
