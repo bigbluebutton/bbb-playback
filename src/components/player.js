@@ -355,7 +355,6 @@ export default class Player extends PureComponent {
   }
 
   renderApplicationContent() {
-    const { intl } = this.props;
     const { application } = this.state;
 
     switch (application) {
@@ -368,16 +367,12 @@ export default class Player extends PureComponent {
           <Chat
             chat={this.chat}
             currentDataIndex={currentChatIndex}
-            intl={intl}
             player={video}
           />
         );
       case ID.NOTES:
         return (
-          <Notes
-            notes={this.notes}
-            intl={intl}
-          />
+          <Notes notes={this.notes} />
         );
       default:
         return null;
