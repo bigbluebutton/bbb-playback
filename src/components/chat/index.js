@@ -64,13 +64,14 @@ const Chat = ({ chat, currentDataIndex, player }) => {
       aria-live="polite"
       className="chat-wrapper"
       id={ID.CHAT}
+      onMouseEnter={() => interaction.current = true}
+      onMouseLeave={() => interaction.current = false}
       tabIndex="0"
     >
       <Messages
         chat={chat}
         currentDataIndex={currentDataIndex}
         player={player}
-        setInteraction={(value) => interaction.current = value}
         setRef={(node, index) => setRef(node, index)}
       />
     </div>

@@ -7,7 +7,7 @@ import {
 } from 'utils/data';
 import './index.scss';
 
-const Messages = ({ chat, currentDataIndex, player, setInteraction, setRef }) => {
+const Messages = ({ chat, currentDataIndex, player, setRef }) => {
 
   const handleOnClick = (timestamp) => {
     if (player) player.currentTime(timestamp);
@@ -15,11 +15,7 @@ const Messages = ({ chat, currentDataIndex, player, setInteraction, setRef }) =>
 
   return (
     <div className="list">
-      <div
-        className="message-wrapper"
-        onMouseEnter={() => setInteraction(true)}
-        onMouseLeave={() => setInteraction(false)}
-      >
+      <div className="message-wrapper">
         {chat.map((item, index) => {
           const active = index <= currentDataIndex;
           const { timestamp } = item;
@@ -58,7 +54,7 @@ const Messages = ({ chat, currentDataIndex, player, setInteraction, setRef }) =>
             default:
               return <span ref={node => setRef(node, index)} />;
           }
-        })};
+        })}
       </div>
     </div>
   );
