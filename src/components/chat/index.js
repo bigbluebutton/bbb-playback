@@ -43,6 +43,7 @@ const Chat = ({ chat, currentDataIndex, player }) => {
 
     // Auto-scroll can start after getting the first and current nodes
     if (fNode && cNode) {
+      const { align } = config;
       const { parentNode: pNode } = cNode;
 
       pNode.scrollTop = getScrollTop(fNode, cNode, align);
@@ -52,10 +53,9 @@ const Chat = ({ chat, currentDataIndex, player }) => {
   useEffect(() => {
     if (!config.scroll) return () => {};
 
-    const { align } = config;
-    handleAutoScroll(align);
+    handleAutoScroll();
 
-    return () => handleAutoScroll(align);
+    return () => handleAutoScroll();
   });
 
   return (
