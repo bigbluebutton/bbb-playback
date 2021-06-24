@@ -512,6 +512,12 @@ const hasProperty = (object, property) => {
   return false;
 };
 
+const hasVideo = (player) => {
+  if (player && player.video) return true;
+
+  return false;
+};
+
 const isActive = (time, timestamp, clear = -1) => {
   const cleared = wasCleared(time, clear);
   const visible = isVisible(time, timestamp);
@@ -691,22 +697,24 @@ const search = (text, thumbnails) => {
 };
 
 const seek = (player, seconds) => {
-  if (player.video) {
-    const min = 0;
-    const max = player.video.duration();
-    const time = player.video.currentTime() + seconds;
+  if (!hasVideo(player)) return null;
 
-    if (time < min) {
-      player.video.currentTime(min);
-    } else if (time > max) {
-      player.video.currentTime(max);
-    } else {
-      player.video.currentTime(time);
-    }
+  const min = 0;
+  const max = player.video.duration();
+  const time = player.video.currentTime() + seconds;
+
+  if (time < min) {
+    player.video.currentTime(min);
+  } else if (time > max) {
+    player.video.currentTime(max);
+  } else {
+    player.video.currentTime(time);
   }
 };
 
 const skip = (player, data, change) => {
+  if (!hasVideo(player)) return null;
+
   const min = 0;
   const max = data.length - 1;
   const time = player.video.currentTime();
