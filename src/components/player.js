@@ -279,8 +279,8 @@ export default class Player extends PureComponent {
         currentDataIndex={currentDataIndex}
         handleSearch={this.handleSearch}
         interactive={true}
-        metadata={this.metadata}
         player={video}
+        recordId={this.metadata.id}
         search={search}
         thumbnails={this.thumbnails}
       />

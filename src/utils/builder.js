@@ -1,6 +1,7 @@
 import { parseStringPromise } from 'xml2js';
 import { files as config } from 'config';
 import {
+  ID,
   getFileType,
   hasProperty,
   isEmpty,
@@ -183,7 +184,6 @@ const buildSlides = image => {
 };
 
 const buildThumbnails = slides => {
-  const screenshare = 'deskshare';
   const prefix = 'slide-';
   const url = 'thumbnails/thumb-';
 
@@ -194,10 +194,10 @@ const buildThumbnails = slides => {
       timestamp,
     } = slide;
 
-    if (src.includes(screenshare)) {
+    if (src.includes(ID.DESKSHARE)) {
       result.push({
         id,
-        src: screenshare,
+        src: ID.SCREENSHARE,
         timestamp,
       });
     } else {

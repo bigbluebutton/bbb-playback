@@ -11,6 +11,7 @@ const ID = {
   CAPTIONS: 'captions',
   CHAT: 'chat',
   CURSOR: 'cursor',
+  DESKSHARE: 'deskshare',
   ERROR: 'error',
   LOADER: 'loader',
   METADATA: 'metadata',

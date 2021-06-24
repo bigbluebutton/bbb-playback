@@ -19,8 +19,8 @@ const Body = ({ handleOnChange, metadata, search, thumbnails, }) => {
           currentDataIndex={0}
           handleSearch={null}
           interactive={false}
-          metadata={metadata}
           player={null}
+          recordId={metadata.id}
           search={search}
           thumbnails={thumbnails}
         />

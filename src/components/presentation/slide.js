@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
 import cx from 'classnames';
-import { buildFileURL } from 'utils/data';
+import {
+  ID,
+  buildFileURL,
+} from 'utils/data';
 import './index.scss';
-
-const SCREENSHARE = 'deskshare';
 
 export default class Slide extends PureComponent {
   constructor(props) {
@@ -25,7 +26,7 @@ export default class Slide extends PureComponent {
       src,
     } = thumbnail;
 
-    if (src === SCREENSHARE) return null;
+    if (src === ID.SCREENSHARE) return null;
 
     const logo = src.includes('logo');
 

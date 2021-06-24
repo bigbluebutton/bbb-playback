@@ -1,106 +1,67 @@
-import React, { Component } from 'react';
-import cx from 'classnames';
+import React, { useEffect, useRef } from 'react';
 import {
   defineMessages,
-  injectIntl,
+  useIntl,
 } from 'react-intl';
+import Thumbnail from './thumbnail';
+import ClearButton from './buttons/clear';
 import { thumbnails as config } from 'config';
-import Button from 'components/utils/button';
 import {
   ID,
-  buildFileURL,
   getScrollLeft,
   isEmpty,
   isEqual,
 } from 'utils/data';
 import './index.scss';
 
-const SCREENSHARE = 'deskshare';
-
 const intlMessages = defineMessages({
   aria: {
     id: 'player.thumbnails.wrapper.aria',
     description: 'Aria label for the thumbnails wrapper',
   },
-  clear: {
-    id: 'button.clear.aria',
-    description: 'Aria label for the clear button',
-  },
 });
 
-class Thumbnails extends Component {
-  constructor(props) {
-    super(props);
+const Thumbnails = ({
+  currentDataIndex,
+  handleSearch,
+  interactive,
+  player,
+  recordId,
+  search,
+  thumbnails,
+}) => {
+  const interaction = useRef(false);
+  const firstNode = useRef();
+  const currentNode = useRef();
 
-    const { metadata } = props;
+  const intl = useIntl();
 
-    this.recordId = metadata.id;
-    this.interaction = false;
-  }
-
-  componentDidMount() {
-    this.handleAutoScroll();
-  }
-
-  shouldComponentUpdate(nextProps) {
-    const {
-      currentDataIndex,
-      search,
-    } = this.props;
-
-    if (currentDataIndex !== nextProps.currentDataIndex) {
-      return true;
-    }
-
-    if (!isEqual(search, nextProps.search)) {
-      return true;
-    }
-
-    return false;
-  }
-
-  componentDidUpdate() {
-    this.handleAutoScroll();
-  }
-
-  handleOnClick(timestamp) {
-    const { player } = this.props;
-
-    if (!player) return null;
-
-    player.currentTime(timestamp);
-  }
-
-  handleAutoScroll() {
-    if (!config.scroll || this.interaction) return;
-
-    // Auto-scroll can start after getting the first and current nodes
-    if (this.firstNode && this.currentNode) {
-      const { parentNode } = this.currentNode;
-
-      parentNode.scrollLeft = getScrollLeft(this.firstNode, this.currentNode, config.align);
-    }
-  }
-
-  // Set node as ref so we can manage auto-scroll
-  setRef(node, index) {
-    const { currentDataIndex } = this.props;
-
+  const setRef = (node, index) => {
     if (index === 0) {
-      this.firstNode = node;
+      firstNode.current = node;
     }
 
     if (index === currentDataIndex) {
-      this.currentNode = node;
+      currentNode.current = node;
     }
-  }
+  };
 
-  isFiltered(index) {
-    const {
-      interactive,
-      search,
-    } = this.props;
+  const handleAutoScroll = () => {
+    if (interaction.current) return;
 
+    const { current: fNode } = firstNode;
+    const { current: cNode } = currentNode;
+
+    // Auto-scroll can start after getting the first and current nodes
+    if (fNode && cNode) {
+      const { align } = config;
+      const { parentNode: pNode } = cNode;
+
+      pNode.scrollLeft = getScrollLeft(fNode, cNode, align);
+    }
+  };
+
+  const isFiltered = (index) => {
     if (interactive) {
       return !isEmpty(search) && !search.includes(index);
     } else {
@@ -108,134 +69,53 @@ class Thumbnails extends Component {
     }
   }
 
-  renderImage(item) {
-    const {
-      alt,
-      src,
-    } = item;
+  useEffect(() => config.scroll ? handleAutoScroll() : null);
 
-    const screenshare = src === SCREENSHARE;
+  return (
+    <div
+      aria-label={intl.formatMessage(intlMessages.aria)}
+      className="thumbnails-wrapper"
+      id={ID.THUMBNAILS}
+      onMouseEnter={() => interaction.current = true}
+      onMouseLeave={() => interaction.current = false}
+      tabIndex="0"
+    >
+      {thumbnails.reduce((result, item, index) => {
+        if (!isFiltered(index)) {
+          const active = index === currentDataIndex;
 
-    if (screenshare) {
-      return (
-        <div className={cx('thumbnail-image', { screenshare })}>
-          <span className="icon-screenshare" />
-        </div>
-      );
-    }
+          result.push(
+            <Thumbnail
+              active={active}
+              index={index}
+              interactive={interactive}
+              item={item}
+              player={player}
+              recordId={recordId}
+              setRef={setRef}
+            />
+          );
+        }
 
-    const logo = src.includes('logo');
-
-    return (
-      <img
-        alt={alt}
-        className={cx('thumbnail-image', { logo })}
-        src={buildFileURL(this.recordId, src)}
+        return result;
+      }, [])}
+      <ClearButton
+        interactive={interactive}
+        handleSearch={handleSearch}
+        search={search}
       />
-    );
-  }
-
-  renderThumbnail(item, index) {
-    const {
-      currentDataIndex,
-      interactive,
-    } = this.props;
-
-    if (!interactive) {
-      return (
-        <div
-          className="thumbnail-wrapper"
-          tabIndex="0"
-        >
-          <div className="thumbnail">
-            {this.renderImage(item)}
-            <div className="thumbnail-index">
-              {index + 1}
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    const active = index === currentDataIndex;
-    const onClick = () => this.handleOnClick(item.timestamp);
-
-    const styles = {
-      active,
-      interactive,
-    };
-
-    return (
-      <div
-        className={cx('thumbnail-wrapper', styles)}
-        onClick={onClick}
-        onKeyPress={(e) => e.key === 'Enter' ? onClick() : null}
-        ref={node => this.setRef(node, index)}
-        tabIndex="0"
-      >
-        <div className="thumbnail">
-          {this.renderImage(item)}
-          <div className="thumbnail-index">
-            {index + 1}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  renderThumbnails() {
-    const { thumbnails } = this.props;
-
-    return thumbnails.reduce((result, item, index) => {
-      if (!this.isFiltered(index)) {
-        result.push(this.renderThumbnail(item, index));
-      }
-
-      return result;
-    }, []);
-  }
-
-  renderClearButton() {
-    const { interactive } = this.props;
-    if (!interactive) return null;
-
-    const { search } = this.props;
-    if (isEmpty(search)) return null;
-
-    const {
-      handleSearch,
-      intl,
-    } = this.props;
-
-    return (
-      <div className="clear-button">
-        <Button
-          aria={intl.formatMessage(intlMessages.clear)}
-          handleOnClick={() => handleSearch ? handleSearch([]) : null}
-          icon="close"
-          type="solid"
-        />
-      </div>
-    );
-  }
-
-  render() {
-    const { intl } = this.props;
-
-    return (
-      <div
-        aria-label={intl.formatMessage(intlMessages.aria)}
-        className="thumbnails-wrapper"
-        id={ID.THUMBNAILS}
-        onMouseEnter={() => this.interaction = true}
-        onMouseLeave={() => this.interaction = false}
-        tabIndex="0"
-      >
-        {this.renderThumbnails()}
-        {this.renderClearButton()}
-      </div>
-    );
-  }
+    </div>
+  );
 };
 
-export default injectIntl(Thumbnails);
+const areEqual = (prevProps, nextProps) => {
+  if (prevProps.currentDataIndex !== nextProps.currentDataIndex) return false;
+
+  if (!isEqual(prevProps.search, nextProps.search, 'array')) return false;
+
+  if (!prevProps.player && nextProps.player) return false;
+
+  return true;
+};
+
+export default React.memo(Thumbnails, areEqual);
