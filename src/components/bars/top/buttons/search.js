@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   defineMessages,
   useIntl,
@@ -13,19 +14,32 @@ const intlMessages = defineMessages({
   },
 });
 
-const Search = ({ enabled, toggleSearch }) => {
+const propTypes = {
+  enabled: PropTypes.bool,
+  toggleSearch: PropTypes.func,
+};
+
+const defaultProps = {
+  enabled: false,
+  toggleSearch: () => {},
+};
+
+const Search = (props) => {
   const intl = useIntl();
 
-  if (!enabled) return null;
+  if (!props.enabled) return null;
 
   return (
     <Button
       aria={intl.formatMessage(intlMessages.search)}
       circle
-      handleOnClick={toggleSearch}
+      handleOnClick={props.toggleSearch}
       icon={ID.SEARCH}
     />
   );
 };
+
+Search.propTypes = propTypes;
+Search.defaultProps = defaultProps;
 
 export default Search;

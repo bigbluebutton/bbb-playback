@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   defineMessages,
   useIntl,
@@ -12,19 +13,34 @@ const intlMessages = defineMessages({
   },
 });
 
-const Section = ({ enabled, section, toggleSection }) => {
+const propTypes = {
+  enabled: PropTypes.bool,
+  section: PropTypes.bool,
+  toggleSection: PropTypes.func,
+};
+
+const defaultProps = {
+  enabled: false,
+  section: true,
+  toggleSection: () => {},
+};
+
+const Section = (props) => {
   const intl = useIntl();
 
-  if (!enabled) return null;
+  if (!props.enabled) return null;
 
   return (
     <Button
       aria={intl.formatMessage(intlMessages.section)}
       circle
-      handleOnClick={toggleSection}
-      icon={section ? 'arrow-left' : 'arrow-right'}
+      handleOnClick={props.toggleSection}
+      icon={props.section ? 'arrow-left' : 'arrow-right'}
     />
   );
 };
+
+Section.propTypes = propTypes;
+Section.defaultProps = defaultProps;
 
 export default Section;

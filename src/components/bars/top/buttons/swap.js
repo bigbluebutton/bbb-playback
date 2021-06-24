@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   defineMessages,
   useIntl,
@@ -13,19 +14,32 @@ const intlMessages = defineMessages({
   },
 });
 
-const Swap = ({ enabled, toggleSwap }) => {
+const propTypes = {
+  enabled: PropTypes.bool,
+  toggleSwap: PropTypes.func,
+};
+
+const defaultProps = {
+  enabled: false,
+  toggleSwap: () => {},
+};
+
+const Swap = (props) => {
   const intl = useIntl();
 
-  if (!enabled) return null;
+  if (!props.enabled) return null;
 
   return (
     <Button
       aria={intl.formatMessage(intlMessages.swap)}
       circle
-      handleOnClick={toggleSwap}
+      handleOnClick={props.toggleSwap}
       icon={ID.SWAP}
     />
   );
 };
+
+Swap.propTypes = propTypes;
+Swap.defaultProps = defaultProps;
 
 export default Swap;
