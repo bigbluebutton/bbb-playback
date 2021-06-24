@@ -1,5 +1,4 @@
 import config from 'config';
-import qs from 'qs';
 import stringHash from 'string-hash';
 import logger from './logger';
 
@@ -61,11 +60,9 @@ const buildFileURL = (recordId, file) => {
   const mediaPath = getMediaPath();
 
   const rootUrl = MEDIA_ROOT_URL ? MEDIA_ROOT_URL : '/presentation';
-  let fileUrl = `${recordId}/${file}`;
 
-  if(mediaPath) {
-    fileUrl = `${mediaPath}/${fileUrl}`;
-  }
+  let fileUrl = `${recordId}/${file}`;
+  if (mediaPath) fileUrl = `${mediaPath}/${fileUrl}`;
 
   return `${rootUrl}/${fileUrl}`;
 };
@@ -256,15 +253,10 @@ const getFileName = file => file.split('.').shift();
 
 const getFileType = file => file.split('.').pop();
 
-const getLayout = location => {
-  if (location) {
-    const { search } = location;
-    if (search) {
-      const { l } = qs.parse(search, { ignoreQueryPrefix: true });
+const getLayout = () => {
+  const param = getSearchParam('l');
 
-      if (l) return l;
-    }
-  }
+  if (param) return param;
 
   return null;
 };
@@ -311,6 +303,18 @@ const getRecordId = match => {
   }
 
   logger.error('missing', 'recordId');
+
+  return null;
+};
+
+const getSearchParam = (name) => {
+  const params = new URLSearchParams(window.location.search);
+
+  if (params && params.has(name)) {
+    const param = params.get(name);
+
+    return param;
+  }
 
   return null;
 };
@@ -421,16 +425,15 @@ const getScrollTop = (firstNode, currentNode, align) => {
 };
 
 const getStyle = () => {
-  const params = new URLSearchParams(window.location.search);
+  const param = getSearchParam('s');
   const { styles } = config;
   const { url } = styles;
 
   let style = styles.default ? `${url}/${styles.default}.css` : null;
-  if (params && params.has('s')) {
+  if (param) {
     const { valid } = styles;
-    const value = params.get('s');
-    if (valid.includes(value)) {
-      style = `${url}/${value}.css`;
+    if (valid.includes(param)) {
+      style = `${url}/${param}.css`;
     }
   }
 
@@ -438,12 +441,10 @@ const getStyle = () => {
 };
 
 const getMediaPath = () => {
-  const params = new URLSearchParams(window.location.search);
-  let mediaPath = "";
+  const param = getSearchParam('p');
 
-  if (params && params.has('p')) {
-    mediaPath = params.get('p');
-  }
+  let mediaPath = '';
+  if (param) mediaPath = param;
 
   return mediaPath;
 };
@@ -455,15 +456,10 @@ const getMessageType = (item) => {
   return 'undefined';
 };
 
-const getTime = location => {
-  if (location) {
-    const { search } = location;
-    if (search) {
-      const { t } = qs.parse(search, { ignoreQueryPrefix: true });
+const getTime = () => {
+  const param = getSearchParam('t');
 
-      if (t) return parseTimeToSeconds(t);
-    }
-  }
+  if (param) return parseTimeToSeconds(param);
 
   return null;
 };

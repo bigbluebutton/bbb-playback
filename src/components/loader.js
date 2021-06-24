@@ -30,16 +30,13 @@ class Loader extends PureComponent {
   constructor(props) {
     super(props);
 
-    const {
-      location,
-      match,
-    } = props;
+    const { match } = props;
 
     this.counter = 0;
     this.data = {};
-    this.layout = getLayout(location);
+    this.layout = getLayout();
     this.recordId = getRecordId(match);
-    this.time = getTime(location);
+    this.time = getTime();
 
     this.state = {
       error: this.recordId ? null : config.error['NOT_FOUND'],
