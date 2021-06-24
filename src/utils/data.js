@@ -470,6 +470,12 @@ const getTime = location => {
 
 const getTimestampAsMilliseconds = timestamp => timestamp * 1000;
 
+const handleOnEnterPress = (event, action) => {
+  if (event && event.key === 'Enter') {
+    if (typeof action === 'function') action();
+  }
+};
+
 const hasIndex = (index, data) => {
   if (index < 0) return false;
 
@@ -756,6 +762,7 @@ export {
   getStyle,
   getTime,
   getTimestampAsMilliseconds,
+  handleOnEnterPress,
   hasPresentation,
   hasProperty,
   isActive,

@@ -5,6 +5,7 @@ import {
   FormattedDate,
 } from 'react-intl';
 import cx from 'classnames';
+import { handleOnEnterPress } from 'utils/data';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -32,7 +33,7 @@ const Title = ({ interactive, name, start, toggleAbout }) => {
       aria={intl.formatMessage(intlMessages.about)}
       className={cx('title', { interactive })}
       onClick={toggleAbout}
-      onKeyPress={(e) => e.key === 'Enter' ? toggleAbout() : null}
+      onKeyPress={event => handleOnEnterPress(event, toggleAbout)}
       tabIndex="0"
     >
       {name} - {date}

@@ -1,6 +1,7 @@
 import React from 'react';
 import cx from 'classnames';
 import Content from './content';
+import { handleOnEnterPress } from 'utils/data';
 import './index.scss';
 
 const Thumbnail = ({ active, index, interactive, item, player, recordId, setRef }) => {
@@ -26,15 +27,11 @@ const Thumbnail = ({ active, index, interactive, item, player, recordId, setRef 
     if (player) player.currentTime(item.timestamp);
   };
 
-  const handleOnKeyPress = (event) => {
-    if (event.key === 'Enter') handleOnClick();
-  };
-
   return (
     <div
       className={cx('thumbnail-wrapper', { active, interactive })}
       onClick={() => handleOnClick()}
-      onKeyPress={event => handleOnKeyPress(event)}
+      onKeyPress={event => handleOnEnterPress(event, handleOnClick)}
       ref={node => setRef(node, index)}
       tabIndex="0"
     >

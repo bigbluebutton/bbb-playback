@@ -1,18 +1,16 @@
 import React from 'react';
 import cx from 'classnames';
 import Avatar from 'components/utils/avatar';
+import { handleOnEnterPress } from 'utils/data';
 import './index.scss';
 
 const Margin = (props) => {
-  const handleOnKeyPress = (event) => {
-    if (event.key === 'Enter') props.onClick();
-  };
 
   return (
     <div
       className={cx('interactive', { inactive: !props.active })}
       onClick={props.onClick}
-      onKeyPress={event => handleOnKeyPress(event)}
+      onKeyPress={event => handleOnEnterPress(event, props.onClick)}
       tabIndex="0"
     >
       <Avatar
