@@ -12,7 +12,7 @@
   "player.wrapper.aria": "プレイヤーエリア",
   "player.chat.message.poll.name": "投票結果",
   "player.chat.message.poll.question": "質問",
-  "player.chat.message.poll.options": "オプション",
+  "player.chat.message.poll.options": "項目",
   "player.chat.message.poll.option.yes": "はい",
   "player.chat.message.poll.option.no": "いいえ",
   "player.chat.message.poll.option.abstention": "どちらでもない",
@@ -22,8 +22,8 @@
   "player.notes.wrapper.aria": "ノートエリア",
   "player.presentation.wrapper.aria": "プレゼンテーションエリア",
   "player.screenshare.wrapper.aria": "画面共有エリア",
-  "player.search.modal.title": "Search",
-  "player.search.modal.subtitle": "Find presentation slides content",
+  "player.search.modal.title": "検索",
+  "player.search.modal.subtitle": "プレゼンテーションスライドの内容を検索",
   "player.thumbnails.wrapper.aria": "サムネイルエリア",
   "player.video.wrapper.aria": "ビデオエリア"
 }
