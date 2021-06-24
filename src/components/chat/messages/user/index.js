@@ -3,18 +3,17 @@ import Text from './text';
 import Message from 'components/chat/messages/message';
 
 const User = (props) => {
-  const { active } = props;
 
   return (
     <Message
-      active={active}
+      active={props.active}
       initials={props.initials}
-      onClick={props.onClick}
       name={props.name}
+      player={props.player}
       timestamp={props.timestamp}
     >
       <Text
-        active={active}
+        active={props.active}
         hyperlink={props.hyperlink}
         text={props.text}
       />
@@ -24,7 +23,11 @@ const User = (props) => {
 
 // Checks the message active state
 const areEqual = (prevProps, nextProps) => {
-  return prevProps.active === nextProps.active;
+  if (prevProps.active !== nextProps.active) return false;
+
+  if (!prevProps.player && nextProps.player) return false;
+
+  return true;
 };
 
 export default React.memo(User, areEqual);

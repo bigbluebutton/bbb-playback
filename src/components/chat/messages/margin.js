@@ -3,20 +3,23 @@ import cx from 'classnames';
 import Avatar from 'components/utils/avatar';
 import './index.scss';
 
-const Margin = ({ active, icon, initials, name, onClick }) => {
+const Margin = (props) => {
+  const handleOnKeyPress = (event) => {
+    if (event.key === 'Enter') props.onClick();
+  };
 
   return (
     <div
-      className={cx('interactive', { inactive: !active })}
-      onClick={onClick}
-      onKeyPress={(e) => e.key === 'Enter' ? onClick() : null}
+      className={cx('interactive', { inactive: !props.active })}
+      onClick={props.onClick}
+      onKeyPress={event => handleOnKeyPress(event)}
       tabIndex="0"
     >
       <Avatar
-        active={active}
-        icon={icon}
-        initials={initials}
-        name={name}
+        active={props.active}
+        icon={props.icon}
+        initials={props.initials}
+        name={props.name}
       />
     </div>
   );

@@ -25,8 +25,8 @@ const Poll = (props) => {
     <Message
       active={props.active}
       icon={ID.POLLS}
-      onClick={props.onClick}
       name={intl.formatMessage(intlMessages.name)}
+      player={props.player}
       timestamp={props.timestamp}
     >
       <div className="poll-wrapper">
@@ -46,7 +46,11 @@ const Poll = (props) => {
 
 // Checks the message active state
 const areEqual = (prevProps, nextProps) => {
-  return prevProps.active === nextProps.active;
+  if (prevProps.active !== nextProps.active) return false;
+
+  if (!prevProps.player && nextProps.player) return false;
+
+  return true;
 };
 
 export default React.memo(Poll, areEqual);

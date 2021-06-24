@@ -18,7 +18,7 @@ const intlMessages = defineMessages({
   },
 });
 
-const Chat = ({ chat, currentDataIndex, player }) => {
+const Chat = (props) => {
   const interaction = useRef(false);
   const firstNode = useRef();
   const currentNode = useRef();
@@ -30,12 +30,12 @@ const Chat = ({ chat, currentDataIndex, player }) => {
       firstNode.current = node;
     }
 
-    if (index === currentDataIndex) {
+    if (index === props.currentDataIndex) {
       currentNode.current = node;
     }
   };
 
-  const handleAutoScroll = (align) => {
+  const handleAutoScroll = () => {
     if (interaction.current) return;
 
     const { current: fNode } = firstNode;
@@ -50,13 +50,7 @@ const Chat = ({ chat, currentDataIndex, player }) => {
     }
   };
 
-  useEffect(() => {
-    if (!config.scroll) return () => {};
-
-    handleAutoScroll();
-
-    return () => handleAutoScroll();
-  });
+  useEffect(() => config.scroll ? handleAutoScroll() : null);
 
   return (
     <div
@@ -69,9 +63,9 @@ const Chat = ({ chat, currentDataIndex, player }) => {
       tabIndex="0"
     >
       <Messages
-        chat={chat}
-        currentDataIndex={currentDataIndex}
-        player={player}
+        chat={props.chat}
+        currentDataIndex={props.currentDataIndex}
+        player={props.player}
         setRef={(node, index) => setRef(node, index)}
       />
     </div>
@@ -79,7 +73,11 @@ const Chat = ({ chat, currentDataIndex, player }) => {
 };
 
 const areEqual = (prevProps, nextProps) => {
-  return prevProps.currentDataIndex === nextProps.currentDataIndex;
+  if (prevProps.currentDataIndex !== nextProps.currentDataIndex) return false;
+
+  if (!prevProps.player && nextProps.player) return false;
+
+  return true;
 };
 
 export default React.memo(Chat, areEqual);

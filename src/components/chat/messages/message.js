@@ -5,27 +5,26 @@ import Margin from './margin';
 import './index.scss';
 
 const Message = (props) => {
-  const {
-    active,
-    name,
-  } = props;
+  const handleOnClick = (timestamp) => {
+    if (props.player) props.player.currentTime(timestamp);
+  };
 
   return (
     <div className="message">
       <Margin
-        active={active}
+        active={props.active}
         icon={props.icon}
         initials={props.initials}
-        name={name}
-        onClick={props.onClick}
+        name={props.name}
+        onClick={() => handleOnClick(props.timestamp)}
       />
       <div className="data">
         <Info
-          active={active}
-          name={name}
+          active={props.active}
+          name={props.name}
           timestamp={props.timestamp}
         />
-        <div className={cx('text', { inactive: !active })}>
+        <div className={cx('text', { inactive: !props.active })}>
           {props.children}
         </div>
       </div>

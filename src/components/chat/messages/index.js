@@ -9,10 +9,6 @@ import './index.scss';
 
 const Messages = ({ chat, currentDataIndex, player, setRef }) => {
 
-  const handleOnClick = (timestamp) => {
-    if (player) player.currentTime(timestamp);
-  };
-
   return (
     <div className="list">
       <div className="message-wrapper">
@@ -30,7 +26,7 @@ const Messages = ({ chat, currentDataIndex, player, setRef }) => {
                     hyperlink={item.hyperlink}
                     initials={item.initials}
                     name={item.name}
-                    onClick={() => handleOnClick(timestamp)}
+                    player={player}
                     text={item.message}
                     timestamp={timestamp}
                   />
@@ -43,7 +39,7 @@ const Messages = ({ chat, currentDataIndex, player, setRef }) => {
                   <PollMessage
                     active={active}
                     answers={item.answers}
-                    onClick={() => handleOnClick(timestamp)}
+                    player={player}
                     question={item.question}
                     responders={item.responders}
                     timestamp={timestamp}
