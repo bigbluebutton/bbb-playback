@@ -11,6 +11,7 @@ const ID = {
   CURSOR: 'cursor',
   DESKSHARE: 'deskshare',
   ERROR: 'error',
+  LEFT: 'left',
   LOADER: 'loader',
   METADATA: 'metadata',
   NOTES: 'notes',
@@ -24,6 +25,7 @@ const ID = {
   SHAPES: 'shapes',
   SWAP: 'swap',
   THUMBNAILS: 'thumbnails',
+  TOP: 'top',
   USERS: 'users',
   VIDEO: 'video',
 };
@@ -155,6 +157,7 @@ const getControlFromLayout = layout => {
       control = false;
       break;
     default:
+      logger.debug('unhandled', layout);
   }
 
   return control;
@@ -349,6 +352,7 @@ const getSectionFromLayout = layout => {
       section = false;
       break;
     default:
+      logger.debug('unhandled', layout);
   }
 
   return section;
@@ -369,6 +373,7 @@ const getSwapFromLayout = layout => {
       swap = true;
       break;
     default:
+      logger.debug('unhandled', layout);
   }
 
   return swap;
@@ -484,6 +489,24 @@ const getTimestampAsMilliseconds = timestamp => timestamp * 1000;
 const handleOnEnterPress = (event, action) => {
   if (event && event.key === 'Enter') {
     if (typeof action === 'function') action();
+  }
+};
+
+const handleAutoScroll = (fNode, cNode, direction, align) => {
+  // Auto-scroll can start after getting the first and current nodes
+  if (fNode && cNode) {
+    const { parentNode: pNode } = cNode;
+
+    switch (direction) {
+      case ID.LEFT:
+        pNode.scrollLeft = getScrollLeft(fNode, cNode, align);
+        break;
+      case ID.TOP:
+        pNode.scrollTop = getScrollTop(fNode, cNode, align);
+        break;
+      default:
+        logger.debug('unhandled', direction);
+    }
   }
 };
 
@@ -781,6 +804,7 @@ export {
   getStyle,
   getTime,
   getTimestampAsMilliseconds,
+  handleAutoScroll,
   handleOnEnterPress,
   hasPresentation,
   hasProperty,

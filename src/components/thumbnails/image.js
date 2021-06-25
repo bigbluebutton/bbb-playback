@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
 import {
   ID,
@@ -6,8 +7,20 @@ import {
 } from 'utils/data';
 import './index.scss';
 
-const Image = ({ alt, src, recordId }) => {
-  const screenshare = src === ID.SCREENSHARE;
+const propTypes = {
+  alt: PropTypes.string,
+  src: PropTypes.string,
+  recordId: PropTypes.string,
+};
+
+const defaultProps = {
+  alt: '',
+  src: '',
+  recordId: '',
+};
+
+const Image = (props) => {
+  const screenshare = props.src === ID.SCREENSHARE;
 
   if (screenshare) {
     return (
@@ -17,15 +30,18 @@ const Image = ({ alt, src, recordId }) => {
     );
   }
 
-  const logo = src.includes('logo');
+  const logo = props.src.includes('logo');
 
   return (
     <img
-      alt={alt}
+      alt={props.alt}
       className={cx('thumbnail-image', { logo })}
-      src={buildFileURL(recordId, src)}
+      src={buildFileURL(props.recordId, props.src)}
     />
   );
 };
+
+Image.propTypes = propTypes;
+Image.defaultProps = defaultProps;
 
 export default Image;

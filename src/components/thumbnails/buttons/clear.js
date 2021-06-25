@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   defineMessages,
   useIntl,
@@ -14,23 +15,38 @@ const intlMessages = defineMessages({
   },
 });
 
-const Clear = ({ interactive, handleSearch, search }) => {
+const propTypes = {
+  interactive: PropTypes.bool,
+  handleSearch: PropTypes.func,
+  search: PropTypes.array,
+};
+
+const defaultProps = {
+  interactive: false,
+  handleSearch: () => {},
+  search: [],
+};
+
+const Clear = (props) => {
   const intl = useIntl();
 
-  if (!interactive) return null;
+  if (!props.interactive) return null;
 
-  if (isEmpty(search)) return null;
+  if (isEmpty(props.search)) return null;
 
   return (
     <div className="clear-button">
       <Button
         aria={intl.formatMessage(intlMessages.clear)}
-        handleOnClick={() => handleSearch ? handleSearch([]) : null}
+        handleOnClick={() => props.handleSearch([])}
         icon="close"
         type="solid"
       />
     </div>
   );
 };
+
+Clear.propTypes = propTypes;
+Clear.defaultProps = defaultProps;
 
 export default Clear;

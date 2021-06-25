@@ -7,7 +7,7 @@ import { chat as config } from 'config';
 import Messages from './messages';
 import {
   ID,
-  getScrollTop,
+  handleAutoScroll,
 } from 'utils/data';
 import './index.scss';
 
@@ -35,22 +35,13 @@ const Chat = (props) => {
     }
   };
 
-  const handleAutoScroll = () => {
-    if (interaction.current) return;
-
-    const { current: fNode } = firstNode;
-    const { current: cNode } = currentNode;
-
-    // Auto-scroll can start after getting the first and current nodes
-    if (fNode && cNode) {
-      const { align } = config;
-      const { parentNode: pNode } = cNode;
-
-      pNode.scrollTop = getScrollTop(fNode, cNode, align);
+  useEffect(() => {
+    if (!interaction.current) {
+      if (config.scroll) {
+        handleAutoScroll(firstNode.current, currentNode.current, ID.TOP, config.align);
+      }
     }
-  };
-
-  useEffect(() => config.scroll ? handleAutoScroll() : null);
+  });
 
   return (
     <div

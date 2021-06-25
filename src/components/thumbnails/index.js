@@ -1,14 +1,15 @@
 import React, { useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import {
   defineMessages,
   useIntl,
 } from 'react-intl';
-import Thumbnail from './thumbnail';
+import Item from './item';
 import ClearButton from './buttons/clear';
 import { thumbnails as config } from 'config';
 import {
   ID,
-  getScrollLeft,
+  handleAutoScroll,
   isEmpty,
   isEqual,
 } from 'utils/data';
@@ -21,15 +22,27 @@ const intlMessages = defineMessages({
   },
 });
 
-const Thumbnails = ({
-  currentDataIndex,
-  handleSearch,
-  interactive,
-  player,
-  recordId,
-  search,
-  thumbnails,
-}) => {
+const propTypes = {
+  currentDataIndex: PropTypes.number,
+  handleSearch: PropTypes.func,
+  interactive: PropTypes.bool,
+  player: PropTypes.object,
+  recordId: PropTypes.string,
+  search: PropTypes.array,
+  thumbnails: PropTypes.array,
+};
+
+const defaultProps = {
+  currentDataIndex: 0,
+  handleSearch: () => {},
+  interactive: false,
+  player: {},
+  recordId: '',
+  search: [],
+  thumbnails: [],
+};
+
+const Thumbnails = (props) => {
   const interaction = useRef(false);
   const firstNode = useRef();
   const currentNode = useRef();
@@ -41,35 +54,26 @@ const Thumbnails = ({
       firstNode.current = node;
     }
 
-    if (index === currentDataIndex) {
+    if (index === props.currentDataIndex) {
       currentNode.current = node;
     }
   };
 
-  const handleAutoScroll = () => {
-    if (interaction.current) return;
-
-    const { current: fNode } = firstNode;
-    const { current: cNode } = currentNode;
-
-    // Auto-scroll can start after getting the first and current nodes
-    if (fNode && cNode) {
-      const { align } = config;
-      const { parentNode: pNode } = cNode;
-
-      pNode.scrollLeft = getScrollLeft(fNode, cNode, align);
-    }
-  };
-
   const isFiltered = (index) => {
-    if (interactive) {
-      return !isEmpty(search) && !search.includes(index);
+    if (props.interactive) {
+      return !isEmpty(props.search) && !props.search.includes(index);
     } else {
-      return !search.includes(index);
+      return !props.search.includes(index);
     }
   }
 
-  useEffect(() => config.scroll ? handleAutoScroll() : null);
+  useEffect(() => {
+    if (!interaction.current) {
+      if (config.scroll) {
+        handleAutoScroll(firstNode.current, currentNode.current, ID.LEFT, config.align);
+      }
+    }
+  });
 
   return (
     <div
@@ -80,18 +84,18 @@ const Thumbnails = ({
       onMouseLeave={() => interaction.current = false}
       tabIndex="0"
     >
-      {thumbnails.reduce((result, item, index) => {
+      {props.thumbnails.reduce((result, item, index) => {
         if (!isFiltered(index)) {
-          const active = index === currentDataIndex;
+          const active = index === props.currentDataIndex;
 
           result.push(
-            <Thumbnail
+            <Item
               active={active}
               index={index}
-              interactive={interactive}
+              interactive={props.interactive}
               item={item}
-              player={player}
-              recordId={recordId}
+              player={props.player}
+              recordId={props.recordId}
               setRef={setRef}
             />
           );
@@ -100,13 +104,16 @@ const Thumbnails = ({
         return result;
       }, [])}
       <ClearButton
-        interactive={interactive}
-        handleSearch={handleSearch}
-        search={search}
+        interactive={props.interactive}
+        handleSearch={props.handleSearch}
+        search={props.search}
       />
     </div>
   );
 };
+
+Thumbnails.propTypes = propTypes;
+Thumbnails.defaultProps = defaultProps;
 
 const areEqual = (prevProps, nextProps) => {
   if (prevProps.currentDataIndex !== nextProps.currentDataIndex) return false;
