@@ -1,26 +1,52 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
 import Avatar from 'components/utils/avatar';
 import { handleOnEnterPress } from 'utils/data';
 import './index.scss';
 
-const Margin = (props) => {
+const propTypes = {
+  active: PropTypes.bool,
+  icon: PropTypes.string,
+  initials: PropTypes.string,
+  name: PropTypes.string,
+  onClick: PropTypes.func,
+};
+
+const defaultProps = {
+  active: false,
+  icon: '',
+  initials: '',
+  name: '',
+  onClick: () => {},
+};
+
+const Margin = ({
+  active,
+  icon,
+  initials,
+  name,
+  onClick,
+}) => {
 
   return (
     <div
-      className={cx('interactive', { inactive: !props.active })}
-      onClick={props.onClick}
-      onKeyPress={event => handleOnEnterPress(event, props.onClick)}
+      className={cx('interactive', { inactive: !active })}
+      onClick={onClick}
+      onKeyPress={event => handleOnEnterPress(event, onClick)}
       tabIndex="0"
     >
       <Avatar
-        active={props.active}
-        icon={props.icon}
-        initials={props.initials}
-        name={props.name}
+        active={active}
+        icon={icon}
+        initials={initials}
+        name={name}
       />
     </div>
   );
 };
+
+Margin.propTypes = propTypes;
+Margin.defaultProps = defaultProps;
 
 export default Margin;

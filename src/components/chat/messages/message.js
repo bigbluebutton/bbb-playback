@@ -1,35 +1,70 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
 import Info from './info';
 import Margin from './margin';
 import './index.scss';
 
-const Message = (props) => {
-  const handleOnClick = (timestamp) => {
-    if (props.player) props.player.currentTime(timestamp);
+const propTypes = {
+  active: PropTypes.bool,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]),
+  icon: PropTypes.string,
+  initials: PropTypes.string,
+  name: PropTypes.string,
+  player: PropTypes.object,
+  timestamp: PropTypes.number,
+};
+
+const defaultProps = {
+  active: false,
+  children: null,
+  icon: '',
+  initials: '',
+  name: '',
+  player: {},
+  timestamp: 0,
+};
+
+const Message = ({
+  active,
+  children,
+  icon,
+  initials,
+  name,
+  player,
+  timestamp,
+}) => {
+  const handleOnClick = () => {
+    if (player) player.currentTime(timestamp);
   };
 
   return (
     <div className="message">
       <Margin
-        active={props.active}
-        icon={props.icon}
-        initials={props.initials}
-        name={props.name}
-        onClick={() => handleOnClick(props.timestamp)}
+        active={active}
+        icon={icon}
+        initials={initials}
+        name={name}
+        onClick={() => handleOnClick()}
       />
       <div className="data">
         <Info
-          active={props.active}
-          name={props.name}
-          timestamp={props.timestamp}
+          active={active}
+          name={name}
+          timestamp={timestamp}
         />
-        <div className={cx('text', { inactive: !props.active })}>
-          {props.children}
+        <div className={cx('text', { inactive: !active })}>
+          {children}
         </div>
       </div>
     </div>
   );
 };
+
+Message.propTypes = propTypes;
+Message.defaultProps = defaultProps;
 
 export default Message;

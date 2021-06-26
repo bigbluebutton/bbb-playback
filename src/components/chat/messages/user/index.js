@@ -1,25 +1,57 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Text from './text';
 import Message from 'components/chat/messages/message';
 
-const User = (props) => {
+const propTypes = {
+  active: PropTypes.bool,
+  hyperlink: PropTypes.bool,
+  initials: PropTypes.string,
+  name: PropTypes.string,
+  player: PropTypes.object,
+  text: PropTypes.string,
+  timestamp: PropTypes.timestamp,
+};
+
+const defaultProps = {
+  active: false,
+  hyperlink: false,
+  initials: '',
+  name: '',
+  player: {},
+  text: '',
+  timestamp: 0,
+};
+
+const User = ({
+  active,
+  hyperlink,
+  initials,
+  name,
+  player,
+  text,
+  timestamp,
+}) => {
 
   return (
     <Message
-      active={props.active}
-      initials={props.initials}
-      name={props.name}
-      player={props.player}
-      timestamp={props.timestamp}
+      active={active}
+      initials={initials}
+      name={name}
+      player={player}
+      timestamp={timestamp}
     >
       <Text
-        active={props.active}
-        hyperlink={props.hyperlink}
-        text={props.text}
+        active={active}
+        hyperlink={hyperlink}
+        text={text}
       />
     </Message>
   );
 };
+
+User.propTypes = propTypes;
+User.defaultProps = defaultProps;
 
 // Checks the message active state
 const areEqual = (prevProps, nextProps) => {

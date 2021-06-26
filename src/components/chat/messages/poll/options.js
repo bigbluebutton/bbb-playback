@@ -1,9 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   defineMessages,
   useIntl,
 } from 'react-intl';
-import { getPollLabel } from 'utils/data';
+import {
+  getPollLabel,
+  isEmpty,
+} from 'utils/data';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -33,10 +37,23 @@ const intlMessages = defineMessages({
   },
 });
 
-const Options = ({ answers, type }) => {
+const propTypes = {
+  answers: PropTypes.array,
+  type: PropTypes.string,
+};
+
+const defaultProps = {
+  answers: [],
+  type: '',
+};
+
+const Options = ({
+  answers,
+  type,
+}) => {
   const intl = useIntl();
 
-  if (answers.length === 0) return null;
+  if (isEmpty(answers)) return null;
 
   return (
     <div className="poll-options">
@@ -60,5 +77,8 @@ const Options = ({ answers, type }) => {
     </div>
   );
 };
+
+Options.propTypes = propTypes;
+Options.defaultProps = defaultProps;
 
 export default Options;

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import {
   defineMessages,
   useIntl,
@@ -18,7 +19,23 @@ const intlMessages = defineMessages({
   },
 });
 
-const Chat = (props) => {
+const propTypes = {
+  chat: PropTypes.array,
+  currentDataIndex: PropTypes.number,
+  player: PropTypes.object,
+};
+
+const defaultProps = {
+  chat: [],
+  currentDataIndex: 0,
+  player: {},
+};
+
+const Chat = ({
+  chat,
+  currentDataIndex,
+  player,
+}) => {
   const interaction = useRef(false);
   const firstNode = useRef();
   const currentNode = useRef();
@@ -30,7 +47,7 @@ const Chat = (props) => {
       firstNode.current = node;
     }
 
-    if (index === props.currentDataIndex) {
+    if (index === currentDataIndex) {
       currentNode.current = node;
     }
   };
@@ -54,14 +71,17 @@ const Chat = (props) => {
       tabIndex="0"
     >
       <Messages
-        chat={props.chat}
-        currentDataIndex={props.currentDataIndex}
-        player={props.player}
+        chat={chat}
+        currentDataIndex={currentDataIndex}
+        player={player}
         setRef={(node, index) => setRef(node, index)}
       />
     </div>
   );
 };
+
+Chat.propTypes = propTypes;
+Chat.defaultProps = defaultProps;
 
 const areEqual = (prevProps, nextProps) => {
   if (prevProps.currentDataIndex !== nextProps.currentDataIndex) return false;

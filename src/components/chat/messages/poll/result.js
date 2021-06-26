@@ -1,12 +1,27 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   getBar,
   getPercentage,
+  isEmpty,
 } from 'utils/data';
 import './index.scss';
 
-const Result = ({ answers, responders }) => {
-  if (answers.length === 0) return null;
+const propTypes = {
+  answers: PropTypes.array,
+  responders: PropTypes.number,
+};
+
+const defaultProps = {
+  answers: [],
+  responders: 0,
+};
+
+const Result = ({
+  answers,
+  responders,
+}) => {
+  if (isEmpty(answers)) return null;
 
   return (
     <div className="poll-result">
@@ -27,5 +42,8 @@ const Result = ({ answers, responders }) => {
     </div>
   );
 };
+
+Result.propTypes = propTypes;
+Result.defaultProps = defaultProps;
 
 export default Result;

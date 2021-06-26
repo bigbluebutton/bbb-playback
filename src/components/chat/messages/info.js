@@ -1,10 +1,27 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { FormattedTime } from 'react-intl';
 import cx from 'classnames';
 import { getTimestampAsMilliseconds } from 'utils/data';
 import './index.scss';
 
-const Info = ({ active, name, timestamp }) => {
+const propTypes = {
+  active: PropTypes.bool,
+  name: PropTypes.string,
+  timestamp: PropTypes.number,
+};
+
+const defaultProps = {
+  active: false,
+  name: '',
+  timestamp: 0,
+};
+
+const Info = ({
+  active,
+  name,
+  timestamp,
+}) => {
   const milliseconds = getTimestampAsMilliseconds(timestamp);
 
   return (
@@ -25,5 +42,8 @@ const Info = ({ active, name, timestamp }) => {
     </div>
   );
 };
+
+Info.propTypes = propTypes;
+Info.defaultProps = defaultProps;
 
 export default Info;

@@ -1,8 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   defineMessages,
   useIntl,
 } from 'react-intl';
+import { isEmpty } from 'utils/data';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -12,10 +14,14 @@ const intlMessages = defineMessages({
   },
 });
 
+const propTypes = { question: PropTypes.string };
+
+const defaultProps = { question: '' };
+
 const Question = ({ question }) => {
   const intl = useIntl();
 
-  if (question.length === 0) return null;
+  if (isEmpty(question)) return null;
 
   return (
     <div className="poll-question">
@@ -26,5 +32,8 @@ const Question = ({ question }) => {
     </div>
   );
 };
+
+Question.propTypes = propTypes;
+Question.defaultProps = defaultProps;
 
 export default Question;

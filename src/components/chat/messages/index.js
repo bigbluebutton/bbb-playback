@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import UserMessage from './user';
 import PollMessage from './poll';
 import {
@@ -7,7 +8,26 @@ import {
 } from 'utils/data';
 import './index.scss';
 
-const Messages = ({ chat, currentDataIndex, player, setRef }) => {
+const propTypes = {
+  chat: PropTypes.array,
+  currentDataIndex: PropTypes.number,
+  player: PropTypes.object,
+  setRef: PropTypes.func,
+};
+
+const defaultProps = {
+  chat: [],
+  currentDataIndex: 0,
+  player: {},
+  setRef: () => {},
+};
+
+const Messages = ({
+  chat,
+  currentDataIndex,
+  player,
+  setRef,
+}) => {
 
   return (
     <div className="list">
@@ -55,5 +75,8 @@ const Messages = ({ chat, currentDataIndex, player, setRef }) => {
     </div>
   );
 };
+
+Messages.propTypes = propTypes;
+Messages.defaultProps = defaultProps;
 
 export default Messages;
