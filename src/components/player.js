@@ -318,7 +318,6 @@ export default class Player extends PureComponent {
   renderMedia() {
     const {
       data,
-      intl,
       time,
     } = this.props;
 
@@ -329,7 +328,6 @@ export default class Player extends PureComponent {
         {this.renderFullscreenButton(LAYOUT.MEDIA)}
         <Video
           captions={this.captions}
-          intl={intl}
           media={media}
           metadata={this.metadata}
           onPlayerReady={this.handlePlayerReady}
