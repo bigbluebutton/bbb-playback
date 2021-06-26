@@ -1,10 +1,39 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
 import Thumbnail from './thumbnail';
 import { handleOnEnterPress } from 'utils/data';
 import './index.scss';
 
-const Item = ({ active, index, interactive, item, player, recordId, setRef }) => {
+const propTypes = {
+  active: PropTypes.bool,
+  index: PropTypes.number,
+  interactive: PropTypes.bool,
+  item: PropTypes.object,
+  player: PropTypes.object,
+  recordId: PropTypes.string,
+  setRef: PropTypes.func,
+};
+
+const defaultProps = {
+  active: false,
+  index: 0,
+  interactive: false,
+  item: {},
+  player: {},
+  recordId: '',
+  setRef: () => {},
+};
+
+const Item = ({
+  active,
+  index,
+  interactive,
+  item,
+  player,
+  recordId,
+  setRef,
+}) => {
   if (!interactive) {
 
     return (
@@ -43,5 +72,8 @@ const Item = ({ active, index, interactive, item, player, recordId, setRef }) =>
     </div>
   );
 };
+
+Item.propTypes = propTypes;
+Item.defaultProps = defaultProps;
 
 export default Item;

@@ -27,18 +27,22 @@ const defaultProps = {
   search: [],
 };
 
-const Clear = (props) => {
+const Clear = ({
+  interactive,
+  handleSearch,
+  search,
+}) => {
   const intl = useIntl();
 
-  if (!props.interactive) return null;
+  if (!interactive) return null;
 
-  if (isEmpty(props.search)) return null;
+  if (isEmpty(search)) return null;
 
   return (
     <div className="clear-button">
       <Button
         aria={intl.formatMessage(intlMessages.clear)}
-        handleOnClick={() => props.handleSearch([])}
+        handleOnClick={() => handleSearch([])}
         icon="close"
         type="solid"
       />

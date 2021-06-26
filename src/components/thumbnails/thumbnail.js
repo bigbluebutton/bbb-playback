@@ -1,8 +1,28 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Image from './image';
 import './index.scss';
 
-const Thumbnail = ({ alt, index, recordId, src }) => {
+const propTypes = {
+  alt: PropTypes.string,
+  index: PropTypes.number,
+  recordId: PropTypes.string,
+  src: PropTypes.string,
+};
+
+const defaultProps = {
+  alt: '',
+  index: 0,
+  recordId: '',
+  src: '',
+};
+
+const Thumbnail = ({
+  alt,
+  index,
+  recordId,
+  src,
+}) => {
 
   return (
     <div className="thumbnail">
@@ -17,5 +37,8 @@ const Thumbnail = ({ alt, index, recordId, src }) => {
     </div>
   )
 };
+
+Thumbnail.propTypes = propTypes;
+Thumbnail.defaultProps = defaultProps;
 
 export default Thumbnail;

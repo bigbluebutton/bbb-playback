@@ -19,8 +19,12 @@ const defaultProps = {
   recordId: '',
 };
 
-const Image = (props) => {
-  const screenshare = props.src === ID.SCREENSHARE;
+const Image = ({
+  alt,
+  src,
+  recordId,
+}) => {
+  const screenshare = src === ID.SCREENSHARE;
 
   if (screenshare) {
     return (
@@ -30,13 +34,13 @@ const Image = (props) => {
     );
   }
 
-  const logo = props.src.includes('logo');
+  const logo = src.includes('logo');
 
   return (
     <img
-      alt={props.alt}
+      alt={alt}
       className={cx('thumbnail-image', { logo })}
-      src={buildFileURL(props.recordId, props.src)}
+      src={buildFileURL(recordId, src)}
     />
   );
 };

@@ -42,7 +42,15 @@ const defaultProps = {
   thumbnails: [],
 };
 
-const Thumbnails = (props) => {
+const Thumbnails = ({
+  currentDataIndex,
+  handleSearch,
+  interactive,
+  player,
+  recordId,
+  search,
+  thumbnails,
+}) => {
   const interaction = useRef(false);
   const firstNode = useRef();
   const currentNode = useRef();
@@ -54,16 +62,16 @@ const Thumbnails = (props) => {
       firstNode.current = node;
     }
 
-    if (index === props.currentDataIndex) {
+    if (index === currentDataIndex) {
       currentNode.current = node;
     }
   };
 
   const isFiltered = (index) => {
-    if (props.interactive) {
-      return !isEmpty(props.search) && !props.search.includes(index);
+    if (interactive) {
+      return !isEmpty(search) && !search.includes(index);
     } else {
-      return !props.search.includes(index);
+      return !search.includes(index);
     }
   }
 
@@ -84,18 +92,18 @@ const Thumbnails = (props) => {
       onMouseLeave={() => interaction.current = false}
       tabIndex="0"
     >
-      {props.thumbnails.reduce((result, item, index) => {
+      {thumbnails.reduce((result, item, index) => {
         if (!isFiltered(index)) {
-          const active = index === props.currentDataIndex;
+          const active = index === currentDataIndex;
 
           result.push(
             <Item
               active={active}
               index={index}
-              interactive={props.interactive}
+              interactive={interactive}
               item={item}
-              player={props.player}
-              recordId={props.recordId}
+              player={player}
+              recordId={recordId}
               setRef={setRef}
             />
           );
@@ -104,9 +112,9 @@ const Thumbnails = (props) => {
         return result;
       }, [])}
       <ClearButton
-        interactive={props.interactive}
-        handleSearch={props.handleSearch}
-        search={props.search}
+        interactive={interactive}
+        handleSearch={handleSearch}
+        search={search}
       />
     </div>
   );
