@@ -1,10 +1,35 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Title from './title';
 import SearchButton from './buttons/search';
 import SectionButton from './buttons/section';
 import SwapButton from './buttons/swap';
 import { controls as config } from 'config';
 import './index.scss';
+
+const propTypes = {
+  control: PropTypes.bool,
+  name: PropTypes.string,
+  section: PropTypes.bool,
+  single: PropTypes.bool,
+  start: PropTypes.number,
+  toggleAbout: PropTypes.func,
+  toggleSearch: PropTypes.func,
+  toggleSection: PropTypes.func,
+  toggleSwap: PropTypes.func,
+};
+
+const defaultProps = {
+  control: false,
+  name: '',
+  section: false,
+  single: false,
+  start: 0,
+  toggleAbout: () => {},
+  toggleSearch: () => {},
+  toggleSection: () => {},
+  toggleSwap: () => {},
+};
 
 const Top = (props) => {
   const {
@@ -49,6 +74,9 @@ const Top = (props) => {
     </div>
   );
 };
+
+Top.propTypes = propTypes;
+Top.defaultProps = defaultProps;
 
 // Checks the side section state
 const areEqual = (prevProps, nextProps) => {
