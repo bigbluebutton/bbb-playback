@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   defineMessages,
   useIntl,
@@ -12,6 +13,10 @@ const intlMessages = defineMessages({
     description: 'Aria label for the notes wrapper',
   },
 });
+
+const propTypes = { notes: PropTypes.text };
+
+const defaultProps = { notes: '' };
 
 const Notes = ({ notes }) => {
   const intl = useIntl();
@@ -29,6 +34,9 @@ const Notes = ({ notes }) => {
     </div>
   );
 };
+
+Notes.propTypes = propTypes;
+Notes.defaultProps = defaultProps;
 
 // Avoid re-render
 const areEqual = () => true;
