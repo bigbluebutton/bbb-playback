@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Item from './item';
 import { ID } from 'utils/data';
 import './index.scss';
@@ -13,7 +14,20 @@ const CONTENT = [
   ID.CAPTIONS,
 ];
 
-const Body = ({ content, users }) => {
+const propTypes = {
+  content: PropTypes.object,
+  users: PropTypes.number,
+};
+
+const defaultProps = {
+  content: {},
+  users: 0,
+};
+
+const Body = ({
+  content,
+  users,
+}) => {
   const data = {
     ...content,
     users,
@@ -31,5 +45,8 @@ const Body = ({ content, users }) => {
     </div>
   );
 };
+
+Body.propTypes = propTypes;
+Body.defaultProps = defaultProps;
 
 export default Body;

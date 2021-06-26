@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   defineMessages,
   useIntl,
@@ -13,7 +14,20 @@ const intlMessages = defineMessages({
   },
 });
 
-const Footer = ({ disabled, handleOnClick }) => {
+const propTypes = {
+  disabled: PropTypes.bool,
+  handleOnClick: PropTypes.func,
+};
+
+const defaultProps = {
+  disabled: false,
+  handleOnClick: () => {},
+};
+
+const Footer = ({
+  disabled,
+  handleOnClick,
+}) => {
   const intl = useIntl();
 
   return (
@@ -28,5 +42,8 @@ const Footer = ({ disabled, handleOnClick }) => {
     </div>
   );
 };
+
+Footer.propTypes = propTypes;
+Footer.defaultProps = defaultProps;
 
 export default Footer;

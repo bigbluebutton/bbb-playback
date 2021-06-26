@@ -1,8 +1,25 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
 import './index.scss';
 
-const Item = ({ icon, value }) => {
+const propTypes = {
+  icon: PropTypes.string,
+  value: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.string,
+  ]),
+};
+
+const defaultProps = {
+  icon: '',
+  value: false,
+};
+
+const Item = ({
+  icon,
+  value,
+}) => {
   let element;
   if (typeof value === 'boolean') {
     const icon = value ? 'icon-check' : 'icon-close';
@@ -26,5 +43,8 @@ const Item = ({ icon, value }) => {
     </div>
   );
 };
+
+Item.propTypes = propTypes;
+Item.defaultProps = defaultProps;
 
 export default Item;

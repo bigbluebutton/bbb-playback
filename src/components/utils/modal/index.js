@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   defineMessages,
   useIntl,
@@ -13,7 +14,23 @@ const intlMessages = defineMessages({
   },
 });
 
-const Modal = ({ children, onClose }) => {
+const propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]),
+  onClose: PropTypes.func,
+};
+
+const defaultProps = {
+  children: null,
+  onClose: () => {},
+};
+
+const Modal = ({
+  children,
+  onClose,
+}) => {
   const intl = useIntl();
 
   return (
@@ -34,5 +51,8 @@ const Modal = ({ children, onClose }) => {
     </div>
   );
 };
+
+Modal.propTypes = propTypes;
+Modal.defaultProps = defaultProps;
 
 export default Modal;

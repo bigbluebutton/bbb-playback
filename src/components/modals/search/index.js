@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import Body from './body';
 import Footer from './footer';
 import Header from './header';
@@ -25,7 +26,26 @@ const isValid = (value) => {
   return false;
 };
 
-const Search = ({ handleSearch, metadata, thumbnails, toggleModal }) => {
+const propTypes = {
+  handleSearch: PropTypes.func,
+  metadata: PropTypes.object,
+  thumbnails: PropTypes.array,
+  toggleModal: PropTypes.func,
+};
+
+const defaultProps = {
+  handleSearch: () => {},
+  metadata: {},
+  thumbnails: [],
+  toggleModal: () => {},
+};
+
+const Search = ({
+  handleSearch,
+  metadata,
+  thumbnails,
+  toggleModal,
+}) => {
   const [disabled, setDisabled] = useState(true);
   const [search, setSearch] = useState([]);
 
@@ -73,6 +93,9 @@ const Search = ({ handleSearch, metadata, thumbnails, toggleModal }) => {
     </Modal>
   );
 };
+
+Search.propTypes = propTypes;
+Search.defaultProps = defaultProps;
 
 // Avoid re-render
 const areEqual = () => true;

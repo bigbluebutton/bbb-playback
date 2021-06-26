@@ -1,11 +1,28 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Body from './body';
 import Footer from './footer';
 import Header from './header';
 import Modal from 'components/utils/modal';
 import './index.scss';
 
-const About = ({ content, metadata, toggleModal }) => {
+const propTypes = {
+  content: PropTypes.object,
+  metadata: PropTypes.object,
+  toggleModal: PropTypes.func,
+};
+
+const defaultProps = {
+  content: {},
+  metadata: {},
+  toggleModal: () => {},
+};
+
+const About = ({
+  content,
+  metadata,
+  toggleModal,
+}) => {
 
   return (
     <Modal onClose={toggleModal}>
@@ -18,6 +35,9 @@ const About = ({ content, metadata, toggleModal }) => {
     </Modal>
   );
 };
+
+About.propTypes = propTypes;
+About.defaultProps = defaultProps;
 
 // Avoid re-render
 const areEqual = () => true;

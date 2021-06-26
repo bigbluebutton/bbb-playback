@@ -1,10 +1,30 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
 import Thumbnails from 'components/thumbnails';
 import { search as config } from 'config';
 import './index.scss';
 
-const Body = ({ handleOnChange, metadata, search, thumbnails, }) => {
+const propTypes = {
+  handleOnChange: PropTypes.func,
+  metadata: PropTypes.object,
+  search: PropTypes.array,
+  thumbnails: PropTypes.array,
+};
+
+const defaultProps = {
+  handleOnChange: () => {},
+  metadata: {},
+  search: [],
+  thumbnails: [],
+};
+
+const Body = ({
+  handleOnChange,
+  metadata,
+  search,
+  thumbnails,
+}) => {
 
   return (
     <div className="search-body">
@@ -28,5 +48,8 @@ const Body = ({ handleOnChange, metadata, search, thumbnails, }) => {
     </div>
   );
 };
+
+Body.propTypes = propTypes;
+Body.defaultProps = defaultProps;
 
 export default Body;
