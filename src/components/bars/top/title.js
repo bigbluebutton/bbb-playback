@@ -30,16 +30,20 @@ const defaultProps = {
   toggleAbout: () => {},
 };
 
-const Title = (props) => {
+const Title = ({
+  interactive,
+  name,
+  start,
+  toggleAbout,
+}) => {
   const intl = useIntl();
-  const date = <FormattedDate value={new Date(props.start)} />;
-  const { interactive } = props;
+  const date = <FormattedDate value={new Date(start)} />;
 
   if (!interactive) {
 
     return (
       <span className="title">
-        {props.name} - {date}
+        {name} - {date}
       </span>
     );
   }
@@ -48,11 +52,11 @@ const Title = (props) => {
     <span
       aria={intl.formatMessage(intlMessages.about)}
       className={cx('title', { interactive })}
-      onClick={props.toggleAbout}
-      onKeyPress={event => handleOnEnterPress(event, props.toggleAbout)}
+      onClick={toggleAbout}
+      onKeyPress={event => handleOnEnterPress(event, toggleAbout)}
       tabIndex="0"
     >
-      {props.name} - {date}
+      {name} - {date}
     </span>
   );
 };

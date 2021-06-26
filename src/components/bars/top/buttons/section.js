@@ -25,17 +25,21 @@ const defaultProps = {
   toggleSection: () => {},
 };
 
-const Section = (props) => {
+const Section = ({
+  enabled,
+  section,
+  toggleSection,
+}) => {
   const intl = useIntl();
 
-  if (!props.enabled) return null;
+  if (!enabled) return null;
 
   return (
     <Button
       aria={intl.formatMessage(intlMessages.section)}
       circle
-      handleOnClick={props.toggleSection}
-      icon={props.section ? 'arrow-left' : 'arrow-right'}
+      handleOnClick={toggleSection}
+      icon={section ? 'arrow-left' : 'arrow-right'}
     />
   );
 };

@@ -31,44 +31,43 @@ const defaultProps = {
   toggleSwap: () => {},
 };
 
-const Top = (props) => {
-  const {
-    control,
-    single,
-  } = props;
-
-  const {
-    about,
-    search,
-    section,
-    swap,
-  } = config;
+const Top = ({
+  control,
+  name,
+  section,
+  single,
+  start,
+  toggleAbout,
+  toggleSearch,
+  toggleSection,
+  toggleSwap,
+}) => {
 
   return (
     <div className="top-bar">
       <div className="left">
         <SectionButton
-          enabled={control && section}
-          section={props.section}
-          toggleSection={props.toggleSection}
+          enabled={control && config.section}
+          section={section}
+          toggleSection={toggleSection}
         />
       </div>
       <div className="center">
         <Title
-          interactive={control && about}
-          name={props.name}
-          start={props.start}
-          toggleAbout={props.toggleAbout}
+          interactive={control && config.about}
+          name={name}
+          start={start}
+          toggleAbout={toggleAbout}
         />
       </div>
       <div className="right">
         <SearchButton
-          enabled={control && search && !single}
-          toggleSearch={props.toggleSearch}
+          enabled={control && config.search && !single}
+          toggleSearch={toggleSearch}
         />
         <SwapButton
-          enabled={control && swap && !single}
-          toggleSwap={props.toggleSwap}
+          enabled={control && config.swap && !single}
+          toggleSwap={toggleSwap}
         />
       </div>
     </div>

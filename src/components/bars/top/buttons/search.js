@@ -24,16 +24,19 @@ const defaultProps = {
   toggleSearch: () => {},
 };
 
-const Search = (props) => {
+const Search = ({
+  enabled,
+  toggleSearch,
+}) => {
   const intl = useIntl();
 
-  if (!props.enabled) return null;
+  if (!enabled) return null;
 
   return (
     <Button
       aria={intl.formatMessage(intlMessages.search)}
       circle
-      handleOnClick={props.toggleSearch}
+      handleOnClick={toggleSearch}
       icon={ID.SEARCH}
     />
   );

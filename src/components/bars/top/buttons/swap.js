@@ -24,16 +24,19 @@ const defaultProps = {
   toggleSwap: () => {},
 };
 
-const Swap = (props) => {
+const Swap = ({
+  enabled,
+  toggleSwap,
+}) => {
   const intl = useIntl();
 
-  if (!props.enabled) return null;
+  if (!enabled) return null;
 
   return (
     <Button
       aria={intl.formatMessage(intlMessages.swap)}
       circle
-      handleOnClick={props.toggleSwap}
+      handleOnClick={toggleSwap}
       icon={ID.SWAP}
     />
   );
