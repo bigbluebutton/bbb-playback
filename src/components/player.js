@@ -135,7 +135,7 @@ export default class Player extends PureComponent {
   handleSearch(value) {
     const { search } = this.state;
 
-    if (!isEqual(search, value, 'array')) {
+    if (!isEqual(search, value)) {
       this.setState({ search: value });
     }
   }
@@ -400,7 +400,6 @@ export default class Player extends PureComponent {
   }
 
   renderPresentation(active) {
-    const { intl } = this.props;
     const { time } = this.state;
 
     const currentSlideIndex = getCurrentDataIndex(this.slides, time);
@@ -415,12 +414,11 @@ export default class Player extends PureComponent {
         currentCursorIndex={currentCursorIndex}
         currentPanzoomIndex={currentPanzoomIndex}
         currentSlideIndex={currentSlideIndex}
-        cursor={this.cursor}
+        cursors={this.cursor}
         draws={draws}
         drawsInterval={currentDrawsInterval}
-        intl={intl}
-        metadata={this.metadata}
         panzooms={this.panzooms}
+        recordId={this.metadata.id}
         slides={this.slides}
         thumbnails={this.thumbnails}
       />

@@ -636,7 +636,7 @@ const isEnabled = (data, time) => {
   return false;
 };
 
-const isEqual = (first, second, type) => {
+const isEqual = (first, second, type = 'array') => {
   let equal = false;
 
   switch (type) {

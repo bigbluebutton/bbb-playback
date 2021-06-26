@@ -126,7 +126,7 @@ Thumbnails.defaultProps = defaultProps;
 const areEqual = (prevProps, nextProps) => {
   if (prevProps.currentDataIndex !== nextProps.currentDataIndex) return false;
 
-  if (!isEqual(prevProps.search, nextProps.search, 'array')) return false;
+  if (!isEqual(prevProps.search, nextProps.search)) return false;
 
   if (!prevProps.player && nextProps.player) return false;
 

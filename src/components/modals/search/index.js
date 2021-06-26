@@ -55,7 +55,7 @@ const Search = ({
       const result = getSearch(value, thumbnails);
 
       // If different, update search
-      if (!isEqual(search, result, 'array')) {
+      if (!isEqual(search, result)) {
         setSearch(result);
       }
 
