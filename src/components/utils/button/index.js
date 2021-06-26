@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import './index.scss';
@@ -19,50 +19,47 @@ const propTypes = {
 
 const defaultProps = {
   active: false,
+  aria: '',
   circle: false,
   disabled: false,
+  handleOnClick: () => {},
+  icon: '',
   type: DEFAULT,
 };
 
-class Button extends PureComponent {
-  render() {
-    const {
-      active,
-      aria,
-      circle,
-      disabled,
-      handleOnClick,
-      icon,
-      type,
-    } = this.props;
+const Button = ({
+  active,
+  aria,
+  circle,
+  disabled,
+  handleOnClick,
+  icon,
+  type,
+}) => {
+  const ghost = type === GHOST;
+  const solid = type === SOLID;
 
-    if (!handleOnClick) return null;
-
-    const ghost = type === GHOST;
-    const solid = type === SOLID;
-
-    const style = {
-      default: !ghost && !solid && !disabled,
-      ghost: ghost && !active && !disabled,
-      solid: (solid || active) && !disabled,
-      circle,
-      disabled,
-    };
-
-    return (
-      <div className="button-wrapper">
-        <button
-          aria-label={aria}
-          className={cx('button', style)}
-          disabled={disabled}
-          onClick={() => handleOnClick()}
-        >
-          <span className={`icon-${icon}`} />
-        </button>
-      </div>
-    );
+  const style = {
+    default: !ghost && !solid && !disabled,
+    ghost: ghost && !active && !disabled,
+    solid: (solid || active) && !disabled,
+    circle,
+    disabled,
   };
-}
+
+  return (
+    <div className="button-wrapper">
+      <button
+        aria-label={aria}
+        className={cx('button', style)}
+        disabled={disabled}
+        onClick={() => handleOnClick()}
+      >
+        <span className={`icon-${icon}`} />
+      </button>
+    </div>
+  );
+};
 
 Button.propTypes = propTypes;
 Button.defaultProps = defaultProps;
