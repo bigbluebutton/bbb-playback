@@ -10,7 +10,17 @@ const propTypes = {
   name: PropTypes.string,
 };
 
-const Avatar = ({ icon, initials, name }) => {
+const defaultProps = {
+  icon: '',
+  initials: '',
+  name: '',
+};
+
+const Avatar = ({
+  icon,
+  initials,
+  name,
+}) => {
 
   return (
     <div className="avatar-wrapper">
@@ -28,5 +38,6 @@ const Avatar = ({ icon, initials, name }) => {
 };
 
 Avatar.propTypes = propTypes;
+Avatar.defaultProps = defaultProps;
 
 export default Avatar;
