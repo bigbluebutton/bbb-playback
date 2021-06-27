@@ -43,6 +43,16 @@ const NUMBERS = [
   'twelve', 'thirteen', 'fourteen', 'fifteen',
 ];
 
+const SHAPES = {
+  CIRCLE: 'circle',
+  LINE: 'line',
+  PATH: 'path',
+  POLL: 'poll',
+  POLYGON: 'polygon',
+  POLYLINE: 'polyline',
+  TEXT: 'text',
+};
+
 const getRouter = () => {
   if (typeof process.env.REACT_APP_NO_ROUTER !== 'undefined') {
     if (process.env.REACT_APP_NO_ROUTER) return false;
@@ -779,6 +789,7 @@ export {
   ID,
   LAYOUT,
   ROUTER,
+  SHAPES,
   buildFileURL,
   getAvatarStyle,
   getActiveContent,

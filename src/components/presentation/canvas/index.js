@@ -7,6 +7,7 @@ import Polygon from './polygon';
 import Polyline from './polyline';
 import Text from './text';
 import {
+  SHAPES,
   isEmpty,
   isEqual,
 } from 'utils/data';
@@ -44,7 +45,7 @@ const Canvas = ({
     } = shape;
 
     switch (type) {
-      case 'circle':
+      case SHAPES.CIRCLE:
         canvas.push(
           <Circle
             data={data}
@@ -53,7 +54,7 @@ const Canvas = ({
           />
         );
         break;
-      case 'line':
+      case SHAPES.LINE:
         canvas.push(
           <Line
             data={data}
@@ -62,7 +63,7 @@ const Canvas = ({
           />
         );
         break;
-      case 'path':
+      case SHAPES.PATH:
         canvas.push(
           <Path
             data={data}
@@ -71,16 +72,7 @@ const Canvas = ({
           />
         );
         break;
-      case 'polygon':
-        canvas.push(
-          <Polygon
-            data={data}
-            key={id}
-            style={style}
-          />
-        );
-        break;
-      case 'poll':
+      case SHAPES.POLL:
         canvas.push(
           <Poll
             data={data}
@@ -90,7 +82,16 @@ const Canvas = ({
           />
         );
         break;
-      case 'polyline':
+      case SHAPES.POLYGON:
+        canvas.push(
+          <Polygon
+            data={data}
+            key={id}
+            style={style}
+          />
+        );
+        break;
+      case SHAPES.POLYLINE:
         canvas.push(
           <Polyline
             data={data}
@@ -99,7 +100,7 @@ const Canvas = ({
           />
         );
         break;
-      case 'text':
+      case SHAPES.TEXT:
         canvas.push(
           <Text
             data={data}
