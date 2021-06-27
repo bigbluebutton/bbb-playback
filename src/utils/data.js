@@ -167,7 +167,6 @@ const getControlFromLayout = layout => {
       control = false;
       break;
     default:
-      logger.debug('unhandled', layout);
   }
 
   return control;
@@ -362,7 +361,6 @@ const getSectionFromLayout = layout => {
       section = false;
       break;
     default:
-      logger.debug('unhandled', layout);
   }
 
   return section;
@@ -383,7 +381,6 @@ const getSwapFromLayout = layout => {
       swap = true;
       break;
     default:
-      logger.debug('unhandled', layout);
   }
 
   return swap;
