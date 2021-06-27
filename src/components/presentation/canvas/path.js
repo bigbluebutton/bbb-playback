@@ -13,4 +13,7 @@ const Path = ({
   );
 };
 
-export default Path;
+// Avoid re-render
+const areEqual = () => true;
+
+export default React.memo(Path, areEqual);

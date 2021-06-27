@@ -6,8 +6,11 @@ import Poll from './poll';
 import Polygon from './polygon';
 import Polyline from './polyline';
 import Text from './text';
+import {
+  isEmpty,
+  isEqual,
+} from 'utils/data';
 import logger from 'utils/logger';
-import { isEmpty } from 'utils/data';
 
 const Canvas = ({
   draws,
@@ -45,6 +48,7 @@ const Canvas = ({
         canvas.push(
           <Circle
             data={data}
+            key={id}
             style={style}
           />
         );
@@ -53,6 +57,7 @@ const Canvas = ({
         canvas.push(
           <Line
             data={data}
+            key={id}
             style={style}
           />
         );
@@ -61,6 +66,7 @@ const Canvas = ({
         canvas.push(
           <Path
             data={data}
+            key={id}
             style={style}
           />
         );
@@ -69,6 +75,7 @@ const Canvas = ({
         canvas.push(
           <Polygon
             data={data}
+            key={id}
             style={style}
           />
         );
@@ -77,6 +84,7 @@ const Canvas = ({
         canvas.push(
           <Poll
             data={data}
+            key={id}
             recordId={recordId}
             style={style}
           />
@@ -86,6 +94,7 @@ const Canvas = ({
         canvas.push(
           <Polyline
             data={data}
+            key={id}
             style={style}
           />
         );
@@ -94,6 +103,7 @@ const Canvas = ({
         canvas.push(
           <Text
             data={data}
+            key={id}
             style={style}
           />
         );
@@ -110,4 +120,12 @@ const Canvas = ({
   );
 };
 
-export default Canvas;
+const areEqual = (prevProps, nextProps) => {
+  if (!isEqual(prevProps.draws, nextProps.draws)) return false;
+
+  if (!isEqual(prevProps.drawsInterval, nextProps.drawsInterval)) return false;
+
+  return true;
+};
+
+export default React.memo(Canvas, areEqual);

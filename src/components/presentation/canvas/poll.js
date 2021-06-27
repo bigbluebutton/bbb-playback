@@ -51,4 +51,7 @@ const Poll = ({
   }
 };
 
-export default Poll;
+// Avoid re-render
+const areEqual = () => true;
+
+export default React.memo(Poll, areEqual);

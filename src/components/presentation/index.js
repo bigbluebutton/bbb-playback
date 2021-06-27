@@ -7,10 +7,7 @@ import cx from 'classnames';
 import Cursor from './cursor';
 import Slide from './slide';
 import Canvas from './canvas';
-import {
-  ID,
-  isEqual,
-} from 'utils/data';
+import { ID } from 'utils/data';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -148,10 +145,6 @@ const areEqual = (prevProps, nextProps) => {
   if (prevProps.currentPanzoomIndex !== nextProps.currentPanzoomIndex) return false;
 
   if (prevProps.currentSlideIndex !== nextProps.currentSlideIndex) return false;
-
-  if (!isEqual(prevProps.draws, nextProps.draws)) return false;
-
-  if (!isEqual(prevProps.drawsInterval, nextProps.drawsInterval)) return false;
 
   return true;
 };

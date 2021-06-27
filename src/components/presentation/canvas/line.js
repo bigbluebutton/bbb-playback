@@ -16,4 +16,7 @@ const Line = ({
   );
 };
 
-export default Line;
+// Avoid re-render
+const areEqual = () => true;
+
+export default React.memo(Line, areEqual);

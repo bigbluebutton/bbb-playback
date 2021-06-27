@@ -13,4 +13,7 @@ const Polygon = ({
   );
 };
 
-export default Polygon;
+// Avoid re-render
+const areEqual = () => true;
+
+export default React.memo(Polygon, areEqual);

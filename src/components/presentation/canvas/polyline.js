@@ -13,4 +13,7 @@ const Polyline = ({
   );
 };
 
-export default Polyline;
+// Avoid re-render
+const areEqual = () => true;
+
+export default React.memo(Polyline, areEqual);

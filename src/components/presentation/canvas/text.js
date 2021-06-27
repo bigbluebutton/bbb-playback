@@ -20,4 +20,7 @@ const Text = ({
   );
 };
 
-export default Text;
+// Avoid re-render
+const areEqual = () => true;
+
+export default React.memo(Text, areEqual);
