@@ -19,19 +19,19 @@ const intlMessages = defineMessages({
   },
 });
 
-const buildSources = (media, metadata) => {
+const buildSources = (media, recordId) => {
   return [
     {
-      src: buildFileURL(metadata.id, 'video/webcams.mp4'),
+      src: buildFileURL(recordId, 'video/webcams.mp4'),
       type: 'video/mp4',
     }, {
-      src: buildFileURL(metadata.id, 'video/webcams.webm'),
+      src: buildFileURL(recordId, 'video/webcams.webm'),
       type: 'video/webm',
     },
   ].filter(source => media.find(m => source.type.includes(m)));
 };
 
-const buildTracks = (captions, metadata) => {
+const buildTracks = (captions, recordId) => {
   return captions.map(lang => {
     const {
       locale,
@@ -40,7 +40,7 @@ const buildTracks = (captions, metadata) => {
 
     return {
       kind: 'captions',
-      src: buildFileURL(metadata.id, `caption_${locale}.vtt`),
+      src: buildFileURL(recordId, `caption_${locale}.vtt`),
       srclang: locale,
       label: localeName,
     };
@@ -69,32 +69,32 @@ const buildOptions = (sources, tracks) => {
 const propTypes = {
   captions: PropTypes.array,
   media: PropTypes.array,
-  metadata: PropTypes.object,
   onPlayerReady: PropTypes.func,
   onTimeUpdate: PropTypes.func,
+  recordId: PropTypes.string,
   time: PropTypes.number,
 };
 
 const defaultProps = {
   captions: [],
   media: [],
-  metadata: {},
   onPlayerReady: () => {},
   onTimeUpdate: () => {},
+  recordId: '',
   time: 0,
 };
 
 const Video = ({
   captions,
   media,
-  metadata,
   onPlayerReady,
   onTimeUpdate,
+  recordId,
   time,
 }) => {
   const intl = useIntl();
-  const sources = useRef(buildSources(media, metadata));
-  const tracks = useRef(buildTracks(captions, metadata));
+  const sources = useRef(buildSources(media, recordId));
+  const tracks = useRef(buildTracks(captions, recordId));
   const player = useRef();
   const element = useRef();
 
@@ -133,7 +133,7 @@ const Video = ({
         player.current.dispose();
       }
     };
-  });
+  }, [ onTimeUpdate, time, onPlayerReady ]);
 
   return (
     <div

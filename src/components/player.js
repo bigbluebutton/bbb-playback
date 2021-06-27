@@ -328,10 +328,11 @@ export default class Player extends PureComponent {
         {this.renderFullscreenButton(LAYOUT.MEDIA)}
         <Video
           captions={this.captions}
+          key={ID.VIDEO}
           media={media}
-          metadata={this.metadata}
           onPlayerReady={this.handlePlayerReady}
           onTimeUpdate={this.handleTimeUpdate}
+          recordId={this.metadata.id}
           time={time}
         />
       </div>
@@ -428,20 +429,17 @@ export default class Player extends PureComponent {
   renderScreenshare(active) {
     if (!this.layout.hasScreenshare()) return null;
 
-    const {
-      intl,
-      data,
-    } = this.props;
+    const { data } = this.props;
 
     const { media } = data;
 
     return (
       <Screenshare
         active={active}
-        intl={intl}
+        key={ID.SCREENSHARE}
         media={media}
-        metadata={this.metadata}
         onPlayerReady={this.handlePlayerReady}
+        recordId={this.metadata.id}
       />
     );
   }
