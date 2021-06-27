@@ -37,4 +37,8 @@ const Slide = ({
   );
 };
 
-export default Slide;
+const areEqual = (prevProps, nextProps) => {
+  return prevProps.id === nextProps.id;
+};
+
+export default React.memo(Slide, areEqual);
