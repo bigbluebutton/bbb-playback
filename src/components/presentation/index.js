@@ -7,7 +7,7 @@ import cx from 'classnames';
 import Cursor from './cursor';
 import Slide from './slide';
 import Canvas from './canvas';
-import { ID } from 'utils/data';
+import { ID } from 'utils/constants';
 import './index.scss';
 
 const intlMessages = defineMessages({

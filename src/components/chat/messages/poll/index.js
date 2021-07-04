@@ -8,7 +8,7 @@ import Options from './options';
 import Question from './question';
 import Result from './result';
 import Message from 'components/chat/messages/message';
-import { ID } from 'utils/data';
+import { ID } from 'utils/constants';
 import './index.scss';
 
 const intlMessages = defineMessages({

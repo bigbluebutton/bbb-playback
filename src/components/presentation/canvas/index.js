@@ -6,7 +6,7 @@ import Poll from './poll';
 import Polygon from './polygon';
 import Polyline from './polyline';
 import Text from './text';
-import { SHAPES } from 'utils/data';
+import { SHAPES } from 'utils/constants';
 import {
   isEmpty,
   isEqual,

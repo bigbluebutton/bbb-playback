@@ -4,7 +4,7 @@ import {
   defineMessages,
   useIntl,
 } from 'react-intl';
-import { ID } from 'utils/data';
+import { ID } from 'utils/constants';
 import './index.scss';
 
 const intlMessages = defineMessages({

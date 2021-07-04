@@ -5,7 +5,7 @@ import {
   useIntl,
 } from 'react-intl';
 import Button from 'components/utils/button';
-import { ID } from 'utils/data';
+import { ID } from 'utils/constants';
 
 const intlMessages = defineMessages({
   swap: {

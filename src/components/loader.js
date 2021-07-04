@@ -7,8 +7,8 @@ import config from 'config';
 import Error from './error';
 import Player from './player';
 import { build } from 'utils/builder';
+import { ID } from 'utils/constants';
 import {
-  ID,
   buildFileURL,
   getFileName,
   getFileType,

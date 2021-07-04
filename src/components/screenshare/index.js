@@ -5,10 +5,8 @@ import {
 } from 'react-intl';
 import cx from 'classnames';
 import videojs from 'video.js/core.es.js';
-import {
-  ID,
-  buildFileURL,
-} from 'utils/data';
+import { ID } from 'utils/constants';
+import { buildFileURL } from 'utils/data';
 import './index.scss';
 
 const intlMessages = defineMessages({

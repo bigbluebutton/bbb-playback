@@ -1,14 +1,14 @@
 import { parseStringPromise } from 'xml2js';
 import { files as config } from 'config';
-import {
-  ID,
-  SHAPES,
-  getFileType,
-} from './data';
+import { getFileType } from './data';
 import {
   hasProperty,
   isEmpty,
 } from './data/validators';
+import {
+  ID,
+  SHAPES,
+} from './constants';
 import logger from './logger';
 
 const getAttr = data => {

@@ -2,10 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import UserMessage from './user';
 import PollMessage from './poll';
-import {
-  ID,
-  getMessageType,
-} from 'utils/data';
+import { ID } from 'utils/constants';
+import { getMessageType } from 'utils/data';
 import './index.scss';
 
 const propTypes = {

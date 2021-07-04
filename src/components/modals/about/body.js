@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Item from './item';
-import { ID } from 'utils/data';
+import { ID } from 'utils/constants';
 import './index.scss';
 
 const CONTENT = [

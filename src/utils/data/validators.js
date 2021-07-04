@@ -1,4 +1,4 @@
-import { LAYOUT } from '.';
+import { LAYOUT } from 'utils/constants';
 import logger from 'utils/logger';
 
 const hasIndex = (index, data) => {

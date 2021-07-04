@@ -6,10 +6,8 @@ import {
 } from 'react-intl';
 import { chat as config } from 'config';
 import Messages from './messages';
-import {
-  ID,
-  handleAutoScroll,
-} from 'utils/data';
+import { ID } from 'utils/constants';
+import { handleAutoScroll } from 'utils/data';
 import './index.scss';
 
 const intlMessages = defineMessages({

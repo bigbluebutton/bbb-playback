@@ -3,7 +3,7 @@ import Item from './item';
 import {
   BUILD,
   ID,
-} from 'utils/data';
+} from 'utils/constants';
 import './index.scss';
 
 const Footer = () => {

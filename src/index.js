@@ -7,7 +7,7 @@ import {
   getLocale,
   getMessages,
 } from 'locales';
-import { ROUTER } from 'utils/data';
+import { ROUTER } from 'utils/constants';
 import { getStyle } from 'utils/params';
 import './index.scss';
 

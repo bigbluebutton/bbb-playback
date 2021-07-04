@@ -1,9 +1,7 @@
 import React from 'react';
 import cx from 'classnames';
-import {
-  ID,
-  buildFileURL,
-} from 'utils/data';
+import { ID } from 'utils/constants';
+import { buildFileURL } from 'utils/data';
 import './index.scss';
 
 const Proxy = ({

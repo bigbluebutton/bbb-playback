@@ -1,5 +1,5 @@
 import config from 'config';
-import { ROUTER } from './data';
+import { ROUTER } from './constants';
 import logger from './logger';
 
 const getLayout = () => {

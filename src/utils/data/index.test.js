@@ -1,6 +1,4 @@
 import {
-  ID,
-  LAYOUT,
   getActiveContent,
   getBar,
   getControlFromLayout,
@@ -16,6 +14,10 @@ import {
   getSectionFromLayout,
   getSwapFromLayout,
 } from '.';
+import {
+  ID,
+  LAYOUT,
+} from 'utils/constants';
 
 const {
   PRESENTATION,

@@ -24,6 +24,8 @@ import {
 import {
   ID,
   LAYOUT,
+} from 'utils/constants';
+import {
   getActiveContent,
   getCurrentDataIndex,
   getCurrentDataInterval,
