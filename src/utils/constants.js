@@ -10,7 +10,6 @@ const ID = {
   CURSOR: 'cursor',
   DESKSHARE: 'deskshare',
   ERROR: 'error',
-  LEFT: 'left',
   LOADER: 'loader',
   METADATA: 'metadata',
   NOTES: 'notes',
@@ -24,7 +23,6 @@ const ID = {
   SHAPES: 'shapes',
   SWAP: 'swap',
   THUMBNAILS: 'thumbnails',
-  TOP: 'top',
   USERS: 'users',
   VIDEO: 'video',
 };
@@ -41,6 +39,15 @@ const NUMBERS = [
   'eight', 'nine', 'ten', 'eleven',
   'twelve', 'thirteen', 'fourteen', 'fifteen',
 ];
+
+const POSITIONS = {
+  BOTTOM: 'bottom',
+  CENTER: 'center',
+  LEFT: 'left',
+  MIDDLE: 'middle',
+  RIGHT: 'right',
+  TOP: 'top',
+};
 
 const SHAPES = {
   CIRCLE: 'circle',
@@ -68,6 +75,7 @@ export {
   LAYOUT,
   MEDIA_ROOT_URL,
   NUMBERS,
+  POSITIONS,
   ROUTER,
   SHAPES,
 };

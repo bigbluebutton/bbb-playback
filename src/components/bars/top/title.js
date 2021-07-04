@@ -6,7 +6,7 @@ import {
   FormattedDate,
 } from 'react-intl';
 import cx from 'classnames';
-import { handleOnEnterPress } from 'utils/data';
+import { handleOnEnterPress } from 'utils/data/handlers';
 import './index.scss';
 
 const intlMessages = defineMessages({

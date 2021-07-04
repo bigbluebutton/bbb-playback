@@ -6,8 +6,11 @@ import {
 } from 'react-intl';
 import { chat as config } from 'config';
 import Messages from './messages';
-import { ID } from 'utils/constants';
-import { handleAutoScroll } from 'utils/data';
+import {
+  ID,
+  POSITIONS,
+} from 'utils/constants';
+import { handleAutoScroll } from 'utils/data/handlers';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -53,7 +56,7 @@ const Chat = ({
   useEffect(() => {
     if (!interaction.current) {
       if (config.scroll) {
-        handleAutoScroll(firstNode.current, currentNode.current, ID.TOP, config.align);
+        handleAutoScroll(firstNode.current, currentNode.current, POSITIONS.TOP, config.align);
       }
     }
   });

@@ -287,71 +287,6 @@ const getSwapFromLayout = layout => {
   return swap;
 };
 
-const getScrollLeft = (firstNode, currentNode, align) => {
-  if (!currentNode) return 0;
-
-  const {
-    clientWidth,
-    offsetLeft,
-    parentNode,
-  } = currentNode;
-
-  if (!firstNode || !parentNode) return 0;
-
-  const ltr = document.dir === 'ltr';
-  const spacing = ltr ? firstNode.offsetLeft : 0;
-  const parentWidth = parentNode.clientWidth;
-
-  let horizontalOffset = 0;
-  switch (align) {
-    case 'left':
-      horizontalOffset = offsetLeft - spacing;
-      break;
-    case 'center':
-      horizontalOffset = parseInt(offsetLeft + (clientWidth - spacing - parentWidth) / 2, 10);
-      break;
-    case 'right':
-      horizontalOffset = offsetLeft + clientWidth - parentWidth;
-      break;
-    default:
-      logger.debug('unhandled', align);
-  }
-
-  return horizontalOffset;
-};
-
-const getScrollTop = (firstNode, currentNode, align) => {
-  if (!currentNode) return 0;
-
-  const {
-    clientHeight,
-    offsetTop,
-    parentNode,
-  } = currentNode;
-
-  if (!firstNode || !parentNode) return 0;
-
-  const spacing = firstNode.offsetTop;
-  const parentHeight = parentNode.clientHeight;
-
-  let verticalOffset = 0;
-  switch (align) {
-    case 'top':
-      verticalOffset = offsetTop - spacing;
-      break;
-    case 'middle':
-      verticalOffset = parseInt(offsetTop + (clientHeight - spacing - parentHeight) / 2, 10);
-      break;
-    case 'bottom':
-      verticalOffset = offsetTop + clientHeight - parentHeight;
-      break;
-    default:
-      logger.debug('unhandled', align);
-  }
-
-  return verticalOffset;
-};
-
 const getMessageType = (item) => {
   if (typeof item.message === 'string') return ID.USERS;
   if (typeof item.question === 'string') return ID.POLLS;
@@ -360,30 +295,6 @@ const getMessageType = (item) => {
 };
 
 const getTimestampAsMilliseconds = timestamp => timestamp * 1000;
-
-const handleOnEnterPress = (event, action) => {
-  if (event && event.key === 'Enter') {
-    if (typeof action === 'function') action();
-  }
-};
-
-const handleAutoScroll = (fNode, cNode, direction, align) => {
-  // Auto-scroll can start after getting the first and current nodes
-  if (fNode && cNode) {
-    const { parentNode: pNode } = cNode;
-
-    switch (direction) {
-      case ID.LEFT:
-        pNode.scrollLeft = getScrollLeft(fNode, cNode, align);
-        break;
-      case ID.TOP:
-        pNode.scrollTop = getScrollTop(fNode, cNode, align);
-        break;
-      default:
-        logger.debug('unhandled', direction);
-    }
-  }
-};
 
 export {
   buildFileURL,
@@ -401,11 +312,7 @@ export {
   getMessageType,
   getPercentage,
   getPollLabel,
-  getScrollLeft,
-  getScrollTop,
   getSectionFromLayout,
   getSwapFromLayout,
   getTimestampAsMilliseconds,
-  handleAutoScroll,
-  handleOnEnterPress,
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import Thumbnail from './thumbnail';
-import { handleOnEnterPress } from 'utils/data';
+import { handleOnEnterPress } from 'utils/data/handlers';
 import './index.scss';
 
 const propTypes = {

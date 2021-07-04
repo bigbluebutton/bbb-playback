@@ -7,8 +7,11 @@ import {
 import Item from './item';
 import ClearButton from './buttons/clear';
 import { thumbnails as config } from 'config';
-import { ID } from 'utils/constants';
-import { handleAutoScroll } from 'utils/data';
+import {
+  ID,
+  POSITIONS,
+} from 'utils/constants';
+import { handleAutoScroll } from 'utils/data/handlers';
 import {
   isEmpty,
   isEqual,
@@ -78,7 +81,7 @@ const Thumbnails = ({
   useEffect(() => {
     if (!interaction.current) {
       if (config.scroll) {
-        handleAutoScroll(firstNode.current, currentNode.current, ID.LEFT, config.align);
+        handleAutoScroll(firstNode.current, currentNode.current, POSITIONS.LEFT, config.align);
       }
     }
   });
