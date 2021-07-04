@@ -4,10 +4,8 @@ import {
   defineMessages,
   useIntl,
 } from 'react-intl';
-import {
-  getPollLabel,
-  isEmpty,
-} from 'utils/data';
+import { getPollLabel } from 'utils/data';
+import { isEmpty } from 'utils/data/validators';
 import './index.scss';
 
 const intlMessages = defineMessages({

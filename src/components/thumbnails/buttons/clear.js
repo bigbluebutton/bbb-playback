@@ -5,7 +5,7 @@ import {
   useIntl,
 } from 'react-intl';
 import Button from 'components/utils/button';
-import { isEmpty } from 'utils/data';
+import { isEmpty } from 'utils/data/validators';
 import './index.scss';
 
 const intlMessages = defineMessages({

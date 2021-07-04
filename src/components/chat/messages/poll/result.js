@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import {
   getBar,
   getPercentage,
-  isEmpty,
 } from 'utils/data';
+import { isEmpty } from 'utils/data/validators';
 import './index.scss';
 
 const propTypes = {

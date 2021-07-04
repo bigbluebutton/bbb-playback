@@ -12,10 +12,12 @@ import {
   buildFileURL,
   getFileName,
   getFileType,
+} from 'utils/data';
+import {
   getLayout,
   getRecordId,
   getTime,
-} from 'utils/data';
+} from 'utils/params';
 import logger from 'utils/logger';
 import './index.scss';
 

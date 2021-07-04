@@ -4,9 +4,11 @@ import {
   ID,
   SHAPES,
   getFileType,
+} from './data';
+import {
   hasProperty,
   isEmpty,
-} from './data';
+} from './data/validators';
 import logger from './logger';
 
 const getAttr = data => {

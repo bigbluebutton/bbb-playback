@@ -14,6 +14,10 @@ import AboutModal from './modals/about';
 import SearchModal from './modals/search';
 import Button from './utils/button';
 import {
+  seek,
+  skip,
+} from 'utils/actions';
+import {
   addAlternatesToThumbnails,
   addPollsToChat,
 } from 'utils/builder';
@@ -25,10 +29,8 @@ import {
   getCurrentDataInterval,
   getData,
   getDraws,
-  isEqual,
-  seek,
-  skip,
 } from 'utils/data';
+import { isEqual } from 'utils/data/validators';
 import Layout from 'utils/layout';
 import logger from 'utils/logger';
 import Shortcuts from 'utils/shortcuts';

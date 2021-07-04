@@ -10,9 +10,11 @@ import { thumbnails as config } from 'config';
 import {
   ID,
   handleAutoScroll,
+} from 'utils/data';
+import {
   isEmpty,
   isEqual,
-} from 'utils/data';
+} from 'utils/data/validators';
 import './index.scss';
 
 const intlMessages = defineMessages({

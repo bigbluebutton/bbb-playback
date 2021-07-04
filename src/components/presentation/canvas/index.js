@@ -6,11 +6,11 @@ import Poll from './poll';
 import Polygon from './polygon';
 import Polyline from './polyline';
 import Text from './text';
+import { SHAPES } from 'utils/data';
 import {
-  SHAPES,
   isEmpty,
   isEqual,
-} from 'utils/data';
+} from 'utils/data/validators';
 import logger from 'utils/logger';
 
 const Canvas = ({

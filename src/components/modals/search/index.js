@@ -5,11 +5,11 @@ import Footer from './footer';
 import Header from './header';
 import { search as config } from 'config';
 import Modal from 'components/utils/modal';
+import { search as getSearch } from 'utils/actions';
 import {
   isEmpty,
   isEqual,
-  search as getSearch,
-} from 'utils/data';
+} from 'utils/data/validators';
 import './index.scss';
 
 const getValue = (event) => {
