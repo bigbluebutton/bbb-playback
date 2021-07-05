@@ -22,6 +22,8 @@
   "player.notes.wrapper.aria": "Область заметок",
   "player.presentation.wrapper.aria": "Площадь презентации",
   "player.screenshare.wrapper.aria": "Площадь экрана",
+  "player.search.modal.title": "Search",
+  "player.search.modal.subtitle": "Find presentation slides content",
   "player.thumbnails.wrapper.aria": "Область миниатюр",
   "player.video.wrapper.aria": "Область видео"
 }

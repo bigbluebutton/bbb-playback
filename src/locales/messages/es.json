@@ -22,6 +22,8 @@
   "player.notes.wrapper.aria": "Área de notas",
   "player.presentation.wrapper.aria": "Área de presentación",
   "player.screenshare.wrapper.aria": "Área de pantalla compartida",
+  "player.search.modal.title": "Search",
+  "player.search.modal.subtitle": "Find presentation slides content",
   "player.thumbnails.wrapper.aria": "Área de miniaturas",
   "player.video.wrapper.aria": "Área de video"
 }

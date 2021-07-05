@@ -2,17 +2,21 @@ import React, { PureComponent } from 'react';
 import cx from 'classnames';
 import { defineMessages } from 'react-intl';
 import { shortcuts } from 'config';
-import About from './about';
 import Chat from './chat';
 import Notes from './notes';
 import Presentation from './presentation';
-import Search from './search';
 import Screenshare from './screenshare';
 import Thumbnails from './thumbnails';
 import Video from './video';
 import BottomBar from './bars/bottom';
 import TopBar from './bars/top';
+import AboutModal from './modals/about';
+import SearchModal from './modals/search';
 import Button from './utils/button';
+import {
+  seek,
+  skip,
+} from 'utils/actions';
 import {
   addAlternatesToThumbnails,
   addPollsToChat,
@@ -20,15 +24,15 @@ import {
 import {
   ID,
   LAYOUT,
+} from 'utils/constants';
+import {
   getActiveContent,
   getCurrentDataIndex,
   getCurrentDataInterval,
   getData,
   getDraws,
-  isEqual,
-  seek,
-  skip,
 } from 'utils/data';
+import { isEqual } from 'utils/data/validators';
 import Layout from 'utils/layout';
 import logger from 'utils/logger';
 import Shortcuts from 'utils/shortcuts';
@@ -135,7 +139,7 @@ export default class Player extends PureComponent {
   handleSearch(value) {
     const { search } = this.state;
 
-    if (!isEqual(search, value, 'array')) {
+    if (!isEqual(search, value)) {
       this.setState({ search: value });
     }
   }
@@ -239,23 +243,20 @@ export default class Player extends PureComponent {
 
     if (!open) return null;
 
-    const { intl } = this.props;
     const content = this.layout.getContent();
 
     switch (modal) {
       case ID.ABOUT:
         return (
-          <About
+          <AboutModal
             content={content}
-            intl={intl}
             metadata={this.metadata}
             toggleModal={() => this.toggleModal(ID.ABOUT)}
           />
         );
       case ID.SEARCH:
         return (
-          <Search
-            intl={intl}
+          <SearchModal
             handleSearch={this.handleSearch}
             metadata={this.metadata}
             thumbnails={this.thumbnails}
@@ -268,8 +269,6 @@ export default class Player extends PureComponent {
   }
 
   renderThumbnails() {
-    const { intl } = this.props;
-
     const {
       search,
       time,
@@ -284,9 +283,8 @@ export default class Player extends PureComponent {
         currentDataIndex={currentDataIndex}
         handleSearch={this.handleSearch}
         interactive={true}
-        intl={intl}
-        metadata={this.metadata}
         player={video}
+        recordId={this.metadata.id}
         search={search}
         thumbnails={this.thumbnails}
       />
@@ -294,8 +292,6 @@ export default class Player extends PureComponent {
   }
 
   renderTopBar() {
-    const { intl } = this.props;
-
     const {
       control,
       section,
@@ -311,7 +307,6 @@ export default class Player extends PureComponent {
     return (
       <TopBar
         control={control}
-        intl={intl}
         name={name}
         section={section}
         single={single}
@@ -327,7 +322,6 @@ export default class Player extends PureComponent {
   renderMedia() {
     const {
       data,
-      intl,
       time,
     } = this.props;
 
@@ -338,11 +332,11 @@ export default class Player extends PureComponent {
         {this.renderFullscreenButton(LAYOUT.MEDIA)}
         <Video
           captions={this.captions}
-          intl={intl}
+          key={ID.VIDEO}
           media={media}
-          metadata={this.metadata}
           onPlayerReady={this.handlePlayerReady}
           onTimeUpdate={this.handleTimeUpdate}
+          recordId={this.metadata.id}
           time={time}
         />
       </div>
@@ -364,7 +358,6 @@ export default class Player extends PureComponent {
   }
 
   renderApplicationContent() {
-    const { intl } = this.props;
     const { application } = this.state;
 
     switch (application) {
@@ -377,16 +370,12 @@ export default class Player extends PureComponent {
           <Chat
             chat={this.chat}
             currentDataIndex={currentChatIndex}
-            intl={intl}
             player={video}
           />
         );
       case ID.NOTES:
         return (
-          <Notes
-            notes={this.notes}
-            intl={intl}
-          />
+          <Notes notes={this.notes} />
         );
       default:
         return null;
@@ -416,7 +405,6 @@ export default class Player extends PureComponent {
   }
 
   renderPresentation(active) {
-    const { intl } = this.props;
     const { time } = this.state;
 
     const currentSlideIndex = getCurrentDataIndex(this.slides, time);
@@ -431,12 +419,11 @@ export default class Player extends PureComponent {
         currentCursorIndex={currentCursorIndex}
         currentPanzoomIndex={currentPanzoomIndex}
         currentSlideIndex={currentSlideIndex}
-        cursor={this.cursor}
+        cursors={this.cursor}
         draws={draws}
         drawsInterval={currentDrawsInterval}
-        intl={intl}
-        metadata={this.metadata}
         panzooms={this.panzooms}
+        recordId={this.metadata.id}
         slides={this.slides}
         thumbnails={this.thumbnails}
       />
@@ -446,20 +433,17 @@ export default class Player extends PureComponent {
   renderScreenshare(active) {
     if (!this.layout.hasScreenshare()) return null;
 
-    const {
-      intl,
-      data,
-    } = this.props;
+    const { data } = this.props;
 
     const { media } = data;
 
     return (
       <Screenshare
         active={active}
-        intl={intl}
+        key={ID.SCREENSHARE}
         media={media}
-        metadata={this.metadata}
         onPlayerReady={this.handlePlayerReady}
+        recordId={this.metadata.id}
       />
     );
   }

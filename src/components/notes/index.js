@@ -1,6 +1,10 @@
-import React, { PureComponent } from 'react';
-import { defineMessages } from 'react-intl';
-import { ID } from 'utils/data';
+import React from 'react';
+import PropTypes from 'prop-types';
+import {
+  defineMessages,
+  useIntl,
+} from 'react-intl';
+import { ID } from 'utils/constants';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -10,24 +14,31 @@ const intlMessages = defineMessages({
   },
 });
 
-export default class Notes extends PureComponent {
-  render() {
-    const {
-      intl,
-      notes,
-    } = this.props;
+const propTypes = { notes: PropTypes.text };
 
-    return (
-      <div
-        aria-label={intl.formatMessage(intlMessages.aria)}
-        className="notes-wrapper"
-        id={ID.NOTES}
-        tabIndex="0"
-      >
-        <div className="notes">
-          <div dangerouslySetInnerHTML={{ __html: notes }} />
-        </div>
+const defaultProps = { notes: '' };
+
+const Notes = ({ notes }) => {
+  const intl = useIntl();
+
+  return (
+    <div
+      aria-label={intl.formatMessage(intlMessages.aria)}
+      className="notes-wrapper"
+      id={ID.NOTES}
+      tabIndex="0"
+    >
+      <div className="notes">
+        <div dangerouslySetInnerHTML={{ __html: notes }} />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+Notes.propTypes = propTypes;
+Notes.defaultProps = defaultProps;
+
+// Avoid re-render
+const areEqual = () => true;
+
+export default React.memo(Notes, areEqual);

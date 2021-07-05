@@ -10,33 +10,34 @@ const propTypes = {
   name: PropTypes.string,
 };
 
-const renderContent = (props) => {
-  const {
-    icon,
-    initials,
-  } = props;
-
-  if (icon) return <span className={`icon-${icon}`} />;
-
-  return (
-    <span className="initials">
-      {initials}
-    </span>
-  );
+const defaultProps = {
+  icon: '',
+  initials: '',
+  name: '',
 };
 
-const Avatar = (props) => {
-  const { name } = props;
+const Avatar = ({
+  icon,
+  initials,
+  name,
+}) => {
 
   return (
     <div className="avatar-wrapper">
       <div className={cx('avatar', getAvatarStyle(name))}>
-        {renderContent(props)}
+        {icon ? (
+          <span className={`icon-${icon}`} />
+        ) : (
+          <span className="initials">
+            {initials}
+          </span>
+        )}
       </div>
     </div>
   );
 };
 
 Avatar.propTypes = propTypes;
+Avatar.defaultProps = defaultProps;
 
 export default Avatar;

@@ -1,5 +1,9 @@
-import React, { PureComponent } from 'react';
-import { defineMessages } from 'react-intl';
+import React from 'react';
+import PropTypes from 'prop-types';
+import {
+  defineMessages,
+  useIntl,
+} from 'react-intl';
 import Button from 'components/utils/button';
 import './index.scss';
 
@@ -10,30 +14,45 @@ const intlMessages = defineMessages({
   },
 });
 
-export default class More extends PureComponent {
-  render() {
-    const {
-      children,
-      intl,
-      onClose,
-    } = this.props;
+const propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]),
+  onClose: PropTypes.func,
+};
 
-    return (
-      <div className="modal-wrapper">
-        <div className="modal">
-          <div className="modal-control">
-            <Button
-              aria={intl.formatMessage(intlMessages.close)}
-              circle
-              handleOnClick={onClose}
-              icon="close"
-            />
-          </div>
-          <div className="modal-content">
-            {children}
-          </div>
+const defaultProps = {
+  children: null,
+  onClose: () => {},
+};
+
+const Modal = ({
+  children,
+  onClose,
+}) => {
+  const intl = useIntl();
+
+  return (
+    <div className="modal-wrapper">
+      <div className="modal">
+        <div className="modal-control">
+          <Button
+            aria={intl.formatMessage(intlMessages.close)}
+            circle
+            handleOnClick={onClose}
+            icon="close"
+          />
+        </div>
+        <div className="modal-content">
+          {children}
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+Modal.propTypes = propTypes;
+Modal.defaultProps = defaultProps;
+
+export default Modal;
