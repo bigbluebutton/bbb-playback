@@ -18,6 +18,8 @@
   "player.chat.message.poll.option.abstention": "Воздержусь",
   "player.chat.message.poll.option.true": "Правда",
   "player.chat.message.poll.option.false": "Ложь",
+  "player.chat.message.question.name": "Question",
+  "player.chat.message.question.answer": "Answer",
   "player.chat.wrapper.aria": "Область чата",
   "player.notes.wrapper.aria": "Область заметок",
   "player.presentation.wrapper.aria": "Площадь презентации",

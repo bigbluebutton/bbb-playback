@@ -17,6 +17,7 @@ const ID = {
   PLAYER: 'player',
   POLLS: 'polls',
   PRESENTATION: 'presentation',
+  QUESTIONS: 'questions',
   SCREENSHARE: 'screenshare',
   SEARCH: 'search',
   SETTINGS: 'settings',

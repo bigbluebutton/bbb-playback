@@ -94,6 +94,16 @@ const buildPolls = result => {
   return data;
 };
 
+// TODO
+const buildQuestions = result => {
+  if (!result) return [];
+
+  let data = [];
+  data = result;
+
+  return data;
+};
+
 const buildMetadata = result => {
   let data = {};
   const { recording } = result;
@@ -469,6 +479,9 @@ const build = (filename, value) => {
         case config.data.polls:
           data = buildPolls(value);
           break;
+        case config.data.questions:
+          data = buildQuestions(value);
+          break;
         default:
           logger.debug('unhandled', 'json', filename);
           reject(filename);
@@ -538,17 +551,17 @@ const addAlternatesToThumbnails = (thumbnails, alternates) => {
   });
 };
 
-const addPollsToChat = (chat, polls) => {
-  return [...chat, ...polls].sort((a, b) => a.timestamp - b.timestamp);
+const mergeChatContent = (chat, polls, questions) => {
+  return [...chat, ...polls, ...questions].sort((a, b) => a.timestamp - b.timestamp);
 };
 
 export {
   addAlternatesToThumbnails,
-  addPollsToChat,
   build,
   buildStyle,
   decodeXML,
   getAttr,
   getId,
   getNumbers,
+  mergeChatContent,
 };

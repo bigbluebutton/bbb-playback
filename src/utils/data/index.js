@@ -82,6 +82,7 @@ const getContentFromData = data => {
   const chat = getData(data, ID.CHAT);
   const notes = getData(data, ID.NOTES);
   const polls = getData(data, ID.POLLS);
+  const questions = getData(data, ID.QUESTIONS);
   const screenshare = getData(data, ID.SCREENSHARE);
   const shapes = getData(data, ID.SHAPES);
   const slides = shapes.slides;
@@ -91,6 +92,7 @@ const getContentFromData = data => {
     chat: !isEmpty(chat),
     notes: !isEmpty(notes),
     polls: !isEmpty(polls),
+    questions: !isEmpty(questions),
     presentation: hasPresentation(slides),
     screenshare: !isEmpty(screenshare),
   };
@@ -169,6 +171,7 @@ const getData = (data, id) => {
     case ID.NOTES:
     case ID.PANZOOMS:
     case ID.POLLS:
+    case ID.QUESTIONS:
     case ID.SCREENSHARE:
     case ID.TALKERS:
       if (!file || data[getFileName(file)] === null) {
@@ -290,6 +293,7 @@ const getSwapFromLayout = layout => {
 const getMessageType = (item) => {
   if (typeof item.message === 'string') return ID.USERS;
   if (typeof item.question === 'string') return ID.POLLS;
+  if (typeof item.text === 'string') return ID.QUESTIONS;
 
   return 'undefined';
 };

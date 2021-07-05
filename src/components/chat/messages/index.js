@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import UserMessage from './user';
 import PollMessage from './poll';
+import QuestionMessage from './question';
 import { ID } from 'utils/constants';
 import { getMessageType } from 'utils/data';
 import './index.scss';
@@ -62,6 +63,19 @@ const Messages = ({
                     responders={item.responders}
                     timestamp={timestamp}
                     type={item.type}
+                  />
+                </span>
+              );
+            case ID.QUESTIONS:
+
+              return (
+                <span ref={node => setRef(node, index)}>
+                  <QuestionMessage
+                    active={active}
+                    answer={item.answer}
+                    player={player}
+                    text={item.text}
+                    timestamp={timestamp}
                   />
                 </span>
               );
