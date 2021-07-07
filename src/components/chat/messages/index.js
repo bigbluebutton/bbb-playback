@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import UserMessage from './user';
 import PollMessage from './system/poll';
-import QuestionMessage from './question';
+import QuestionMessage from './system/question';
 import ExternalVideoMessage from './system/external-video';
 import { ID } from 'utils/constants';
 import { getMessageType } from 'utils/data';

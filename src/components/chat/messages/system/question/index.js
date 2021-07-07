@@ -6,7 +6,7 @@ import {
 } from 'react-intl';
 import Answer from './answer';
 import Text from './text';
-import Message from 'components/chat/messages/message';
+import SystemMessage from 'components/chat/messages/system/message';
 import { ID } from 'utils/constants';
 import './index.scss';
 
@@ -43,18 +43,16 @@ const Question = ({
   const intl = useIntl();
 
   return (
-    <Message
+    <SystemMessage
       active={active}
       icon={ID.QUESTIONS}
       name={intl.formatMessage(intlMessages.name)}
       player={player}
       timestamp={timestamp}
     >
-      <div className="question-wrapper">
-        <Text text={text} />
-        <Answer answer={answer} />
-      </div>
-    </Message>
+      <Text text={text} />
+      <Answer answer={answer} />
+    </SystemMessage>
   );
 };
 
