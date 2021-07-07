@@ -39,7 +39,7 @@ const Section = ({
       aria={intl.formatMessage(intlMessages.section)}
       circle
       handleOnClick={toggleSection}
-      icon={section ? 'arrow-left' : 'arrow-right'}
+      icon={section ? 'arrowLeft' : 'arrowRight'}
     />
   );
 };

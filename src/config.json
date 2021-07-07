@@ -34,7 +34,7 @@
       "notes": "notes.html",
       "panzooms": "panzooms.xml",
       "polls": "polls.json",
-      "external_videos": "external_videos.json",
+      "externalVideos": "external_videos.json",
       "screenshare": "deskshare.xml",
       "shapes": "shapes.svg"
     }

@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import UserMessage from './user';
-import PollMessage from './poll';
-import ExternalVideoMessage from './external-video';
+import PollMessage from './system/poll';
+import ExternalVideoMessage from './system/external-video';
 import { ID } from 'utils/constants';
 import { getMessageType } from 'utils/data';
 import './index.scss';
@@ -73,7 +73,7 @@ const Messages = ({
                   <ExternalVideoMessage
                     active={active}
                     player={player}
-                    url={item.external_video_url}
+                    url={item.url}
                     timestamp={timestamp}
                     type={item.type}
                   />

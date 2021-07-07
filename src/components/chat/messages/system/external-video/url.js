@@ -3,15 +3,20 @@ import PropTypes from 'prop-types';
 import { isEmpty } from 'utils/data/validators';
 import Linkify from 'linkifyjs/react';
 import cx from 'classnames';
-import './index.scss';
 
-const propTypes = { url: PropTypes.string };
+const propTypes = {
+  active: PropTypes.bool,
+  url: PropTypes.string,
+};
 
-const defaultProps = { url: '' };
+const defaultProps = {
+  active: false,
+  url: '',
+};
 
-const Url = ({ 
-  url, 
-  active 
+const Url = ({
+  active,
+  url,
 }) => {
   if (isEmpty(url)) return null;
 

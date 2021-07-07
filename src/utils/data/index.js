@@ -293,7 +293,7 @@ const getSwapFromLayout = layout => {
 const getMessageType = (item) => {
   if (typeof item.message === 'string') return ID.USERS;
   if (typeof item.question === 'string') return ID.POLLS;
-  if (typeof item.external_video_url === 'string') return ID.EXTERNAL_VIDEOS;
+  if (typeof item.url === 'string') return ID.EXTERNAL_VIDEOS;
 
   return 'undefined';
 };

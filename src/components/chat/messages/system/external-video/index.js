@@ -5,13 +5,12 @@ import {
   useIntl,
 } from 'react-intl';
 import Url from './url';
-import Message from 'components/chat/messages/message';
+import SystemMessage from 'components/chat/messages/system/message';
 import { ID } from 'utils/constants';
-import './index.scss';
 
 const intlMessages = defineMessages({
   name: {
-    id: 'player.chat.message.externalvideo.name',
+    id: 'player.chat.message.externalVideo.name',
     description: 'Label for the external video message name',
   },
 });
@@ -39,20 +38,18 @@ const ExternalVideo = ({
   const intl = useIntl();
 
   return (
-    <Message
+    <SystemMessage
       active={active}
       icon={ID.EXTERNAL_VIDEOS}
       name={intl.formatMessage(intlMessages.name)}
       player={player}
       timestamp={timestamp}
-    > 
-      <div className="external-video-wrapper">
-        <Url 
-          url={url} 
-          active={active} 
-        />
-      </div>
-    </Message>
+    >
+      <Url
+        active={active}
+        url={url}
+      />
+    </SystemMessage>
   );
 };
 

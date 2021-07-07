@@ -94,12 +94,15 @@ const buildPolls = result => {
   return data;
 };
 
-// TODO
 const buildExternalVideos = result => {
   if (!result) return [];
 
-  let data = [];
-  data = result;
+  const data = result.map(r => {
+    return {
+      timestamp: r.timestamp,
+      url: r.external_video_url,
+    };
+  });
 
   return data;
 };
@@ -479,7 +482,7 @@ const build = (filename, value) => {
         case config.data.polls:
           data = buildPolls(value);
           break;
-        case config.data.external_videos:
+        case config.data.externalVideos:
           data = buildExternalVideos(value);
           break;
         default:
@@ -552,7 +555,11 @@ const addAlternatesToThumbnails = (thumbnails, alternates) => {
 };
 
 const mergeChatContent = (chat, polls, externalVideos) => {
-  return [...chat, ...polls, ...externalVideos].sort((a, b) => a.timestamp - b.timestamp);
+  return [
+    ...chat,
+    ...externalVideos,
+    ...polls,
+  ].sort((a, b) => a.timestamp - b.timestamp);
 };
 
 export {
