@@ -18,6 +18,7 @@
   "player.chat.message.poll.option.abstention": "Enthaltung",
   "player.chat.message.poll.option.true": "Wahr",
   "player.chat.message.poll.option.false": "Falsch",
+  "player.chat.message.externalvideo.name": "Externes Video",
   "player.chat.wrapper.aria": "Chat-Bereich",
   "player.notes.wrapper.aria": "Notizenbereich",
   "player.presentation.wrapper.aria": "Präsentationsfläche",

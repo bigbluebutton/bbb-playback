@@ -1,0 +1,15 @@
+@import 'src/styles/sizes';
+
+.external-video-wrapper {
+  background-color: var(--poll-wrapper-background-color);
+  border: $border-width-extra-small solid var(--poll-wrapper-color);
+  padding: $padding-small $padding-small $padding-small $padding-small;
+
+  [dir="ltr"] & {
+    margin: 0 $margin 0 0;
+  }
+
+  [dir="rtl"] & {
+    margin: 0 0 0 $margin;
+  }
+}

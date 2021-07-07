@@ -18,6 +18,7 @@
   "player.chat.message.poll.option.abstention": "どちらでもない",
   "player.chat.message.poll.option.true": "○",
   "player.chat.message.poll.option.false": "×",
+  "player.chat.message.externalvideo.name": "External video",
   "player.chat.wrapper.aria": "チャットエリア",
   "player.notes.wrapper.aria": "ノートエリア",
   "player.presentation.wrapper.aria": "プレゼンテーションエリア",
