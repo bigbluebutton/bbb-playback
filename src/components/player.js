@@ -19,7 +19,7 @@ import {
 } from 'utils/actions';
 import {
   addAlternatesToThumbnails,
-  addPollsToChat,
+  mergeChatContent,
 } from 'utils/builder';
 import {
   ID,
@@ -102,7 +102,11 @@ export default class Player extends PureComponent {
   initData(data) {
     this.alternates = getData(data, ID.ALTERNATES);
     this.captions = getData(data, ID.CAPTIONS);
-    this.chat = addPollsToChat(getData(data, ID.CHAT), getData(data, ID.POLLS));
+    this.chat = mergeChatContent(
+      getData(data, ID.CHAT),
+      getData(data, ID.POLLS),
+      getData(data, ID.EXTERNAL_VIDEOS),
+    );
     this.cursor = getData(data, ID.CURSOR);
     this.metadata = getData(data, ID.METADATA);
     this.notes = getData(data, ID.NOTES);
