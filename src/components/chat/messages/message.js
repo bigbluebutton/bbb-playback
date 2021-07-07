@@ -1,78 +1,70 @@
-import React, { PureComponent } from 'react';
-import { FormattedTime } from 'react-intl';
+import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
-import Avatar from 'components/utils/avatar';
-import { getTimestampAsMilliseconds } from 'utils/data';
+import Info from './info';
+import Margin from './margin';
 import './index.scss';
 
-export default class Message extends PureComponent {
-  renderAvatar(active, name) {
-    const {
-      icon,
-      initials,
-      onClick,
-    } = this.props;
+const propTypes = {
+  active: PropTypes.bool,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]),
+  icon: PropTypes.string,
+  initials: PropTypes.string,
+  name: PropTypes.string,
+  player: PropTypes.object,
+  timestamp: PropTypes.number,
+};
 
-    return (
-      <div
-        className={cx('interactive', { inactive: !active })}
-        onClick={onClick}
-        onKeyPress={(e) => e.key === 'Enter' ? onClick() : null}
-        tabIndex="0"
-      >
-        <Avatar
+const defaultProps = {
+  active: false,
+  children: null,
+  icon: '',
+  initials: '',
+  name: '',
+  player: {},
+  timestamp: 0,
+};
+
+const Message = ({
+  active,
+  children,
+  icon,
+  initials,
+  name,
+  player,
+  timestamp,
+}) => {
+  const handleOnClick = () => {
+    if (player) player.currentTime(timestamp);
+  };
+
+  return (
+    <div className="message">
+      <Margin
+        active={active}
+        icon={icon}
+        initials={initials}
+        name={name}
+        onClick={() => handleOnClick()}
+      />
+      <div className="data">
+        <Info
           active={active}
-          icon={icon}
-          initials={initials}
           name={name}
+          timestamp={timestamp}
         />
-      </div>
-    );
-  }
-
-  renderInfo(active, name) {
-    const {
-      timestamp,
-    } = this.props;
-
-    const milliseconds = getTimestampAsMilliseconds(timestamp);
-
-    return (
-      <div className="info">
-        <div className={cx('name', { inactive: !active })}>
-          {name}
-        </div>
-        <div className={cx('time', { inactive: !active })}>
-          <FormattedTime
-            hourCycle="h23"
-            hour="numeric"
-            minute="numeric"
-            second="numeric"
-            timeZone="UTC"
-            value={milliseconds}
-          />
+        <div className={cx('text', { inactive: !active })}>
+          {children}
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+};
 
-  render() {
-    const {
-      active,
-      children,
-      name,
-    } = this.props;
+Message.propTypes = propTypes;
+Message.defaultProps = defaultProps;
 
-    return (
-      <div className="message">
-        {this.renderAvatar(active, name)}
-        <div className="data">
-          {this.renderInfo(active, name)}
-          <div className={cx('text', { inactive: !active })}>
-            {children}
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
+export default Message;

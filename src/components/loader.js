@@ -1,21 +1,23 @@
-import React, { PureComponent } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   defineMessages,
-  injectIntl,
+  useIntl,
 } from 'react-intl';
 import config from 'config';
 import Error from './error';
 import Player from './player';
 import { build } from 'utils/builder';
+import { ID } from 'utils/constants';
 import {
-  ID,
   buildFileURL,
   getFileName,
   getFileType,
+} from 'utils/data';
+import {
   getLayout,
   getRecordId,
   getTime,
-} from 'utils/data';
+} from 'utils/params';
 import logger from 'utils/logger';
 import './index.scss';
 
@@ -26,41 +28,22 @@ const intlMessages = defineMessages({
   },
 });
 
-class Loader extends PureComponent {
-  constructor(props) {
-    super(props);
+const initError = (recordId) => recordId ? null : config.error['NOT_FOUND'];
 
-    const {
-      location,
-      match,
-    } = props;
+const Loader = ({ match }) => {
+  const intl = useIntl();
+  const counter = useRef(0);
+  const data = useRef({});
+  const layout = useRef(getLayout());
+  const recordId = useRef(getRecordId(match));
+  const started = useRef(false);
+  const time = useRef(getTime());
 
-    this.counter = 0;
-    this.data = {};
-    this.layout = getLayout(location);
-    this.recordId = getRecordId(match);
-    this.time = getTime(location);
+  const [error, setError] = useState(initError(recordId));
+  const [loaded, setLoaded] = useState(false);
 
-    this.state = {
-      error: this.recordId ? null : config.error['NOT_FOUND'],
-      loaded: false,
-    };
-  }
-
-  componentDidMount() {
-    if (!this.recordId) return;
-
-    const { data } = config.files;
-
-    for (const file in data) {
-      this.fetchFile(this.recordId, data[file]);
-    }
-
-    this.fetchMedia();
-  }
-
-  fetchFile(recordId, file) {
-    const url = buildFileURL(recordId, file);
+  const fetchFile = (file) => {
+    const url = buildFileURL(recordId.current, file);
     fetch(url).then(response => {
       if (response.ok) {
         logger.debug(ID.LOADER, file, response);
@@ -75,25 +58,25 @@ class Loader extends PureComponent {
           case 'xml':
             return response.text();
           default:
-            this.setState({ error: config.error['BAD_REQUEST'] });
-            throw Error(file);
+            setError(config.error['BAD_REQUEST']);
+            return null;
         }
       } else {
         logger.warn('loader', file, response);
         return null;
       }
     }).then(value => {
-      build(file, value).then(data => {
-        if (data) logger.debug(ID.LOADER, 'builded', file);
-        this.data[getFileName(file)] = data;
-        this.update();
-      }).catch(error => this.setState({ error: config.error['BAD_REQUEST'] }));
-    }).catch(error => this.setState({ error: config.error['NOT_FOUND'] }));
-  }
+      build(file, value).then(content => {
+        if (content) logger.debug(ID.LOADER, 'builded', file);
+        data.current[getFileName(file)] = content;
+        update();
+      }).catch(error => setError(config.error['BAD_REQUEST']));
+    }).catch(error => setError(config.error['NOT_FOUND']));
+  };
 
-  fetchMedia() {
+  const fetchMedia = () => {
     const fetches = config.medias.map(type => {
-      const url = buildFileURL(this.recordId, `video/webcams.${type}`);
+      const url = buildFileURL(recordId.current, `video/webcams.${type}`);
       return fetch(url, { method: 'HEAD' });
     });
 
@@ -108,65 +91,61 @@ class Loader extends PureComponent {
       });
 
       if (media.length > 0) {
-        this.data.media = media;
-        this.update();
+        data.current.media = media;
+        update();
       } else {
         // TODO: Handle audio medias
-        this.setState({ error: config.error['NOT_FOUND'] });
+        setError(config.error['NOT_FOUND']);
       }
     });
-  }
+  };
 
-  update() {
-    this.counter = this.counter + 1;
+  const update = () => {
+    counter.current = counter.current + 1;
     // TODO: Better control
-    if (this.counter > Object.keys(config.files.data).length) {
-      const { loaded } = this.state;
-      if (!loaded) this.setState({ loaded: true });
+    if (counter.current > Object.keys(config.files.data).length) {
+      if (!loaded) setLoaded(true);
+    }
+  };
+
+  if (!started.current) {
+    started.current = true;
+
+    if (recordId.current) {
+      for (const file in config.files.data) {
+        fetchFile(config.files.data[file]);
+      }
+
+      fetchMedia();
     }
   }
 
-  render() {
-    const { intl } = this.props;
+  if (error) return <Error code={error} />;
 
-    const {
-      error,
-      loaded,
-    } = this.state;
-
-    if (error) {
-      return (
-        <Error
-          code={error}
-        />
-      );
-    }
-
-    if (loaded) {
-      return (
-        <Player
-          data={this.data}
-          intl={intl}
-          layout={this.layout}
-          time={this.time}
-        />
-      );
-    }
-
+  if (loaded) {
     return (
-      <div
-        aria-label={intl.formatMessage(intlMessages.aria)}
-        className="loader-wrapper"
-        id={ID.LOADER}
-      >
-        <div className="loading-dots">
-          <div className="first" />
-          <div className="second" />
-          <div className="third" />
-        </div>
-      </div>
+      <Player
+        data={data.current}
+        intl={intl}
+        layout={layout.current}
+        time={time.current}
+      />
     );
   }
-}
 
-export default injectIntl(Loader);
+  return (
+    <div
+      aria-label={intl.formatMessage(intlMessages.aria)}
+      className="loader-wrapper"
+      id={ID.LOADER}
+    >
+      <div className="loading-dots">
+        <div className="first" />
+        <div className="second" />
+        <div className="third" />
+      </div>
+    </div>
+  );
+};
+
+export default Loader;

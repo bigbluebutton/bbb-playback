@@ -1,0 +1,15 @@
+@import 'src/styles/sizes';
+
+.poll-options,
+.poll-question,
+.poll-result {
+  padding-bottom: $padding-small;
+}
+
+.poll-bar {
+  color: var(--poll-bar-color);
+}
+
+.poll-label {
+  font-weight: var(--font-weight-semi-bold);
+}

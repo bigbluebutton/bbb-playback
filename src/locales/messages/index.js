@@ -10,7 +10,7 @@ import pt from './pt.json';
 import ru from './ru.json';
 import tr from './tr.json';
 
-export default {
+const messages = {
   ar,
   de,
   en,
@@ -23,3 +23,5 @@ export default {
   ru,
   tr,
 };
+
+export default messages;

@@ -18,10 +18,13 @@
   "player.chat.message.poll.option.abstention": "Enthaltung",
   "player.chat.message.poll.option.true": "Wahr",
   "player.chat.message.poll.option.false": "Falsch",
+  "player.chat.message.externalVideo.name": "Externes Video",
   "player.chat.wrapper.aria": "Chat-Bereich",
   "player.notes.wrapper.aria": "Notizenbereich",
   "player.presentation.wrapper.aria": "Präsentationsfläche",
   "player.screenshare.wrapper.aria": "Screenshare-Bereich",
+  "player.search.modal.title": "Search",
+  "player.search.modal.subtitle": "Find presentation slides content",
   "player.thumbnails.wrapper.aria": "Miniaturansichten",
   "player.video.wrapper.aria": "Videobereich"
 }

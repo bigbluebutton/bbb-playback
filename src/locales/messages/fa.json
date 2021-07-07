@@ -18,10 +18,13 @@
   "player.chat.message.poll.option.abstention": "ممتنع",
   "player.chat.message.poll.option.true": "درست",
   "player.chat.message.poll.option.false": "نادرست",
+  "player.chat.message.externalVideo.name": "External video",
   "player.chat.wrapper.aria": "ناحیه گفت و گو",
   "player.notes.wrapper.aria": "ناحیه یادداشت ها",
   "player.presentation.wrapper.aria": "ناحیه ارایه",
   "player.screenshare.wrapper.aria": "ناحیه اشتراک صفحه",
+  "player.search.modal.title": "Search",
+  "player.search.modal.subtitle": "Find presentation slides content",
   "player.thumbnails.wrapper.aria": "ناحیه بندانگشتی ها",
   "player.video.wrapper.aria": "ناحیه ویدیو"
 }

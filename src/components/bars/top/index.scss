@@ -1,0 +1,57 @@
+@import 'src/styles/sizes';
+
+.top-bar {
+  background-color: var(--top-bar-background-color);
+  color: var(--top-bar-color);
+  box-sizing: border-box;
+  display: flex;
+  grid-area: top-bar;
+  overflow: hidden;
+  padding: 0 $padding-small;
+
+  .left,
+  .center,
+  .right {
+    align-items: center;
+    box-sizing: border-box;
+    height: 100%;
+    padding: $padding-small;
+  }
+
+  .left,
+  .right {
+    display: flex;
+    width: 50%;
+  }
+
+  .left {
+    justify-content: flex-start;
+  }
+
+  .center {
+    display: grid;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .right {
+    justify-content: flex-end;
+  }
+
+  .title {
+    overflow: hidden;
+    padding: $padding-small;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .interactive {
+    cursor: pointer;
+    outline: none;
+
+    &:focus,
+    &:hover {
+      background-color: var(--top-bar-active-background-color);
+    }
+  }
+}

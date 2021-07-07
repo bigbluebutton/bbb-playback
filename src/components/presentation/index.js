@@ -1,10 +1,14 @@
-import React, { PureComponent } from 'react';
-import { defineMessages } from 'react-intl';
+import React from 'react';
+import {
+  defineMessages,
+  useIntl,
+} from 'react-intl';
 import cx from 'classnames';
 import Cursor from './cursor';
 import Slide from './slide';
 import Canvas from './canvas';
-import { ID } from 'utils/data';
+import { ID } from 'utils/constants';
+import { isEqual } from 'utils/data/validators';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -14,138 +18,138 @@ const intlMessages = defineMessages({
   },
 });
 
-export default class Presentation extends PureComponent {
-  getSlideId() {
-    const {
-      currentSlideIndex,
-      slides,
-    } = this.props;
+const buildViewBoxAttr = (viewBox) => {
+  const {
+    height,
+    x,
+    width,
+    y,
+  } = viewBox;
 
-    const inactive = -1;
-    if (currentSlideIndex === -1) return inactive;
+  return `${x} ${y} ${width} ${height}`;
+};
 
-    const currentData = slides[currentSlideIndex];
-
-    return currentData.id;
+const getCursor = (cursors, index, viewBox) => {
+  const inactive = {
+    x: -1,
+    y: -1,
   }
 
-  getViewBox() {
-    const {
-      currentPanzoomIndex,
-      panzooms,
-    } = this.props;
+  if (index === -1) return inactive;
 
-    const inactive = {
-      height: 0,
-      x: 0,
-      width: 0,
-      y: 0,
-    };
+  const currentData = cursors[index];
+  if (currentData.x === -1 && currentData.y === -1) return inactive;
 
-    if (currentPanzoomIndex === -1) return inactive;
+  return {
+    x: viewBox.x + (currentData.x * viewBox.width),
+    y: viewBox.y + (currentData.y * viewBox.height),
+  };
+};
 
-    const currentData = panzooms[currentPanzoomIndex];
+const getSlideId = (index, slides) => {
+  const inactive = -1;
+  if (index === -1) return inactive;
 
-    return {
-      height: currentData.height,
-      x: currentData.x,
-      width: currentData.width,
-      y: currentData.y,
-    };
-  }
+  const currentData = slides[index];
 
-  buildViewBoxAttr(viewBox) {
-    const {
-      height,
-      x,
-      width,
-      y,
-    } = viewBox;
+  return currentData.id;
+};
 
-    return `${x} ${y} ${width} ${height}`;
-  }
+const getViewBox = (index, panzooms) => {
+  const inactive = {
+    height: 0,
+    x: 0,
+    width: 0,
+    y: 0,
+  };
 
-  getCursor(viewBox) {
-    const {
-      currentCursorIndex,
-      cursor,
-    } = this.props;
+  if (index === -1) return inactive;
 
-    const inactive = {
-      x: -1,
-      y: -1,
-    }
+  const currentData = panzooms[index];
 
-    if (currentCursorIndex === -1) return inactive;
+  return {
+    height: currentData.height,
+    x: currentData.x,
+    width: currentData.width,
+    y: currentData.y,
+  };
+};
 
-    const currentData = cursor[currentCursorIndex];
-    if (currentData.x === -1 && currentData.y === -1) return inactive;
+const Presentation = ({
+  active,
+  currentCursorIndex,
+  currentPanzoomIndex,
+  currentSlideIndex,
+  cursors,
+  draws,
+  drawsInterval,
+  panzooms,
+  recordId,
+  slides,
+  thumbnails,
+}) => {
+  const intl = useIntl();
+  const slideId = getSlideId(currentSlideIndex, slides);
+  const viewBox = getViewBox(currentPanzoomIndex, panzooms);
+  const cursor = getCursor(cursors, currentCursorIndex, viewBox);
 
-    return {
-      x: viewBox.x + (currentData.x * viewBox.width),
-      y: viewBox.y + (currentData.y * viewBox.height),
-    };
-  }
-
-  render() {
-    const {
-      active,
-      draws,
-      drawsInterval,
-      intl,
-      metadata,
-      slides,
-      thumbnails,
-    } = this.props;
-
-    const slideId = this.getSlideId();
-    const viewBox = this.getViewBox();
-    const cursor = this.getCursor(viewBox);
-    const canvasId = slideId;
-
-    return (
-      <div
-        aria-label={intl.formatMessage(intlMessages.aria)}
-        className={cx('presentation-wrapper', { inactive: !active })}
-        id={ID.PRESENTATION}
-      >
-        <div className="presentation">
-          <svg
-            viewBox={this.buildViewBoxAttr(viewBox)}
-            xmlns="http://www.w3.org/2000/svg"
-            xmlnsXlink="http://www.w3.org/1999/xlink"
-          >
-            <defs>
-              <clipPath id="viewBox">
-                <rect
-                  height={viewBox.height}
-                  x={viewBox.x}
-                  width={viewBox.width}
-                  y={viewBox.y}
-                />
-              </clipPath>
-            </defs>
-            <g clipPath="url(#viewBox)">
-              <Slide
-                id={slideId}
-                metadata={metadata}
-                slides={slides}
-                thumbnails={thumbnails}
+  return (
+    <div
+      aria-label={intl.formatMessage(intlMessages.aria)}
+      className={cx('presentation-wrapper', { inactive: !active })}
+      id={ID.PRESENTATION}
+    >
+      <div className="presentation">
+        <svg
+          viewBox={buildViewBoxAttr(viewBox)}
+          xmlns="http://www.w3.org/2000/svg"
+          xmlnsXlink="http://www.w3.org/1999/xlink"
+        >
+          <defs>
+            <clipPath id="viewBox">
+              <rect
+                height={viewBox.height}
+                x={viewBox.x}
+                width={viewBox.width}
+                y={viewBox.y}
               />
-              <Canvas
-                draws={draws}
-                drawsInterval={drawsInterval}
-                id={canvasId}
-                metadata={metadata}
-              />
-              <Cursor
-                x={cursor.x}
-                y={cursor.y}
-              />
-            </g>
-          </svg>
-        </div>
+            </clipPath>
+          </defs>
+          <g clipPath="url(#viewBox)">
+            <Slide
+              id={slideId}
+              recordId={recordId}
+              slides={slides}
+              thumbnails={thumbnails}
+            />
+            <Canvas
+              draws={draws}
+              drawsInterval={drawsInterval}
+              recordId={recordId}
+            />
+            <Cursor
+              x={cursor.x}
+              y={cursor.y}
+            />
+          </g>
+        </svg>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+const areEqual = (prevProps, nextProps) => {
+  if (prevProps.active !== nextProps.active) return false;
+
+  if (prevProps.currentCursorIndex !== nextProps.currentCursorIndex) return false;
+
+  if (prevProps.currentPanzoomIndex !== nextProps.currentPanzoomIndex) return false;
+
+  if (!isEqual(prevProps.draws, nextProps.draws)) return false;
+
+  if (!isEqual(prevProps.drawsInterval, nextProps.drawsInterval)) return false;
+
+  return true;
+};
+
+export default React.memo(Presentation, areEqual);

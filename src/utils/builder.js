@@ -1,10 +1,14 @@
 import { parseStringPromise } from 'xml2js';
 import { files as config } from 'config';
+import { getFileType } from './data';
 import {
-  getFileType,
   hasProperty,
   isEmpty,
-} from './data';
+} from './data/validators';
+import {
+  ID,
+  SHAPES,
+} from './constants';
 import logger from './logger';
 
 const getAttr = data => {
@@ -86,6 +90,19 @@ const buildPolls = result => {
 
   let data = [];
   data = result;
+
+  return data;
+};
+
+const buildExternalVideos = result => {
+  if (!result) return [];
+
+  const data = result.map(r => {
+    return {
+      timestamp: r.timestamp,
+      url: r.external_video_url,
+    };
+  });
 
   return data;
 };
@@ -183,7 +200,6 @@ const buildSlides = image => {
 };
 
 const buildThumbnails = slides => {
-  const screenshare = 'deskshare';
   const prefix = 'slide-';
   const url = 'thumbnails/thumb-';
 
@@ -194,10 +210,10 @@ const buildThumbnails = slides => {
       timestamp,
     } = slide;
 
-    if (src.includes(screenshare)) {
+    if (src.includes(ID.DESKSHARE)) {
       result.push({
         id,
-        src: screenshare,
+        src: ID.SCREENSHARE,
         timestamp,
       });
     } else {
@@ -250,7 +266,7 @@ const buildCanvases = group => {
 
         let shape = {};
         if (g.image) {
-          shape.type = 'poll';
+          shape.type = SHAPES.POLL;
           const image = getAttr(g.image.shift());
           // TODO: Better adapt for old versions
           // Versions prior to 2.3 included a rect structure along with an image
@@ -261,22 +277,22 @@ const buildCanvases = group => {
             shape.data = Object.assign({ image });
           }
         } else if (g.polyline) {
-          shape.type = 'polyline';
+          shape.type = SHAPES.POLYLINE;
           shape.data = Object.assign({}, getAttr(g.polyline.shift()));
         } else if (g.line) {
-          shape.type = 'line';
+          shape.type = SHAPES.LINE;
           shape.data = Object.assign({}, getAttr(g.line.shift()));
         } else if (g.polygon) {
-          shape.type = 'polygon';
+          shape.type = SHAPES.POLYGON;
           shape.data = Object.assign({}, getAttr(g.polygon.shift()));
         } else if (g.circle) {
-          shape.type = 'circle';
+          shape.type = SHAPES.CIRCLE;
           shape.data = Object.assign({}, getAttr(g.circle.shift()));
         } else if (g.path) {
-          shape.type = 'path';
+          shape.type = SHAPES.PATH;
           shape.data = Object.assign({}, getAttr(g.path.shift()));
         } else if (g.switch) {
-          shape.type = 'text';
+          shape.type = SHAPES.TEXT;
           const foreignObject = g.switch.shift()['foreignObject'].shift();
           const text = parseText(foreignObject);
           shape.data = Object.assign({ text }, getAttr(foreignObject));
@@ -466,6 +482,9 @@ const build = (filename, value) => {
         case config.data.polls:
           data = buildPolls(value);
           break;
+        case config.data.externalVideos:
+          data = buildExternalVideos(value);
+          break;
         default:
           logger.debug('unhandled', 'json', filename);
           reject(filename);
@@ -535,17 +554,21 @@ const addAlternatesToThumbnails = (thumbnails, alternates) => {
   });
 };
 
-const addPollsToChat = (chat, polls) => {
-  return [...chat, ...polls].sort((a, b) => a.timestamp - b.timestamp);
+const mergeChatContent = (chat, polls, externalVideos) => {
+  return [
+    ...chat,
+    ...externalVideos,
+    ...polls,
+  ].sort((a, b) => a.timestamp - b.timestamp);
 };
 
 export {
   addAlternatesToThumbnails,
-  addPollsToChat,
   build,
   buildStyle,
   decodeXML,
   getAttr,
   getId,
   getNumbers,
+  mergeChatContent,
 };

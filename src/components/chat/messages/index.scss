@@ -29,14 +29,22 @@
   }
 
   .info {
+    box-sizing: border-box;
     display: flex;
     width: 100%;
     margin: 0 0 $margin-extra-small 0;
+
+    [dir="ltr"] & {
+      padding: 0 $padding-extra-small 0 0;
+    }
+
+    [dir="rtl"] & {
+      padding: 0 0 0 $padding-extra-small;
+    }
   }
 
   .name {
     font-weight: var(--font-weight-semi-bold);
-    max-width: 60%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

@@ -1,11 +1,12 @@
-import React, { PureComponent } from 'react';
-import { defineMessages } from 'react-intl';
+import React, { useEffect, useRef } from 'react';
+import {
+  defineMessages,
+  useIntl,
+} from 'react-intl';
 import cx from 'classnames';
 import videojs from 'video.js/core.es.js';
-import {
-  ID,
-  buildFileURL,
-} from 'utils/data';
+import { ID } from 'utils/constants';
+import { buildFileURL } from 'utils/data';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -15,71 +16,71 @@ const intlMessages = defineMessages({
   },
 });
 
-export default class Screenshare extends PureComponent {
-  constructor(props) {
-    super(props);
+const buildSources = (media, recordId) => {
+  return [
+    {
+      src: buildFileURL(recordId, 'deskshare/deskshare.mp4'),
+      type: 'video/mp4',
+    }, {
+      src: buildFileURL(recordId, 'deskshare/deskshare.webm'),
+      type: 'video/webm',
+    },
+  ].filter(source => media.find(m => source.type.includes(m)));
+};
 
-    const {
-      media,
-      metadata,
-    } = props;
+const buildOptions = (sources) => {
+  return {
+    controls: false,
+    fill: true,
+    sources: sources.current,
+  };
+};
 
-    const sources = [
-      {
-        src: buildFileURL(metadata.id, 'deskshare/deskshare.mp4'),
-        type: `video/mp4`,
-      }, {
-        src: buildFileURL(metadata.id, 'deskshare/deskshare.webm'),
-        type: `video/webm`,
-      },
-    ].filter(src => {
-      const { type } = src;
+const Screenshare = ({
+  active,
+  media,
+  onPlayerReady,
+  recordId,
+}) => {
+  const intl = useIntl();
+  const sources = useRef(buildSources(media, recordId));
+  const player = useRef();
+  const element = useRef();
 
-      return media.find(m => type.includes(m));
-    });
-
-    this.options = {
-      controls: false,
-      fill: true,
-      sources,
-    };
-  }
-
-  componentDidMount() {
-    this.player = videojs(this.node, this.options, () => {
-      const { onPlayerReady } = this.props;
-
-      if (onPlayerReady) onPlayerReady(ID.SCREENSHARE, this.player);
-    });
-  }
-
-  componentWillUnmount() {
-    if (this.player) {
-      this.player.dispose();
+  useEffect(() => {
+    if (!player.current) {
+      player.current = videojs(element.current, buildOptions(sources), () => {
+        if (onPlayerReady) onPlayerReady(ID.SCREENSHARE, player.current);
+      });
     }
-  }
 
-  render() {
-    const {
-      active,
-      intl,
-    } = this.props;
+    return () => {
+      if (player.current) {
+        player.current.dispose();
+      }
+    };
+  }, [ onPlayerReady ]);
 
-    return (
-      <div
-        aria-label={intl.formatMessage(intlMessages.aria)}
-        className={cx('screenshare-wrapper', { inactive: !active })}
-        id={ID.SCREENSHARE}
-      >
-        <div data-vjs-player>
-          <video
-            className="video-js"
-            playsInline
-            preload="auto"
-            ref={node => this.node = node}
-          />
-        </div>
+  return (
+    <div
+      aria-label={intl.formatMessage(intlMessages.aria)}
+      className={cx('screenshare-wrapper', { inactive: !active })}
+      id={ID.SCREENSHARE}
+    >
+      <div data-vjs-player>
+        <video
+          className="video-js"
+          playsInline
+          preload="auto"
+          ref={node => element.current = node}
+        />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+const areEqual = (prevProps, nextProps) => {
+  return prevProps.active === nextProps.active;
+};
+
+export default React.memo(Screenshare, areEqual);
