@@ -7,10 +7,7 @@ import Polygon from './polygon';
 import Polyline from './polyline';
 import Text from './text';
 import { SHAPES } from 'utils/constants';
-import {
-  isEmpty,
-  isEqual,
-} from 'utils/data/validators';
+import { isEmpty } from 'utils/data/validators';
 import logger from 'utils/logger';
 
 const Canvas = ({
@@ -121,12 +118,4 @@ const Canvas = ({
   );
 };
 
-const areEqual = (prevProps, nextProps) => {
-  if (!isEqual(prevProps.draws, nextProps.draws)) return false;
-
-  if (!isEqual(prevProps.drawsInterval, nextProps.drawsInterval)) return false;
-
-  return true;
-};
-
-export default React.memo(Canvas, areEqual);
+export default Canvas;

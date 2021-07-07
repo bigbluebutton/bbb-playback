@@ -16,6 +16,7 @@ const ID = {
   PANZOOMS: 'panzooms',
   PLAYER: 'player',
   POLLS: 'polls',
+  EXTERNAL_VIDEOS: 'externalVideos',
   PRESENTATION: 'presentation',
   QUESTIONS: 'questions',
   SCREENSHARE: 'screenshare',

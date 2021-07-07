@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import UserMessage from './user';
-import PollMessage from './poll';
+import PollMessage from './system/poll';
 import QuestionMessage from './question';
+import ExternalVideoMessage from './system/external-video';
 import { ID } from 'utils/constants';
 import { getMessageType } from 'utils/data';
 import './index.scss';
@@ -76,6 +77,19 @@ const Messages = ({
                     player={player}
                     text={item.text}
                     timestamp={timestamp}
+                  />
+                </span>
+              );
+            case ID.EXTERNAL_VIDEOS:
+
+              return (
+                <span ref={node => setRef(node, index)}>
+                  <ExternalVideoMessage
+                    active={active}
+                    player={player}
+                    url={item.url}
+                    timestamp={timestamp}
+                    type={item.type}
                   />
                 </span>
               );

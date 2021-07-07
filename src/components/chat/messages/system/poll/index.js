@@ -7,7 +7,7 @@ import {
 import Options from './options';
 import Question from './question';
 import Result from './result';
-import Message from 'components/chat/messages/message';
+import SystemMessage from 'components/chat/messages/system/message';
 import { ID } from 'utils/constants';
 import './index.scss';
 
@@ -50,25 +50,23 @@ const Poll = ({
   const intl = useIntl();
 
   return (
-    <Message
+    <SystemMessage
       active={active}
       icon={ID.POLLS}
       name={intl.formatMessage(intlMessages.name)}
       player={player}
       timestamp={timestamp}
     >
-      <div className="poll-wrapper">
-        <Question question={question} />
-        <Result
-          answers={answers}
-          responders={responders}
-        />
-        <Options
-          answers={answers}
-          type={type}
-        />
-      </div>
-    </Message>
+      <Question question={question} />
+      <Result
+        answers={answers}
+        responders={responders}
+      />
+      <Options
+        answers={answers}
+        type={type}
+      />
+    </SystemMessage>
   );
 };
 

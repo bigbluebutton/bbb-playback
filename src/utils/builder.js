@@ -104,6 +104,19 @@ const buildQuestions = result => {
   return data;
 };
 
+const buildExternalVideos = result => {
+  if (!result) return [];
+
+  const data = result.map(r => {
+    return {
+      timestamp: r.timestamp,
+      url: r.external_video_url,
+    };
+  });
+
+  return data;
+};
+
 const buildMetadata = result => {
   let data = {};
   const { recording } = result;
@@ -482,6 +495,9 @@ const build = (filename, value) => {
         case config.data.questions:
           data = buildQuestions(value);
           break;
+        case config.data.externalVideos:
+          data = buildExternalVideos(value);
+          break;
         default:
           logger.debug('unhandled', 'json', filename);
           reject(filename);
@@ -551,8 +567,13 @@ const addAlternatesToThumbnails = (thumbnails, alternates) => {
   });
 };
 
-const mergeChatContent = (chat, polls, questions) => {
-  return [...chat, ...polls, ...questions].sort((a, b) => a.timestamp - b.timestamp);
+const mergeChatContent = (chat, polls, questions, externalVideos) => {
+  return [
+    ...chat,
+    ...externalVideos,
+    ...polls,
+    ...questions,
+  ].sort((a, b) => a.timestamp - b.timestamp);
 };
 
 export {

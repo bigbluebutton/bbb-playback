@@ -20,6 +20,7 @@
   "player.chat.message.poll.option.false": "Yanlış",
   "player.chat.message.question.name": "Question",
   "player.chat.message.question.answer": "Answer",
+  "player.chat.message.externalVideo.name": "External video",
   "player.chat.wrapper.aria": "Sohbet",
   "player.notes.wrapper.aria": "Notlar",
   "player.presentation.wrapper.aria": "Sunum",

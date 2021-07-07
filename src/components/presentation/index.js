@@ -8,6 +8,7 @@ import Cursor from './cursor';
 import Slide from './slide';
 import Canvas from './canvas';
 import { ID } from 'utils/constants';
+import { isEqual } from 'utils/data/validators';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -143,6 +144,10 @@ const areEqual = (prevProps, nextProps) => {
   if (prevProps.currentCursorIndex !== nextProps.currentCursorIndex) return false;
 
   if (prevProps.currentPanzoomIndex !== nextProps.currentPanzoomIndex) return false;
+
+  if (!isEqual(prevProps.draws, nextProps.draws)) return false;
+
+  if (!isEqual(prevProps.drawsInterval, nextProps.drawsInterval)) return false;
 
   return true;
 };

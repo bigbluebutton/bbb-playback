@@ -20,6 +20,7 @@
   "player.chat.message.poll.option.false": "False",
   "player.chat.message.question.name": "Question",
   "player.chat.message.question.answer": "Answer",
+  "player.chat.message.externalVideo.name": "External video",
   "player.chat.wrapper.aria": "Chat area",
   "player.notes.wrapper.aria": "Notes area",
   "player.presentation.wrapper.aria": "Presentation area",

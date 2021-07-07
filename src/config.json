@@ -35,6 +35,7 @@
       "panzooms": "panzooms.xml",
       "polls": "polls.json",
       "questions": "questions.json",
+      "externalVideos": "external_videos.json",
       "screenshare": "deskshare.xml",
       "shapes": "shapes.svg"
     }
