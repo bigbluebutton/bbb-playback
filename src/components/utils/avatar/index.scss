@@ -6,7 +6,6 @@ $avatar-size: 2.25rem;
   height: 100%;
 
   .avatar {
-    border-radius: 50%;
     color: var(--avatar-color);
     height: $avatar-size;
     text-align: center;
@@ -20,6 +19,10 @@ $avatar-size: 2.25rem;
       text-transform: capitalize;
       width: 100%;
     }
+  }
+
+  .circle {
+    border-radius: 50%;
   }
 
   .avatar-zero {
