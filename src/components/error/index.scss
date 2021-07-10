@@ -1,0 +1,16 @@
+$error-font-size: 5rem;
+
+.error-wrapper {
+  background-color: var(--error-background-color);
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.error-code {
+  color: var(--error-color);
+  font-size: $error-font-size;
+  font-weight: var(--font-weight-bold);
+  margin: auto;
+  text-align: center;
+}
