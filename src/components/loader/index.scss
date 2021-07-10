@@ -1,0 +1,51 @@
+@import 'src/styles/sizes';
+
+$dot-size: 20px;
+$dots-wrapper-width: 100px;
+
+.loader-wrapper {
+  background-color: var(--loader-background-color);
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.dots-wrapper {
+  margin: auto;
+  text-align: center;
+  width: $dots-wrapper-width;
+
+  div {
+    animation: dots 1.4s infinite ease-in-out both;
+    background-color: var(--loader-color);
+    border-radius: 100%;
+    display: inline-block;
+    height: $dot-size;
+    margin: $margin-extra-small;
+    width: $dot-size;
+  }
+
+  .first {
+    animation-delay: -0.32s;
+  }
+
+  .second {
+    animation-delay: -0.16s;
+  }
+
+  .third {
+    animation-delay: 0s;
+  }
+
+  @keyframes dots {
+    0%,
+    80%,
+    100% {
+      transform: scale(0);
+    }
+
+    40% {
+      transform: scale(1);
+    }
+  }
+}
