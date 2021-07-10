@@ -1,8 +1,8 @@
-$avatar-size: 2.25rem;
+$avatar-size: 2rem;
 
 .avatar-wrapper {
   display: flex;
-  font-size: small;
+  font-size: medium;
   height: 100%;
 
   .avatar {
@@ -14,6 +14,7 @@ $avatar-size: 2.25rem;
     .initials {
       align-items: center;
       display: flex;
+      font-size: small;
       height: 100%;
       justify-content: center;
       text-transform: capitalize;
