@@ -24,10 +24,11 @@ const Avatar = ({
   initials,
   name,
 }) => {
+  const style = circle ? getAvatarStyle(name) : 'avatar-default';
 
   return (
     <div className="avatar-wrapper">
-      <div className={cx('avatar', { circle }, getAvatarStyle(name))}>
+      <div className={cx('avatar', { circle }, style)}>
         {icon ? (
           <span className={`icon-${icon}`} />
         ) : (

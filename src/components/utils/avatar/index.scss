@@ -25,6 +25,10 @@ $avatar-size: 2.25rem;
     border-radius: 50%;
   }
 
+  .avatar-default {
+    background-color: var(--avatar-default-background-color);
+  }
+
   .avatar-zero {
     background-color: var(--avatar-zero-background-color);
   }
