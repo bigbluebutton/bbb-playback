@@ -11,6 +11,7 @@ const propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]),
+  circle: PropTypes.bool,
   icon: PropTypes.string,
   initials: PropTypes.string,
   name: PropTypes.string,
@@ -21,6 +22,7 @@ const propTypes = {
 const defaultProps = {
   active: false,
   children: null,
+  circle: false,
   icon: '',
   initials: '',
   name: '',
@@ -31,6 +33,7 @@ const defaultProps = {
 const Message = ({
   active,
   children,
+  circle,
   icon,
   initials,
   name,
@@ -45,6 +48,7 @@ const Message = ({
     <div className="message">
       <Margin
         active={active}
+        circle={circle}
         icon={icon}
         initials={initials}
         name={name}

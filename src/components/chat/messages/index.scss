@@ -81,7 +81,6 @@
   }
 
   .interactive {
-    border-radius: 50%;
     display: flex;
     height: max-content;
     outline: none;
@@ -92,8 +91,12 @@
 
     &:focus,
     &:hover {
-      box-shadow: 0 0 0 $margin-small var(--box-shadow-color);
+      box-shadow: 0 0 0 $margin-extra-small var(--box-shadow-color);
     }
+  }
+
+  .circle {
+    border-radius: 50%;
   }
 
   .inactive {
