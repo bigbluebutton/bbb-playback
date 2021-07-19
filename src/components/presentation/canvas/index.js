@@ -1,11 +1,5 @@
 import React from 'react';
-import Circle from './circle';
-import Line from './line';
-import Path from './path';
 import Poll from './poll';
-import Polygon from './polygon';
-import Polyline from './polyline';
-import Text from './text';
 import { SHAPES } from 'utils/constants';
 import { isEmpty } from 'utils/data/validators';
 import logger from 'utils/logger';
@@ -44,28 +38,30 @@ const Canvas = ({
     switch (type) {
       case SHAPES.CIRCLE:
         canvas.push(
-          <Circle
-            data={data}
-            key={id}
+          <circle
             style={style}
+            cx={data.cx}
+            cy={data.cy}
+            r={data.r}
           />
         );
         break;
       case SHAPES.LINE:
         canvas.push(
-          <Line
-            data={data}
-            key={id}
+          <line
             style={style}
+            x1={data.x1}
+            y1={data.y1}
+            x2={data.x2}
+            y2={data.y2}
           />
         );
         break;
       case SHAPES.PATH:
         canvas.push(
-          <Path
-            data={data}
-            key={id}
+          <path
             style={style}
+            d={data.d}
           />
         );
         break;
@@ -81,29 +77,33 @@ const Canvas = ({
         break;
       case SHAPES.POLYGON:
         canvas.push(
-          <Polygon
-            data={data}
-            key={id}
+          <polygon
             style={style}
+            points={data.points}
           />
         );
         break;
       case SHAPES.POLYLINE:
         canvas.push(
-          <Polyline
-            data={data}
-            key={id}
+          <polyline
             style={style}
+            points={data.points}
           />
         );
         break;
       case SHAPES.TEXT:
         canvas.push(
-          <Text
-            data={data}
-            key={id}
+          <foreignObject
             style={style}
-          />
+            height={data.height}
+            width={data.width}
+            x={data.x}
+            y={data.y}
+          >
+            <div xmlns="http://www.w3.org/1999/xhtml">
+              {data.text.split('\r').map(line => <span>{line}<br /></span>)}
+            </div>
+          </foreignObject>
         );
         break;
       default:

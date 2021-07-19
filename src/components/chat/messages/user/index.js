@@ -36,6 +36,7 @@ const User = ({
   return (
     <Message
       active={active}
+      circle
       initials={initials}
       name={name}
       player={player}

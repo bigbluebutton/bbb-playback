@@ -4,8 +4,9 @@ import {
   useIntl,
 } from 'react-intl';
 import config from 'config';
-import Error from './error';
-import Player from './player';
+import Dots from './dots';
+import Error from 'components/error';
+import Player from 'components/player';
 import { build } from 'utils/builder';
 import { ID } from 'utils/constants';
 import {
@@ -139,11 +140,7 @@ const Loader = ({ match }) => {
       className="loader-wrapper"
       id={ID.LOADER}
     >
-      <div className="loading-dots">
-        <div className="first" />
-        <div className="second" />
-        <div className="third" />
-      </div>
+      <Dots />
     </div>
   );
 };

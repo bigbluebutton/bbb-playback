@@ -7,6 +7,7 @@ import './index.scss';
 
 const propTypes = {
   active: PropTypes.bool,
+  circle: PropTypes.bool,
   icon: PropTypes.string,
   initials: PropTypes.string,
   name: PropTypes.string,
@@ -15,6 +16,7 @@ const propTypes = {
 
 const defaultProps = {
   active: false,
+  circle: false,
   icon: '',
   initials: '',
   name: '',
@@ -23,21 +25,27 @@ const defaultProps = {
 
 const Margin = ({
   active,
+  circle,
   icon,
   initials,
   name,
   onClick,
 }) => {
+  const style = {
+    circle,
+    inactive: !active,
+  };
 
   return (
     <div
-      className={cx('interactive', { inactive: !active })}
+      className={cx('interactive', style)}
       onClick={onClick}
       onKeyPress={event => handleOnEnterPress(event, onClick)}
       tabIndex="0"
     >
       <Avatar
         active={active}
+        circle={circle}
         icon={icon}
         initials={initials}
         name={name}
