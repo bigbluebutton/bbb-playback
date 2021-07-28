@@ -123,6 +123,7 @@ export {
   getMediaPath,
   getRecordId,
   getStyle,
+  getSearchParam,
   getTime,
   parseTimeToSeconds,
 };
