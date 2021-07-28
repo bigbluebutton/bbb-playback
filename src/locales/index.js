@@ -1,5 +1,6 @@
 import { locale as config } from 'config';
 import messages from './messages';
+import { getSearchParam } from 'utils/params';
 
 const RTL_LOCALES = ['ar', 'fa'];
 
@@ -12,11 +13,19 @@ const setDirection = (locale) => {
 };
 
 const getLocale = () => {
-  const locale = navigator.language.split(/[-_]/)[0];
+  // Try from the query params
+  let locale = getSearchParam('locale');
+
+  // If not, get browser default
+  if (!locale) locale = navigator.language;
+
+  // Sanitize
+  locale = locale.split(/[-_]/)[0];
+
+  // If the locale is missing, use the default fallback
+  if (!messages[locale]) locale = config.default.split(/[-_]/)[0];
 
   setDirection(locale);
-
-  if (!messages[locale]) return config.default;
 
   return locale;
 };
