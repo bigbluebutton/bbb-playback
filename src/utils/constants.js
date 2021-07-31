@@ -42,6 +42,16 @@ const ID = {
   VIDEO: 'video',
 };
 
+const CONTENT = [
+  ID.PRESENTATION,
+  ID.CHAT,
+  ID.POLLS,
+  ID.EXTERNAL_VIDEOS,
+  ID.NOTES,
+  ID.SCREENSHARE,
+  ID.CAPTIONS,
+];
+
 const LAYOUT = {
   CONTENT: 'content',
   DISABLED: 'disabled',
@@ -86,6 +96,7 @@ const ROUTER = getRouter();
 
 export {
   BUILD,
+  CONTENT,
   ERROR,
   ID,
   LAYOUT,

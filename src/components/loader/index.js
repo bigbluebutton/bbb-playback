@@ -4,6 +4,7 @@ import {
   useIntl,
 } from 'react-intl';
 import config from 'config';
+import Data from './data';
 import Dots from './dots';
 import Error from 'components/error';
 import Player from 'components/player';
@@ -16,6 +17,7 @@ import {
   buildFileURL,
   getFileName,
   getFileType,
+  getLoadedData,
 } from 'utils/data';
 import {
   getLayout,
@@ -143,7 +145,13 @@ const Loader = ({ match }) => {
       className="loader-wrapper"
       id={ID.LOADER}
     >
-      <Dots />
+      <div className="loader-top" />
+      <div className="loader-middle">
+        <Dots />
+      </div>
+      <div className="loader-bottom">
+        <Data data={getLoadedData(data.current)} />
+      </div>
     </div>
   );
 };

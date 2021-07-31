@@ -6,8 +6,21 @@ $dots-wrapper-width: 100px;
 .loader-wrapper {
   background-color: var(--loader-background-color);
   display: flex;
+  flex-direction: column;
   height: 100%;
   width: 100%;
+}
+
+.loader-top,
+.loader-middle,
+.loader-bottom {
+  display: flex;
+  height: 100%;
+}
+
+.loader-bottom {
+  align-items: flex-start;
+  justify-content: center;
 }
 
 .dots-wrapper {
