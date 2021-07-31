@@ -4,7 +4,7 @@ import {
   Route,
   Switch,
 } from 'react-router-dom';
-import { error } from 'config';
+import { ERROR } from 'utils/constants';
 import Error from './error';
 import Loader from './loader';
 
@@ -17,7 +17,7 @@ const Router = () => {
           path="/:recordId"
           component={Loader}
         />
-        <Route render={() => <Error code={error['NOT_FOUND']} />} />
+        <Route render={() => <Error code={ERROR.NOT_FOUND} />} />
       </Switch>
     </BrowserRouter>
   );
