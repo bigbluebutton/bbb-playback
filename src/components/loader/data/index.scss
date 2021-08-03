@@ -1,0 +1,24 @@
+@import 'src/styles/icons';
+@import 'src/styles/sizes';
+
+.data-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  .item {
+    box-sizing: border-box;
+    color: var(--loader-color);
+    display: flex;
+    font-size: xx-large;
+    font-weight: var(--font-weight-semi-bold);
+    padding: $padding;
+    opacity: .5;
+  }
+
+  .loaded {
+    opacity: 1;
+  }
+}

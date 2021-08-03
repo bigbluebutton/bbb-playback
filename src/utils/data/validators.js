@@ -92,6 +92,8 @@ const isCurrent = (data, index, time) => {
   return current;
 };
 
+const isDefined = data => typeof data !== 'undefined';
+
 const isEmpty = data => {
   const isArray = isValid('array', data);
   const isString = isValid('string', data);
@@ -171,6 +173,7 @@ export {
   isActive,
   isContentVisible,
   isCurrent,
+  isDefined,
   isEmpty,
   isEnabled,
   isEqual,
