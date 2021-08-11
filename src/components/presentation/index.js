@@ -145,6 +145,8 @@ const areEqual = (prevProps, nextProps) => {
 
   if (prevProps.currentPanzoomIndex !== nextProps.currentPanzoomIndex) return false;
 
+  if (prevProps.currentSlideIndex !== nextProps.currentSlideIndex) return false;
+
   if (!isEqual(prevProps.draws, nextProps.draws)) return false;
 
   if (!isEqual(prevProps.drawsInterval, nextProps.drawsInterval)) return false;
