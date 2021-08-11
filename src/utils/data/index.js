@@ -4,6 +4,7 @@ import {
   hasPresentation,
   hasProperty,
   isCurrent,
+  isDefined,
   isEmpty,
   isEnabled,
   isVisible,
@@ -225,6 +226,28 @@ const getFileName = file => file.split('.').shift();
 
 const getFileType = file => file.split('.').pop();
 
+const getLoadedData = data => {
+  const captions = getData(data, ID.CAPTIONS);
+  const chat = getData(data, ID.CHAT);
+  const notes = getData(data, ID.NOTES);
+  const polls = getData(data, ID.POLLS);
+  const externalVideos = getData(data, ID.EXTERNAL_VIDEOS);
+  const screenshare = getData(data, ID.SCREENSHARE);
+  const shapes = getData(data, ID.SHAPES);
+
+  const loadedData = {
+    captions: isDefined(captions),
+    chat: isDefined(chat),
+    notes: isDefined(notes),
+    polls: isDefined(polls),
+    externalVideos: isDefined(externalVideos),
+    presentation: isDefined(shapes),
+    screenshare: isDefined(screenshare),
+  };
+
+  return loadedData;
+};
+
 const getPercentage = (value, total) => {
   if (total === 0) return 0;
 
@@ -317,6 +340,7 @@ export {
   getDraws,
   getFileName,
   getFileType,
+  getLoadedData,
   getMessageType,
   getPercentage,
   getPollLabel,
