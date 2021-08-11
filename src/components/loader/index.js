@@ -4,15 +4,20 @@ import {
   useIntl,
 } from 'react-intl';
 import config from 'config';
+//import Data from './data';
 import Dots from './dots';
 import Error from 'components/error';
 import Player from 'components/player';
 import { build } from 'utils/builder';
-import { ID } from 'utils/constants';
+import {
+  ERROR,
+  ID,
+} from 'utils/constants';
 import {
   buildFileURL,
   getFileName,
   getFileType,
+//  getLoadedData,
 } from 'utils/data';
 import {
   getLayout,
@@ -29,7 +34,7 @@ const intlMessages = defineMessages({
   },
 });
 
-const initError = (recordId) => recordId ? null : config.error['NOT_FOUND'];
+const initError = (recordId) => recordId ? null : ERROR.BAD_REQUEST;
 
 const Loader = ({ match }) => {
   const intl = useIntl();
@@ -40,7 +45,7 @@ const Loader = ({ match }) => {
   const started = useRef(false);
   const time = useRef(getTime());
 
-  const [error, setError] = useState(initError(recordId));
+  const [error, setError] = useState(initError(recordId.current));
   const [loaded, setLoaded] = useState(false);
 
   const fetchFile = (file) => {
@@ -59,7 +64,7 @@ const Loader = ({ match }) => {
           case 'xml':
             return response.text();
           default:
-            setError(config.error['BAD_REQUEST']);
+            setError(ERROR.BAD_REQUEST);
             return null;
         }
       } else {
@@ -71,8 +76,8 @@ const Loader = ({ match }) => {
         if (content) logger.debug(ID.LOADER, 'builded', file);
         data.current[getFileName(file)] = content;
         update();
-      }).catch(error => setError(config.error['BAD_REQUEST']));
-    }).catch(error => setError(config.error['NOT_FOUND']));
+      }).catch(error => setError(ERROR.BAD_REQUEST));
+    }).catch(error => setError(ERROR.NOT_FOUND));
   };
 
   const fetchMedia = () => {
@@ -96,7 +101,7 @@ const Loader = ({ match }) => {
         update();
       } else {
         // TODO: Handle audio medias
-        setError(config.error['NOT_FOUND']);
+        setError(ERROR.NOT_FOUND);
       }
     });
   };
@@ -140,7 +145,13 @@ const Loader = ({ match }) => {
       className="loader-wrapper"
       id={ID.LOADER}
     >
-      <Dots />
+      <div className="loader-top" />
+      <div className="loader-middle">
+        <Dots />
+      </div>
+      <div className="loader-bottom">
+        {/*<Data data={getLoadedData(data.current)} />*/}
+      </div>
     </div>
   );
 };
