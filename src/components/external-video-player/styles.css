@@ -1,0 +1,22 @@
+.autoPlayWarning {
+  position: absolute;
+  z-index: 100;
+  font-size: x-large;
+  color: white;
+  width: 100%;
+  background-color: rgba(6,23,42,0.5);
+  bottom: 20%;
+  vertical-align: middle;
+  text-align: center;
+  pointer-events: none;
+}
+
+.externalVideos-wrapper {
+  display: flex;
+  position: absolute;
+  height: 100%;
+  position: absolute;
+  width: 95%;
+  left: 2.5%;
+}
+

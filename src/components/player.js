@@ -6,6 +6,7 @@ import Chat from './chat';
 import Notes from './notes';
 import Presentation from './presentation';
 import Screenshare from './screenshare';
+import ExternalVideoPlayer from './external-video-player';
 import Thumbnails from './thumbnails';
 import Video from './video';
 import BottomBar from './bars/bottom';
@@ -105,13 +106,14 @@ export default class Player extends PureComponent {
     this.chat = mergeChatContent(
       getData(data, ID.CHAT),
       getData(data, ID.POLLS),
-      getData(data, ID.EXTERNAL_VIDEOS),
+      //getData(data, ID.EXTERNAL_VIDEOS),
     );
     this.cursor = getData(data, ID.CURSOR);
     this.metadata = getData(data, ID.METADATA);
     this.notes = getData(data, ID.NOTES);
     this.panzooms = getData(data, ID.PANZOOMS);
     this.screenshare = getData(data, ID.SCREENSHARE);
+    this.external_videos = getData(data, ID.EXTERNAL_VIDEOS);
     this.shapes = getData(data, ID.SHAPES);
 
     this.canvases = this.shapes.canvases;
@@ -131,15 +133,26 @@ export default class Player extends PureComponent {
         logger.debug(ID.PLAYER, 'ready', ID.SCREENSHARE);
         this.player.screenshare = player;
         break;
+      case ID.EXTERNAL_VIDEOS:
+        logger.debug(ID.PLAYER, 'ready', ID.EXTERNAL_VIDEOS);
+        this.player.external_videos = player;
+        break;
       default:
         logger.debug('unhandled', media);
     }
 
-    if (this.player.video && this.player.screenshare) {
-      this.synchronizer = new Synchronizer(this.player.video, this.player.screenshare);
+    if (this.external_videos.length === 0) {
+      if (this.player.video && this.player.screenshare) {
+        this.synchronizer = new Synchronizer(this.player.video, this.player.screenshare);
+      }
+    } else {
+      if (this.player.video && this.player.screenshare && this.player.external_videos) {
+        this.synchronizer = new Synchronizer(this.player.video, this.player.screenshare, this.player.external_videos);
+      } 
     }
+    
   }
-
+  
   handleSearch(value) {
     const { search } = this.state;
 
@@ -452,11 +465,59 @@ export default class Player extends PureComponent {
     );
   }
 
+  renderExternalVideo(active) {
+    //if (!this.layout.hasScreenshare()) return null;
+
+    const {
+      intl,
+      data,
+    } = this.props;
+
+    const { time } = this.state;
+    const { external_videos } = data;
+
+    if (!external_videos) {
+      return;
+    }
+
+    let currentDataIndex = getCurrentDataIndex(external_videos, time);
+
+    if (currentDataIndex === -1) {
+      currentDataIndex = 0;
+    }
+
+    const video = external_videos[currentDataIndex];
+     
+    if (!video) {
+      return
+    }
+
+    const url = video.url
+    const events = video.events;
+
+     let primaryPlaybackRate = 1;
+
+    if (this.player.video)  {
+       primaryPlaybackRate = this.player.video.playbackRate();
+   }
+         
+    return (
+      <ExternalVideoPlayer 
+          active={active}
+          intl={intl}
+          videoUrl={url}
+          onPlayerReady={this.handlePlayerReady}
+          events={events}
+          primaryPlaybackRate={primaryPlaybackRate}
+      />
+    );
+  }
+
   renderContent() {
     if (this.layout.isSingle()) return null;
 
     const { time } = this.state;
-    const content = getActiveContent(this.screenshare, time);
+    const content = getActiveContent(this.screenshare, this.external_videos, time);
 
     return (
       <div className={cx('content', this.layout.getContentStyle(this.state))}>
@@ -464,6 +525,7 @@ export default class Player extends PureComponent {
         <div className="top-content">
           {this.renderPresentation(content === ID.PRESENTATION)}
           {this.renderScreenshare(content === ID.SCREENSHARE)}
+          {this.renderExternalVideo(content === ID.EXTERNAL_VIDEOS)}
         </div>
         <div className={cx('bottom-content', this.layout.getBottomContentStyle(this.state))}>
           {this.renderThumbnails()}

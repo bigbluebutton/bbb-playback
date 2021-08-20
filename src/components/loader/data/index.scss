@@ -12,9 +12,10 @@
     box-sizing: border-box;
     color: var(--loader-color);
     display: flex;
+    font-size: xx-large;
     font-weight: var(--font-weight-semi-bold);
     padding: $padding;
-    opacity: .25;
+    opacity: .5;
   }
 
   .loaded {
