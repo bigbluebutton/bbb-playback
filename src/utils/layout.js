@@ -4,8 +4,8 @@ import {
   getControlFromLayout,
   getSectionFromLayout,
   getSwapFromLayout,
-  isContentVisible,
-} from 'utils/data';
+} from './data';
+import { isContentVisible } from './data/validators';
 
 export default class Layout {
   constructor(data, layout) {

@@ -1,11 +1,16 @@
-import React, { Component } from 'react';
-import { defineMessages } from 'react-intl';
+import React, { useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
+import {
+  defineMessages,
+  useIntl,
+} from 'react-intl';
 import { chat as config } from 'config';
-import Message from './message';
+import Messages from './messages';
 import {
   ID,
-  getScrollTop,
-} from 'utils/data';
+  POSITIONS,
+} from 'utils/constants';
+import { handleAutoScroll } from 'utils/data/handlers';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -15,117 +20,76 @@ const intlMessages = defineMessages({
   },
 });
 
-export default class Chat extends Component {
-  constructor(props) {
-    super(props);
+const propTypes = {
+  chat: PropTypes.array,
+  currentDataIndex: PropTypes.number,
+  player: PropTypes.object,
+};
 
-    this.interaction = false;
-  }
+const defaultProps = {
+  chat: [],
+  currentDataIndex: 0,
+  player: {},
+};
 
-  componentDidMount() {
-    this.handleAutoScroll();
-  }
+const Chat = ({
+  chat,
+  currentDataIndex,
+  player,
+}) => {
+  const interaction = useRef(false);
+  const firstNode = useRef();
+  const currentNode = useRef();
 
-  shouldComponentUpdate(nextProps) {
-    const { currentDataIndex } = this.props;
+  const intl = useIntl();
 
-    if (currentDataIndex !== nextProps.currentDataIndex) {
-      return true;
-    }
-
-    return false;
-  }
-
-  componentDidUpdate() {
-    this.handleAutoScroll();
-  }
-
-  handleAutoScroll() {
-    if (!config.scroll || this.interaction) return;
-
-    // Auto-scroll can start after getting the first and current nodes
-    if (this.firstNode && this.currentNode) {
-      const { parentNode } = this.currentNode;
-
-      parentNode.scrollTop = getScrollTop(this.firstNode, this.currentNode, config.align);
-    }
-  }
-
-  handleOnClick(timestamp) {
-    const { player } = this.props;
-
-    if (!player) return null;
-
-    player.currentTime(timestamp);
-  }
-
-  // Set node as ref so we can manage auto-scroll
-  setRef(node, index) {
-    const { currentDataIndex } = this.props;
-
+  const setRef = (node, index) => {
     if (index === 0) {
-      this.firstNode = node;
+      firstNode.current = node;
     }
 
     if (index === currentDataIndex) {
-      this.currentNode = node;
+      currentNode.current = node;
     }
-  }
+  };
 
-  renderMessages() {
-    const {
-      chat,
-      currentDataIndex,
-    } = this.props;
+  useEffect(() => {
+    if (!interaction.current) {
+      if (config.scroll) {
+        handleAutoScroll(firstNode.current, currentNode.current, POSITIONS.TOP, config.align);
+      }
+    }
+  });
 
-    return chat.map((item, index) => {
-      const {
-        hyperlink,
-        initials,
-        message,
-        name,
-        timestamp,
-      } = item;
+  return (
+    <div
+      aria-label={intl.formatMessage(intlMessages.aria)}
+      aria-live="polite"
+      className="chat-wrapper"
+      id={ID.CHAT}
+      onMouseEnter={() => interaction.current = true}
+      onMouseLeave={() => interaction.current = false}
+      tabIndex="0"
+    >
+      <Messages
+        chat={chat}
+        currentDataIndex={currentDataIndex}
+        player={player}
+        setRef={(node, index) => setRef(node, index)}
+      />
+    </div>
+  );
+};
 
-      const active = index <= currentDataIndex;
+Chat.propTypes = propTypes;
+Chat.defaultProps = defaultProps;
 
-      return (
-        <span ref={node => this.setRef(node, index)}>
-          <Message
-            active={active}
-            hyperlink={hyperlink}
-            initials={initials}
-            name={name}
-            onClick={() => this.handleOnClick(timestamp)}
-            text={message}
-            timestamp={timestamp}
-          />
-        </span>
-      );
-    });
-  }
+const areEqual = (prevProps, nextProps) => {
+  if (prevProps.currentDataIndex !== nextProps.currentDataIndex) return false;
 
-  render() {
-    const { intl } = this.props;
+  if (!prevProps.player && nextProps.player) return false;
 
-    return (
-      <div
-        aria-label={intl.formatMessage(intlMessages.aria)}
-        aria-live="polite"
-        className="chat-wrapper"
-        id={ID.CHAT}
-        tabIndex="0"
-      >
-        <div className="list">
-          <div
-            className="message-wrapper"
-            onMouseEnter={() => this.interaction = true}
-            onMouseLeave={() => this.interaction = false}
-          >
-            {this.renderMessages()}
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
+  return true;
+};
+
+export default React.memo(Chat, areEqual);

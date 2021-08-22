@@ -1,0 +1,75 @@
+@import 'src/styles/icons';
+@import 'src/styles/sizes';
+
+$result-height: $bottom-content-height;
+
+.search-body,
+.search-header,
+.search-footer {
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+}
+
+.search-body {
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-evenly;
+  overflow-x: hidden;
+  padding: 0 $padding;
+
+  input[type="text"] {
+    box-sizing: border-box;
+    font-size: large;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .result {
+    box-sizing: border-box;
+    height: $result-height;
+    margin: $margin 0 0 0;
+    position: relative;
+    width: 100%;
+  }
+}
+
+.search-header {
+  flex-direction: column;
+  font-weight: var(--font-weight-regular);
+  padding: 0 0 $padding 0;
+
+  .title,
+  .subtitle {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+  }
+
+  .title {
+    font-size: larger;
+    overflow: hidden;
+    padding: 0 0 $padding-extra-small 0;
+    text-overflow: ellipsis;
+  }
+
+  .subtitle {
+    font-size: small;
+    padding: 0 $padding-small;
+    opacity: .75;
+  }
+}
+
+.search-footer {
+  align-items: center;
+  justify-content: flex-end;
+  padding: $padding 0;
+
+  .button-wrapper {
+    .solid {
+      &:focus {
+        box-shadow: 0 0 0 $margin-extra-small var(--box-shadow-color);
+      }
+    }
+  }
+}

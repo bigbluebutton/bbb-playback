@@ -1,12 +1,11 @@
-$avatar-size: 2.25rem;
+$avatar-size: 2rem;
 
 .avatar-wrapper {
   display: flex;
-  font-size: small;
+  font-size: medium;
   height: 100%;
 
   .avatar {
-    border-radius: 50%;
     color: var(--avatar-color);
     height: $avatar-size;
     text-align: center;
@@ -15,11 +14,20 @@ $avatar-size: 2.25rem;
     .initials {
       align-items: center;
       display: flex;
+      font-size: small;
       height: 100%;
       justify-content: center;
       text-transform: capitalize;
       width: 100%;
     }
+  }
+
+  .circle {
+    border-radius: 50%;
+  }
+
+  .avatar-default {
+    background-color: var(--avatar-default-background-color);
   }
 
   .avatar-zero {

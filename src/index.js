@@ -7,10 +7,8 @@ import {
   getLocale,
   getMessages,
 } from 'locales';
-import {
-  ROUTER,
-  getStyle,
-} from 'utils/data';
+import { ROUTER } from 'utils/constants';
+import { getStyle } from 'utils/params';
 import './index.scss';
 
 const locale = getLocale();

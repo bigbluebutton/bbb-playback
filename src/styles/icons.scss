@@ -15,11 +15,11 @@
 }
 
 
-.icon-arrow-left:before {
+.icon-arrowLeft:before {
   content: "\e90d";
 }
 
-.icon-arrow-right:before {
+.icon-arrowRight:before {
   content: "\e90a";
 }
 
@@ -39,12 +39,20 @@
   content: "\e912";
 }
 
+.icon-externalVideos:before {
+  content: "\e930";
+}
+
 .icon-fullscreen:before {
   content: "\e92a";
 }
 
 .icon-notes:before {
   content: "\e94a";
+}
+
+.icon-polls:before {
+  content: "\e927";
 }
 
 .icon-presentation:before {

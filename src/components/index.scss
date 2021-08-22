@@ -2,26 +2,6 @@
 
 $player-wrapper-padding: $control-bar-height;
 
-$loading-dot-size: 20px;
-$loading-dots-width: 100px;
-
-$error-font-size: 5rem;
-
-.error-wrapper,
-.loader-wrapper {
-  display: flex;
-  height: 100%;
-  width: 100%;
-}
-
-.error-wrapper {
-  background-color: var(--error-background-color);
-}
-
-.loader-wrapper {
-  background-color: var(--loader-background-color);
-}
-
 .player-wrapper {
   box-sizing: border-box;
   display: grid;
@@ -68,56 +48,6 @@ $error-font-size: 5rem;
 
   .fullscreen-button {
     visibility: visible;
-  }
-}
-
-.error-code,
-.loading-dots {
-  margin: auto;
-  text-align: center;
-}
-
-.error-code {
-  color: var(--error-color);
-  font-size: $error-font-size;
-  font-weight: var(--font-weight-bold);
-}
-
-.loading-dots {
-  width: $loading-dots-width;
-
-  div {
-    animation: dots 1.4s infinite ease-in-out both;
-    background-color: var(--loader-color);
-    border-radius: 100%;
-    display: inline-block;
-    height: $loading-dot-size;
-    margin: $margin-extra-small;
-    width: $loading-dot-size;
-  }
-
-  .first {
-    animation-delay: -0.32s;
-  }
-
-  .second {
-    animation-delay: -0.16s;
-  }
-
-  .third {
-    animation-delay: 0s;
-  }
-
-  @keyframes dots {
-    0%,
-    80%,
-    100% {
-      transform: scale(0);
-    }
-
-    40% {
-      transform: scale(1);
-    }
   }
 }
 

@@ -31,6 +31,9 @@ https://<domain>/playback/presentation/2.3/<recordId>
 - path:
   - `p=path/to/recordings`
 
+- locale:
+  - `locale=locale-CODE` (e.g., pt-BR)
+
 - log:
   - `debug`
 
