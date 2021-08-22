@@ -106,6 +106,45 @@ const Canvas = ({
           </foreignObject>
         );
         break;
+      case SHAPES.MARKER:
+        canvas.push(
+          <g>
+            <path
+              d={data.path.d}
+              style={data.pathStyle}
+            />
+            <mask
+              id={data.mask.id}
+            >
+              <path
+                d={data.maskPath.d}
+                style={data.maskPathStyle}
+              />
+            </mask>
+            <use
+              mask={data.use['mask']}
+              xlinkHref={data.use['xlink:href']}
+            />
+          </g>
+        );
+        break;
+      case SHAPES.ERASER:
+        canvas.push(
+          <g style={style}>
+            <clipPath
+              id={data.clipPath.id}
+            >
+              <path
+                d={data.path.d}
+              />
+            </clipPath>
+            <use
+              clip-path={data.use['clip-path']}
+              xlinkHref={data.use['xlink:href']}
+            />
+          </g>
+        );
+        break;
       default:
         logger.debug('unhandled', type);
     }
