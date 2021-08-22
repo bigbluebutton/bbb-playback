@@ -88,6 +88,7 @@ export default class Player extends PureComponent {
     this.handlePlayerReady = this.handlePlayerReady.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleTimeUpdate = this.handleTimeUpdate.bind(this);
+    this.getCurrentPlayerTime = this.getCurrentPlayerTime.bind(this);
   }
 
   componentDidMount() {
@@ -106,7 +107,6 @@ export default class Player extends PureComponent {
     this.chat = mergeChatContent(
       getData(data, ID.CHAT),
       getData(data, ID.POLLS),
-      //getData(data, ID.EXTERNAL_VIDEOS),
     );
     this.cursor = getData(data, ID.CURSOR);
     this.metadata = getData(data, ID.METADATA);
@@ -153,6 +153,7 @@ export default class Player extends PureComponent {
     
   }
   
+
   handleSearch(value) {
     const { search } = this.state;
 
@@ -168,6 +169,11 @@ export default class Player extends PureComponent {
       this.setState({ time: value });
     }
   }
+
+  getCurrentPlayerTime() {
+    const { time } = this.state;
+    return time;
+ }
 
   initShortcuts() {
     const { seconds } = shortcuts.video;
@@ -509,6 +515,7 @@ export default class Player extends PureComponent {
           onPlayerReady={this.handlePlayerReady}
           events={events}
           primaryPlaybackRate={primaryPlaybackRate}
+          getCurrentPlayerTime={this.getCurrentPlayerTime}
       />
     );
   }

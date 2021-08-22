@@ -215,9 +215,11 @@ class ExternalVideoPlayer extends Component {
   }
 
   orchestrator () {
-    const { events, active, primaryPlaybackRate } = this.props;
+    const { events, active, getCurrentPlayerTime  } = this.props;
     const { playing, playbackRate } = this.state;
 
+    this.time = getCurrentPlayerTime();
+    
     let primaryPlayerPlaying = true;
 
     if (this.time === this.lastTime) {

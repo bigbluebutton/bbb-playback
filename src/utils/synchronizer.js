@@ -63,16 +63,7 @@ export default class Synchronizer {
     }
   }
 
-   handleUpdateTime() {
-    const currentTime = this.primary.currentTime();
-
-    if (this.externalVideos && this.externalVideos.time !== currentTime)
-    {
-      this.externalVideos.time = currentTime;
-    }
-  }
-
-  init() {
+    init() {
     STATUSES.forEach(status => {
       this.primary.on(status, () => this.status.primary = status);
       this.secondary.on(status, () => this.status.secondary = status);
@@ -92,8 +83,6 @@ export default class Synchronizer {
     });
 
     this.primary.on('volumechange', () => this.syncVolume());
-
-    this.primary.on('timeupdate', () => this.handleUpdateTime());
 
     this.primary.on('waiting', () => {
       if (!this.synching && this.status.secondary === 'canplay') {
