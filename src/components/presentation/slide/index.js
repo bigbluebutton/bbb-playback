@@ -15,6 +15,7 @@ const Slide = ({
     height,
     src,
     width,
+    fullId,
   } = current;
 
   return (
@@ -27,6 +28,7 @@ const Slide = ({
         width={width}
       />
       <image
+        id={fullId}
         height={height}
         href={buildFileURL(recordId, src)}
         x={0}
