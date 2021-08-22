@@ -185,6 +185,7 @@ const buildSlides = image => {
       timestamps.forEach(timestamp => {
         slides.push({
           id: slideId,
+          fullId: attr.id,
           height: parseInt(attr.height),
           src,
           timestamp,
@@ -276,6 +277,28 @@ const buildCanvases = group => {
           } else {
             shape.data = Object.assign({ image });
           }
+        } else if (g.path && g.mask && g.use) {
+          shape.type = 'marker';
+          const elemPath = g.$$.shift();
+          const elemMask = g.$$.shift();
+          const elemUse = g.$$.shift();
+          const elemMaskPath =  elemMask.path.shift();
+          const path =  getAttr(elemPath);
+          const pathStyle = buildStyle(path.style);
+          const mask =  getAttr(elemMask);
+          const use =  getAttr(elemUse);
+          const maskPath =  getAttr(elemMaskPath);
+          const maskPathStyle = buildStyle(maskPath.style);
+          shape.data = Object.assign({ path }, { pathStyle }, { mask }, { maskPath }, { maskPathStyle }, { use });
+        } else if (g.clipPath && g.use) {
+          shape.type = 'eraser';
+          const elemClipPath = g.$$.shift();
+          const elemUse = g.$$.shift();
+          const elemPath = elemClipPath.path.shift();
+          const clipPath =  getAttr(elemClipPath);
+          const path =  getAttr(elemPath);
+          const use =  getAttr(elemUse);
+          shape.data = Object.assign({ clipPath }, { path },{ use });
         } else if (g.polyline) {
           shape.type = SHAPES.POLYLINE;
           shape.data = Object.assign({}, getAttr(g.polyline.shift()));
