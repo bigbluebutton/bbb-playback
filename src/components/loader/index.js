@@ -3,8 +3,11 @@ import {
   defineMessages,
   useIntl,
 } from 'react-intl';
-import config from 'config';
-//import Data from './data';
+import {
+  files,
+  medias,
+} from 'config';
+import Data from './data';
 import Dots from './dots';
 import Error from 'components/error';
 import Player from 'components/player';
@@ -17,7 +20,7 @@ import {
   buildFileURL,
   getFileName,
   getFileType,
-//  getLoadedData,
+  getLoadedData,
 } from 'utils/data';
 import {
   getLayout,
@@ -45,6 +48,7 @@ const Loader = ({ match }) => {
   const started = useRef(false);
   const time = useRef(getTime());
 
+  const [, setBuilt] = useState(0);
   const [error, setError] = useState(initError(recordId.current));
   const [loaded, setLoaded] = useState(false);
 
@@ -81,7 +85,7 @@ const Loader = ({ match }) => {
   };
 
   const fetchMedia = () => {
-    const fetches = config.medias.map(type => {
+    const fetches = medias.map(type => {
       const url = buildFileURL(recordId.current, `video/webcams.${type}`);
       return fetch(url, { method: 'HEAD' });
     });
@@ -92,7 +96,7 @@ const Loader = ({ match }) => {
         const { ok, url } = response;
         if (ok) {
           logger.debug(ID.LOADER, 'media', response);
-          media.push(config.medias.find(type => url.endsWith(type)));
+          media.push(medias.find(type => url.endsWith(type)));
         }
       });
 
@@ -108,9 +112,10 @@ const Loader = ({ match }) => {
 
   const update = () => {
     counter.current = counter.current + 1;
+    setBuilt(counter.current);
     // TODO: Better control
-    if (counter.current > Object.keys(config.files.data).length) {
-      if (!loaded) setLoaded(true);
+    if (counter.current > Object.keys(files.data).length) {
+      if (!loaded) setTimeout(() => setLoaded(true), files.feedback.timeout);
     }
   };
 
@@ -118,8 +123,8 @@ const Loader = ({ match }) => {
     started.current = true;
 
     if (recordId.current) {
-      for (const file in config.files.data) {
-        fetchFile(config.files.data[file]);
+      for (const file in files.data) {
+        fetchFile(files.data[file]);
       }
 
       fetchMedia();
@@ -150,7 +155,7 @@ const Loader = ({ match }) => {
         <Dots />
       </div>
       <div className="loader-bottom">
-        {/*<Data data={getLoadedData(data.current)} />*/}
+        {files.feedback.enabled ? <Data data={getLoadedData(data.current)} /> : null}
       </div>
     </div>
   );

@@ -13,7 +13,7 @@ sudo cp -r ./build $BBB_PLAYBACK
 sudo chown --recursive bigbluebutton:bigbluebutton $BBB_PLAYBACK
 
 BBB_NGINX_FILES_PATH=/etc/bigbluebutton/nginx
-if [ ! -f $BBB_NGINX_FILES_PATH/bbb-playback.nginx ]; then
-  sudo cp ./bbb-playback.nginx $BBB_NGINX_FILES_PATH
+if [ ! -f $BBB_NGINX_FILES_PATH/playback.nginx ]; then
+  sudo cp ./playback.nginx $BBB_NGINX_FILES_PATH
   sudo systemctl reload nginx
 fi

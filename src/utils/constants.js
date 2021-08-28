@@ -56,6 +56,7 @@ const LAYOUT = {
   CONTENT: 'content',
   DISABLED: 'disabled',
   MEDIA: 'media',
+  SWAPPED: 'swapped',
 };
 
 const NUMBERS = [
