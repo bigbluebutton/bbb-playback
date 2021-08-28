@@ -63,16 +63,16 @@ export default class Player extends PureComponent {
       layout,
     } = props;
 
-    this.layout = new Layout(data, layout);
+    this.layout = new Layout(data);
 
     this.state = {
       application: ID.CHAT,
-      control: this.layout.initControl(),
+      control: this.layout.getControl(layout),
       fullscreen: false,
       modal: '',
       search: [],
-      section: this.layout.initSection(),
-      swap: this.layout.initSwap(),
+      section: this.layout.getSection(layout),
+      swap: this.layout.getSwap(layout),
       thumbnails: true,
       time: 0,
     }

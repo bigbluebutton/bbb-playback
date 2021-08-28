@@ -12,7 +12,6 @@ import {
 } from './validators';
 import {
   ID,
-  LAYOUT,
   MEDIA_ROOT_URL,
   NUMBERS,
   ROUTER,
@@ -99,19 +98,6 @@ const getContentFromData = data => {
   };
 
   return content;
-};
-
-const getControlFromLayout = layout => {
-  const { DISABLED } = LAYOUT;
-  let control = true;
-  switch (layout) {
-    case DISABLED:
-      control = false;
-      break;
-    default:
-  }
-
-  return control;
 };
 
 const getCurrentDataIndex = (data, time) => {
@@ -273,46 +259,6 @@ const getPollLabel = (key, type) => {
   return key.toLowerCase();
 };
 
-const getSectionFromLayout = layout => {
-  const {
-    CONTENT,
-    MEDIA,
-  } = LAYOUT;
-
-  let section = true;
-  switch (layout) {
-    case CONTENT:
-      section = false;
-      break;
-    case MEDIA:
-      section = false;
-      break;
-    default:
-  }
-
-  return section;
-};
-
-const getSwapFromLayout = layout => {
-  const {
-    CONTENT,
-    MEDIA,
-  } = LAYOUT;
-
-  let swap = false;
-  switch (layout) {
-    case CONTENT:
-      swap = false;
-      break;
-    case MEDIA:
-      swap = true;
-      break;
-    default:
-  }
-
-  return swap;
-};
-
 const getMessageType = (item) => {
   if (typeof item.message === 'string') return ID.USERS;
   if (typeof item.question === 'string') return ID.POLLS;
@@ -329,7 +275,6 @@ export {
   getActiveContent,
   getBar,
   getContentFromData,
-  getControlFromLayout,
   getCurrentDataIndex,
   getCurrentDataInterval,
   getData,
@@ -340,7 +285,5 @@ export {
   getMessageType,
   getPercentage,
   getPollLabel,
-  getSectionFromLayout,
-  getSwapFromLayout,
   getTimestampAsMilliseconds,
 };
