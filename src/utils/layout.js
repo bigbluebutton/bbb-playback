@@ -1,32 +1,71 @@
 import { controls } from 'config';
-import {
-  getContentFromData,
-  getControlFromLayout,
-  getSectionFromLayout,
-  getSwapFromLayout,
-} from './data';
+import { LAYOUT } from './constants';
+import { getContentFromData } from './data';
 import { isContentVisible } from './data/validators';
 
 export default class Layout {
-  constructor(data, layout) {
+  constructor(data) {
     this.content = getContentFromData(data);
-    this.layout = layout;
   }
 
   getContent() {
     return this.content;
   }
 
-  initControl() {
-    return getControlFromLayout(this.layout);
+  getControl(layout) {
+    const { DISABLED } = LAYOUT;
+
+    let control = true;
+    switch (layout) {
+      case DISABLED:
+        control = false;
+        break;
+      default:
+    }
+
+    return control;
   }
 
-  initSection() {
-    return getSectionFromLayout(this.layout);
+  getSection(layout) {
+    const {
+      CONTENT,
+      MEDIA,
+    } = LAYOUT;
+
+    let section = true;
+    switch (layout) {
+      case CONTENT:
+        section = false;
+        break;
+      case MEDIA:
+        section = false;
+        break;
+      default:
+    }
+
+    return section;
   }
 
-  initSwap() {
-    return getSwapFromLayout(this.layout);
+  getSwap(layout) {
+    const {
+      CONTENT,
+      MEDIA,
+      SWAPPED,
+    } = LAYOUT;
+
+    let swap = false;
+    switch (layout) {
+      case CONTENT:
+        swap = false;
+        break;
+      case MEDIA:
+      case SWAPPED:
+        swap = true;
+        break;
+      default:
+    }
+
+    return swap;
   }
 
   getBottomContentStyle(state) {

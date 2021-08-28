@@ -1,13 +1,13 @@
 import {
-  addPollsToChat,
   buildStyle,
   decodeXML,
   getAttr,
   getId,
   getNumbers,
+  mergeChatContent,
 } from './builder';
 
-it('merges and sorts chat and polls arrays', () => {
+it('merges and sorts chat and extra content arrays', () => {
   let chat = [
     { timestamp: 5.1, type: 'chat' },
     { timestamp: 11.9, type: 'chat' },
@@ -20,13 +20,23 @@ it('merges and sorts chat and polls arrays', () => {
     { timestamp: 10.1, type: 'poll' },
   ];
 
-  expect(addPollsToChat(chat, polls)).toEqual([
+  let externalVideos = [
+    { timestamp: 3.0, type: 'externalVideo' },
+    { timestamp: 19.0, type: 'externalVideo' },
+    { timestamp: 12.1, type: 'externalVideo' },
+  ];
+
+
+  expect(mergeChatContent(chat, polls, externalVideos)).toEqual([
+    { timestamp: 3.0, type: 'externalVideo' },
     { timestamp: 4.0, type: 'poll' },
     { timestamp: 5.1, type: 'chat' },
     { timestamp: 10.1, type: 'chat' },
     { timestamp: 10.1, type: 'poll' },
     { timestamp: 11.9, type: 'chat' },
+    { timestamp: 12.1, type: 'externalVideo' },
     { timestamp: 16.9, type: 'poll' },
+    { timestamp: 19.0, type: 'externalVideo' },
   ]);
 });
 

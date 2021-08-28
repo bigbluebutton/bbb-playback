@@ -16,9 +16,10 @@ https://<domain>/playback/presentation/2.3/<recordId>
 ## URL query strings
 
 - layout:
-  - `l=media`
-  - `l=content`
-  - `l=disabled`
+  - `l=content`: focus on content
+  - `l=disabled`: disabled interactive elements
+  - `l=media`: focus on media
+  - `l=swapped`: content/media swapped
 
 - style: custom style
   - `s=<name>`
