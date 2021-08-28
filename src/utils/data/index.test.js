@@ -1,7 +1,6 @@
 import {
   getActiveContent,
   getBar,
-  getControlFromLayout,
   getCurrentDataIndex,
   getCurrentDataInterval,
   getFileName,
@@ -10,24 +9,13 @@ import {
   getPercentage,
   getPollLabel,
   getRecordId,
-  getSectionFromLayout,
-  getSwapFromLayout,
 } from '.';
-import {
-  ID,
-  LAYOUT,
-} from 'utils/constants';
+import { ID } from 'utils/constants';
 
 const {
   PRESENTATION,
   SCREENSHARE,
 } = ID;
-
-const {
-  CONTENT,
-  DISABLED,
-  MEDIA,
-} = LAYOUT;
 
 it('gets the current active content', () => {
   const screenshare = [
@@ -70,17 +58,6 @@ it('get a poll bar from a percentage value', () => {
     .toEqual('████████▌');
   expect(getBar(100))
     .toEqual('██████████');
-});
-
-it('gets controls from layout query string', () => {
-  // Enabled
-  expect(getControlFromLayout(CONTENT)).toEqual(true);
-
-  // Disabled
-  expect(getControlFromLayout(DISABLED)).toEqual(false);
-
-  // Enabled
-  expect(getControlFromLayout(MEDIA)).toEqual(true);
 });
 
 it('gets current data index', () => {
@@ -208,26 +185,4 @@ it('gets the locale id for a poll label', () => {
   expect(getPollLabel('False', 'TF')).toEqual('false');
   expect(getPollLabel('Other', 'TF')).toEqual(null);
   expect(getPollLabel('True', 'X')).toEqual(null);
-});
-
-it('gets section from layout query string', () => {
-  // Hidden
-  expect(getSectionFromLayout(CONTENT)).toEqual(false);
-
-  // Visible
-  expect(getSectionFromLayout(DISABLED)).toEqual(true);
-
-  // Hidden
-  expect(getSectionFromLayout(MEDIA)).toEqual(false);
-});
-
-it('gets swap from layout query string', () => {
-  // Inactive
-  expect(getSwapFromLayout(CONTENT)).toEqual(false);
-
-  // Inactive
-  expect(getSwapFromLayout(DISABLED)).toEqual(false);
-
-  // Active
-  expect(getSwapFromLayout(MEDIA)).toEqual(true);
 });
