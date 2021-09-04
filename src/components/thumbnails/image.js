@@ -22,12 +22,24 @@ const Image = ({
   src,
   recordId,
 }) => {
-  const screenshare = src === ID.SCREENSHARE;
+
+
+ const screenshare = src === ID.SCREENSHARE;
 
   if (screenshare) {
     return (
       <div className={cx('thumbnail-image', { screenshare })}>
         <span className="icon-screenshare" />
+      </div>
+    );
+  }
+
+  const external_video = src === ID.EXTERNAL_VIDEOS;
+
+  if (external_video) {
+    return (
+      <div className={cx('thumbnail-image', { external_video })}>
+        <span className="icon-video" />
       </div>
     );
   }

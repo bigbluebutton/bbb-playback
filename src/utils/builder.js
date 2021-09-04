@@ -94,18 +94,6 @@ const buildPolls = result => {
   return data;
 };
 
-const buildExternalVideos = result => {
-  if (!result) return [];
-
-  const data = result.map(r => {
-    return {
-      timestamp: r.timestamp,
-      url: r.external_video_url,
-    };
-  });
-
-  return data;
-};
 
 const buildMetadata = result => {
   let data = {};
@@ -216,6 +204,12 @@ const buildThumbnails = slides => {
         src: ID.SCREENSHARE,
         timestamp,
       });
+    } else if (src.includes(ID.EXTERNAL_VIDEOS)) {
+        result.push({
+          id,
+          src: ID.EXTERNAL_VIDEOS,
+          timestamp,
+        });
     } else {
       result.push({
         id,
@@ -223,7 +217,7 @@ const buildThumbnails = slides => {
         timestamp,
       });
     }
-
+    
     return result;
   }, []);
 };
@@ -449,6 +443,36 @@ const buildScreenshare = result => {
   return data;
 };
 
+
+const buildExternalVideos = result => {
+  let data = [];
+  const { recording } = result;
+
+  if (hasProperty(recording, 'video')) {
+    data = recording.video.map(video => {
+      const attr = getAttr(video);
+      return {
+        timestamp: parseFloat(attr.start_timestamp),
+        clear: parseFloat(attr.stop_timestamp),
+        url: attr.url,
+        events: video.event.map(event => { 
+          const attr = getAttr(event);
+          return {
+            timestamp: parseFloat(attr.timestamp),
+            type: attr.type,
+            time: attr.time,
+            rate: parseFloat(attr.rate),
+            playing: (attr.playing === 'true'),
+          }
+        })
+      };
+    });
+  }
+
+  return data;
+};
+
+
 const getOptions = filename => {
   let options = {};
 
@@ -482,10 +506,7 @@ const build = (filename, value) => {
         case config.data.polls:
           data = buildPolls(value);
           break;
-        case config.data.externalVideos:
-          data = buildExternalVideos(value);
-          break;
-        default:
+          default:
           logger.debug('unhandled', 'json', filename);
           reject(filename);
       }
@@ -526,6 +547,9 @@ const build = (filename, value) => {
           case config.data.screenshare:
             data = buildScreenshare(result);
             break;
+          case config.data.externalVideos:
+            data = buildExternalVideos(result);
+            break;
           case config.data.shapes:
             data = buildShapes(result);
             break;
@@ -554,10 +578,9 @@ const addAlternatesToThumbnails = (thumbnails, alternates) => {
   });
 };
 
-const mergeChatContent = (chat, polls, externalVideos) => {
+const mergeChatContent = (chat, polls) => {
   return [
     ...chat,
-    ...externalVideos,
     ...polls,
   ].sort((a, b) => a.timestamp - b.timestamp);
 };

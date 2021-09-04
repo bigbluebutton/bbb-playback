@@ -1,10 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
-import { files } from 'config';
 import './index.scss';
-
-const TRANSITION = ((files.feedback.timeout / 1000) / 2).toFixed(2);
 
 const propTypes = {
   icon: PropTypes.string,
@@ -25,10 +22,7 @@ const Item = ({
 }) => {
 
   return (
-    <div
-      className={cx('item', { loaded: value })}
-      style={{ transition: `opacity ${TRANSITION}s ease-in` }}
-    >
+    <div className={cx('item', { loaded: value })}>
       <div className={`icon-${icon}`} />
     </div>
   );

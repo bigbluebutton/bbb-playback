@@ -39,13 +39,20 @@ const getAvatarStyle = name => {
   return `avatar-${NUMBERS[index]}`;
 };
 
-const getActiveContent = (screenshare, time) => {
+const getActiveContent = (screenshare, externalVideos, time) => {
   const {
     SCREENSHARE,
     PRESENTATION,
+    EXTERNAL_VIDEOS
   } = ID;
 
-  const content = isEnabled(screenshare, time) ? SCREENSHARE : PRESENTATION;
+  let content=PRESENTATION;
+
+  if (isEnabled(screenshare, time)) {
+    content=SCREENSHARE;
+  } else if (isEnabled(externalVideos, time)) {
+    content=EXTERNAL_VIDEOS;
+  }
 
   return content;
 };
@@ -159,6 +166,11 @@ const getData = (data, id) => {
     case ID.PANZOOMS:
     case ID.POLLS:
     case ID.EXTERNAL_VIDEOS:
+      if (!file || data[getFileName(file)] === null) {
+        return [];
+      }
+
+      return data[getFileName(file)];
     case ID.SCREENSHARE:
     case ID.TALKERS:
       if (!file || data[getFileName(file)] === null) {

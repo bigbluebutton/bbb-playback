@@ -26,5 +26,6 @@
   "player.search.modal.title": "Search",
   "player.search.modal.subtitle": "Find presentation slides content",
   "player.thumbnails.wrapper.aria": "Área de miniaturas",
-  "player.video.wrapper.aria": "Área de video"
+  "player.video.wrapper.aria": "Área de video",
+  "player.externalVideo.autoPlayWarning": "Necesitamos su permiso para reproducir audio."
 }

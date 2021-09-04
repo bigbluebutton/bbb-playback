@@ -42,5 +42,10 @@ $thumbnail-height: calc((#{$bottom-content-height} / 10) * 6);
       font-size: xxx-large;
       font-weight: var(--font-weight-semi-bold);
     }
+
+    .external_video {
+      font-size: xxx-large;
+      font-weight: var(--font-weight-semi-bold);
+    }
   }
 }
