@@ -94,7 +94,7 @@ const buildPolls = result => {
   return data;
 };
 
-const buildExternalVideos = result => {
+const buildVideos = result => {
   if (!result) return [];
 
   const data = result.map(r => {
@@ -482,8 +482,8 @@ const build = (filename, value) => {
         case config.data.polls:
           data = buildPolls(value);
           break;
-        case config.data.externalVideos:
-          data = buildExternalVideos(value);
+        case config.data.videos:
+          data = buildVideos(value);
           break;
         default:
           logger.debug('unhandled', 'json', filename);
@@ -554,10 +554,10 @@ const addAlternatesToThumbnails = (thumbnails, alternates) => {
   });
 };
 
-const mergeChatContent = (chat, polls, externalVideos) => {
+const mergeChatContent = (chat, polls, videos) => {
   return [
     ...chat,
-    ...externalVideos,
+    ...videos,
     ...polls,
   ].sort((a, b) => a.timestamp - b.timestamp);
 };

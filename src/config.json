@@ -21,9 +21,9 @@
       "notes": "notes.html",
       "panzooms": "panzooms.xml",
       "polls": "polls.json",
-      "externalVideos": "external_videos.json",
       "screenshare": "deskshare.xml",
-      "shapes": "shapes.svg"
+      "shapes": "shapes.svg",
+      "videos": "external_videos.json"
     },
     "feedback": {
       "enabled": true,

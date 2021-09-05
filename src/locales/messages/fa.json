@@ -18,7 +18,7 @@
   "player.chat.message.poll.option.abstention": "ممتنع",
   "player.chat.message.poll.option.true": "درست",
   "player.chat.message.poll.option.false": "نادرست",
-  "player.chat.message.externalVideo.name": "ویدیوی خارجی",
+  "player.chat.message.video.name": "ویدیوی خارجی",
   "player.chat.wrapper.aria": "ناحیه گفت‌و‌گو",
   "player.notes.wrapper.aria": "ناحیه یادداشت‌ها",
   "player.presentation.wrapper.aria": "ناحیه ارایه",

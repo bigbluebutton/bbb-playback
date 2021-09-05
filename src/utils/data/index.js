@@ -82,7 +82,7 @@ const getContentFromData = data => {
   const chat = getData(data, ID.CHAT);
   const notes = getData(data, ID.NOTES);
   const polls = getData(data, ID.POLLS);
-  const externalVideos = getData(data, ID.EXTERNAL_VIDEOS);
+  const videos = getData(data, ID.VIDEOS);
   const screenshare = getData(data, ID.SCREENSHARE);
   const shapes = getData(data, ID.SHAPES);
   const slides = shapes.slides;
@@ -92,7 +92,7 @@ const getContentFromData = data => {
     chat: !isEmpty(chat),
     notes: !isEmpty(notes),
     polls: !isEmpty(polls),
-    externalVideos: !isEmpty(externalVideos),
+    videos: !isEmpty(videos),
     presentation: hasPresentation(slides),
     screenshare: !isEmpty(screenshare),
   };
@@ -158,7 +158,7 @@ const getData = (data, id) => {
     case ID.NOTES:
     case ID.PANZOOMS:
     case ID.POLLS:
-    case ID.EXTERNAL_VIDEOS:
+    case ID.VIDEOS:
     case ID.SCREENSHARE:
     case ID.TALKERS:
       if (!file || data[getFileName(file)] === null) {
@@ -214,7 +214,7 @@ const getLoadedData = data => {
   const chat = getData(data, ID.CHAT);
   const notes = getData(data, ID.NOTES);
   const polls = getData(data, ID.POLLS);
-  const externalVideos = getData(data, ID.EXTERNAL_VIDEOS);
+  const videos = getData(data, ID.VIDEOS);
   const screenshare = getData(data, ID.SCREENSHARE);
   const shapes = getData(data, ID.SHAPES);
 
@@ -223,7 +223,7 @@ const getLoadedData = data => {
     chat: isDefined(chat),
     notes: isDefined(notes),
     polls: isDefined(polls),
-    externalVideos: isDefined(externalVideos),
+    videos: isDefined(videos),
     presentation: isDefined(shapes),
     screenshare: isDefined(screenshare),
   };
@@ -262,7 +262,7 @@ const getPollLabel = (key, type) => {
 const getMessageType = (item) => {
   if (typeof item.message === 'string') return ID.USERS;
   if (typeof item.question === 'string') return ID.POLLS;
-  if (typeof item.url === 'string') return ID.EXTERNAL_VIDEOS;
+  if (typeof item.url === 'string') return ID.VIDEOS;
 
   return 'undefined';
 };

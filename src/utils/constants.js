@@ -30,7 +30,6 @@ const ID = {
   PANZOOMS: 'panzooms',
   PLAYER: 'player',
   POLLS: 'polls',
-  EXTERNAL_VIDEOS: 'externalVideos',
   PRESENTATION: 'presentation',
   SCREENSHARE: 'screenshare',
   SEARCH: 'search',
@@ -39,6 +38,7 @@ const ID = {
   SWAP: 'swap',
   THUMBNAILS: 'thumbnails',
   USERS: 'users',
+  VIDEOS: 'videos',
   WEBCAMS: 'webcams',
 };
 
@@ -46,7 +46,7 @@ const CONTENT = [
   ID.PRESENTATION,
   ID.CHAT,
   ID.POLLS,
-  ID.EXTERNAL_VIDEOS,
+  ID.VIDEOS,
   ID.NOTES,
   ID.SCREENSHARE,
   ID.CAPTIONS,

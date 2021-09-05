@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import UserMessage from './user';
 import PollMessage from './system/poll';
-import ExternalVideoMessage from './system/external-video';
+import VideoMessage from './system/video';
 import { ID } from 'utils/constants';
 import { getMessageType } from 'utils/data';
 import './index.scss';
@@ -66,11 +66,11 @@ const Messages = ({
                   />
                 </span>
               );
-            case ID.EXTERNAL_VIDEOS:
+            case ID.VIDEOS:
 
               return (
                 <span ref={node => setRef(node, index)}>
-                  <ExternalVideoMessage
+                  <VideoMessage
                     active={active}
                     player={player}
                     url={item.url}

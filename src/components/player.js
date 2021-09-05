@@ -105,7 +105,7 @@ export default class Player extends PureComponent {
     this.chat = mergeChatContent(
       getData(data, ID.CHAT),
       getData(data, ID.POLLS),
-      getData(data, ID.EXTERNAL_VIDEOS),
+      getData(data, ID.VIDEOS),
     );
     this.cursor = getData(data, ID.CURSOR);
     this.metadata = getData(data, ID.METADATA);
