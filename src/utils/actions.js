@@ -1,5 +1,5 @@
 import { getCurrentDataIndex } from './data';
-import { hasVideo } from './data/validators';
+import { hasWebcams } from './data/validators';
 
 const search = (text, thumbnails) => {
   const result = [];
@@ -17,27 +17,27 @@ const search = (text, thumbnails) => {
 };
 
 const seek = (player, seconds) => {
-  if (!hasVideo(player)) return null;
+  if (!hasWebcams(player)) return null;
 
   const min = 0;
-  const max = player.video.duration();
-  const time = player.video.currentTime() + seconds;
+  const max = player.webcams.duration();
+  const time = player.webcams.currentTime() + seconds;
 
   if (time < min) {
-    player.video.currentTime(min);
+    player.webcams.currentTime(min);
   } else if (time > max) {
-    player.video.currentTime(max);
+    player.webcams.currentTime(max);
   } else {
-    player.video.currentTime(time);
+    player.webcams.currentTime(time);
   }
 };
 
 const skip = (player, data, change) => {
-  if (!hasVideo(player)) return null;
+  if (!hasWebcams(player)) return null;
 
   const min = 0;
   const max = data.length - 1;
-  const time = player.video.currentTime();
+  const time = player.webcams.currentTime();
 
   const current = getCurrentDataIndex(data, time);
   if (current === -1) return null;
@@ -54,7 +54,7 @@ const skip = (player, data, change) => {
   }
 
   if (typeof timestamp !== 'undefined') {
-    player.video.currentTime(timestamp);
+    player.webcams.currentTime(timestamp);
   }
 };
 

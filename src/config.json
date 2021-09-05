@@ -37,6 +37,10 @@
     "mp4",
     "webm"
   ],
+  "player": {
+    "rps": 10,
+    "rates": [ 0.5, 1, 1.25, 1.5, 1.75, 2 ]
+  },
   "search": {
     "length": {
       "min": 3,
@@ -46,18 +50,18 @@
   "shortcuts": {
     "enabled": true,
     "fullscreen": "K",
+    "player": {
+      "backward": "ArrowLeft",
+      "forward": "ArrowRight",
+      "seconds": 15
+    },
     "section": "L",
     "slides": {
       "next": "ArrowUp",
       "previous": "ArrowDown"
     },
     "swap": "M",
-    "thumbnails": "N",
-    "video": {
-      "backward": "ArrowLeft",
-      "forward": "ArrowRight",
-      "seconds": 15
-    }
+    "thumbnails": "N"
   },
   "styles": {
     "default": null,
@@ -67,9 +71,5 @@
   "thumbnails": {
     "align": "center",
     "scroll": true
-  },
-  "video": {
-    "rps": 10,
-    "rates": [ 0.5, 1, 1.25, 1.5, 1.75, 2 ]
   }
 }

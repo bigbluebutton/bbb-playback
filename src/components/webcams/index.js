@@ -5,15 +5,15 @@ import {
   useIntl,
 } from 'react-intl';
 import videojs from 'video.js/core.es.js';
-import { video as config } from 'config';
+import { player as config } from 'config';
 import { ID } from 'utils/constants';
 import { buildFileURL } from 'utils/data';
 import './index.scss';
 
 const intlMessages = defineMessages({
   aria: {
-    id: 'player.video.wrapper.aria',
-    description: 'Aria label for the video wrapper',
+    id: 'player.webcams.wrapper.aria',
+    description: 'Aria label for the webcams wrapper',
   },
 });
 
@@ -82,7 +82,7 @@ const defaultProps = {
   time: 0,
 };
 
-const Video = ({
+const Webcams = ({
   captions,
   media,
   onPlayerReady,
@@ -122,7 +122,7 @@ const Video = ({
         }
 
         // Set ready
-        if (onPlayerReady) onPlayerReady(ID.VIDEO, player.current);
+        if (onPlayerReady) onPlayerReady(ID.WEBCAMS, player.current);
       });
     }
 
@@ -136,8 +136,8 @@ const Video = ({
   return (
     <div
       aria-label={intl.formatMessage(intlMessages.aria)}
-      className="video-wrapper"
-      id={ID.VIDEO}
+      className="webcams-wrapper"
+      id={ID.WEBCAMS}
     >
       <div data-vjs-player>
         <video
@@ -151,10 +151,10 @@ const Video = ({
   );
 };
 
-Video.propTypes = propTypes;
-Video.defaultProps = defaultProps;
+Webcams.propTypes = propTypes;
+Webcams.defaultProps = defaultProps;
 
 // Avoid re-render
 const areEqual = () => true;
 
-export default React.memo(Video, areEqual);
+export default React.memo(Webcams, areEqual);

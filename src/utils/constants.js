@@ -39,7 +39,7 @@ const ID = {
   SWAP: 'swap',
   THUMBNAILS: 'thumbnails',
   USERS: 'users',
-  VIDEO: 'video',
+  WEBCAMS: 'webcams',
 };
 
 const CONTENT = [

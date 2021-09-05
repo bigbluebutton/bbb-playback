@@ -7,7 +7,7 @@ import Notes from './notes';
 import Presentation from './presentation';
 import Screenshare from './screenshare';
 import Thumbnails from './thumbnails';
-import Video from './video';
+import Webcams from './webcams';
 import BottomBar from './bars/bottom';
 import TopBar from './bars/top';
 import AboutModal from './modals/about';
@@ -78,7 +78,7 @@ export default class Player extends PureComponent {
     }
 
     this.player = {
-      video: null,
+      webcams: null,
       screenshare: null,
     };
 
@@ -123,9 +123,9 @@ export default class Player extends PureComponent {
 
   handlePlayerReady(media, player) {
     switch (media) {
-      case ID.VIDEO:
-        logger.debug(ID.PLAYER, 'ready', ID.VIDEO);
-        this.player.video = player;
+      case ID.WEBCAMS:
+        logger.debug(ID.PLAYER, 'ready', ID.WEBCAMS);
+        this.player.webcams = player;
         break;
       case ID.SCREENSHARE:
         logger.debug(ID.PLAYER, 'ready', ID.SCREENSHARE);
@@ -135,8 +135,8 @@ export default class Player extends PureComponent {
         logger.debug('unhandled', media);
     }
 
-    if (this.player.video && this.player.screenshare) {
-      this.synchronizer = new Synchronizer(this.player.video, this.player.screenshare);
+    if (this.player.webcams && this.player.screenshare) {
+      this.synchronizer = new Synchronizer(this.player.webcams, this.player.screenshare);
     }
   }
 
@@ -157,7 +157,7 @@ export default class Player extends PureComponent {
   }
 
   initShortcuts() {
-    const { seconds } = shortcuts.video;
+    const { seconds } = shortcuts.player;
 
     const actions = {
       fullscreen: () => this.toggleFullscreen(),
@@ -168,7 +168,7 @@ export default class Player extends PureComponent {
         next: () => skip(this.player, this.slides, +1),
         previous: () => skip(this.player, this.slides, -1),
       },
-      video: {
+      player: {
         backward: () => seek(this.player, -seconds),
         forward: () => seek(this.player, +seconds),
       },
@@ -278,7 +278,7 @@ export default class Player extends PureComponent {
       time,
     } = this.state;
 
-    const { video } = this.player;
+    const { webcams } = this.player;
 
     const currentDataIndex = getCurrentDataIndex(this.thumbnails, time);
 
@@ -287,7 +287,7 @@ export default class Player extends PureComponent {
         currentDataIndex={currentDataIndex}
         handleSearch={this.handleSearch}
         interactive={true}
-        player={video}
+        player={webcams}
         recordId={this.metadata.id}
         search={search}
         thumbnails={this.thumbnails}
@@ -334,9 +334,9 @@ export default class Player extends PureComponent {
     return (
       <div className={cx('media', this.layout.getMediaStyle(this.state))}>
         {this.renderFullscreenButton(LAYOUT.MEDIA)}
-        <Video
+        <Webcams
           captions={this.captions}
-          key={ID.VIDEO}
+          key={ID.WEBCAMS}
           media={media}
           onPlayerReady={this.handlePlayerReady}
           onTimeUpdate={this.handleTimeUpdate}
@@ -367,14 +367,14 @@ export default class Player extends PureComponent {
     switch (application) {
       case ID.CHAT:
         const { time } = this.state;
-        const { video } = this.player;
+        const { webcams } = this.player;
         const currentChatIndex = getCurrentDataIndex(this.chat, time);
 
         return (
           <Chat
             chat={this.chat}
             currentDataIndex={currentChatIndex}
-            player={video}
+            player={webcams}
           />
         );
       case ID.NOTES:

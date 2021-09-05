@@ -26,5 +26,5 @@
   "player.search.modal.title": "Buscar",
   "player.search.modal.subtitle": "Ache conteúdo nos slides da apresentação",
   "player.thumbnails.wrapper.aria": "Área das miniaturas",
-  "player.video.wrapper.aria": "Área do vídeo"
+  "player.webcams.wrapper.aria": "Área das webcams"
 }

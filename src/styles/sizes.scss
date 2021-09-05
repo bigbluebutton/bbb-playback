@@ -4,11 +4,11 @@ $media-max-height: 400px;
 
 $modal-max-width: 320px;
 
-$video-height: 480px;
-$video-width: 640px;
+$webcams-height: 480px;
+$webcams-width: 640px;
 
-$section-width: calc(#{$video-width} / 2);
-$section-width-small: calc((#{$video-width} / 8) * 3);
+$section-width: calc(#{$webcams-width} / 2);
+$section-width-small: calc((#{$webcams-width} / 8) * 3);
 
 $bottom-content-height: 80px;
 
@@ -18,8 +18,8 @@ $top-bar-height: $bar-height;
 $bottom-bar-height: calc(#{$bar-height} / 3);
 $modal-bar-height: $bar-height;
 
-$media-fit-height: calc((#{$video-height} / 2) - #{$bar-height});
-$media-fit-height-small: calc(((#{$video-height} / 8) * 3) - #{$bar-height});
+$media-fit-height: calc((#{$webcams-height} / 2) - #{$bar-height});
+$media-fit-height-small: calc(((#{$webcams-height} / 8) * 3) - #{$bar-height});
 
 $border-radius: .35rem;
 $border-width: .2rem;

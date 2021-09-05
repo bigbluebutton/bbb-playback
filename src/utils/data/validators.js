@@ -37,8 +37,8 @@ const hasProperty = (object, property) => {
   return false;
 };
 
-const hasVideo = (player) => {
-  if (player && player.video) return true;
+const hasWebcams = (player) => {
+  if (player && player.webcams) return true;
 
   return false;
 };
@@ -169,7 +169,7 @@ export {
   hasIndex,
   hasPresentation,
   hasProperty,
-  hasVideo,
+  hasWebcams,
   isActive,
   isContentVisible,
   isCurrent,
