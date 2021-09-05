@@ -55,18 +55,22 @@ https://<domain>/playback/presentation/2.3/<recordId>
 - locale:
   - `default`: fallback [`ar`|`de`|`en`|`es`|`fr`|`it`|`ja`|`pt`|`ru`|`tr`]
 
+- player: primary media configuration
+  - `rps`: renders per second
+  - `rates`: speed rates
+
 - shortcuts: alt + shift
   - `fullscreen`: `K`
+  - `player`: seek
+    - `backward`: `ArrowLeft`
+    - `forward`: `ArrowRight`
+    - `seconds`: 15
   - `section`: `L`
   - `slides`: skip
     - `next`: `ArrowUp`
     - `previous`: `ArrowDown`
   - `swap`: `M`
   - `thumbnails`: `N`
-  - `video`: seek
-    - `backward`: `ArrowLeft`
-    - `forward`: `ArrowRight`
-    - `seconds`: 15
 
 - styles: custom styles
   - `default`: default style
@@ -76,10 +80,6 @@ https://<domain>/playback/presentation/2.3/<recordId>
 - thumbnails:
   - `scroll`: automatic scroll [`true`|`false`]
   - `align`: scroll align [`left`|`center`|`right`]
-
-- video: primary media configuration
-  - `rps`: renders per second
-  - `rates`: speed rates
 
 ## Standalone recordings
 
