@@ -160,7 +160,6 @@ const getData = (data, id) => {
     case ID.POLLS:
     case ID.VIDEOS:
     case ID.SCREENSHARE:
-    case ID.TALKERS:
       if (!file || data[getFileName(file)] === null) {
         return [];
       }
