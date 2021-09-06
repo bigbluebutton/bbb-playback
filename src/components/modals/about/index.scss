@@ -1,5 +1,6 @@
-@import 'src/styles/icons';
 @import 'src/styles/sizes';
+
+$item-size: 4rem;
 
 .about-body,
 .about-header,
@@ -21,20 +22,9 @@
     display: flex;
     font-size: large;
     font-weight: var(--font-weight-semi-bold);
+    justify-content: space-evenly;
     padding: $padding-small 0;
-
-    .value {
-      box-sizing: border-box;
-      padding: 0 $padding;
-    }
-
-    .green {
-      color: var(--green);
-    }
-
-    .red {
-      color: var(--red);
-    }
+    width: $item-size;
   }
 }
 
@@ -71,20 +61,16 @@
 
 .about-footer {
   align-items: center;
+  justify-content: flex-end;
   padding: $padding;
 
   .item {
     box-sizing: border-box;
     display: flex;
     font-size: small;
-    justify-content: flex-end;
+    justify-content: space-around;
     opacity: .75;
     padding: $padding 0 0 0;
-    width: 100%;
-
-    .value {
-      box-sizing: border-box;
-      padding: 0 $padding-small;
-    }
+    width: calc(#{$item-size} * 1.5);
   }
 }

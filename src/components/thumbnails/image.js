@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
+import Icon from 'components/utils/icon';
 import { ID } from 'utils/constants';
 import { buildFileURL } from 'utils/data';
 import './index.scss';
@@ -27,7 +28,7 @@ const Image = ({
   if (screenshare) {
     return (
       <div className={cx('thumbnail-image', { screenshare })}>
-        <span className="icon-screenshare" />
+        <Icon name={ID.SCREENSHARE} />
       </div>
     );
   }

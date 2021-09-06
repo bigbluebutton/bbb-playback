@@ -13,6 +13,7 @@ import TopBar from './bars/top';
 import AboutModal from './modals/about';
 import SearchModal from './modals/search';
 import Button from './utils/button';
+import Icon from './utils/icon';
 import {
   seek,
   skip,
@@ -356,7 +357,7 @@ export default class Player extends PureComponent {
         className={cx('application-icon', { inactive: !active })}
         onClick={() => active ? null : this.toggleApplication(type)}
       >
-        <span className={`icon-${type}`} />
+        <Icon name={type} />
       </div>
     );
   }

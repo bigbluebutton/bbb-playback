@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
+import Icon from 'components/utils/icon';
 import { getAvatarStyle } from 'utils/data';
 import './index.scss';
 
@@ -30,7 +31,7 @@ const Avatar = ({
     <div className="avatar-wrapper">
       <div className={cx('avatar', { circle }, style)}>
         {icon ? (
-          <span className={`icon-${icon}`} />
+          <Icon name={icon} />
         ) : (
           <span className="initials">
             {initials}
