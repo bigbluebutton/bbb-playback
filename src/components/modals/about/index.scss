@@ -1,7 +1,5 @@
 @import 'src/styles/sizes';
 
-$item-size: 4rem;
-
 .about-body,
 .about-header,
 .about-footer {
@@ -19,12 +17,11 @@ $item-size: 4rem;
 
   .item {
     box-sizing: border-box;
-    display: flex;
+    display: grid;
     font-size: large;
     font-weight: var(--font-weight-semi-bold);
-    justify-content: space-evenly;
-    padding: $padding-small 0;
-    width: $item-size;
+    grid-gap: $padding-extra-small;
+    padding: $padding-small $padding-extra-small;
   }
 }
 
@@ -64,13 +61,10 @@ $item-size: 4rem;
   justify-content: flex-end;
   padding: $padding;
 
-  .item {
+  .revision {
     box-sizing: border-box;
-    display: flex;
     font-size: small;
-    justify-content: space-around;
     opacity: .75;
     padding: $padding 0 0 0;
-    width: calc(#{$item-size} * 1.5);
   }
 }
