@@ -2,18 +2,16 @@ import React, { PureComponent } from 'react';
 import cx from 'classnames';
 import { defineMessages } from 'react-intl';
 import { shortcuts } from 'config';
-import Chat from './chat';
-import Notes from './notes';
-import Presentation from './presentation';
-import Screenshare from './screenshare';
-import Thumbnails from './thumbnails';
-import Webcams from './webcams';
-import BottomBar from './bars/bottom';
-import TopBar from './bars/top';
-import AboutModal from './modals/about';
-import SearchModal from './modals/search';
-import Button from './utils/button';
-import Icon from './utils/icon';
+import Application from './application';
+import Presentation from 'components/presentation';
+import Screenshare from 'components/screenshare';
+import Thumbnails from 'components/thumbnails';
+import Webcams from 'components/webcams';
+import BottomBar from 'components/bars/bottom';
+import TopBar from 'components/bars/top';
+import AboutModal from 'components/modals/about';
+import SearchModal from 'components/modals/search';
+import Button from 'components/utils/button';
 import {
   seek,
   skip,
@@ -67,7 +65,6 @@ export default class Player extends PureComponent {
     this.layout = new Layout(data);
 
     this.state = {
-      application: ID.CHAT,
       control: this.layout.getControl(layout),
       fullscreen: false,
       modal: '',
@@ -176,14 +173,6 @@ export default class Player extends PureComponent {
     };
 
     this.shortcuts = new Shortcuts(actions);
-  }
-
-  toggleApplication(type) {
-    const { application } = this.state;
-
-    if (application === type) return null;
-
-    this.setState({ application: type });
   }
 
   toggleFullscreen() {
@@ -348,64 +337,23 @@ export default class Player extends PureComponent {
     );
   }
 
-  renderApplicationIcon(type) {
-    const { application } = this.state;
-    const active = application === type;
-
-    return (
-      <div
-        className={cx('application-icon', { inactive: !active })}
-        onClick={() => active ? null : this.toggleApplication(type)}
-      >
-        <Icon name={type} />
-      </div>
-    );
-  }
-
-  renderApplicationContent() {
-    const { application } = this.state;
-
-    switch (application) {
-      case ID.CHAT:
-        const { time } = this.state;
-        const { webcams } = this.player;
-        const currentChatIndex = getCurrentDataIndex(this.chat, time);
-
-        return (
-          <Chat
-            chat={this.chat}
-            currentDataIndex={currentChatIndex}
-            player={webcams}
-          />
-        );
-      case ID.NOTES:
-        return (
-          <Notes notes={this.notes} />
-        );
-      default:
-        return null;
-    }
-  }
-
-  renderApplicationControl() {
-    const { control } = this.state;
-
-    if (!control) return null;
-
-    return (
-      <div className="application-control">
-        {this.renderApplicationIcon(ID.CHAT)}
-        {this.renderApplicationIcon(ID.NOTES)}
-      </div>
-    );
-  }
-
   renderApplication() {
+    const {
+      control,
+      time,
+    } = this.state;
+
+    const currentChatIndex = getCurrentDataIndex(this.chat, time);
+    const { webcams } = this.player;
+
     return (
-      <div className="application">
-        {this.renderApplicationControl()}
-        {this.renderApplicationContent()}
-      </div>
+      <Application
+        chat={this.chat}
+        control={control}
+        currentChatIndex={currentChatIndex}
+        notes={this.notes}
+        player={webcams}
+      />
     );
   }
 
