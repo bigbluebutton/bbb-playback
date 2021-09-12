@@ -5,12 +5,12 @@ import SearchButton from './buttons/search';
 import SectionButton from './buttons/section';
 import SwapButton from './buttons/swap';
 import { controls as config } from 'config';
+import layout from 'utils/layout';
 import './index.scss';
 
 const propTypes = {
   control: PropTypes.bool,
   section: PropTypes.bool,
-  single: PropTypes.bool,
   toggleAbout: PropTypes.func,
   toggleSearch: PropTypes.func,
   toggleSection: PropTypes.func,
@@ -20,7 +20,6 @@ const propTypes = {
 const defaultProps = {
   control: false,
   section: false,
-  single: false,
   toggleAbout: () => {},
   toggleSearch: () => {},
   toggleSection: () => {},
@@ -30,7 +29,6 @@ const defaultProps = {
 const Top = ({
   control,
   section,
-  single,
   toggleAbout,
   toggleSearch,
   toggleSection,
@@ -54,11 +52,11 @@ const Top = ({
       </div>
       <div className="right">
         <SearchButton
-          enabled={control && config.search && !single}
+          enabled={control && config.search && !layout.single}
           toggleSearch={toggleSearch}
         />
         <SwapButton
-          enabled={control && config.swap && !single}
+          enabled={control && config.swap && !layout.single}
           toggleSwap={toggleSwap}
         />
       </div>

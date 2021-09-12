@@ -28,7 +28,7 @@ import {
 } from 'utils/data';
 import storage from 'utils/data/storage';
 import { isEqual } from 'utils/data/validators';
-import Layout from 'utils/layout';
+import layout from 'utils/layout';
 import Shortcuts from 'utils/shortcuts';
 import './index.scss';
 
@@ -51,17 +51,13 @@ export default class Player extends PureComponent {
   constructor(props) {
     super(props);
 
-    const { layout } = props;
-
-    this.layout = new Layout();
-
     this.state = {
-      control: this.layout.getControl(layout),
+      control: layout.control,
       fullscreen: false,
       modal: '',
       search: [],
-      section: this.layout.getSection(layout),
-      swap: this.layout.getSwap(layout),
+      section: layout.section,
+      swap: layout.swap,
       thumbnails: true,
       time: 0,
     }
@@ -148,8 +144,8 @@ export default class Player extends PureComponent {
     this.setState({ thumbnails: !thumbnails });
   }
 
-  renderFullscreenButton(layout) {
-    if (!this.layout.hasFullscreenButton(layout, this.state)) return null;
+  renderFullscreenButton(content) {
+    if (!layout.hasFullscreenButton(content, this.state)) return null;
 
     const { intl } = this.props;
     const { fullscreen } = this.state;
@@ -220,13 +216,10 @@ export default class Player extends PureComponent {
       section,
     } = this.state;
 
-    const single = this.layout.isSingle();
-
     return (
       <TopBar
         control={control}
         section={section}
-        single={single}
         toggleAbout={() => this.toggleModal(ID.ABOUT)}
         toggleSearch={() => this.toggleModal(ID.SEARCH)}
         toggleSection={() => this.toggleSection()}
@@ -239,7 +232,7 @@ export default class Player extends PureComponent {
     const { time } = this.props;
 
     return (
-      <div className={cx('media', this.layout.getMediaStyle(this.state))}>
+      <div className={cx('media', layout.getMediaStyle(this.state))}>
         {this.renderFullscreenButton(LAYOUT.MEDIA)}
         <Webcams
           key={ID.WEBCAMS}
@@ -288,7 +281,7 @@ export default class Player extends PureComponent {
   }
 
   renderScreenshare(active) {
-    if (!this.layout.hasScreenshare()) return null;
+    if (!layout.screenshare) return null;
 
     return (
       <Screenshare
@@ -299,19 +292,19 @@ export default class Player extends PureComponent {
   }
 
   renderContent() {
-    if (this.layout.isSingle()) return null;
+    if (layout.single) return null;
 
     const { time } = this.state;
     const content = getActiveContent(storage.screenshare, time);
 
     return (
-      <div className={cx('content', this.layout.getContentStyle(this.state))}>
+      <div className={cx('content', layout.getContentStyle(this.state))}>
         {this.renderFullscreenButton(LAYOUT.CONTENT)}
         <div className="top-content">
           {this.renderPresentation(content === ID.PRESENTATION)}
           {this.renderScreenshare(content === ID.SCREENSHARE)}
         </div>
-        <div className={cx('bottom-content', this.layout.getBottomContentStyle(this.state))}>
+        <div className={cx('bottom-content', layout.getBottomContentStyle(this.state))}>
           {this.renderThumbnails()}
         </div>
       </div>
@@ -328,7 +321,7 @@ export default class Player extends PureComponent {
     return (
       <div
         aria-label={intl.formatMessage(intlMessages.aria)}
-        className={cx('player-wrapper', this.layout.getPlayerStyle(this.state))}
+        className={cx('player-wrapper', layout.getPlayerStyle(this.state))}
         id={ID.PLAYER}
       >
         {this.renderTopBar()}

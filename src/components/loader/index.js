@@ -12,6 +12,7 @@ import {
   ID,
 } from 'utils/constants';
 import storage from 'utils/data/storage';
+import layout from 'utils/layout';
 import {
   getLayout,
   getRecordId,
@@ -30,7 +31,6 @@ const initError = (recordId) => recordId ? null : ERROR.BAD_REQUEST;
 
 const Loader = ({ match }) => {
   const intl = useIntl();
-  const layout = useRef(getLayout());
   const recordId = useRef(getRecordId(match));
   const time = useRef(getTime());
 
@@ -42,10 +42,11 @@ const Loader = ({ match }) => {
   storage.fetch(recordId.current, setLoaded, setError);
 
   if (loaded) {
+    layout.mode = getLayout();
+
     return (
       <Player
         intl={intl}
-        layout={layout.current}
         time={time.current}
       />
     );
