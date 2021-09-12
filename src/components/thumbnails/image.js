@@ -9,19 +9,16 @@ import './index.scss';
 const propTypes = {
   alt: PropTypes.string,
   src: PropTypes.string,
-  recordId: PropTypes.string,
 };
 
 const defaultProps = {
   alt: '',
   src: '',
-  recordId: '',
 };
 
 const Image = ({
   alt,
   src,
-  recordId,
 }) => {
   const screenshare = src === ID.SCREENSHARE;
 
@@ -39,7 +36,7 @@ const Image = ({
     <img
       alt={alt}
       className={cx('thumbnail-image', { logo })}
-      src={buildFileURL(recordId, src)}
+      src={buildFileURL(src)}
     />
   );
 };

@@ -17,10 +17,6 @@ import {
   skip,
 } from 'utils/actions';
 import {
-  addAlternatesToThumbnails,
-  mergeChatContent,
-} from 'utils/builder';
-import {
   ID,
   LAYOUT,
 } from 'utils/constants';
@@ -28,9 +24,9 @@ import {
   getActiveContent,
   getCurrentDataIndex,
   getCurrentDataInterval,
-  getData,
   getDraws,
 } from 'utils/data';
+import storage from 'utils/data/storage';
 import { isEqual } from 'utils/data/validators';
 import Layout from 'utils/layout';
 import logger from 'utils/logger';
@@ -57,12 +53,9 @@ export default class Player extends PureComponent {
   constructor(props) {
     super(props);
 
-    const {
-      data,
-      layout,
-    } = props;
+    const { layout } = props;
 
-    this.layout = new Layout(data);
+    this.layout = new Layout();
 
     this.state = {
       control: this.layout.getControl(layout),
@@ -80,8 +73,6 @@ export default class Player extends PureComponent {
       screenshare: null,
     };
 
-    this.initData(data);
-
     this.handlePlayerReady = this.handlePlayerReady.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleTimeUpdate = this.handleTimeUpdate.bind(this);
@@ -95,28 +86,6 @@ export default class Player extends PureComponent {
     if (this.shortcuts) {
       this.shortcuts.destroy();
     }
-  }
-
-  initData(data) {
-    this.alternates = getData(data, ID.ALTERNATES);
-    this.captions = getData(data, ID.CAPTIONS);
-    this.chat = mergeChatContent(
-      getData(data, ID.CHAT),
-      getData(data, ID.POLLS),
-      getData(data, ID.VIDEOS),
-    );
-    this.cursor = getData(data, ID.CURSOR);
-    this.metadata = getData(data, ID.METADATA);
-    this.notes = getData(data, ID.NOTES);
-    this.panzooms = getData(data, ID.PANZOOMS);
-    this.screenshare = getData(data, ID.SCREENSHARE);
-    this.shapes = getData(data, ID.SHAPES);
-
-    this.canvases = this.shapes.canvases;
-    this.slides = this.shapes.slides;
-    this.thumbnails = addAlternatesToThumbnails(this.shapes.thumbnails, this.alternates);
-
-    logger.debug(ID.PLAYER, data);
   }
 
   handlePlayerReady(media, player) {
@@ -163,8 +132,8 @@ export default class Player extends PureComponent {
       swap: () => this.toggleSwap(),
       thumbnails: () => this.toggleThumbnails(),
       slides: {
-        next: () => skip(this.player, this.slides, +1),
-        previous: () => skip(this.player, this.slides, -1),
+        next: () => skip(this.player, storage.shapes.slides, +1),
+        previous: () => skip(this.player, storage.shapes.slides, -1),
       },
       player: {
         backward: () => seek(this.player, -seconds),
@@ -237,23 +206,15 @@ export default class Player extends PureComponent {
 
     if (!open) return null;
 
-    const content = this.layout.getContent();
-
     switch (modal) {
       case ID.ABOUT:
         return (
-          <AboutModal
-            content={content}
-            metadata={this.metadata}
-            toggleModal={() => this.toggleModal(ID.ABOUT)}
-          />
+          <AboutModal toggleModal={() => this.toggleModal(ID.ABOUT)} />
         );
       case ID.SEARCH:
         return (
           <SearchModal
             handleSearch={this.handleSearch}
-            metadata={this.metadata}
-            thumbnails={this.thumbnails}
             toggleModal={() => this.toggleModal(ID.SEARCH)}
           />
         );
@@ -270,17 +231,15 @@ export default class Player extends PureComponent {
 
     const { webcams } = this.player;
 
-    const currentDataIndex = getCurrentDataIndex(this.thumbnails, time);
+    const currentDataIndex = getCurrentDataIndex(storage.thumbnails, time);
 
     return (
       <Thumbnails
         currentDataIndex={currentDataIndex}
         handleSearch={this.handleSearch}
-        interactive={true}
+        interactive
         player={webcams}
-        recordId={this.metadata.id}
         search={search}
-        thumbnails={this.thumbnails}
       />
     );
   }
@@ -291,20 +250,13 @@ export default class Player extends PureComponent {
       section,
     } = this.state;
 
-    const {
-      name,
-      start,
-    } = this.metadata;
-
     const single = this.layout.isSingle();
 
     return (
       <TopBar
         control={control}
-        name={name}
         section={section}
         single={single}
-        start={start}
         toggleAbout={() => this.toggleModal(ID.ABOUT)}
         toggleSearch={() => this.toggleModal(ID.SEARCH)}
         toggleSection={() => this.toggleSection()}
@@ -314,23 +266,15 @@ export default class Player extends PureComponent {
   }
 
   renderMedia() {
-    const {
-      data,
-      time,
-    } = this.props;
-
-    const { media } = data;
+    const { time } = this.props;
 
     return (
       <div className={cx('media', this.layout.getMediaStyle(this.state))}>
         {this.renderFullscreenButton(LAYOUT.MEDIA)}
         <Webcams
-          captions={this.captions}
           key={ID.WEBCAMS}
-          media={media}
           onPlayerReady={this.handlePlayerReady}
           onTimeUpdate={this.handleTimeUpdate}
-          recordId={this.metadata.id}
           time={time}
         />
       </div>
@@ -343,15 +287,13 @@ export default class Player extends PureComponent {
       time,
     } = this.state;
 
-    const currentChatIndex = getCurrentDataIndex(this.chat, time);
+    const currentChatIndex = getCurrentDataIndex(storage.messages, time);
     const { webcams } = this.player;
 
     return (
       <Application
-        chat={this.chat}
         control={control}
         currentChatIndex={currentChatIndex}
-        notes={this.notes}
         player={webcams}
       />
     );
@@ -360,10 +302,10 @@ export default class Player extends PureComponent {
   renderPresentation(active) {
     const { time } = this.state;
 
-    const currentSlideIndex = getCurrentDataIndex(this.slides, time);
-    const currentPanzoomIndex = getCurrentDataIndex(this.panzooms, time);
-    const currentCursorIndex = getCurrentDataIndex(this.cursor, time);
-    const draws = getDraws(currentSlideIndex, this.slides, this.canvases);
+    const currentSlideIndex = getCurrentDataIndex(storage.shapes.slides, time);
+    const currentPanzoomIndex = getCurrentDataIndex(storage.panzooms, time);
+    const currentCursorIndex = getCurrentDataIndex(storage.cursor, time);
+    const draws = getDraws(currentSlideIndex, storage.shapes.slides, storage.shapes.canvases);
     const currentDrawsInterval = getCurrentDataInterval(draws, time);
 
     return (
@@ -372,13 +314,8 @@ export default class Player extends PureComponent {
         currentCursorIndex={currentCursorIndex}
         currentPanzoomIndex={currentPanzoomIndex}
         currentSlideIndex={currentSlideIndex}
-        cursors={this.cursor}
         draws={draws}
         drawsInterval={currentDrawsInterval}
-        panzooms={this.panzooms}
-        recordId={this.metadata.id}
-        slides={this.slides}
-        thumbnails={this.thumbnails}
       />
     )
   }
@@ -386,17 +323,11 @@ export default class Player extends PureComponent {
   renderScreenshare(active) {
     if (!this.layout.hasScreenshare()) return null;
 
-    const { data } = this.props;
-
-    const { media } = data;
-
     return (
       <Screenshare
         active={active}
         key={ID.SCREENSHARE}
-        media={media}
         onPlayerReady={this.handlePlayerReady}
-        recordId={this.metadata.id}
       />
     );
   }
@@ -405,7 +336,7 @@ export default class Player extends PureComponent {
     if (this.layout.isSingle()) return null;
 
     const { time } = this.state;
-    const content = getActiveContent(this.screenshare, time);
+    const content = getActiveContent(storage.screenshare, time);
 
     return (
       <div className={cx('content', this.layout.getContentStyle(this.state))}>

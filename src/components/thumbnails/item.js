@@ -11,7 +11,6 @@ const propTypes = {
   interactive: PropTypes.bool,
   item: PropTypes.object,
   player: PropTypes.object,
-  recordId: PropTypes.string,
   setRef: PropTypes.func,
 };
 
@@ -21,7 +20,6 @@ const defaultProps = {
   interactive: false,
   item: {},
   player: {},
-  recordId: '',
   setRef: () => {},
 };
 
@@ -31,7 +29,6 @@ const Item = ({
   interactive,
   item,
   player,
-  recordId,
   setRef,
 }) => {
   if (!interactive) {
@@ -44,7 +41,6 @@ const Item = ({
         <Thumbnail
           alt={item.alt}
           index={index}
-          recordId={recordId}
           src={item.src}
         />
       </div>
@@ -66,7 +62,6 @@ const Item = ({
       <Thumbnail
         alt={item.alt}
         index={index}
-        recordId={recordId}
         src={item.src}
       />
     </div>

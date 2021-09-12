@@ -4,10 +4,10 @@ import {
   getAttr,
   getId,
   getNumbers,
-  mergeChatContent,
+  mergeMessages,
 } from './builder';
 
-it('merges and sorts chat and extra content arrays', () => {
+it('merges and sorts messages arrays', () => {
   let chat = [
     { timestamp: 5.1, type: 'chat' },
     { timestamp: 11.9, type: 'chat' },
@@ -27,7 +27,7 @@ it('merges and sorts chat and extra content arrays', () => {
   ];
 
 
-  expect(mergeChatContent(chat, polls, videos)).toEqual([
+  expect(mergeMessages(chat, polls, videos)).toEqual([
     { timestamp: 3.0, type: 'video' },
     { timestamp: 4.0, type: 'poll' },
     { timestamp: 5.1, type: 'chat' },

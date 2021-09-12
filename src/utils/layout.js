@@ -1,11 +1,11 @@
 import { controls } from 'config';
-import { LAYOUT } from './constants';
-import { getContentFromData } from './data';
-import { isContentVisible } from './data/validators';
+import { LAYOUT } from 'utils/constants';
+import storage from 'utils/data/storage';
+import { isContentVisible } from 'utils/data/validators';
 
 export default class Layout {
   constructor(data) {
-    this.content = getContentFromData(data);
+    this.content = storage.content;
   }
 
   getContent() {

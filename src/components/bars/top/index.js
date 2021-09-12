@@ -9,10 +9,8 @@ import './index.scss';
 
 const propTypes = {
   control: PropTypes.bool,
-  name: PropTypes.string,
   section: PropTypes.bool,
   single: PropTypes.bool,
-  start: PropTypes.number,
   toggleAbout: PropTypes.func,
   toggleSearch: PropTypes.func,
   toggleSection: PropTypes.func,
@@ -21,10 +19,8 @@ const propTypes = {
 
 const defaultProps = {
   control: false,
-  name: '',
   section: false,
   single: false,
-  start: 0,
   toggleAbout: () => {},
   toggleSearch: () => {},
   toggleSection: () => {},
@@ -33,10 +29,8 @@ const defaultProps = {
 
 const Top = ({
   control,
-  name,
   section,
   single,
-  start,
   toggleAbout,
   toggleSearch,
   toggleSection,
@@ -55,8 +49,6 @@ const Top = ({
       <div className="center">
         <Title
           interactive={control && config.about}
-          name={name}
-          start={start}
           toggleAbout={toggleAbout}
         />
       </div>

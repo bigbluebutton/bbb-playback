@@ -4,10 +4,8 @@ import Notes from 'components/notes';
 import { ID } from 'utils/constants';
 
 const Content = ({
-  chat,
   current,
   currentChatIndex,
-  notes,
   player,
 }) => {
   switch (current) {
@@ -15,7 +13,6 @@ const Content = ({
 
       return (
         <Chat
-          chat={chat}
           currentDataIndex={currentChatIndex}
           player={player}
         />
@@ -23,7 +20,7 @@ const Content = ({
     case ID.NOTES:
 
       return (
-        <Notes notes={notes} />
+        <Notes />
       );
     default:
 

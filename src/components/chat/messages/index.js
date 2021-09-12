@@ -5,24 +5,22 @@ import PollMessage from './system/poll';
 import VideoMessage from './system/video';
 import { ID } from 'utils/constants';
 import { getMessageType } from 'utils/data';
+import storage from 'utils/data/storage';
 import './index.scss';
 
 const propTypes = {
-  chat: PropTypes.array,
   currentDataIndex: PropTypes.number,
   player: PropTypes.object,
   setRef: PropTypes.func,
 };
 
 const defaultProps = {
-  chat: [],
   currentDataIndex: 0,
   player: {},
   setRef: () => {},
 };
 
 const Messages = ({
-  chat,
   currentDataIndex,
   player,
   setRef,
@@ -31,7 +29,7 @@ const Messages = ({
   return (
     <div className="list">
       <div className="message-wrapper">
-        {chat.map((item, index) => {
+        {storage.messages.map((item, index) => {
           const active = index <= currentDataIndex;
           const { timestamp } = item;
           const type = getMessageType(item);

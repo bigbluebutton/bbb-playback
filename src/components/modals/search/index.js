@@ -6,6 +6,7 @@ import Header from './header';
 import { search as config } from 'config';
 import Modal from 'components/utils/modal';
 import { search as getSearch } from 'utils/actions';
+import storage from 'utils/data/storage';
 import {
   isEmpty,
   isEqual,
@@ -28,22 +29,16 @@ const isValid = (value) => {
 
 const propTypes = {
   handleSearch: PropTypes.func,
-  metadata: PropTypes.object,
-  thumbnails: PropTypes.array,
   toggleModal: PropTypes.func,
 };
 
 const defaultProps = {
   handleSearch: () => {},
-  metadata: {},
-  thumbnails: [],
   toggleModal: () => {},
 };
 
 const Search = ({
   handleSearch,
-  metadata,
-  thumbnails,
   toggleModal,
 }) => {
   const [disabled, setDisabled] = useState(true);
@@ -52,7 +47,7 @@ const Search = ({
   const handleOnChange = (event) => {
     const value = getValue(event);
     if (isValid(value)) {
-      const result = getSearch(value, thumbnails);
+      const result = getSearch(value, storage.thumbnails);
 
       // If different, update search
       if (!isEqual(search, result)) {
@@ -82,9 +77,7 @@ const Search = ({
       <Header />
       <Body
         handleOnChange={(event) => handleOnChange(event)}
-        metadata={metadata}
         search={search}
-        thumbnails={thumbnails}
       />
       <Footer
         disabled={disabled}

@@ -453,7 +453,7 @@ const getOptions = filename => {
   let options = {};
 
   switch (filename) {
-    case config.data.shapes:
+    case config.shapes:
       options = {
         explicitChildren: true,
         preserveChildrenOrder: true,
@@ -473,16 +473,16 @@ const build = (filename, value) => {
 
     if (fileType === 'json') {
       switch (filename) {
-        case config.data.alternates:
+        case config.alternates:
           data = buildAlternates(value);
           break;
-        case config.data.captions:
+        case config.captions:
           data = buildCaptions(value);
           break;
-        case config.data.polls:
+        case config.polls:
           data = buildPolls(value);
           break;
-        case config.data.videos:
+        case config.videos:
           data = buildVideos(value);
           break;
         default:
@@ -492,7 +492,7 @@ const build = (filename, value) => {
       resolve(data);
     } else if (fileType === 'html') {
       switch (filename) {
-        case config.data.notes:
+        case config.notes:
           data = buildNotes(value);
           break;
         default:
@@ -511,22 +511,22 @@ const build = (filename, value) => {
       const options = getOptions(filename);
       parseStringPromise(value, options).then(result => {
         switch (filename) {
-          case config.data.chat:
+          case config.chat:
             data = buildChat(result);
             break;
-          case config.data.cursor:
+          case config.cursor:
             data = buildCursor(result);
             break;
-          case config.data.metadata:
+          case config.metadata:
             data = buildMetadata(result);
             break;
-          case config.data.panzooms:
+          case config.panzooms:
             data = buildPanzooms(result);
             break;
-          case config.data.screenshare:
+          case config.screenshare:
             data = buildScreenshare(result);
             break;
-          case config.data.shapes:
+          case config.shapes:
             data = buildShapes(result);
             break;
           default:
@@ -554,11 +554,11 @@ const addAlternatesToThumbnails = (thumbnails, alternates) => {
   });
 };
 
-const mergeChatContent = (chat, polls, videos) => {
+const mergeMessages = (chat, polls, videos) => {
   return [
     ...chat,
-    ...videos,
     ...polls,
+    ...videos,
   ].sort((a, b) => a.timestamp - b.timestamp);
 };
 
@@ -570,5 +570,5 @@ export {
   getAttr,
   getId,
   getNumbers,
-  mergeChatContent,
+  mergeMessages,
 };

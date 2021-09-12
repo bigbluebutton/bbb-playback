@@ -8,6 +8,7 @@ import videojs from 'video.js/core.es.js';
 import { player as config } from 'config';
 import { ID } from 'utils/constants';
 import { buildFileURL } from 'utils/data';
+import storage from 'utils/data/storage';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -17,20 +18,20 @@ const intlMessages = defineMessages({
   },
 });
 
-const buildSources = (media, recordId) => {
+const buildSources = () => {
   return [
     {
-      src: buildFileURL(recordId, 'video/webcams.mp4'),
+      src: buildFileURL('video/webcams.mp4'),
       type: 'video/mp4',
     }, {
-      src: buildFileURL(recordId, 'video/webcams.webm'),
+      src: buildFileURL('video/webcams.webm'),
       type: 'video/webm',
     },
-  ].filter(source => media.find(m => source.type.includes(m)));
+  ].filter(source => storage.media.find(m => source.type.includes(m)));
 };
 
-const buildTracks = (captions, recordId) => {
-  return captions.map(lang => {
+const buildTracks = () => {
+  return storage.captions.map(lang => {
     const {
       locale,
       localeName,
@@ -38,7 +39,7 @@ const buildTracks = (captions, recordId) => {
 
     return {
       kind: 'captions',
-      src: buildFileURL(recordId, `caption_${locale}.vtt`),
+      src: buildFileURL(`caption_${locale}.vtt`),
       srclang: locale,
       label: localeName,
     };
@@ -65,34 +66,25 @@ const buildOptions = (sources, tracks) => {
 };
 
 const propTypes = {
-  captions: PropTypes.array,
-  media: PropTypes.array,
   onPlayerReady: PropTypes.func,
   onTimeUpdate: PropTypes.func,
-  recordId: PropTypes.string,
   time: PropTypes.number,
 };
 
 const defaultProps = {
-  captions: [],
-  media: [],
   onPlayerReady: () => {},
   onTimeUpdate: () => {},
-  recordId: '',
   time: 0,
 };
 
 const Webcams = ({
-  captions,
-  media,
   onPlayerReady,
   onTimeUpdate,
-  recordId,
   time,
 }) => {
   const intl = useIntl();
-  const sources = useRef(buildSources(media, recordId));
-  const tracks = useRef(buildTracks(captions, recordId));
+  const sources = useRef(buildSources());
+  const tracks = useRef(buildTracks());
   const player = useRef();
   const element = useRef();
 

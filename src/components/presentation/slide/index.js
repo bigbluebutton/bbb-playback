@@ -1,14 +1,10 @@
 import React from 'react';
 import Proxy from './proxy';
 import { buildFileURL } from 'utils/data';
+import storage from 'utils/data/storage';
 
-const Slide = ({
-  id,
-  recordId,
-  slides,
-  thumbnails,
-}) => {
-  const current = slides.find(slide => id === slide.id);
+const Slide = ({ id }) => {
+  const current = storage.shapes.slides.find(slide => id === slide.id);
   if (!current) return null;
 
   const {
@@ -22,13 +18,11 @@ const Slide = ({
       <Proxy
         id={id}
         height={height}
-        recordId={recordId}
-        thumbnails={thumbnails}
         width={width}
       />
       <image
         height={height}
-        href={buildFileURL(recordId, src)}
+        href={buildFileURL(src)}
         x={0}
         width={width}
         y={0}

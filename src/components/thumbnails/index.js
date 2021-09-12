@@ -12,6 +12,7 @@ import {
   POSITIONS,
 } from 'utils/constants';
 import { handleAutoScroll } from 'utils/data/handlers';
+import storage from 'utils/data/storage';
 import {
   isEmpty,
   isEqual,
@@ -30,9 +31,7 @@ const propTypes = {
   handleSearch: PropTypes.func,
   interactive: PropTypes.bool,
   player: PropTypes.object,
-  recordId: PropTypes.string,
   search: PropTypes.array,
-  thumbnails: PropTypes.array,
 };
 
 const defaultProps = {
@@ -40,9 +39,7 @@ const defaultProps = {
   handleSearch: () => {},
   interactive: false,
   player: {},
-  recordId: '',
   search: [],
-  thumbnails: [],
 };
 
 const Thumbnails = ({
@@ -50,9 +47,7 @@ const Thumbnails = ({
   handleSearch,
   interactive,
   player,
-  recordId,
   search,
-  thumbnails,
 }) => {
   const interaction = useRef(false);
   const firstNode = useRef();
@@ -95,7 +90,7 @@ const Thumbnails = ({
       onMouseLeave={() => interaction.current = false}
       tabIndex="0"
     >
-      {thumbnails.reduce((result, item, index) => {
+      {storage.thumbnails.reduce((result, item, index) => {
         if (!isFiltered(index)) {
           const active = index === currentDataIndex;
 
@@ -106,7 +101,6 @@ const Thumbnails = ({
               interactive={interactive}
               item={item}
               player={player}
-              recordId={recordId}
               setRef={setRef}
             />
           );
@@ -116,7 +110,7 @@ const Thumbnails = ({
       }, [])}
       <ClearButton
         interactive={interactive}
-        handleSearch={handleSearch}
+        onClick={() => handleSearch([])}
         search={search}
       />
     </div>

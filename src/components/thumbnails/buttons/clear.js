@@ -17,19 +17,19 @@ const intlMessages = defineMessages({
 
 const propTypes = {
   interactive: PropTypes.bool,
-  handleSearch: PropTypes.func,
+  onClick: PropTypes.func,
   search: PropTypes.array,
 };
 
 const defaultProps = {
   interactive: false,
-  handleSearch: () => {},
+  onClick: () => {},
   search: [],
 };
 
 const Clear = ({
   interactive,
-  handleSearch,
+  onClick,
   search,
 }) => {
   const intl = useIntl();
@@ -42,7 +42,7 @@ const Clear = ({
     <div className="clear-button">
       <Button
         aria={intl.formatMessage(intlMessages.clear)}
-        handleOnClick={() => handleSearch([])}
+        handleOnClick={onClick}
         icon="close"
         type="solid"
       />

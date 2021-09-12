@@ -7,6 +7,7 @@ import {
 } from 'react-intl';
 import cx from 'classnames';
 import { handleOnEnterPress } from 'utils/data/handlers';
+import storage from 'utils/data/storage';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -18,32 +19,26 @@ const intlMessages = defineMessages({
 
 const propTypes = {
   interactive: PropTypes.bool,
-  name: PropTypes.string,
-  start: PropTypes.number,
   toggleAbout: PropTypes.func,
 };
 
 const defaultProps = {
   interactive: false,
-  name: '',
-  start: 0,
   toggleAbout: () => {},
 };
 
 const Title = ({
   interactive,
-  name,
-  start,
   toggleAbout,
 }) => {
   const intl = useIntl();
-  const date = <FormattedDate value={new Date(start)} />;
+  const date = <FormattedDate value={new Date(storage.metadata.start)} />;
 
   if (!interactive) {
 
     return (
       <span className="title">
-        {name} - {date}
+        {storage.metadata.name} - {date}
       </span>
     );
   }
@@ -56,7 +51,7 @@ const Title = ({
       onKeyPress={event => handleOnEnterPress(event, toggleAbout)}
       tabIndex="0"
     >
-      {name} - {date}
+      {storage.metadata.name} - {date}
     </span>
   );
 };

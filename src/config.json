@@ -12,23 +12,17 @@
     "thumbnails": true
   },
   "files": {
-    "data": {
-      "alternates": "presentation_text.json",
-      "captions": "captions.json",
-      "chat": "slides_new.xml",
-      "cursor": "cursor.xml",
-      "metadata": "metadata.xml",
-      "notes": "notes.html",
-      "panzooms": "panzooms.xml",
-      "polls": "polls.json",
-      "screenshare": "deskshare.xml",
-      "shapes": "shapes.svg",
-      "videos": "external_videos.json"
-    },
-    "feedback": {
-      "enabled": true,
-      "timeout": 1000
-    }
+    "alternates": "presentation_text.json",
+    "captions": "captions.json",
+    "chat": "slides_new.xml",
+    "cursor": "cursor.xml",
+    "metadata": "metadata.xml",
+    "notes": "notes.html",
+    "panzooms": "panzooms.xml",
+    "polls": "polls.json",
+    "screenshare": "deskshare.xml",
+    "shapes": "shapes.svg",
+    "videos": "external_videos.json"
   },
   "locale": {
     "default": "en"

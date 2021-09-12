@@ -7,6 +7,7 @@ import cx from 'classnames';
 import videojs from 'video.js/core.es.js';
 import { ID } from 'utils/constants';
 import { buildFileURL } from 'utils/data';
+import storage from 'utils/data/storage';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -16,16 +17,16 @@ const intlMessages = defineMessages({
   },
 });
 
-const buildSources = (media, recordId) => {
+const buildSources = () => {
   return [
     {
-      src: buildFileURL(recordId, 'deskshare/deskshare.mp4'),
+      src: buildFileURL('deskshare/deskshare.mp4'),
       type: 'video/mp4',
     }, {
-      src: buildFileURL(recordId, 'deskshare/deskshare.webm'),
+      src: buildFileURL('deskshare/deskshare.webm'),
       type: 'video/webm',
     },
-  ].filter(source => media.find(m => source.type.includes(m)));
+  ].filter(source => storage.media.find(m => source.type.includes(m)));
 };
 
 const buildOptions = (sources) => {
@@ -38,12 +39,10 @@ const buildOptions = (sources) => {
 
 const Screenshare = ({
   active,
-  media,
   onPlayerReady,
-  recordId,
 }) => {
   const intl = useIntl();
-  const sources = useRef(buildSources(media, recordId));
+  const sources = useRef(buildSources());
   const player = useRef();
   const element = useRef();
 

@@ -21,19 +21,16 @@ const intlMessages = defineMessages({
 });
 
 const propTypes = {
-  chat: PropTypes.array,
   currentDataIndex: PropTypes.number,
   player: PropTypes.object,
 };
 
 const defaultProps = {
-  chat: [],
   currentDataIndex: 0,
   player: {},
 };
 
 const Chat = ({
-  chat,
   currentDataIndex,
   player,
 }) => {
@@ -72,7 +69,6 @@ const Chat = ({
       tabIndex="0"
     >
       <Messages
-        chat={chat}
         currentDataIndex={currentDataIndex}
         player={player}
         setRef={(node, index) => setRef(node, index)}

@@ -7,10 +7,8 @@ import './index.scss';
 const DEFAULT = ID.CHAT;
 
 const Application = ({
-  chat,
   control,
   currentChatIndex,
-  notes,
   player,
 }) => {
   const [current, setCurrent] = useState(DEFAULT);
@@ -28,10 +26,8 @@ const Application = ({
         />
       ) : null}
       <Content
-        chat={chat}
         current={current}
         currentChatIndex={currentChatIndex}
-        notes={notes}
         player={player}
       />
     </div>

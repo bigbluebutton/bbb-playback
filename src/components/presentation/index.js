@@ -8,6 +8,7 @@ import Cursor from './cursor';
 import Slide from './slide';
 import Canvas from './canvas';
 import { ID } from 'utils/constants';
+import storage from 'utils/data/storage';
 import { isEqual } from 'utils/data/validators';
 import './index.scss';
 
@@ -29,7 +30,7 @@ const buildViewBoxAttr = (viewBox) => {
   return `${x} ${y} ${width} ${height}`;
 };
 
-const getCursor = (cursors, index, viewBox) => {
+const getCursor = (index, viewBox) => {
   const inactive = {
     x: -1,
     y: -1,
@@ -37,7 +38,7 @@ const getCursor = (cursors, index, viewBox) => {
 
   if (index === -1) return inactive;
 
-  const currentData = cursors[index];
+  const currentData = storage.cursor[index];
   if (currentData.x === -1 && currentData.y === -1) return inactive;
 
   return {
@@ -46,16 +47,16 @@ const getCursor = (cursors, index, viewBox) => {
   };
 };
 
-const getSlideId = (index, slides) => {
+const getSlideId = (index) => {
   const inactive = -1;
   if (index === -1) return inactive;
 
-  const currentData = slides[index];
+  const currentData = storage.shapes.slides[index];
 
   return currentData.id;
 };
 
-const getViewBox = (index, panzooms) => {
+const getViewBox = (index) => {
   const inactive = {
     height: 0,
     x: 0,
@@ -65,7 +66,7 @@ const getViewBox = (index, panzooms) => {
 
   if (index === -1) return inactive;
 
-  const currentData = panzooms[index];
+  const currentData = storage.panzooms[index];
 
   return {
     height: currentData.height,
@@ -80,18 +81,13 @@ const Presentation = ({
   currentCursorIndex,
   currentPanzoomIndex,
   currentSlideIndex,
-  cursors,
   draws,
   drawsInterval,
-  panzooms,
-  recordId,
-  slides,
-  thumbnails,
 }) => {
   const intl = useIntl();
-  const slideId = getSlideId(currentSlideIndex, slides);
-  const viewBox = getViewBox(currentPanzoomIndex, panzooms);
-  const cursor = getCursor(cursors, currentCursorIndex, viewBox);
+  const slideId = getSlideId(currentSlideIndex);
+  const viewBox = getViewBox(currentPanzoomIndex);
+  const cursor = getCursor(currentCursorIndex, viewBox);
 
   return (
     <div
@@ -116,16 +112,10 @@ const Presentation = ({
             </clipPath>
           </defs>
           <g clipPath="url(#viewBox)">
-            <Slide
-              id={slideId}
-              recordId={recordId}
-              slides={slides}
-              thumbnails={thumbnails}
-            />
+            <Slide id={slideId} />
             <Canvas
               draws={draws}
               drawsInterval={drawsInterval}
-              recordId={recordId}
             />
             <Cursor
               x={cursor.x}
