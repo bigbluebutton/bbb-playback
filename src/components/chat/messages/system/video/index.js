@@ -17,21 +17,18 @@ const intlMessages = defineMessages({
 
 const propTypes = {
   active: PropTypes.bool,
-  player: PropTypes.object,
   url: PropTypes.url,
   timestamp: PropTypes.number,
 };
 
 const defaultProps = {
   active: false,
-  player: {},
   url: '',
   timestamp: 0,
 };
 
 const Video = ({
   active,
-  player,
   url,
   timestamp,
 }) => {
@@ -42,7 +39,6 @@ const Video = ({
       active={active}
       icon={ID.VIDEOS}
       name={intl.formatMessage(intlMessages.name)}
-      player={player}
       timestamp={timestamp}
     >
       <Url
@@ -59,8 +55,6 @@ Video.defaultProps = defaultProps;
 // Checks the message active state
 const areEqual = (prevProps, nextProps) => {
   if (prevProps.active !== nextProps.active) return false;
-
-  if (!prevProps.player && nextProps.player) return false;
 
   return true;
 };

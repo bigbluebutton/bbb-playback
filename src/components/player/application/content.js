@@ -6,22 +6,14 @@ import { ID } from 'utils/constants';
 const Content = ({
   current,
   currentChatIndex,
-  player,
 }) => {
   switch (current) {
     case ID.CHAT:
 
-      return (
-        <Chat
-          currentDataIndex={currentChatIndex}
-          player={player}
-        />
-      );
+      return <Chat currentDataIndex={currentChatIndex} />;
     case ID.NOTES:
 
-      return (
-        <Notes />
-      );
+      return <Notes />;
     default:
 
       return null;
@@ -32,8 +24,6 @@ const areEqual = (prevProps, nextProps) => {
   if (prevProps.current !== nextProps.current) return false;
 
   if (prevProps.currentChatIndex !== nextProps.currentChatIndex) return false;
-
-  if (!prevProps.player && nextProps.player) return false;
 
   return true;
 };

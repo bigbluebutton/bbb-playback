@@ -8,7 +8,9 @@ import videojs from 'video.js/core.es.js';
 import { player as config } from 'config';
 import { ID } from 'utils/constants';
 import { buildFileURL } from 'utils/data';
+import logger from 'utils/logger';
 import storage from 'utils/data/storage';
+import player from 'utils/player';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -66,64 +68,64 @@ const buildOptions = (sources, tracks) => {
 };
 
 const propTypes = {
-  onPlayerReady: PropTypes.func,
   onTimeUpdate: PropTypes.func,
   time: PropTypes.number,
 };
 
 const defaultProps = {
-  onPlayerReady: () => {},
   onTimeUpdate: () => {},
   time: 0,
 };
 
 const Webcams = ({
-  onPlayerReady,
   onTimeUpdate,
   time,
 }) => {
   const intl = useIntl();
   const sources = useRef(buildSources());
   const tracks = useRef(buildTracks());
-  const player = useRef();
   const element = useRef();
 
   useEffect(() => {
-    if (!player.current) {
-      player.current = videojs(element.current, buildOptions(sources, tracks), () => {
-        // Set clock tick
+    if (!player.webcams) {
+      const video = element.current;
+      if (!video) return;
+
+      player.webcams = videojs(video, buildOptions(sources, tracks), () => {
         if (onTimeUpdate) {
-          player.current.on('play', () => {
+          player.webcams.on('play', () => {
             setInterval(() => {
-              const currentTime = player.current.currentTime();
+              const currentTime = player.webcams.currentTime();
               onTimeUpdate(currentTime);
             }, 1000 / config.rps);
           });
 
-          player.current.on('pause', () => clearInterval());
+          player.webcams.on('pause', () => clearInterval());
         }
 
-        // Set starting point
         if (time) {
-          player.current.on('loadedmetadata', () => {
-            const duration = player.current.duration();
+          player.webcams.on('loadedmetadata', () => {
+            const duration = player.webcams.duration();
             if (time < duration) {
-              player.current.currentTime(time);
+              player.webcams.currentTime(time);
             }
           });
         }
-
-        // Set ready
-        if (onPlayerReady) onPlayerReady(ID.WEBCAMS, player.current);
       });
+      logger.debug(ID.WEBCAMS, 'mounted');
     }
+  }, [ onTimeUpdate, time ]);
 
+  useEffect(() => {
     return () => {
-      if (player.current) {
-        player.current.dispose();
+      if (player.webcams) {
+        player.webcams.dispose();
+        player.webcams = null;
+        logger.debug(ID.WEBCAMS, 'unmounted');
       }
     };
-  }, [ onTimeUpdate, time, onPlayerReady ]);
+  }, []);
+
 
   return (
     <div
@@ -136,7 +138,7 @@ const Webcams = ({
           className="video-js"
           playsInline
           preload="auto"
-          ref={node => element.current = node}
+          ref={element}
         />
       </div>
     </div>

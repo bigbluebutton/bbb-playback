@@ -9,7 +9,6 @@ const DEFAULT = ID.CHAT;
 const Application = ({
   control,
   currentChatIndex,
-  player,
 }) => {
   const [current, setCurrent] = useState(DEFAULT);
 
@@ -28,7 +27,6 @@ const Application = ({
       <Content
         current={current}
         currentChatIndex={currentChatIndex}
-        player={player}
       />
     </div>
   );
@@ -36,8 +34,6 @@ const Application = ({
 
 const areEqual = (prevProps, nextProps) => {
   if (prevProps.currentChatIndex !== nextProps.currentChatIndex) return false;
-
-  if (!prevProps.player && nextProps.player) return false;
 
   return true;
 };

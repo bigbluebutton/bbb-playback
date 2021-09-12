@@ -10,19 +10,16 @@ import './index.scss';
 
 const propTypes = {
   currentDataIndex: PropTypes.number,
-  player: PropTypes.object,
   setRef: PropTypes.func,
 };
 
 const defaultProps = {
   currentDataIndex: 0,
-  player: {},
   setRef: () => {},
 };
 
 const Messages = ({
   currentDataIndex,
-  player,
   setRef,
 }) => {
 
@@ -43,7 +40,6 @@ const Messages = ({
                     hyperlink={item.hyperlink}
                     initials={item.initials}
                     name={item.name}
-                    player={player}
                     text={item.message}
                     timestamp={timestamp}
                   />
@@ -56,7 +52,6 @@ const Messages = ({
                   <PollMessage
                     active={active}
                     answers={item.answers}
-                    player={player}
                     question={item.question}
                     responders={item.responders}
                     timestamp={timestamp}
@@ -70,7 +65,6 @@ const Messages = ({
                 <span ref={node => setRef(node, index)}>
                   <VideoMessage
                     active={active}
-                    player={player}
                     url={item.url}
                     timestamp={timestamp}
                     type={item.type}

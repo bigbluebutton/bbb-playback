@@ -1,5 +1,5 @@
-import { getCurrentDataIndex } from './data';
-import { hasWebcams } from './data/validators';
+import { getCurrentDataIndex } from 'utils/data';
+import player from 'utils/player';
 
 const search = (text, thumbnails) => {
   const result = [];
@@ -16,28 +16,24 @@ const search = (text, thumbnails) => {
   return result;
 };
 
-const seek = (player, seconds) => {
-  if (!hasWebcams(player)) return null;
-
+const seek = (seconds) => {
   const min = 0;
-  const max = player.webcams.duration();
-  const time = player.webcams.currentTime() + seconds;
+  const max = player.primary.duration();
+  const time = player.primary.currentTime() + seconds;
 
   if (time < min) {
-    player.webcams.currentTime(min);
+    player.primary.currentTime(min);
   } else if (time > max) {
-    player.webcams.currentTime(max);
+    player.primary.currentTime(max);
   } else {
-    player.webcams.currentTime(time);
+    player.primary.currentTime(time);
   }
 };
 
-const skip = (player, data, change) => {
-  if (!hasWebcams(player)) return null;
-
+const skip = (data, change) => {
   const min = 0;
   const max = data.length - 1;
-  const time = player.webcams.currentTime();
+  const time = player.primary.currentTime();
 
   const current = getCurrentDataIndex(data, time);
   if (current === -1) return null;
@@ -54,7 +50,7 @@ const skip = (player, data, change) => {
   }
 
   if (typeof timestamp !== 'undefined') {
-    player.webcams.currentTime(timestamp);
+    player.primary.currentTime(timestamp);
   }
 };
 

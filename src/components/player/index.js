@@ -29,9 +29,7 @@ import {
 import storage from 'utils/data/storage';
 import { isEqual } from 'utils/data/validators';
 import Layout from 'utils/layout';
-import logger from 'utils/logger';
 import Shortcuts from 'utils/shortcuts';
-import Synchronizer from 'utils/synchronizer';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -68,12 +66,6 @@ export default class Player extends PureComponent {
       time: 0,
     }
 
-    this.player = {
-      webcams: null,
-      screenshare: null,
-    };
-
-    this.handlePlayerReady = this.handlePlayerReady.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleTimeUpdate = this.handleTimeUpdate.bind(this);
   }
@@ -85,25 +77,6 @@ export default class Player extends PureComponent {
   componentWillUnmount() {
     if (this.shortcuts) {
       this.shortcuts.destroy();
-    }
-  }
-
-  handlePlayerReady(media, player) {
-    switch (media) {
-      case ID.WEBCAMS:
-        logger.debug(ID.PLAYER, 'ready', ID.WEBCAMS);
-        this.player.webcams = player;
-        break;
-      case ID.SCREENSHARE:
-        logger.debug(ID.PLAYER, 'ready', ID.SCREENSHARE);
-        this.player.screenshare = player;
-        break;
-      default:
-        logger.debug('unhandled', media);
-    }
-
-    if (this.player.webcams && this.player.screenshare) {
-      this.synchronizer = new Synchronizer(this.player.webcams, this.player.screenshare);
     }
   }
 
@@ -132,12 +105,12 @@ export default class Player extends PureComponent {
       swap: () => this.toggleSwap(),
       thumbnails: () => this.toggleThumbnails(),
       slides: {
-        next: () => skip(this.player, storage.shapes.slides, +1),
-        previous: () => skip(this.player, storage.shapes.slides, -1),
+        next: () => skip(storage.shapes.slides, +1),
+        previous: () => skip(storage.shapes.slides, -1),
       },
       player: {
-        backward: () => seek(this.player, -seconds),
-        forward: () => seek(this.player, +seconds),
+        backward: () => seek(-seconds),
+        forward: () => seek(+seconds),
       },
     };
 
@@ -229,8 +202,6 @@ export default class Player extends PureComponent {
       time,
     } = this.state;
 
-    const { webcams } = this.player;
-
     const currentDataIndex = getCurrentDataIndex(storage.thumbnails, time);
 
     return (
@@ -238,7 +209,6 @@ export default class Player extends PureComponent {
         currentDataIndex={currentDataIndex}
         handleSearch={this.handleSearch}
         interactive
-        player={webcams}
         search={search}
       />
     );
@@ -273,7 +243,6 @@ export default class Player extends PureComponent {
         {this.renderFullscreenButton(LAYOUT.MEDIA)}
         <Webcams
           key={ID.WEBCAMS}
-          onPlayerReady={this.handlePlayerReady}
           onTimeUpdate={this.handleTimeUpdate}
           time={time}
         />
@@ -288,13 +257,11 @@ export default class Player extends PureComponent {
     } = this.state;
 
     const currentChatIndex = getCurrentDataIndex(storage.messages, time);
-    const { webcams } = this.player;
 
     return (
       <Application
         control={control}
         currentChatIndex={currentChatIndex}
-        player={webcams}
       />
     );
   }
@@ -327,7 +294,6 @@ export default class Player extends PureComponent {
       <Screenshare
         active={active}
         key={ID.SCREENSHARE}
-        onPlayerReady={this.handlePlayerReady}
       />
     );
   }

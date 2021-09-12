@@ -30,7 +30,6 @@ const propTypes = {
   currentDataIndex: PropTypes.number,
   handleSearch: PropTypes.func,
   interactive: PropTypes.bool,
-  player: PropTypes.object,
   search: PropTypes.array,
 };
 
@@ -38,7 +37,6 @@ const defaultProps = {
   currentDataIndex: 0,
   handleSearch: () => {},
   interactive: false,
-  player: {},
   search: [],
 };
 
@@ -46,7 +44,6 @@ const Thumbnails = ({
   currentDataIndex,
   handleSearch,
   interactive,
-  player,
   search,
 }) => {
   const interaction = useRef(false);
@@ -100,7 +97,6 @@ const Thumbnails = ({
               index={index}
               interactive={interactive}
               item={item}
-              player={player}
               setRef={setRef}
             />
           );
@@ -124,8 +120,6 @@ const areEqual = (prevProps, nextProps) => {
   if (prevProps.currentDataIndex !== nextProps.currentDataIndex) return false;
 
   if (!isEqual(prevProps.search, nextProps.search)) return false;
-
-  if (!prevProps.player && nextProps.player) return false;
 
   return true;
 };

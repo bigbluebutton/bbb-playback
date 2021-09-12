@@ -37,12 +37,6 @@ const hasProperty = (object, property) => {
   return false;
 };
 
-const hasWebcams = (player) => {
-  if (player && player.webcams) return true;
-
-  return false;
-};
-
 const isActive = (time, timestamp, clear = -1) => {
   const cleared = wasCleared(time, clear);
   const visible = isVisible(time, timestamp);
@@ -169,7 +163,6 @@ export {
   hasIndex,
   hasPresentation,
   hasProperty,
-  hasWebcams,
   isActive,
   isContentVisible,
   isCurrent,
