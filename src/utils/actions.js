@@ -1,4 +1,5 @@
 import { getCurrentDataIndex } from 'utils/data';
+import storage from 'utils/data/storage';
 import player from 'utils/player';
 
 const search = (text, thumbnails) => {
@@ -30,23 +31,23 @@ const seek = (seconds) => {
   }
 };
 
-const skip = (data, change) => {
+const skip = (change) => {
   const min = 0;
-  const max = data.length - 1;
+  const max = storage.shapes.slides.length - 1;
   const time = player.primary.currentTime();
 
-  const current = getCurrentDataIndex(data, time);
+  const current = getCurrentDataIndex(storage.shapes.slides, time);
   if (current === -1) return null;
 
   const index = current + change;
 
   let timestamp;
   if (index < min) {
-    timestamp = data[min].timestamp;
+    timestamp = storage.shapes.slides[min].timestamp;
   } else if (index > max) {
-    timestamp = data[max].timestamp;
+    timestamp = storage.shapes.slides[max].timestamp;
   } else {
-    timestamp = data[index].timestamp;
+    timestamp = storage.shapes.slides[index].timestamp;
   }
 
   if (typeof timestamp !== 'undefined') {

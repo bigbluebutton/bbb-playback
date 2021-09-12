@@ -101,8 +101,8 @@ export default class Player extends PureComponent {
       swap: () => this.toggleSwap(),
       thumbnails: () => this.toggleThumbnails(),
       slides: {
-        next: () => skip(storage.shapes.slides, +1),
-        previous: () => skip(storage.shapes.slides, -1),
+        next: () => skip(+1),
+        previous: () => skip(-1),
       },
       player: {
         backward: () => seek(-seconds),
