@@ -13,6 +13,7 @@ import {
 } from 'utils/constants';
 import storage from 'utils/data/storage';
 import layout from 'utils/layout';
+import logger from 'utils/logger';
 import {
   getLayout,
   getRecordId,
@@ -27,27 +28,47 @@ const intlMessages = defineMessages({
   },
 });
 
+const FEEDBACK = 1 * 1000;
+
 const initError = (recordId) => recordId ? null : ERROR.BAD_REQUEST;
 
 const Loader = ({ match }) => {
   const intl = useIntl();
+  const counter = useRef(0);
   const recordId = useRef(getRecordId(match));
-  const time = useRef(getTime());
 
   const [error, setError] = useState(initError(recordId.current));
+  const [, setUpdate] = useState(0);
   const [loaded, setLoaded] = useState(false);
 
   if (error) return <Error code={error} />;
 
-  storage.fetch(recordId.current, setLoaded, setError);
+  const onError = (error) => {
+    logger.error('loader', 'error', error);
+    setError(error);
+  };
+
+  const onUpdate = (data) => {
+    logger.debug('loader', 'update', data);
+    counter.current += 1;
+    setUpdate(counter.current);
+  };
+
+  const onLoaded = () => {
+    logger.debug('loader', 'loaded');
+    setTimeout(() => setLoaded(true), FEEDBACK);
+  };
+
+  storage.fetch(recordId.current, onUpdate, onLoaded, onError);
 
   if (loaded) {
     layout.mode = getLayout();
+    const time = getTime();
 
     return (
       <Player
         intl={intl}
-        time={time.current}
+        time={time}
       />
     );
   }
@@ -63,7 +84,7 @@ const Loader = ({ match }) => {
         <Dots />
       </div>
       <div className="loader-bottom">
-        <Data data={storage.data} />
+        <Data data={storage.built} />
       </div>
     </div>
   );

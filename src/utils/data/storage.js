@@ -55,7 +55,7 @@ const hasLoaded = () => {
   return false;
 };
 
-const fetchFile = (data, recordId, onLoaded, onError) => {
+const fetchFile = (data, recordId, onUpdate, onLoaded, onError) => {
   const file = files[data];
   const url = buildFileURL(file, recordId);
   fetch(url).then(response => {
@@ -83,12 +83,13 @@ const fetchFile = (data, recordId, onLoaded, onError) => {
     build(file, value).then(content => {
       if (content) logger.debug(ID.STORAGE, 'builded', file);
       DATA[data] = content;
-      if (hasLoaded()) onLoaded(true);
+      onUpdate(data);
+      if (hasLoaded()) onLoaded();
     }).catch(error => onError(ERROR.BAD_REQUEST));
   }).catch(error => onError(ERROR.NOT_FOUND));
 };
 
-const fetchMedia = (recordId, onLoaded, onError) => {
+const fetchMedia = (recordId, onUpdate, onLoaded, onError) => {
   const fetches = medias.map(type => {
     const url = buildFileURL(`video/webcams.${type}`, recordId);
     return fetch(url, { method: 'HEAD' });
@@ -106,7 +107,8 @@ const fetchMedia = (recordId, onLoaded, onError) => {
 
     if (media.length > 0) {
       DATA[ID.MEDIA] = media;
-      if (hasLoaded()) onLoaded(true);
+      onUpdate(ID.MEDIA);
+      if (hasLoaded()) onLoaded();
     } else {
       onError(ERROR.NOT_FOUND);
     }
@@ -114,20 +116,31 @@ const fetchMedia = (recordId, onLoaded, onError) => {
 };
 
 const storage = {
-  fetch: (recordId, onLoaded, onError) => {
+  fetch: (recordId, onUpdate, onLoaded, onError) => {
     if (hasFetched()) return null;
 
     for (const data in files) {
-      fetchFile(data, recordId, onLoaded, onError);
+      fetchFile(data, recordId, onUpdate, onLoaded, onError);
     }
 
-    fetchMedia(recordId, onLoaded, onError);
+    fetchMedia(recordId, onUpdate, onLoaded, onError);
   },
   get status() {
     return STATUS;
   },
   get data() {
     return DATA;
+  },
+  get built() {
+    return {
+      captions: hasProperty(DATA, ID.CAPTIONS),
+      chat: hasProperty(DATA, ID.CHAT),
+      notes: hasProperty(DATA, ID.NOTES),
+      polls: hasProperty(DATA, ID.POLLS),
+      videos: hasProperty(DATA, ID.VIDEOS),
+      presentation: hasProperty(DATA, ID.SHAPES),
+      screenshare: hasProperty(DATA, ID.SCREENSHARE),
+    };
   },
   get content() {
     return {

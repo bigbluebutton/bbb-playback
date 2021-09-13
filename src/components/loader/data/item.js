@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import './index.scss';
 
-const TRANSITION = 0.5;
+const TRANSITION = .5;
 
 const propTypes = {
   icon: PropTypes.string,
