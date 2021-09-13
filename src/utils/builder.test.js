@@ -20,6 +20,12 @@ it('merges and sorts messages arrays', () => {
     { timestamp: 10.1, type: 'poll' },
   ];
 
+  let questions = [
+    { timestamp: 4.1, type: 'question' },
+    { timestamp: 16.8, type: 'question' },
+    { timestamp: 10.2, type: 'question' },
+  ];
+
   let videos = [
     { timestamp: 3.0, type: 'video' },
     { timestamp: 19.0, type: 'video' },
@@ -30,11 +36,14 @@ it('merges and sorts messages arrays', () => {
   expect(mergeMessages(chat, polls, videos)).toEqual([
     { timestamp: 3.0, type: 'video' },
     { timestamp: 4.0, type: 'poll' },
+    { timestamp: 4.1, type: 'question' },
     { timestamp: 5.1, type: 'chat' },
     { timestamp: 10.1, type: 'chat' },
     { timestamp: 10.1, type: 'poll' },
+    { timestamp: 10.2, type: 'question' },
     { timestamp: 11.9, type: 'chat' },
     { timestamp: 12.1, type: 'video' },
+    { timestamp: 16.8, type: 'question' },
     { timestamp: 16.9, type: 'poll' },
     { timestamp: 19.0, type: 'video' },
   ]);
