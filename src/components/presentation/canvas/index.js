@@ -7,7 +7,6 @@ import logger from 'utils/logger';
 const Canvas = ({
   draws,
   drawsInterval,
-  recordId,
 }) => {
   if (isEmpty(drawsInterval)) return null;
 
@@ -70,7 +69,6 @@ const Canvas = ({
           <Poll
             data={data}
             key={id}
-            recordId={recordId}
             style={style}
           />
         );

@@ -4,10 +4,10 @@ import {
   getAttr,
   getId,
   getNumbers,
-  mergeChatContent,
+  mergeMessages,
 } from './builder';
 
-it('merges and sorts chat and extra content arrays', () => {
+it('merges and sorts messages arrays', () => {
   let chat = [
     { timestamp: 5.1, type: 'chat' },
     { timestamp: 11.9, type: 'chat' },
@@ -20,23 +20,23 @@ it('merges and sorts chat and extra content arrays', () => {
     { timestamp: 10.1, type: 'poll' },
   ];
 
-  let externalVideos = [
-    { timestamp: 3.0, type: 'externalVideo' },
-    { timestamp: 19.0, type: 'externalVideo' },
-    { timestamp: 12.1, type: 'externalVideo' },
+  let videos = [
+    { timestamp: 3.0, type: 'video' },
+    { timestamp: 19.0, type: 'video' },
+    { timestamp: 12.1, type: 'video' },
   ];
 
 
-  expect(mergeChatContent(chat, polls, externalVideos)).toEqual([
-    { timestamp: 3.0, type: 'externalVideo' },
+  expect(mergeMessages(chat, polls, videos)).toEqual([
+    { timestamp: 3.0, type: 'video' },
     { timestamp: 4.0, type: 'poll' },
     { timestamp: 5.1, type: 'chat' },
     { timestamp: 10.1, type: 'chat' },
     { timestamp: 10.1, type: 'poll' },
     { timestamp: 11.9, type: 'chat' },
-    { timestamp: 12.1, type: 'externalVideo' },
+    { timestamp: 12.1, type: 'video' },
     { timestamp: 16.9, type: 'poll' },
-    { timestamp: 19.0, type: 'externalVideo' },
+    { timestamp: 19.0, type: 'video' },
   ]);
 });
 

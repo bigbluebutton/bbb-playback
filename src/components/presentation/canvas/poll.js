@@ -3,7 +3,6 @@ import { buildFileURL } from 'utils/data';
 
 const Poll = ({
   data,
-  recordId,
   style,
 }) => {
   const {
@@ -30,7 +29,7 @@ const Poll = ({
           transform={image.transform}
           width={image.width}
           x={image.x}
-          href={buildFileURL(recordId, image['xlink:href'])}
+          href={buildFileURL(image['xlink:href'])}
           y={image.y}
         />
       </g>
@@ -43,7 +42,7 @@ const Poll = ({
           height={image.height}
           width={image.width}
           x={image.x}
-          href={buildFileURL(recordId, image['xlink:href'])}
+          href={buildFileURL(image['xlink:href'])}
           y={image.y}
         />
       </g>

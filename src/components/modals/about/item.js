@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import cx from 'classnames';
+import Icon from 'components/utils/icon';
 import './index.scss';
 
 const propTypes = {
@@ -22,24 +22,15 @@ const Item = ({
 }) => {
   let element;
   if (typeof value === 'boolean') {
-    const icon = value ? 'icon-check' : 'icon-close';
-
-    const style = {
-      green: value,
-      red: !value,
-    };
-
-    element = <div className={cx(icon, style)} />;
+    element = <Icon name={value ? 'check' : 'close'} />;
   } else {
     element = value;
   }
 
   return (
     <div className="item">
-      <div className={`icon-${icon}`} />
-      <div className="value">
-        {element}
-      </div>
+      <Icon name={icon} />
+      {element}
     </div>
   );
 };

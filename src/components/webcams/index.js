@@ -5,32 +5,35 @@ import {
   useIntl,
 } from 'react-intl';
 import videojs from 'video.js/core.es.js';
-import { video as config } from 'config';
+import { player as config } from 'config';
 import { ID } from 'utils/constants';
 import { buildFileURL } from 'utils/data';
+import logger from 'utils/logger';
+import storage from 'utils/data/storage';
+import player from 'utils/player';
 import './index.scss';
 
 const intlMessages = defineMessages({
   aria: {
-    id: 'player.video.wrapper.aria',
-    description: 'Aria label for the video wrapper',
+    id: 'player.webcams.wrapper.aria',
+    description: 'Aria label for the webcams wrapper',
   },
 });
 
-const buildSources = (media, recordId) => {
+const buildSources = () => {
   return [
     {
-      src: buildFileURL(recordId, 'video/webcams.mp4'),
+      src: buildFileURL('video/webcams.mp4'),
       type: 'video/mp4',
     }, {
-      src: buildFileURL(recordId, 'video/webcams.webm'),
+      src: buildFileURL('video/webcams.webm'),
       type: 'video/webm',
     },
-  ].filter(source => media.find(m => source.type.includes(m)));
+  ].filter(source => storage.media.find(m => source.type.includes(m)));
 };
 
-const buildTracks = (captions, recordId) => {
-  return captions.map(lang => {
+const buildTracks = () => {
+  return storage.captions.map(lang => {
     const {
       locale,
       localeName,
@@ -38,7 +41,7 @@ const buildTracks = (captions, recordId) => {
 
     return {
       kind: 'captions',
-      src: buildFileURL(recordId, `caption_${locale}.vtt`),
+      src: buildFileURL(`caption_${locale}.vtt`),
       srclang: locale,
       label: localeName,
     };
@@ -65,96 +68,87 @@ const buildOptions = (sources, tracks) => {
 };
 
 const propTypes = {
-  captions: PropTypes.array,
-  media: PropTypes.array,
-  onPlayerReady: PropTypes.func,
   onTimeUpdate: PropTypes.func,
-  recordId: PropTypes.string,
   time: PropTypes.number,
 };
 
 const defaultProps = {
-  captions: [],
-  media: [],
-  onPlayerReady: () => {},
   onTimeUpdate: () => {},
-  recordId: '',
   time: 0,
 };
 
-const Video = ({
-  captions,
-  media,
-  onPlayerReady,
+const Webcams = ({
   onTimeUpdate,
-  recordId,
   time,
 }) => {
   const intl = useIntl();
-  const sources = useRef(buildSources(media, recordId));
-  const tracks = useRef(buildTracks(captions, recordId));
-  const player = useRef();
+  const sources = useRef(buildSources());
+  const tracks = useRef(buildTracks());
   const element = useRef();
 
   useEffect(() => {
-    if (!player.current) {
-      player.current = videojs(element.current, buildOptions(sources, tracks), () => {
-        // Set clock tick
+    if (!player.webcams) {
+      const video = element.current;
+      if (!video) return;
+
+      player.webcams = videojs(video, buildOptions(sources, tracks), () => {
         if (onTimeUpdate) {
-          player.current.on('play', () => {
+          player.webcams.on('play', () => {
             setInterval(() => {
-              const currentTime = player.current.currentTime();
+              const currentTime = player.webcams.currentTime();
               onTimeUpdate(currentTime);
             }, 1000 / config.rps);
           });
 
-          player.current.on('pause', () => clearInterval());
+          player.webcams.on('pause', () => clearInterval());
         }
 
-        // Set starting point
         if (time) {
-          player.current.on('loadedmetadata', () => {
-            const duration = player.current.duration();
+          player.webcams.on('loadedmetadata', () => {
+            const duration = player.webcams.duration();
             if (time < duration) {
-              player.current.currentTime(time);
+              player.webcams.currentTime(time);
             }
           });
         }
-
-        // Set ready
-        if (onPlayerReady) onPlayerReady(ID.VIDEO, player.current);
       });
+      logger.debug(ID.WEBCAMS, 'mounted');
     }
+  }, [ onTimeUpdate, time ]);
 
+  useEffect(() => {
     return () => {
-      if (player.current) {
-        player.current.dispose();
+      if (player.webcams) {
+        player.webcams.dispose();
+        player.webcams = null;
+        logger.debug(ID.WEBCAMS, 'unmounted');
       }
     };
-  }, [ onTimeUpdate, time, onPlayerReady ]);
+  }, []);
+
 
   return (
     <div
       aria-label={intl.formatMessage(intlMessages.aria)}
-      className="video-wrapper"
-      id={ID.VIDEO}
+      className="webcams-wrapper"
+      id={ID.WEBCAMS}
     >
       <div data-vjs-player>
         <video
           className="video-js"
           playsInline
           preload="auto"
-          ref={node => element.current = node}
+          ref={element}
         />
       </div>
     </div>
   );
 };
 
-Video.propTypes = propTypes;
-Video.defaultProps = defaultProps;
+Webcams.propTypes = propTypes;
+Webcams.defaultProps = defaultProps;
 
 // Avoid re-render
 const areEqual = () => true;
 
-export default React.memo(Video, areEqual);
+export default React.memo(Webcams, areEqual);

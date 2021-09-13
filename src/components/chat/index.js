@@ -20,23 +20,11 @@ const intlMessages = defineMessages({
   },
 });
 
-const propTypes = {
-  chat: PropTypes.array,
-  currentDataIndex: PropTypes.number,
-  player: PropTypes.object,
-};
+const propTypes = { currentDataIndex: PropTypes.number };
 
-const defaultProps = {
-  chat: [],
-  currentDataIndex: 0,
-  player: {},
-};
+const defaultProps = { currentDataIndex: 0 };
 
-const Chat = ({
-  chat,
-  currentDataIndex,
-  player,
-}) => {
+const Chat = ({ currentDataIndex }) => {
   const interaction = useRef(false);
   const firstNode = useRef();
   const currentNode = useRef();
@@ -72,9 +60,7 @@ const Chat = ({
       tabIndex="0"
     >
       <Messages
-        chat={chat}
         currentDataIndex={currentDataIndex}
-        player={player}
         setRef={(node, index) => setRef(node, index)}
       />
     </div>
@@ -86,8 +72,6 @@ Chat.defaultProps = defaultProps;
 
 const areEqual = (prevProps, nextProps) => {
   if (prevProps.currentDataIndex !== nextProps.currentDataIndex) return false;
-
-  if (!prevProps.player && nextProps.player) return false;
 
   return true;
 };

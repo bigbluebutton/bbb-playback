@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
+import Icon from 'components/utils/icon';
 import './index.scss';
 
 const DEFAULT = 'default';
@@ -55,7 +56,7 @@ const Button = ({
         disabled={disabled}
         onClick={() => handleOnClick()}
       >
-        <span className={`icon-${icon}`} />
+        <Icon name={icon} />
       </button>
     </div>
   );

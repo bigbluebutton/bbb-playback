@@ -18,7 +18,7 @@
   "player.chat.message.poll.option.abstention": "Çekimser",
   "player.chat.message.poll.option.true": "Doğru",
   "player.chat.message.poll.option.false": "Yanlış",
-  "player.chat.message.externalVideo.name": "External video",
+  "player.chat.message.video.name": "External video",
   "player.chat.wrapper.aria": "Sohbet",
   "player.notes.wrapper.aria": "Notlar",
   "player.presentation.wrapper.aria": "Sunum",
@@ -26,5 +26,5 @@
   "player.search.modal.title": "Search",
   "player.search.modal.subtitle": "Find presentation slides content",
   "player.thumbnails.wrapper.aria": "Önizleme",
-  "player.video.wrapper.aria": "Video"
+  "player.webcams.wrapper.aria": "Video"
 }
