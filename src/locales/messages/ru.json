@@ -20,7 +20,7 @@
   "player.chat.message.poll.option.false": "Ложь",
   "player.chat.message.question.name": "Question",
   "player.chat.message.question.answer": "Answer",
-  "player.chat.message.externalVideo.name": "External video",
+  "player.chat.message.video.name": "External video",
   "player.chat.wrapper.aria": "Область чата",
   "player.notes.wrapper.aria": "Область заметок",
   "player.presentation.wrapper.aria": "Площадь презентации",
@@ -28,5 +28,5 @@
   "player.search.modal.title": "Search",
   "player.search.modal.subtitle": "Find presentation slides content",
   "player.thumbnails.wrapper.aria": "Область миниатюр",
-  "player.video.wrapper.aria": "Область видео"
+  "player.webcams.wrapper.aria": "Область видео"
 }

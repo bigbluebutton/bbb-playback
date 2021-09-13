@@ -1,22 +1,25 @@
 import { controls } from 'config';
-import { LAYOUT } from './constants';
-import { getContentFromData } from './data';
-import { isContentVisible } from './data/validators';
+import { LAYOUT } from 'utils/constants';
+import storage from 'utils/data/storage';
+import { isContentVisible } from 'utils/data/validators';
 
-export default class Layout {
-  constructor(data) {
-    this.content = getContentFromData(data);
-  }
+let MODE = null;
 
-  getContent() {
-    return this.content;
-  }
-
-  getControl(layout) {
+const layout = {
+  get content() {
+    return storage.content;
+  },
+  get mode() {
+    return MODE;
+  },
+  set mode(value) {
+    MODE = value;
+  },
+  get control() {
     const { DISABLED } = LAYOUT;
 
     let control = true;
-    switch (layout) {
+    switch (this.mode) {
       case DISABLED:
         control = false;
         break;
@@ -24,16 +27,15 @@ export default class Layout {
     }
 
     return control;
-  }
-
-  getSection(layout) {
+  },
+  get section() {
     const {
       CONTENT,
       MEDIA,
     } = LAYOUT;
 
     let section = true;
-    switch (layout) {
+    switch (this.mode) {
       case CONTENT:
         section = false;
         break;
@@ -44,9 +46,8 @@ export default class Layout {
     }
 
     return section;
-  }
-
-  getSwap(layout) {
+  },
+  get swap() {
     const {
       CONTENT,
       MEDIA,
@@ -54,7 +55,7 @@ export default class Layout {
     } = LAYOUT;
 
     let swap = false;
-    switch (layout) {
+    switch (this.mode) {
       case CONTENT:
         swap = false;
         break;
@@ -66,78 +67,45 @@ export default class Layout {
     }
 
     return swap;
-  }
-
-  getBottomContentStyle(state) {
-    const {
-      fullscreen,
-      thumbnails,
-    } = state;
-
+  },
+  get screenshare() {
+    return this.content.screenshare;
+  },
+  get single() {
+    return !this.content.presentation && !this.content.screenshare;
+  },
+  getBottomContentStyle: function ({ fullscreen, thumbnails }) {
     const bottom = thumbnails && !fullscreen;
     const style = { 'inactive': !bottom };
 
     return style;
-  }
-
-  getContentStyle(state) {
-    const { swap } = state;
+  },
+  getContentStyle: function ({ swap }) {
     const style = { 'swapped-content': swap };
 
     return style;
-  }
-
-  getMediaStyle(state) {
-    const { swap } = state;
-    const single = this.isSingle();
-    const style = { 'swapped-media': swap || single };
+  },
+  getMediaStyle: function ({ swap }) {
+    const style = { 'swapped-media': swap || this.single };
 
     return style;
-  }
-
-  getPlayerStyle(state) {
-    const {
-      fullscreen,
-      section,
-    } = state;
-
-    const single = this.isSingle();
-
+  },
+  getPlayerStyle: function ({ fullscreen, section }) {
     const style = {
       'fullscreen-content': fullscreen,
       'hidden-section': !section,
-      'single-content': single,
+      'single-content': this.single,
     };
 
     return style;
-  }
-
-  hasFullscreenButton(layout, state) {
-    const {
-      control,
-      swap,
-    } = state;
-
+  },
+  hasFullscreenButton: function (content, { control, swap }) {
     if (!control || !controls.fullscreen) return false;
 
-    const single = this.isSingle();
-    if (!isContentVisible(layout, swap || single)) return false;
+    if (!isContentVisible(content, swap || this.single)) return false;
 
     return true;
-  }
+  },
+};
 
-  hasScreenshare() {
-    const { screenshare } = this.content;
-
-    return screenshare;
-  }
-
-  isSingle() {
-    const {
-      presentation,
-      screenshare,
-    } = this.content;
-
-    return !presentation && !screenshare;
-  }
-}
+export default layout;

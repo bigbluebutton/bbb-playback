@@ -1,21 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {
   FormattedDate,
   FormattedTime,
 } from 'react-intl';
+import storage from 'utils/data/storage';
 import './index.scss';
 
-const propTypes = { metadata: PropTypes.object };
-
-const defaultProps = { metadata: {} };
-
-const Header = ({ metadata }) => {
+const Header = () => {
   const {
     end,
     name,
     start,
-  } = metadata;
+  } = storage.metadata;
 
   const subtitle = [];
   subtitle.push(
@@ -41,8 +37,5 @@ const Header = ({ metadata }) => {
     </div>
   );
 };
-
-Header.propTypes = propTypes;
-Header.defaultProps = defaultProps;
 
 export default Header;

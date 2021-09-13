@@ -1,0 +1,42 @@
+@import 'src/styles/sizes';
+
+.application {
+  background-color: var(--application-background-color);
+  color: var(--application-color);
+  display: flex;
+  flex-direction: column;
+  grid-area: application;
+  height: 100%;
+  width: 100%;
+
+  .application-control {
+    background-color: var(--application-control-background-color);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row-reverse;
+    padding: $padding;
+
+    .application-icon {
+      box-sizing: border-box;
+      display: flex;
+      font-size: large;
+      font-weight: var(--font-weight-semi-bold);
+      opacity: .75;
+      outline: none;
+      overflow: hidden;
+
+      [dir="ltr"] & {
+        padding-left: $padding;
+      }
+
+      [dir="rtl"] & {
+        padding-right: $padding;
+      }
+    }
+
+    .inactive {
+      cursor: pointer;
+      opacity: .5;
+    }
+  }
+}

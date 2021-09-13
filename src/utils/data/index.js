@@ -1,33 +1,31 @@
-import config from 'config';
-import {
-  hasIndex,
-  hasPresentation,
-  hasProperty,
-  isCurrent,
-  isDefined,
-  isEmpty,
-  isEnabled,
-  isVisible,
-  wasCleared,
-} from './validators';
 import {
   ID,
   MEDIA_ROOT_URL,
   NUMBERS,
   ROUTER,
 } from 'utils/constants';
+import storage from 'utils/data/storage';
+import {
+  hasIndex,
+  hasProperty,
+  isCurrent,
+  isEmpty,
+  isEnabled,
+  isVisible,
+  wasCleared,
+} from 'utils/data/validators';
 import hash from 'utils/hash';
-import logger from 'utils/logger';
 import { getMediaPath } from 'utils/params';
 
-const buildFileURL = (recordId, file) => {
+const buildFileURL = (file, recordId = null) => {
   if (!ROUTER) return file;
 
   const mediaPath = getMediaPath();
 
   const rootUrl = MEDIA_ROOT_URL ? MEDIA_ROOT_URL : '/presentation';
 
-  let fileUrl = `${recordId}/${file}`;
+  const id = recordId ? recordId : storage.metadata.id;
+  let fileUrl = `${id}/${file}`;
   if (mediaPath) fileUrl = `${mediaPath}/${fileUrl}`;
 
   return `${rootUrl}/${fileUrl}`;
@@ -77,31 +75,6 @@ const getBar = (percentage) => {
   return bar;
 };
 
-const getContentFromData = data => {
-  const captions = getData(data, ID.CAPTIONS);
-  const chat = getData(data, ID.CHAT);
-  const notes = getData(data, ID.NOTES);
-  const polls = getData(data, ID.POLLS);
-  const questions = getData(data, ID.QUESTIONS);
-  const externalVideos = getData(data, ID.EXTERNAL_VIDEOS);
-  const screenshare = getData(data, ID.SCREENSHARE);
-  const shapes = getData(data, ID.SHAPES);
-  const slides = shapes.slides;
-
-  const content = {
-    captions: !isEmpty(captions),
-    chat: !isEmpty(chat),
-    notes: !isEmpty(notes),
-    polls: !isEmpty(polls),
-    questions: !isEmpty(questions),
-    externalVideos: !isEmpty(externalVideos),
-    presentation: hasPresentation(slides),
-    screenshare: !isEmpty(screenshare),
-  };
-
-  return content;
-};
-
 const getCurrentDataIndex = (data, time) => {
   if (isEmpty(data)) return -1;
 
@@ -149,49 +122,6 @@ const getCurrentDataInterval = (data, time) => {
   return currentDataInterval;
 };
 
-const getData = (data, id) => {
-  const file = config.files.data[id];
-
-  switch (id) {
-    case ID.ALTERNATES:
-    case ID.CAPTIONS:
-    case ID.CHAT:
-    case ID.CURSOR:
-    case ID.NOTES:
-    case ID.PANZOOMS:
-    case ID.POLLS:
-    case ID.QUESTIONS:
-    case ID.EXTERNAL_VIDEOS:
-    case ID.SCREENSHARE:
-    case ID.TALKERS:
-      if (!file || data[getFileName(file)] === null) {
-        return [];
-      }
-
-      return data[getFileName(file)];
-    case ID.METADATA:
-      if (!file || data[getFileName(file)] === null) {
-        logger.error('missing', id);
-        return {};
-      }
-
-      return data[getFileName(file)];
-    case ID.SHAPES:
-      if (!file || data[getFileName(file)] === null) {
-        return {
-          canvases: [],
-          slides: [],
-          thumbnails: [],
-        };
-      }
-
-      return data[getFileName(file)];
-    default:
-      logger.debug('unhandled', id);
-      return [];
-  }
-};
-
 const getDraws = (index, slides, canvases) => {
   if (!hasIndex(index, slides)) return [];
 
@@ -208,31 +138,7 @@ const getDraws = (index, slides, canvases) => {
   return draws;
 };
 
-const getFileName = file => file.split('.').shift();
-
 const getFileType = file => file.split('.').pop();
-
-const getLoadedData = data => {
-  const captions = getData(data, ID.CAPTIONS);
-  const chat = getData(data, ID.CHAT);
-  const notes = getData(data, ID.NOTES);
-  const polls = getData(data, ID.POLLS);
-  const externalVideos = getData(data, ID.EXTERNAL_VIDEOS);
-  const screenshare = getData(data, ID.SCREENSHARE);
-  const shapes = getData(data, ID.SHAPES);
-
-  const loadedData = {
-    captions: isDefined(captions),
-    chat: isDefined(chat),
-    notes: isDefined(notes),
-    polls: isDefined(polls),
-    externalVideos: isDefined(externalVideos),
-    presentation: isDefined(shapes),
-    screenshare: isDefined(screenshare),
-  };
-
-  return loadedData;
-};
 
 const getPercentage = (value, total) => {
   if (total === 0) return 0;
@@ -266,7 +172,7 @@ const getMessageType = (item) => {
   if (typeof item.message === 'string') return ID.USERS;
   if (typeof item.question === 'string') return ID.POLLS;
   if (typeof item.text === 'string') return ID.QUESTIONS;
-  if (typeof item.url === 'string') return ID.EXTERNAL_VIDEOS;
+  if (typeof item.url === 'string') return ID.VIDEOS;
 
   return 'undefined';
 };
@@ -278,14 +184,10 @@ export {
   getAvatarStyle,
   getActiveContent,
   getBar,
-  getContentFromData,
   getCurrentDataIndex,
   getCurrentDataInterval,
-  getData,
   getDraws,
-  getFileName,
   getFileType,
-  getLoadedData,
   getMessageType,
   getPercentage,
   getPollLabel,

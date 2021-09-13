@@ -20,7 +20,6 @@ const intlMessages = defineMessages({
 const propTypes = {
   active: PropTypes.bool,
   answer: PropTypes.string,
-  player: PropTypes.object,
   text: PropTypes.text,
   timestamp: PropTypes.number,
 };
@@ -28,7 +27,6 @@ const propTypes = {
 const defaultProps = {
   active: false,
   answer: '',
-  player: {},
   text: '',
   timestamp: 0,
 };
@@ -36,7 +34,6 @@ const defaultProps = {
 const Question = ({
   active,
   answer,
-  player,
   text,
   timestamp,
 }) => {
@@ -47,7 +44,6 @@ const Question = ({
       active={active}
       icon={ID.QUESTIONS}
       name={intl.formatMessage(intlMessages.name)}
-      player={player}
       timestamp={timestamp}
     >
       <Text text={text} />
@@ -62,8 +58,6 @@ Question.defaultProps = defaultProps;
 // Checks the message active state
 const areEqual = (prevProps, nextProps) => {
   if (prevProps.active !== nextProps.active) return false;
-
-  if (!prevProps.player && nextProps.player) return false;
 
   return true;
 };

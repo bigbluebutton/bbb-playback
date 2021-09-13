@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import Info from './info';
 import Margin from './margin';
+import player from 'utils/player';
 import './index.scss';
 
 const propTypes = {
@@ -15,7 +16,6 @@ const propTypes = {
   icon: PropTypes.string,
   initials: PropTypes.string,
   name: PropTypes.string,
-  player: PropTypes.object,
   timestamp: PropTypes.number,
 };
 
@@ -26,7 +26,6 @@ const defaultProps = {
   icon: '',
   initials: '',
   name: '',
-  player: {},
   timestamp: 0,
 };
 
@@ -37,11 +36,10 @@ const Message = ({
   icon,
   initials,
   name,
-  player,
   timestamp,
 }) => {
   const handleOnClick = () => {
-    if (player) player.currentTime(timestamp);
+    player.primary.currentTime(timestamp);
   };
 
   return (

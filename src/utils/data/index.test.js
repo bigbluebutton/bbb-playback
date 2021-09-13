@@ -3,7 +3,6 @@ import {
   getBar,
   getCurrentDataIndex,
   getCurrentDataInterval,
-  getFileName,
   getFileType,
   getMessageType,
   getPercentage,
@@ -139,15 +138,6 @@ it('gets current data interval', () => {
 
   const invalid = [{}];
   expect(getCurrentDataInterval(invalid, 0.0)).toEqual([]);
-});
-
-it('gets file name', () => {
-  const json = 'name.json'
-  expect(getFileName(json)).toEqual('name');
-  const svg = 'name.svg';
-  expect(getFileName(svg)).toEqual('name');
-  const xml = 'name.xml';
-  expect(getFileName(xml)).toEqual('name');
 });
 
 it('gets file type', () => {

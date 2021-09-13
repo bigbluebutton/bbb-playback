@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import Thumbnail from './thumbnail';
 import { handleOnEnterPress } from 'utils/data/handlers';
+import player from 'utils/player';
 import './index.scss';
 
 const propTypes = {
@@ -10,8 +11,6 @@ const propTypes = {
   index: PropTypes.number,
   interactive: PropTypes.bool,
   item: PropTypes.object,
-  player: PropTypes.object,
-  recordId: PropTypes.string,
   setRef: PropTypes.func,
 };
 
@@ -20,8 +19,6 @@ const defaultProps = {
   index: 0,
   interactive: false,
   item: {},
-  player: {},
-  recordId: '',
   setRef: () => {},
 };
 
@@ -30,8 +27,6 @@ const Item = ({
   index,
   interactive,
   item,
-  player,
-  recordId,
   setRef,
 }) => {
   if (!interactive) {
@@ -44,7 +39,6 @@ const Item = ({
         <Thumbnail
           alt={item.alt}
           index={index}
-          recordId={recordId}
           src={item.src}
         />
       </div>
@@ -52,7 +46,7 @@ const Item = ({
   }
 
   const handleOnClick = () => {
-    if (player) player.currentTime(item.timestamp);
+    if (interactive) player.primary.currentTime(item.timestamp);
   };
 
   return (
@@ -66,7 +60,6 @@ const Item = ({
       <Thumbnail
         alt={item.alt}
         index={index}
-        recordId={recordId}
         src={item.src}
       />
     </div>

@@ -37,12 +37,6 @@ const hasProperty = (object, property) => {
   return false;
 };
 
-const hasVideo = (player) => {
-  if (player && player.video) return true;
-
-  return false;
-};
-
 const isActive = (time, timestamp, clear = -1) => {
   const cleared = wasCleared(time, clear);
   const visible = isVisible(time, timestamp);
@@ -169,7 +163,6 @@ export {
   hasIndex,
   hasPresentation,
   hasProperty,
-  hasVideo,
   isActive,
   isContentVisible,
   isCurrent,

@@ -1,5 +1,6 @@
-import { getCurrentDataIndex } from './data';
-import { hasVideo } from './data/validators';
+import { getCurrentDataIndex } from 'utils/data';
+import storage from 'utils/data/storage';
+import player from 'utils/player';
 
 const search = (text, thumbnails) => {
   const result = [];
@@ -16,45 +17,41 @@ const search = (text, thumbnails) => {
   return result;
 };
 
-const seek = (player, seconds) => {
-  if (!hasVideo(player)) return null;
-
+const seek = (seconds) => {
   const min = 0;
-  const max = player.video.duration();
-  const time = player.video.currentTime() + seconds;
+  const max = player.primary.duration();
+  const time = player.primary.currentTime() + seconds;
 
   if (time < min) {
-    player.video.currentTime(min);
+    player.primary.currentTime(min);
   } else if (time > max) {
-    player.video.currentTime(max);
+    player.primary.currentTime(max);
   } else {
-    player.video.currentTime(time);
+    player.primary.currentTime(time);
   }
 };
 
-const skip = (player, data, change) => {
-  if (!hasVideo(player)) return null;
-
+const skip = (change) => {
   const min = 0;
-  const max = data.length - 1;
-  const time = player.video.currentTime();
+  const max = storage.shapes.slides.length - 1;
+  const time = player.primary.currentTime();
 
-  const current = getCurrentDataIndex(data, time);
+  const current = getCurrentDataIndex(storage.shapes.slides, time);
   if (current === -1) return null;
 
   const index = current + change;
 
   let timestamp;
   if (index < min) {
-    timestamp = data[min].timestamp;
+    timestamp = storage.shapes.slides[min].timestamp;
   } else if (index > max) {
-    timestamp = data[max].timestamp;
+    timestamp = storage.shapes.slides[max].timestamp;
   } else {
-    timestamp = data[index].timestamp;
+    timestamp = storage.shapes.slides[index].timestamp;
   }
 
   if (typeof timestamp !== 'undefined') {
-    player.video.currentTime(timestamp);
+    player.primary.currentTime(timestamp);
   }
 };
 

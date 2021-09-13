@@ -20,7 +20,7 @@
   "player.chat.message.poll.option.false": "×",
   "player.chat.message.question.name": "Question",
   "player.chat.message.question.answer": "Answer",
-  "player.chat.message.externalVideo.name": "External video",
+  "player.chat.message.video.name": "External video",
   "player.chat.wrapper.aria": "チャットエリア",
   "player.notes.wrapper.aria": "ノートエリア",
   "player.presentation.wrapper.aria": "プレゼンテーションエリア",
@@ -28,5 +28,5 @@
   "player.search.modal.title": "検索",
   "player.search.modal.subtitle": "プレゼンテーションスライドの内容を検索",
   "player.thumbnails.wrapper.aria": "サムネイルエリア",
-  "player.video.wrapper.aria": "ビデオエリア"
+  "player.webcams.wrapper.aria": "ビデオエリア"
 }

@@ -20,7 +20,7 @@
   "player.chat.message.poll.option.false": "Falso",
   "player.chat.message.question.name": "Question",
   "player.chat.message.question.answer": "Answer",
-  "player.chat.message.externalVideo.name": "Video externo",
+  "player.chat.message.video.name": "Video externo",
   "player.chat.wrapper.aria": "Área de chat",
   "player.notes.wrapper.aria": "Área de notas",
   "player.presentation.wrapper.aria": "Área de presentación",
@@ -28,5 +28,5 @@
   "player.search.modal.title": "Search",
   "player.search.modal.subtitle": "Find presentation slides content",
   "player.thumbnails.wrapper.aria": "Área de miniaturas",
-  "player.video.wrapper.aria": "Área de video"
+  "player.webcams.wrapper.aria": "Área de video"
 }

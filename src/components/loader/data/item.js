@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
-import { files } from 'config';
 import './index.scss';
 
-const TRANSITION = ((files.feedback.timeout / 1000) / 2).toFixed(2);
+const TRANSITION = .5;
 
 const propTypes = {
   icon: PropTypes.string,
