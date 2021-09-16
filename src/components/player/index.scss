@@ -1,5 +1,17 @@
 @import 'src/styles/sizes';
 
+:root {
+  --media-background-color: var(--secondary-background-color);
+  --media-color: var(--secondary-content-color);
+
+  --top-content-background-color: var(--primary-background-color);
+  --top-content-color: var(--primary-content-color);
+
+  --bottom-content-active-background-color: var(--tertiary-highlight-color);
+  --bottom-content-background-color: var(--tertiary-background-color);
+  --bottom-content-color: var(--tertiary-content-color);
+}
+
 $player-wrapper-padding: $control-bar-height;
 
 .player-wrapper {
