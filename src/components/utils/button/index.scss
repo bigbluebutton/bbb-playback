@@ -7,9 +7,6 @@
   --button-disabled-background-color: var(--gray-light);
   --button-disabled-color: var(--white);
 
-  --button-ghost-background-color: transparent;
-  --button-ghost-color: var(--gray);
-
   --button-solid-background-color: var(--blue);
   --button-solid-color: var(--white);
 }
@@ -47,16 +44,6 @@ $button-size: 2rem;
 
     &:focus {
       box-shadow: 0 0 0 $margin-extra-small var(--button-solid-background-color);
-    }
-  }
-
-  .ghost {
-    background-color: var(--button-ghost-background-color);
-    border: solid;
-    color: var(--button-ghost-color);
-
-    &:focus {
-      box-shadow: 0 0 0 $margin-extra-small;
     }
   }
 
