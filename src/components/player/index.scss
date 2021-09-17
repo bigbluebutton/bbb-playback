@@ -109,14 +109,6 @@ $player-wrapper-padding: $control-bar-height;
   .video-js {
     background-color: var(--top-content-background-color);
   }
-
-  .button-wrapper {
-    .solid {
-      &:focus {
-        box-shadow: 0 0 0 $margin-extra-small var(--box-shadow-color);
-      }
-    }
-  }
 }
 
 .swapped-content {
@@ -150,14 +142,6 @@ $player-wrapper-padding: $control-bar-height;
 
   .video-js {
     background-color: var(--top-content-background-color);
-  }
-
-  .button-wrapper {
-    .solid {
-      &:focus {
-        box-shadow: 0 0 0 $margin-extra-small var(--box-shadow-color);
-      }
-    }
   }
 }
 

@@ -9,6 +9,8 @@
 
   --button-solid-background-color: var(--blue);
   --button-solid-color: var(--white);
+
+  --button-box-shadow-color: var(--gray-light);
 }
 
 $button-size: 2rem;
@@ -43,7 +45,7 @@ $button-size: 2rem;
     color: var(--button-solid-color);
 
     &:focus {
-      box-shadow: 0 0 0 $margin-extra-small var(--button-solid-background-color);
+      box-shadow: 0 0 0 $margin-extra-small var(--button-box-shadow-color);
     }
   }
 
