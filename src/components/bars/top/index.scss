@@ -1,5 +1,11 @@
 @import 'src/styles/sizes';
 
+:root {
+  --top-bar-active-background-color: var(--primary-highlight-color);
+  --top-bar-background-color: var(--primary-background-color);
+  --top-bar-color: var(--primary-content-color);
+}
+
 .top-bar {
   background-color: var(--top-bar-background-color);
   color: var(--top-bar-color);

@@ -1,5 +1,19 @@
 @import 'src/styles/sizes';
 
+:root {
+  --button-default-background-color: transparent;
+  --button-default-color: var(--gray);
+
+  --button-disabled-background-color: var(--gray-light);
+  --button-disabled-color: var(--white);
+
+  --button-ghost-background-color: transparent;
+  --button-ghost-color: var(--gray);
+
+  --button-solid-background-color: var(--blue);
+  --button-solid-color: var(--white);
+}
+
 $button-size: 2rem;
 
 .button-wrapper {

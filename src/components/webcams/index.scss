@@ -1,5 +1,9 @@
 @import 'src/styles/sizes';
 
+:root {
+  --control-bar-background-color: var(--gray-dark);
+}
+
 .webcams-wrapper {
   display: flex;
   height: 100%;

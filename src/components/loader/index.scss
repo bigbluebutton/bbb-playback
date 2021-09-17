@@ -1,5 +1,10 @@
 @import 'src/styles/sizes';
 
+:root {
+  --loader-background-color: var(--primary-background-color);
+  --loader-color: var(--primary-content-color);
+}
+
 $dot-size: 20px;
 $dots-wrapper-width: 100px;
 
