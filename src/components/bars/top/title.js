@@ -6,8 +6,10 @@ import {
   FormattedDate,
 } from 'react-intl';
 import cx from 'classnames';
+import { controls as config } from 'config';
 import { handleOnEnterPress } from 'utils/data/handlers';
 import storage from 'utils/data/storage';
+import layout from 'utils/layout';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -17,23 +19,15 @@ const intlMessages = defineMessages({
   },
 });
 
-const propTypes = {
-  interactive: PropTypes.bool,
-  toggleAbout: PropTypes.func,
-};
+const propTypes = { toggleAbout: PropTypes.func };
 
-const defaultProps = {
-  interactive: false,
-  toggleAbout: () => {},
-};
+const defaultProps = { toggleAbout: () => {} };
 
-const Title = ({
-  interactive,
-  toggleAbout,
-}) => {
+const Title = ({ toggleAbout }) => {
   const intl = useIntl();
   const date = <FormattedDate value={new Date(storage.metadata.start)} />;
 
+  const interactive = layout.control && config.about;
   if (!interactive) {
 
     return (

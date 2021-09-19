@@ -52,7 +52,6 @@ export default class Player extends PureComponent {
     super(props);
 
     this.state = {
-      control: layout.control,
       fullscreen: false,
       modal: '',
       search: [],
@@ -211,14 +210,10 @@ export default class Player extends PureComponent {
   }
 
   renderTopBar() {
-    const {
-      control,
-      section,
-    } = this.state;
+    const { section } = this.state;
 
     return (
       <TopBar
-        control={control}
         section={section}
         toggleAbout={() => this.toggleModal(ID.ABOUT)}
         toggleSearch={() => this.toggleModal(ID.SEARCH)}
@@ -244,18 +239,11 @@ export default class Player extends PureComponent {
   }
 
   renderApplication() {
-    const {
-      control,
-      time,
-    } = this.state;
-
+    const { time } = this.state;
     const currentChatIndex = getCurrentDataIndex(storage.messages, time);
 
     return (
-      <Application
-        control={control}
-        currentChatIndex={currentChatIndex}
-      />
+      <Application currentChatIndex={currentChatIndex} />
     );
   }
 

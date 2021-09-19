@@ -5,7 +5,9 @@ import {
   useIntl,
 } from 'react-intl';
 import Button from 'components/utils/button';
+import { controls as config } from 'config';
 import { ID } from 'utils/constants';
+import layout from 'utils/layout';
 
 const intlMessages = defineMessages({
   search: {
@@ -14,23 +16,14 @@ const intlMessages = defineMessages({
   },
 });
 
-const propTypes = {
-  enabled: PropTypes.bool,
-  toggleSearch: PropTypes.func,
-};
+const propTypes = { toggleSearch: PropTypes.func };
 
-const defaultProps = {
-  enabled: false,
-  toggleSearch: () => {},
-};
+const defaultProps = { toggleSearch: () => {} };
 
-const Search = ({
-  enabled,
-  toggleSearch,
-}) => {
+const Search = ({ toggleSearch }) => {
   const intl = useIntl();
 
-  if (!enabled) return null;
+  if (!layout.control && config.search && !layout.single) return null;
 
   return (
     <Button

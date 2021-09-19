@@ -4,12 +4,9 @@ import Title from './title';
 import SearchButton from './buttons/search';
 import SectionButton from './buttons/section';
 import SwapButton from './buttons/swap';
-import { controls as config } from 'config';
-import layout from 'utils/layout';
 import './index.scss';
 
 const propTypes = {
-  control: PropTypes.bool,
   section: PropTypes.bool,
   toggleAbout: PropTypes.func,
   toggleSearch: PropTypes.func,
@@ -18,7 +15,6 @@ const propTypes = {
 };
 
 const defaultProps = {
-  control: false,
   section: false,
   toggleAbout: () => {},
   toggleSearch: () => {},
@@ -27,7 +23,6 @@ const defaultProps = {
 };
 
 const Top = ({
-  control,
   section,
   toggleAbout,
   toggleSearch,
@@ -39,26 +34,16 @@ const Top = ({
     <div className="top-bar">
       <div className="left">
         <SectionButton
-          enabled={control && config.section}
           section={section}
           toggleSection={toggleSection}
         />
       </div>
       <div className="center">
-        <Title
-          interactive={control && config.about}
-          toggleAbout={toggleAbout}
-        />
+        <Title toggleAbout={toggleAbout} />
       </div>
       <div className="right">
-        <SearchButton
-          enabled={control && config.search && !layout.single}
-          toggleSearch={toggleSearch}
-        />
-        <SwapButton
-          enabled={control && config.swap && !layout.single}
-          toggleSwap={toggleSwap}
-        />
+        <SearchButton toggleSearch={toggleSearch} />
+        <SwapButton toggleSwap={toggleSwap} />
       </div>
     </div>
   );

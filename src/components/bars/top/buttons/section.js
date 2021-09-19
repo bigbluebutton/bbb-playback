@@ -5,6 +5,8 @@ import {
   useIntl,
 } from 'react-intl';
 import Button from 'components/utils/button';
+import { controls as config } from 'config';
+import layout from 'utils/layout';
 
 const intlMessages = defineMessages({
   section: {
@@ -14,25 +16,22 @@ const intlMessages = defineMessages({
 });
 
 const propTypes = {
-  enabled: PropTypes.bool,
   section: PropTypes.bool,
   toggleSection: PropTypes.func,
 };
 
 const defaultProps = {
-  enabled: false,
   section: true,
   toggleSection: () => {},
 };
 
 const Section = ({
-  enabled,
   section,
   toggleSection,
 }) => {
   const intl = useIntl();
 
-  if (!enabled) return null;
+  if (!layout.control && config.section) return null;
 
   return (
     <Button

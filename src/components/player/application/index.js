@@ -7,7 +7,6 @@ import './index.scss';
 const DEFAULT = ID.CHAT;
 
 const Application = ({
-  control,
   currentChatIndex,
 }) => {
   const [current, setCurrent] = useState(DEFAULT);
@@ -18,12 +17,10 @@ const Application = ({
 
   return (
     <div className="application">
-      {control ? (
-        <Control
-          current={current}
-          toggleApplication={toggleApplication}
-        />
-      ) : null}
+      <Control
+        current={current}
+        toggleApplication={toggleApplication}
+      />
       <Content
         current={current}
         currentChatIndex={currentChatIndex}

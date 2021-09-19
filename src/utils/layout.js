@@ -99,8 +99,8 @@ const layout = {
 
     return style;
   },
-  hasFullscreenButton: function (content, { control, swap }) {
-    if (!control || !controls.fullscreen) return false;
+  hasFullscreenButton: function (content, { swap }) {
+    if (!this.control || !controls.fullscreen) return false;
 
     if (!isContentVisible(content, swap || this.single)) return false;
 
