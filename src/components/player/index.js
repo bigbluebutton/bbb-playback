@@ -57,7 +57,6 @@ export default class Player extends PureComponent {
       search: [],
       section: layout.section,
       swap: layout.swap,
-      thumbnails: true,
       time: 0,
     }
 
@@ -98,7 +97,6 @@ export default class Player extends PureComponent {
       fullscreen: () => this.toggleFullscreen(),
       section: () => this.toggleSection(),
       swap: () => this.toggleSwap(),
-      thumbnails: () => this.toggleThumbnails(),
       slides: {
         next: () => skip(+1),
         previous: () => skip(-1),
@@ -135,12 +133,6 @@ export default class Player extends PureComponent {
     const { swap } = this.state;
 
     this.setState({ swap: !swap });
-  }
-
-  toggleThumbnails() {
-    const { thumbnails } = this.state;
-
-    this.setState({ thumbnails: !thumbnails });
   }
 
   renderFullscreenButton(content) {
