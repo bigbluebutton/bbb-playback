@@ -9,6 +9,7 @@ import { player as config } from 'config';
 import { ID } from 'utils/constants';
 import { buildFileURL } from 'utils/data';
 import logger from 'utils/logger';
+import { getTime } from 'utils/params';
 import storage from 'utils/data/storage';
 import player from 'utils/player';
 import './index.scss';
@@ -67,20 +68,11 @@ const buildOptions = (sources, tracks) => {
   };
 };
 
-const propTypes = {
-  onTimeUpdate: PropTypes.func,
-  time: PropTypes.number,
-};
+const propTypes = { onTimeUpdate: PropTypes.func };
 
-const defaultProps = {
-  onTimeUpdate: () => {},
-  time: 0,
-};
+const defaultProps = { onTimeUpdate: () => {} };
 
-const Webcams = ({
-  onTimeUpdate,
-  time,
-}) => {
+const Webcams = ({ onTimeUpdate }) => {
   const intl = useIntl();
   const sources = useRef(buildSources());
   const tracks = useRef(buildTracks());
@@ -103,6 +95,7 @@ const Webcams = ({
           player.webcams.on('pause', () => clearInterval());
         }
 
+        const time = getTime();
         if (time) {
           player.webcams.on('loadedmetadata', () => {
             const duration = player.webcams.duration();
@@ -114,7 +107,7 @@ const Webcams = ({
       });
       logger.debug(ID.WEBCAMS, 'mounted');
     }
-  }, [ onTimeUpdate, time ]);
+  }, [ onTimeUpdate ]);
 
   useEffect(() => {
     return () => {

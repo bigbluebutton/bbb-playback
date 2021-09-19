@@ -1,6 +1,9 @@
 import React, { PureComponent } from 'react';
 import cx from 'classnames';
-import { defineMessages } from 'react-intl';
+import {
+  defineMessages,
+  injectIntl,
+} from 'react-intl';
 import { shortcuts } from 'config';
 import Application from './application';
 import Presentation from 'components/presentation';
@@ -47,7 +50,7 @@ const intlMessages = defineMessages({
   },
 });
 
-export default class Player extends PureComponent {
+class Player extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -216,7 +219,6 @@ export default class Player extends PureComponent {
   }
 
   renderMedia() {
-    const { time } = this.props;
 
     return (
       <div className={cx('media', layout.getMediaStyle(this.state))}>
@@ -224,7 +226,6 @@ export default class Player extends PureComponent {
         <Webcams
           key={ID.WEBCAMS}
           onTimeUpdate={this.handleTimeUpdate}
-          time={time}
         />
       </div>
     );
@@ -314,3 +315,5 @@ export default class Player extends PureComponent {
     );
   }
 }
+
+export default injectIntl(Player);
