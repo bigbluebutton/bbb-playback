@@ -6,9 +6,7 @@ import './index.scss';
 
 const DEFAULT = ID.CHAT;
 
-const Application = ({
-  currentChatIndex,
-}) => {
+const Application = () => {
   const [current, setCurrent] = useState(DEFAULT);
 
   const toggleApplication = (application) => {
@@ -21,18 +19,11 @@ const Application = ({
         current={current}
         toggleApplication={toggleApplication}
       />
-      <Content
-        current={current}
-        currentChatIndex={currentChatIndex}
-      />
+      <Content current={current} />
     </div>
   );
 };
 
-const areEqual = (prevProps, nextProps) => {
-  if (prevProps.currentChatIndex !== nextProps.currentChatIndex) return false;
-
-  return true;
-};
+const areEqual = () => true;
 
 export default React.memo(Application, areEqual);

@@ -187,16 +187,10 @@ class Player extends PureComponent {
   }
 
   renderThumbnails() {
-    const {
-      search,
-      time,
-    } = this.state;
-
-    const currentDataIndex = getCurrentDataIndex(storage.thumbnails, time);
+    const { search } = this.state;
 
     return (
       <Thumbnails
-        currentDataIndex={currentDataIndex}
         handleSearch={this.handleSearch}
         interactive
         search={search}
@@ -232,28 +226,20 @@ class Player extends PureComponent {
   }
 
   renderApplication() {
-    const { time } = this.state;
-    const currentChatIndex = getCurrentDataIndex(storage.messages, time);
 
-    return (
-      <Application currentChatIndex={currentChatIndex} />
-    );
+    return <Application />;
   }
 
   renderPresentation(active) {
     const { time } = this.state;
 
-    const currentSlideIndex = getCurrentDataIndex(storage.shapes.slides, time);
-    const currentPanzoomIndex = getCurrentDataIndex(storage.panzooms, time);
-    const currentCursorIndex = getCurrentDataIndex(storage.cursor, time);
-    const draws = getDraws(currentSlideIndex, storage.shapes.slides, storage.shapes.canvases);
+    const currentSlideIndex = getCurrentDataIndex(storage.slides, time);
+    const draws = getDraws(currentSlideIndex, storage.slides, storage.canvases);
     const currentDrawsInterval = getCurrentDataInterval(draws, time);
 
     return (
       <Presentation
         active={active}
-        currentCursorIndex={currentCursorIndex}
-        currentPanzoomIndex={currentPanzoomIndex}
         currentSlideIndex={currentSlideIndex}
         draws={draws}
         drawsInterval={currentDrawsInterval}

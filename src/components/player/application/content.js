@@ -3,14 +3,11 @@ import Chat from 'components/chat';
 import Notes from 'components/notes';
 import { ID } from 'utils/constants';
 
-const Content = ({
-  current,
-  currentChatIndex,
-}) => {
+const Content = ({ current }) => {
   switch (current) {
     case ID.CHAT:
 
-      return <Chat currentDataIndex={currentChatIndex} />;
+      return <Chat />;
     case ID.NOTES:
 
       return <Notes />;
@@ -22,8 +19,6 @@ const Content = ({
 
 const areEqual = (prevProps, nextProps) => {
   if (prevProps.current !== nextProps.current) return false;
-
-  if (prevProps.currentChatIndex !== nextProps.currentChatIndex) return false;
 
   return true;
 };
