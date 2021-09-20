@@ -74,8 +74,8 @@ const layout = {
   get single() {
     return !this.content.presentation && !this.content.screenshare;
   },
-  getBottomContentStyle: function ({ fullscreen, thumbnails }) {
-    const bottom = thumbnails && !fullscreen;
+  getBottomContentStyle: function ({ fullscreen }) {
+    const bottom = !fullscreen;
     const style = { 'inactive': !bottom };
 
     return style;
