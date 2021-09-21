@@ -1,5 +1,4 @@
 import React from 'react';
-import cx from 'classnames';
 import { ID } from 'utils/constants';
 import { buildFileURL } from 'utils/data';
 import storage from 'utils/data/storage';
@@ -20,8 +19,6 @@ const Proxy = ({
 
   if (src === ID.SCREENSHARE) return null;
 
-  const logo = src.includes('logo');
-
   return (
     <foreignObject
       height={height}
@@ -31,7 +28,7 @@ const Proxy = ({
     >
       <img
         alt={alt}
-        className={cx('proxy', { logo })}
+        className="proxy"
         src={buildFileURL(src)}
       />
     </foreignObject>

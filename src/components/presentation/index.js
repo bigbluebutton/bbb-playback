@@ -65,7 +65,7 @@ const Presentation = () => {
       className={cx('presentation-wrapper', { inactive: currentContent !== ID.PRESENTATION })}
       id={ID.PRESENTATION}
     >
-      <div className="presentation">
+      <div className={cx('presentation', 'logo')}>
         <svg
           viewBox={buildViewBoxAttr(viewBox)}
           xmlns="http://www.w3.org/2000/svg"
