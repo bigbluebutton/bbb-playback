@@ -248,16 +248,16 @@ const parseText = data => {
   return text;
 };
 
-const buildCanvases = group => {
+const buildCanvases = (group, slides) => {
   let canvases = [];
 
   if (group) {
     canvases = group.map(canvas => {
       const canvasAttr = getAttr(canvas);
-      // Get the number from the id name
       const canvasId = getId(canvasAttr.id);
+      const { timestamp } = slides.find(slide => slide.id === canvasId);
 
-      let draws = canvas.g.map(g => {
+      let data = canvas.g.map(g => {
         const drawAttr = getAttr(g);
         const timestamp = parseFloat(drawAttr.timestamp);
         const clear = parseFloat(drawAttr.undo);
@@ -308,8 +308,9 @@ const buildCanvases = group => {
       });
 
       return {
-        draws,
+        data,
         id: canvasId,
+        timestamp,
       };
     });
   }
@@ -329,7 +330,7 @@ const buildShapes = result => {
 
     data.slides = buildSlides(image);
     data.thumbnails = buildThumbnails(data.slides);
-    data.canvases = buildCanvases(g);
+    data.canvases = buildCanvases(g, data.slides);
   }
 
   return data;

@@ -7,10 +7,12 @@ import cx from 'classnames';
 import Cursor from './cursor';
 import Slide from './slide';
 import Canvas from './canvas';
-import { useCurrentIndex } from 'components/utils/hooks';
+import {
+  useCurrentContent,
+  useCurrentIndex,
+} from 'components/utils/hooks';
 import { ID } from 'utils/constants';
 import storage from 'utils/data/storage';
-import { isEqual } from 'utils/data/validators';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -29,15 +31,6 @@ const buildViewBoxAttr = (viewBox) => {
   } = viewBox;
 
   return `${x} ${y} ${width} ${height}`;
-};
-
-const getSlideId = (index) => {
-  const inactive = -1;
-  if (index === -1) return inactive;
-
-  const currentData = storage.slides[index];
-
-  return currentData.id;
 };
 
 const getViewBox = (index) => {
@@ -60,21 +53,16 @@ const getViewBox = (index) => {
   };
 };
 
-const Presentation = ({
-  active,
-  currentSlideIndex,
-  draws,
-  drawsInterval,
-}) => {
+const Presentation = () => {
   const intl = useIntl();
+  const currentContent = useCurrentContent();
   const currentPanzoomIndex = useCurrentIndex(storage.panzooms);
-  const slideId = getSlideId(currentSlideIndex);
   const viewBox = getViewBox(currentPanzoomIndex);
 
   return (
     <div
       aria-label={intl.formatMessage(intlMessages.aria)}
-      className={cx('presentation-wrapper', { inactive: !active })}
+      className={cx('presentation-wrapper', { inactive: currentContent !== ID.PRESENTATION })}
       id={ID.PRESENTATION}
     >
       <div className="presentation">
@@ -94,11 +82,8 @@ const Presentation = ({
             </clipPath>
           </defs>
           <g clipPath="url(#viewBox)">
-            <Slide id={slideId} />
-            <Canvas
-              draws={draws}
-              drawsInterval={drawsInterval}
-            />
+            <Slide />
+            <Canvas />
             <Cursor viewBox={viewBox} />
           </g>
         </svg>
@@ -107,16 +92,6 @@ const Presentation = ({
   );
 };
 
-const areEqual = (prevProps, nextProps) => {
-  if (prevProps.active !== nextProps.active) return false;
-
-  if (prevProps.currentSlideIndex !== nextProps.currentSlideIndex) return false;
-
-  if (!isEqual(prevProps.draws, nextProps.draws)) return false;
-
-  if (!isEqual(prevProps.drawsInterval, nextProps.drawsInterval)) return false;
-
-  return true;
-};
+const areEqual = () => true;
 
 export default React.memo(Presentation, areEqual);

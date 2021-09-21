@@ -1,6 +1,6 @@
 import {
-  getActiveContent,
   getBar,
+//  getCurrentContent,
   getCurrentDataIndex,
   getCurrentDataInterval,
   getFileType,
@@ -15,32 +15,6 @@ const {
   PRESENTATION,
   SCREENSHARE,
 } = ID;
-
-it('gets the current active content', () => {
-  const screenshare = [
-    { timestamp: 10.0, clear: 25.0 },
-    { timestamp: 30.0, clear: 45.0 },
-  ];
-
-  // Boundaries
-  expect(getActiveContent(screenshare, 9.9)).toEqual(PRESENTATION);
-  expect(getActiveContent(screenshare, 10.0)).toEqual(SCREENSHARE);
-  expect(getActiveContent(screenshare, 24.9)).toEqual(SCREENSHARE);
-  expect(getActiveContent(screenshare, 25.0)).toEqual(PRESENTATION);
-  expect(getActiveContent(screenshare, 29.9)).toEqual(PRESENTATION);
-  expect(getActiveContent(screenshare, 30.0)).toEqual(SCREENSHARE);
-  expect(getActiveContent(screenshare, 44.9)).toEqual(SCREENSHARE);
-  expect(getActiveContent(screenshare, 45.0)).toEqual(PRESENTATION);
-
-  const empty = [];
-  expect(getActiveContent(empty, 0.0)).toEqual(PRESENTATION);
-
-  const object = { timestamp: 1.2 };
-  expect(getActiveContent(empty, 0.0)).toEqual(PRESENTATION);
-
-  const invalid = [{}];
-  expect(getActiveContent(invalid, 0.0)).toEqual(PRESENTATION);
-});
 
 it('get a poll bar from a percentage value', () => {
   expect(getBar(0))

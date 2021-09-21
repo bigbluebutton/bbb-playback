@@ -23,13 +23,6 @@ import {
   ID,
   LAYOUT,
 } from 'utils/constants';
-import {
-  getActiveContent,
-  getCurrentDataIndex,
-  getCurrentDataInterval,
-  getDraws,
-} from 'utils/data';
-import storage from 'utils/data/storage';
 import { isEqual } from 'utils/data/validators';
 import layout from 'utils/layout';
 import Shortcuts from 'utils/shortcuts';
@@ -60,11 +53,9 @@ class Player extends PureComponent {
       search: [],
       section: layout.section,
       swap: layout.swap,
-      time: 0,
     }
 
     this.handleSearch = this.handleSearch.bind(this);
-    this.handleTimeUpdate = this.handleTimeUpdate.bind(this);
   }
 
   componentDidMount() {
@@ -82,14 +73,6 @@ class Player extends PureComponent {
 
     if (!isEqual(search, value)) {
       this.setState({ search: value });
-    }
-  }
-
-  handleTimeUpdate(value) {
-    const { time } = this.state;
-
-    if (time !== value) {
-      this.setState({ time: value });
     }
   }
 
@@ -217,10 +200,7 @@ class Player extends PureComponent {
     return (
       <div className={cx('media', layout.getMediaStyle(this.state))}>
         {this.renderFullscreenButton(LAYOUT.MEDIA)}
-        <Webcams
-          key={ID.WEBCAMS}
-          onTimeUpdate={this.handleTimeUpdate}
-        />
+        <Webcams />
       </div>
     );
   }
@@ -230,46 +210,26 @@ class Player extends PureComponent {
     return <Application />;
   }
 
-  renderPresentation(active) {
-    const { time } = this.state;
+  renderPresentation() {
 
-    const currentSlideIndex = getCurrentDataIndex(storage.slides, time);
-    const draws = getDraws(currentSlideIndex, storage.slides, storage.canvases);
-    const currentDrawsInterval = getCurrentDataInterval(draws, time);
-
-    return (
-      <Presentation
-        active={active}
-        currentSlideIndex={currentSlideIndex}
-        draws={draws}
-        drawsInterval={currentDrawsInterval}
-      />
-    )
+    return <Presentation />;
   }
 
-  renderScreenshare(active) {
+  renderScreenshare() {
     if (!layout.screenshare) return null;
 
-    return (
-      <Screenshare
-        active={active}
-        key={ID.SCREENSHARE}
-      />
-    );
+    return <Screenshare />;
   }
 
   renderContent() {
     if (layout.single) return null;
 
-    const { time } = this.state;
-    const content = getActiveContent(storage.screenshare, time);
-
     return (
       <div className={cx('content', layout.getContentStyle(this.state))}>
         {this.renderFullscreenButton(LAYOUT.CONTENT)}
         <div className="top-content">
-          {this.renderPresentation(content === ID.PRESENTATION)}
-          {this.renderScreenshare(content === ID.SCREENSHARE)}
+          {this.renderPresentation()}
+          {this.renderScreenshare()}
         </div>
         <div className={cx('bottom-content', layout.getBottomContentStyle(this.state))}>
           {this.renderThumbnails()}
