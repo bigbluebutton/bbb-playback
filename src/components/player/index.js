@@ -6,23 +6,17 @@ import {
 } from 'react-intl';
 import { shortcuts } from 'config';
 import Application from './application';
-import Presentation from 'components/presentation';
-import Screenshare from 'components/screenshare';
-import Thumbnails from 'components/thumbnails';
-import Webcams from 'components/webcams';
+import Content from './content';
+import Media from './media';
 import BottomBar from 'components/bars/bottom';
 import TopBar from 'components/bars/top';
 import AboutModal from 'components/modals/about';
 import SearchModal from 'components/modals/search';
-import Button from 'components/utils/button';
 import {
   seek,
   skip,
 } from 'utils/actions';
-import {
-  ID,
-  LAYOUT,
-} from 'utils/constants';
+import { ID } from 'utils/constants';
 import { isEqual } from 'utils/data/validators';
 import layout from 'utils/layout';
 import Shortcuts from 'utils/shortcuts';
@@ -32,14 +26,6 @@ const intlMessages = defineMessages({
   aria: {
     id: 'player.wrapper.aria',
     description: 'Aria label for the player wrapper',
-  },
-  fullscreen: {
-    id: 'button.fullscreen.aria',
-    description: 'Aria label for the fullscreen button',
-  },
-  restore: {
-    id: 'button.restore.aria',
-    description: 'Aria label for the restore button',
   },
 });
 
@@ -121,31 +107,6 @@ class Player extends PureComponent {
     this.setState({ swap: !swap });
   }
 
-  renderFullscreenButton(content) {
-    if (!layout.hasFullscreenButton(content, this.state)) return null;
-
-    const { intl } = this.props;
-    const { fullscreen } = this.state;
-
-    const aria = fullscreen
-      ? intl.formatMessage(intlMessages.restore)
-      : intl.formatMessage(intlMessages.fullscreen)
-    ;
-
-    const icon = fullscreen ? 'restore' : 'fullscreen';
-
-    return (
-      <div className="fullscreen-button">
-        <Button
-          aria={aria}
-          handleOnClick={() => this.toggleFullscreen()}
-          icon={icon}
-          type="solid"
-        />
-      </div>
-    );
-  }
-
   renderModal() {
     const { modal } = this.state;
     const open = modal.length > 0;
@@ -169,18 +130,6 @@ class Player extends PureComponent {
     }
   }
 
-  renderThumbnails() {
-    const { search } = this.state;
-
-    return (
-      <Thumbnails
-        handleSearch={this.handleSearch}
-        interactive
-        search={search}
-      />
-    );
-  }
-
   renderTopBar() {
     const { section } = this.state;
 
@@ -196,12 +145,17 @@ class Player extends PureComponent {
   }
 
   renderMedia() {
+    const {
+      fullscreen,
+      swap,
+    } = this.state;
 
     return (
-      <div className={cx('media', layout.getMediaStyle(this.state))}>
-        {this.renderFullscreenButton(LAYOUT.MEDIA)}
-        <Webcams />
-      </div>
+      <Media
+        fullscreen={fullscreen}
+        swap={swap}
+        toggleFullscreen={() => this.toggleFullscreen()}
+      />
     );
   }
 
@@ -210,31 +164,21 @@ class Player extends PureComponent {
     return <Application />;
   }
 
-  renderPresentation() {
-
-    return <Presentation />;
-  }
-
-  renderScreenshare() {
-    if (!layout.screenshare) return null;
-
-    return <Screenshare />;
-  }
-
   renderContent() {
-    if (layout.single) return null;
+    const {
+      fullscreen,
+      search,
+      swap,
+    } = this.state;
 
     return (
-      <div className={cx('content', layout.getContentStyle(this.state))}>
-        {this.renderFullscreenButton(LAYOUT.CONTENT)}
-        <div className="top-content">
-          {this.renderPresentation()}
-          {this.renderScreenshare()}
-        </div>
-        <div className={cx('bottom-content', layout.getBottomContentStyle(this.state))}>
-          {this.renderThumbnails()}
-        </div>
-      </div>
+      <Content
+        fullscreen={fullscreen}
+        handleSearch={this.handleSearch}
+        search={search}
+        swap={swap}
+        toggleFullscreen={() => this.toggleFullscreen()}
+      />
     );
   }
 

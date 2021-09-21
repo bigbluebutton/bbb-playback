@@ -74,22 +74,6 @@ const layout = {
   get single() {
     return !this.content.presentation && !this.content.screenshare;
   },
-  getBottomContentStyle: function ({ fullscreen }) {
-    const bottom = !fullscreen;
-    const style = { 'inactive': !bottom };
-
-    return style;
-  },
-  getContentStyle: function ({ swap }) {
-    const style = { 'swapped-content': swap };
-
-    return style;
-  },
-  getMediaStyle: function ({ swap }) {
-    const style = { 'swapped-media': swap || this.single };
-
-    return style;
-  },
   getPlayerStyle: function ({ fullscreen, section }) {
     const style = {
       'fullscreen-content': fullscreen,
@@ -99,7 +83,7 @@ const layout = {
 
     return style;
   },
-  hasFullscreenButton: function (content, { swap }) {
+  hasFullscreenButton: function (content, swap) {
     if (!this.control || !controls.fullscreen) return false;
 
     if (!isContentVisible(content, swap || this.single)) return false;
