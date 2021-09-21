@@ -77,20 +77,20 @@ class Player extends PureComponent {
   }
 
   initShortcuts() {
-    const { seconds } = shortcuts.player;
+    const { seconds } = shortcuts.seek;
 
     const actions = {
       fullscreen: () => this.toggleFullscreen(),
       section: () => this.toggleSection(),
-      swap: () => this.toggleSwap(),
-      slides: {
-        next: () => skip(+1),
-        previous: () => skip(-1),
-      },
-      player: {
+      seek: {
         backward: () => seek(-seconds),
         forward: () => seek(+seconds),
       },
+      skip: {
+        next: () => skip(+1),
+        previous: () => skip(-1),
+      },
+      swap: () => this.toggleSwap(),
     };
 
     this.shortcuts = new Shortcuts(actions);

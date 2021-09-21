@@ -61,16 +61,15 @@ https://<domain>/playback/presentation/2.3/<recordId>
 
 - shortcuts: alt + shift
   - `fullscreen`: `K`
-  - `player`: seek
+  - `section`: `L`
+  - `seek`:
     - `backward`: `ArrowLeft`
     - `forward`: `ArrowRight`
     - `seconds`: 15
-  - `section`: `L`
-  - `slides`: skip
+  - `skip`:
     - `next`: `ArrowUp`
     - `previous`: `ArrowDown`
   - `swap`: `M`
-  - `thumbnails`: `N`
 
 - styles: custom styles
   - `default`: default style
