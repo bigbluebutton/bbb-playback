@@ -8,10 +8,9 @@ import { shortcuts } from 'config';
 import Application from './application';
 import Content from './content';
 import Media from './media';
+import Modal from './modal';
 import BottomBar from 'components/bars/bottom';
 import TopBar from 'components/bars/top';
-import AboutModal from 'components/modals/about';
-import SearchModal from 'components/modals/search';
 import {
   seek,
   skip,
@@ -107,87 +106,16 @@ class Player extends PureComponent {
     this.setState({ swap: !swap });
   }
 
-  renderModal() {
-    const { modal } = this.state;
-    const open = modal.length > 0;
-
-    if (!open) return null;
-
-    switch (modal) {
-      case ID.ABOUT:
-        return (
-          <AboutModal toggleModal={() => this.toggleModal(ID.ABOUT)} />
-        );
-      case ID.SEARCH:
-        return (
-          <SearchModal
-            handleSearch={this.handleSearch}
-            toggleModal={() => this.toggleModal(ID.SEARCH)}
-          />
-        );
-      default:
-        return null;
-    }
-  }
-
-  renderTopBar() {
-    const { section } = this.state;
-
-    return (
-      <TopBar
-        section={section}
-        toggleAbout={() => this.toggleModal(ID.ABOUT)}
-        toggleSearch={() => this.toggleModal(ID.SEARCH)}
-        toggleSection={() => this.toggleSection()}
-        toggleSwap={() => this.toggleSwap()}
-      />
-    );
-  }
-
-  renderMedia() {
-    const {
-      fullscreen,
-      swap,
-    } = this.state;
-
-    return (
-      <Media
-        fullscreen={fullscreen}
-        swap={swap}
-        toggleFullscreen={() => this.toggleFullscreen()}
-      />
-    );
-  }
-
-  renderApplication() {
-
-    return <Application />;
-  }
-
-  renderContent() {
-    const {
-      fullscreen,
-      search,
-      swap,
-    } = this.state;
-
-    return (
-      <Content
-        fullscreen={fullscreen}
-        handleSearch={this.handleSearch}
-        search={search}
-        swap={swap}
-        toggleFullscreen={() => this.toggleFullscreen()}
-      />
-    );
-  }
-
-  renderBottomBar() {
-    return <BottomBar />;
-  }
-
   render() {
     const { intl } = this.props;
+
+    const {
+      fullscreen,
+      modal,
+      search,
+      section,
+      swap,
+    } = this.state;
 
     return (
       <div
@@ -195,12 +123,32 @@ class Player extends PureComponent {
         className={cx('player-wrapper', layout.getPlayerStyle(this.state))}
         id={ID.PLAYER}
       >
-        {this.renderTopBar()}
-        {this.renderMedia()}
-        {this.renderApplication()}
-        {this.renderContent()}
-        {this.renderBottomBar()}
-        {this.renderModal()}
+        <TopBar
+          section={section}
+          toggleAbout={() => this.toggleModal(ID.ABOUT)}
+          toggleSearch={() => this.toggleModal(ID.SEARCH)}
+          toggleSection={() => this.toggleSection()}
+          toggleSwap={() => this.toggleSwap()}
+        />
+        <Media
+          fullscreen={fullscreen}
+          swap={swap}
+          toggleFullscreen={() => this.toggleFullscreen()}
+        />
+        <Application />
+        <Content
+          fullscreen={fullscreen}
+          handleSearch={this.handleSearch}
+          search={search}
+          swap={swap}
+          toggleFullscreen={() => this.toggleFullscreen()}
+        />
+        <BottomBar />
+        <Modal
+          handleSearch={this.handleSearch}
+          modal={modal}
+          toggleModal={(id) => this.toggleModal(id)}
+        />
       </div>
     );
   }
