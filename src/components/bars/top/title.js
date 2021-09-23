@@ -19,11 +19,11 @@ const intlMessages = defineMessages({
   },
 });
 
-const propTypes = { toggleAbout: PropTypes.func };
+const propTypes = { openAbout: PropTypes.func };
 
-const defaultProps = { toggleAbout: () => {} };
+const defaultProps = { openAbout: () => {} };
 
-const Title = ({ toggleAbout }) => {
+const Title = ({ openAbout }) => {
   const intl = useIntl();
   const date = <FormattedDate value={new Date(storage.metadata.start)} />;
 
@@ -41,8 +41,8 @@ const Title = ({ toggleAbout }) => {
     <span
       aria={intl.formatMessage(intlMessages.about)}
       className={cx('title', { interactive })}
-      onClick={toggleAbout}
-      onKeyPress={event => handleOnEnterPress(event, toggleAbout)}
+      onClick={openAbout}
+      onKeyPress={event => handleOnEnterPress(event, openAbout)}
       tabIndex="0"
     >
       {storage.metadata.name} - {date}

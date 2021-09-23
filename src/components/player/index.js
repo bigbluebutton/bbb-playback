@@ -1,10 +1,10 @@
-import React, { PureComponent } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 import {
   defineMessages,
-  injectIntl,
+  useIntl,
 } from 'react-intl';
-import { shortcuts } from 'config';
+import { shortcuts as config } from 'config';
 import Application from './application';
 import Content from './content';
 import Media from './media';
@@ -16,7 +16,6 @@ import {
   skip,
 } from 'utils/actions';
 import { ID } from 'utils/constants';
-import { isEqual } from 'utils/data/validators';
 import layout from 'utils/layout';
 import Shortcuts from 'utils/shortcuts';
 import './index.scss';
@@ -28,45 +27,23 @@ const intlMessages = defineMessages({
   },
 });
 
-class Player extends PureComponent {
-  constructor(props) {
-    super(props);
+const Player = () => {
+  const intl = useIntl();
 
-    this.state = {
-      fullscreen: false,
-      modal: '',
-      search: [],
-      section: layout.section,
-      swap: layout.swap,
-    }
+  const [fullscreen, setFullscreen] = useState(false);
+  const [modal, setModal] = useState('');
+  const [search, setSearch] = useState([]);
+  const [section, setSection] = useState(layout.section);
+  const [swap, setSwap] = useState(layout.swap);
 
-    this.handleSearch = this.handleSearch.bind(this);
-  }
+  const shortcuts = useRef();
 
-  componentDidMount() {
-    this.initShortcuts();
-  }
-
-  componentWillUnmount() {
-    if (this.shortcuts) {
-      this.shortcuts.destroy();
-    }
-  }
-
-  handleSearch(value) {
-    const { search } = this.state;
-
-    if (!isEqual(search, value)) {
-      this.setState({ search: value });
-    }
-  }
-
-  initShortcuts() {
-    const { seconds } = shortcuts.seek;
+  useEffect(() => {
+    const { seconds } = config.seek;
 
     const actions = {
-      fullscreen: () => this.toggleFullscreen(),
-      section: () => this.toggleSection(),
+      fullscreen: () => setFullscreen(prevFullscreen => !prevFullscreen),
+      section: () => setSection(prevSection => !prevSection),
       seek: {
         backward: () => seek(-seconds),
         forward: () => seek(+seconds),
@@ -75,83 +52,49 @@ class Player extends PureComponent {
         next: () => skip(+1),
         previous: () => skip(-1),
       },
-      swap: () => this.toggleSwap(),
+      swap: () => setSwap(prevSwap => !prevSwap),
     };
 
-    this.shortcuts = new Shortcuts(actions);
-  }
+    shortcuts.current = new Shortcuts(actions);
 
-  toggleFullscreen() {
-    const { fullscreen } = this.state;
+    return () => {
+      if (shortcuts.current) shortcuts.current.destroy();
+    };
+  }, []);
 
-    this.setState({ fullscreen: !fullscreen });
-  }
+  return (
+    <div
+      aria-label={intl.formatMessage(intlMessages.aria)}
+      className={cx('player-wrapper', layout.getPlayerStyle(fullscreen, section))}
+      id={ID.PLAYER}
+    >
+      <TopBar
+        openModal={(type) => setModal(type)}
+        section={section}
+        toggleSection={() => setSection(prevSection => !prevSection)}
+        toggleSwap={() => setSwap(prevSwap => !prevSwap)}
+      />
+      <Media
+        fullscreen={fullscreen}
+        swap={swap}
+        toggleFullscreen={() => setFullscreen(prevFullscreen => !prevFullscreen)}
+      />
+      <Application />
+      <Content
+        fullscreen={fullscreen}
+        handleSearch={(value) => setSearch(value)}
+        search={search}
+        swap={swap}
+        toggleFullscreen={() => setFullscreen(prevFullscreen => !prevFullscreen)}
+      />
+      <BottomBar />
+      <Modal
+        handleClose={() => setModal('')}
+        handleSearch={(value) => setSearch(value)}
+        modal={modal}
+      />
+    </div>
+  );
+};
 
-  toggleModal(type) {
-    const { modal } = this.state;
-    const open = modal.length > 0;
-
-    this.setState({ modal: open ? '' : type });
-  }
-
-  toggleSection() {
-    const { section } = this.state;
-
-    this.setState({ section: !section });
-  }
-
-  toggleSwap() {
-    const { swap } = this.state;
-
-    this.setState({ swap: !swap });
-  }
-
-  render() {
-    const { intl } = this.props;
-
-    const {
-      fullscreen,
-      modal,
-      search,
-      section,
-      swap,
-    } = this.state;
-
-    return (
-      <div
-        aria-label={intl.formatMessage(intlMessages.aria)}
-        className={cx('player-wrapper', layout.getPlayerStyle(this.state))}
-        id={ID.PLAYER}
-      >
-        <TopBar
-          section={section}
-          toggleAbout={() => this.toggleModal(ID.ABOUT)}
-          toggleSearch={() => this.toggleModal(ID.SEARCH)}
-          toggleSection={() => this.toggleSection()}
-          toggleSwap={() => this.toggleSwap()}
-        />
-        <Media
-          fullscreen={fullscreen}
-          swap={swap}
-          toggleFullscreen={() => this.toggleFullscreen()}
-        />
-        <Application />
-        <Content
-          fullscreen={fullscreen}
-          handleSearch={this.handleSearch}
-          search={search}
-          swap={swap}
-          toggleFullscreen={() => this.toggleFullscreen()}
-        />
-        <BottomBar />
-        <Modal
-          handleSearch={this.handleSearch}
-          modal={modal}
-          toggleModal={(id) => this.toggleModal(id)}
-        />
-      </div>
-    );
-  }
-}
-
-export default injectIntl(Player);
+export default Player;

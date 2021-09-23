@@ -4,9 +4,9 @@ import SearchModal from 'components/modals/search';
 import { ID } from 'utils/constants';
 
 const Modal = ({
+  handleClose,
   handleSearch,
   modal,
-  toggleModal,
 }) => {
   const open = modal.length > 0;
 
@@ -15,13 +15,13 @@ const Modal = ({
   switch (modal) {
     case ID.ABOUT:
       return (
-        <AboutModal toggleModal={() => toggleModal(ID.ABOUT)} />
+        <AboutModal handleClose={handleClose} />
       );
     case ID.SEARCH:
       return (
         <SearchModal
+          handleClose={handleClose}
           handleSearch={handleSearch}
-          toggleModal={() => toggleModal(ID.SEARCH)}
         />
       );
     default:

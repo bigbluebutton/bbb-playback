@@ -4,28 +4,26 @@ import Title from './title';
 import SearchButton from './buttons/search';
 import SectionButton from './buttons/section';
 import SwapButton from './buttons/swap';
+import { ID } from 'utils/constants';
 import './index.scss';
 
 const propTypes = {
+  openModal: PropTypes.func,
   section: PropTypes.bool,
-  toggleAbout: PropTypes.func,
-  toggleSearch: PropTypes.func,
   toggleSection: PropTypes.func,
   toggleSwap: PropTypes.func,
 };
 
 const defaultProps = {
+  openModal: () => {},
   section: false,
-  toggleAbout: () => {},
-  toggleSearch: () => {},
   toggleSection: () => {},
   toggleSwap: () => {},
 };
 
 const Top = ({
+  openModal,
   section,
-  toggleAbout,
-  toggleSearch,
   toggleSection,
   toggleSwap,
 }) => {
@@ -39,10 +37,10 @@ const Top = ({
         />
       </div>
       <div className="center">
-        <Title toggleAbout={toggleAbout} />
+        <Title openAbout={() => openModal(ID.ABOUT)} />
       </div>
       <div className="right">
-        <SearchButton toggleSearch={toggleSearch} />
+        <SearchButton openSearch={() => openModal(ID.SEARCH)} />
         <SwapButton toggleSwap={toggleSwap} />
       </div>
     </div>

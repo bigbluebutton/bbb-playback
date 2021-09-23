@@ -16,11 +16,11 @@ const intlMessages = defineMessages({
   },
 });
 
-const propTypes = { toggleSearch: PropTypes.func };
+const propTypes = { openSearch: PropTypes.func };
 
-const defaultProps = { toggleSearch: () => {} };
+const defaultProps = { openSearch: () => {} };
 
-const Search = ({ toggleSearch }) => {
+const Search = ({ openSearch }) => {
   const intl = useIntl();
 
   if (!layout.control && config.search && !layout.single) return null;
@@ -29,7 +29,7 @@ const Search = ({ toggleSearch }) => {
     <Button
       aria={intl.formatMessage(intlMessages.search)}
       circle
-      handleOnClick={toggleSearch}
+      handleOnClick={openSearch}
       icon={ID.SEARCH}
     />
   );
