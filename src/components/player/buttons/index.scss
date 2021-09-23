@@ -1,0 +1,41 @@
+@import 'src/styles/sizes';
+
+.player-wrapper {
+  .fullscreen-button {
+    visibility: hidden;
+  }
+}
+
+.hidden-section {
+  .fullscreen-button {
+    visibility: visible;
+  }
+}
+
+.fullscreen-content {
+  .fullscreen-button {
+    visibility: visible;
+  }
+}
+
+.fullscreen-button {
+  margin-top: $margin;
+  position: fixed;
+  z-index: 1;
+
+  [dir="ltr"] & {
+    right: 0;
+  }
+
+  [dir="rtl"] & {
+    left: 0;
+  }
+}
+
+@media (min-width: $media-min-width) {
+  .player-wrapper {
+    .fullscreen-button {
+      visibility: visible;
+    }
+  }
+}

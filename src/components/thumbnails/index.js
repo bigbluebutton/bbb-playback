@@ -6,6 +6,7 @@ import {
 } from 'react-intl';
 import Item from './item';
 import ClearButton from './buttons/clear';
+import { useCurrentIndex } from 'components/utils/hooks';
 import { thumbnails as config } from 'config';
 import {
   ID,
@@ -27,25 +28,23 @@ const intlMessages = defineMessages({
 });
 
 const propTypes = {
-  currentDataIndex: PropTypes.number,
   handleSearch: PropTypes.func,
   interactive: PropTypes.bool,
   search: PropTypes.array,
 };
 
 const defaultProps = {
-  currentDataIndex: 0,
   handleSearch: () => {},
   interactive: false,
   search: [],
 };
 
 const Thumbnails = ({
-  currentDataIndex,
   handleSearch,
   interactive,
   search,
 }) => {
+  const currentIndex = useCurrentIndex(storage.thumbnails);
   const interaction = useRef(false);
   const firstNode = useRef();
   const currentNode = useRef();
@@ -57,7 +56,7 @@ const Thumbnails = ({
       firstNode.current = node;
     }
 
-    if (index === currentDataIndex) {
+    if (index === currentIndex) {
       currentNode.current = node;
     }
   };
@@ -89,7 +88,7 @@ const Thumbnails = ({
     >
       {storage.thumbnails.reduce((result, item, index) => {
         if (!isFiltered(index)) {
-          const active = index === currentDataIndex;
+          const active = index === currentIndex;
 
           result.push(
             <Item
@@ -117,8 +116,6 @@ Thumbnails.propTypes = propTypes;
 Thumbnails.defaultProps = defaultProps;
 
 const areEqual = (prevProps, nextProps) => {
-  if (prevProps.currentDataIndex !== nextProps.currentDataIndex) return false;
-
   if (!isEqual(prevProps.search, nextProps.search)) return false;
 
   return true;

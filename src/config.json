@@ -45,18 +45,17 @@
   "shortcuts": {
     "enabled": true,
     "fullscreen": "K",
-    "player": {
+    "section": "L",
+    "seek": {
       "backward": "ArrowLeft",
       "forward": "ArrowRight",
       "seconds": 15
     },
-    "section": "L",
-    "slides": {
+    "skip": {
       "next": "ArrowUp",
       "previous": "ArrowDown"
     },
-    "swap": "M",
-    "thumbnails": "N"
+    "swap": "M"
   },
   "styles": {
     "default": null,

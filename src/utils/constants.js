@@ -16,9 +16,16 @@ const ERROR = {
   GONE: 410,
 };
 
+const EVENT_PREFIX = 'bbbplayback';
+
+const EVENTS = {
+  TIME_UPDATE: `${EVENT_PREFIX}timeupdate`,
+};
+
 const ID = {
   ABOUT: 'about',
   ALTERNATES: 'alternates',
+  CANVASES: 'canvases',
   CAPTIONS: 'captions',
   CHAT: 'chat',
   CURSOR: 'cursor',
@@ -38,6 +45,7 @@ const ID = {
   SEARCH: 'search',
   SETTINGS: 'settings',
   SHAPES: 'shapes',
+  SLIDES: 'slides',
   STORAGE: 'storage',
   SWAP: 'swap',
   THUMBNAILS: 'thumbnails',
@@ -104,6 +112,7 @@ export {
   BUILD,
   CONTENT,
   ERROR,
+  EVENTS,
   ID,
   LAYOUT,
   MEDIA_ROOT_URL,

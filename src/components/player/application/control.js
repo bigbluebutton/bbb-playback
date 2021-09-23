@@ -2,6 +2,7 @@ import React from 'react';
 import cx from 'classnames';
 import Icon from 'components/utils/icon';
 import { ID } from 'utils/constants';
+import layout from 'utils/layout';
 import './index.scss';
 
 const APPLICATIONS = [
@@ -13,6 +14,7 @@ const Control = ({
   current,
   toggleApplication,
 }) => {
+  if (!layout.control) return null;
 
   return (
     <div className="application-control">

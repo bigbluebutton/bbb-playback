@@ -11,14 +11,10 @@ $player-wrapper-padding: $control-bar-height;
     "application content"
     "bottom-bar content";
   grid-template-columns: 100% auto;
-  grid-template-rows: $top-bar-height auto auto $bottom-bar-height;
+  grid-template-rows: $top-bar-height auto 50% $bottom-bar-height;
   height: 100%;
   padding: 0 0 $player-wrapper-padding 0;
   width: 100%;
-
-  .fullscreen-button {
-    visibility: hidden;
-  }
 }
 
 .single-content {
@@ -36,131 +32,11 @@ $player-wrapper-padding: $control-bar-height;
     "application content"
     "application bottom-bar";
   grid-template-columns: 0% auto;
-
-  .fullscreen-button {
-    visibility: visible;
-  }
 }
 
 .fullscreen-content {
   grid-template-columns: 0% auto;
   grid-template-rows: 0% auto auto 0%;
-
-  .fullscreen-button {
-    visibility: visible;
-  }
-}
-
-.content {
-  display: flex;
-  flex-direction: column;
-  grid-area: content;
-  height: 100%;
-  width: 100%;
-
-  .top-content {
-    background-color: var(--top-content-background-color);
-    color: var(--top-content-color);
-    display: flex;
-    height: 100%;
-    position: relative;
-    width: 100%;
-  }
-
-  .bottom-content {
-    background-color: var(--bottom-content-background-color);
-    color: var(--bottom-content-color);
-    display: flex;
-    min-height: $bottom-content-height;
-    position: relative;
-    width: 100%;
-
-    .active {
-      background-color: var(--bottom-content-active-background-color);
-    }
-
-    .interactive {
-      cursor: pointer;
-      outline: none;
-
-      &:focus,
-      &:hover {
-        background-color:var(--bottom-content-active-background-color);
-      }
-    }
-  }
-
-  .inactive {
-    display: none;
-  }
-
-  .video-js {
-    background-color: var(--top-content-background-color);
-  }
-
-  .button-wrapper {
-    .solid {
-      &:focus {
-        box-shadow: 0 0 0 $margin-extra-small var(--box-shadow-color);
-      }
-    }
-  }
-}
-
-.swapped-content {
-  grid-area: media;
-
-  .top-content {
-    background-color: var(--media-background-color);
-    color: var(--media-color);
-  }
-
-  .video-js {
-    background-color: var(--media-background-color);
-  }
-}
-
-.media {
-  background-color: var(--media-background-color);
-  display: flex;
-  grid-area: media;
-  height: 100%;
-  width: 100%;
-
-  .video-js {
-    background-color: var(--media-background-color);
-  }
-}
-
-.swapped-media {
-  background-color: var(--top-content-background-color);
-  grid-area: content;
-
-  .video-js {
-    background-color: var(--top-content-background-color);
-  }
-
-  .button-wrapper {
-    .solid {
-      &:focus {
-        box-shadow: 0 0 0 $margin-extra-small var(--box-shadow-color);
-      }
-    }
-  }
-}
-
-.fullscreen-button {
-  margin-top: $margin;
-  position: fixed;
-  z-index: 1;
-
-  [dir="ltr"] & {
-    right: 0;
-  }
-
-  [dir="rtl"] & {
-    left: 0;
-  }
 }
 
 @media (min-width: $media-min-width) {
@@ -173,10 +49,6 @@ $player-wrapper-padding: $control-bar-height;
       "application bottom-bar";
     grid-template-columns: $section-width auto;
     grid-template-rows: $top-bar-height $media-fit-height auto auto $bottom-bar-height;
-
-    .fullscreen-button {
-      visibility: visible;
-    }
   }
 
   .single-content {

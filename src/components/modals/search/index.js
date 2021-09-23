@@ -28,18 +28,18 @@ const isValid = (value) => {
 };
 
 const propTypes = {
+  handleClose: PropTypes.func,
   handleSearch: PropTypes.func,
-  toggleModal: PropTypes.func,
 };
 
 const defaultProps = {
+  handleClose: () => {},
   handleSearch: () => {},
-  toggleModal: () => {},
 };
 
 const Search = ({
+  handleClose,
   handleSearch,
-  toggleModal,
 }) => {
   const [disabled, setDisabled] = useState(true);
   const [search, setSearch] = useState([]);
@@ -69,11 +69,11 @@ const Search = ({
 
   const handleOnClick = () => {
     handleSearch(search);
-    toggleModal();
+    handleClose();
   };
 
   return (
-    <Modal onClose={toggleModal}>
+    <Modal onClose={handleClose}>
       <Header />
       <Body
         handleOnChange={(event) => handleOnChange(event)}

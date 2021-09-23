@@ -5,7 +5,9 @@ import {
   useIntl,
 } from 'react-intl';
 import Button from 'components/utils/button';
+import { controls as config } from 'config';
 import { ID } from 'utils/constants';
+import layout from 'utils/layout';
 
 const intlMessages = defineMessages({
   swap: {
@@ -14,23 +16,14 @@ const intlMessages = defineMessages({
   },
 });
 
-const propTypes = {
-  enabled: PropTypes.bool,
-  toggleSwap: PropTypes.func,
-};
+const propTypes = { toggleSwap: PropTypes.func };
 
-const defaultProps = {
-  enabled: false,
-  toggleSwap: () => {},
-};
+const defaultProps = { toggleSwap: () => {} };
 
-const Swap = ({
-  enabled,
-  toggleSwap,
-}) => {
+const Swap = ({ toggleSwap }) => {
   const intl = useIntl();
 
-  if (!enabled) return null;
+  if (!layout.control && config.swap && !layout.single) return null;
 
   return (
     <Button

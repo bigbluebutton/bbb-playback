@@ -10,17 +10,17 @@ import storage from 'utils/data/storage';
 import './index.scss';
 
 const propTypes = {
-  currentDataIndex: PropTypes.number,
+  currentIndex: PropTypes.number,
   setRef: PropTypes.func,
 };
 
 const defaultProps = {
-  currentDataIndex: 0,
+  currentIndex: 0,
   setRef: () => {},
 };
 
 const Messages = ({
-  currentDataIndex,
+  currentIndex,
   setRef,
 }) => {
 
@@ -28,7 +28,7 @@ const Messages = ({
     <div className="list">
       <div className="message-wrapper">
         {storage.messages.map((item, index) => {
-          const active = index <= currentDataIndex;
+          const active = index <= currentIndex;
           const { timestamp } = item;
           const type = getMessageType(item);
           switch (type) {

@@ -1,4 +1,10 @@
+@import 'src/styles/images';
+
 $cursor-size: .5rem;
+
+:root {
+  --cursor-fill-color: var(--red);
+}
 
 .presentation-wrapper {
   align-items: center;

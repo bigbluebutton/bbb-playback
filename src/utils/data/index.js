@@ -6,7 +6,6 @@ import {
 } from 'utils/constants';
 import storage from 'utils/data/storage';
 import {
-  hasIndex,
   hasProperty,
   isCurrent,
   isEmpty,
@@ -37,17 +36,6 @@ const getAvatarStyle = name => {
   return `avatar-${NUMBERS[index]}`;
 };
 
-const getActiveContent = (screenshare, time) => {
-  const {
-    SCREENSHARE,
-    PRESENTATION,
-  } = ID;
-
-  const content = isEnabled(screenshare, time) ? SCREENSHARE : PRESENTATION;
-
-  return content;
-};
-
 const FULL_BLOCK = '█';
 const LEFT_HALF_BLOCK = '▌';
 const RIGHT_HALF_BLOCK = '▐';
@@ -73,6 +61,17 @@ const getBar = (percentage) => {
   }
 
   return bar;
+};
+
+const getCurrentContent = (time) => {
+  const {
+    SCREENSHARE,
+    PRESENTATION,
+  } = ID;
+
+  const content = isEnabled(storage.screenshare, time) ? SCREENSHARE : PRESENTATION;
+
+  return content;
 };
 
 const getCurrentDataIndex = (data, time) => {
@@ -122,22 +121,6 @@ const getCurrentDataInterval = (data, time) => {
   return currentDataInterval;
 };
 
-const getDraws = (index, slides, canvases) => {
-  if (!hasIndex(index, slides)) return [];
-
-  const slide = slides[index];
-
-  if (isEmpty(canvases)) return [];
-
-  const canvas = canvases.find(canvas => slide.id === canvas.id);
-
-  if (!canvas) return [];
-
-  const { draws } = canvas;
-
-  return draws;
-};
-
 const getFileType = file => file.split('.').pop();
 
 const getPercentage = (value, total) => {
@@ -182,11 +165,10 @@ const getTimestampAsMilliseconds = timestamp => timestamp * 1000;
 export {
   buildFileURL,
   getAvatarStyle,
-  getActiveContent,
   getBar,
+  getCurrentContent,
   getCurrentDataIndex,
   getCurrentDataInterval,
-  getDraws,
   getFileType,
   getMessageType,
   getPercentage,

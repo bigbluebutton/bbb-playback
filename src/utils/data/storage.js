@@ -151,7 +151,7 @@ const storage = {
       polls: !isEmpty(this.polls),
       questions: !isEmpty(this.questions),
       videos: !isEmpty(this.videos),
-      presentation: hasPresentation(this.shapes.slides),
+      presentation: hasPresentation(this.slides),
       screenshare: !isEmpty(this.screenshare),
     };
   },
@@ -206,9 +206,15 @@ const storage = {
   get shapes() {
     return DATA[ID.SHAPES];
   },
+  get slides() {
+    return this.shapes[ID.SLIDES];
+  },
+  get canvases() {
+    return this.shapes[ID.CANVASES];
+  },
   get thumbnails() {
     if (!hasProperty(DATA, ID.THUMBNAILS)) {
-      DATA[ID.THUMBNAILS] = addAlternatesToThumbnails(this.shapes.thumbnails, this.alternates);
+      DATA[ID.THUMBNAILS] = addAlternatesToThumbnails(this.shapes[ID.THUMBNAILS], this.alternates);
     }
 
     return DATA[ID.THUMBNAILS];

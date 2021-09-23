@@ -1,16 +1,17 @@
 import React, { useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
 import {
   defineMessages,
   useIntl,
 } from 'react-intl';
 import { chat as config } from 'config';
 import Messages from './messages';
+import { useCurrentIndex } from 'components/utils/hooks';
 import {
   ID,
   POSITIONS,
 } from 'utils/constants';
 import { handleAutoScroll } from 'utils/data/handlers';
+import storage from 'utils/data/storage';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -20,23 +21,19 @@ const intlMessages = defineMessages({
   },
 });
 
-const propTypes = { currentDataIndex: PropTypes.number };
-
-const defaultProps = { currentDataIndex: 0 };
-
-const Chat = ({ currentDataIndex }) => {
+const Chat = () => {
+  const intl = useIntl();
+  const currentIndex = useCurrentIndex(storage.messages);
   const interaction = useRef(false);
   const firstNode = useRef();
   const currentNode = useRef();
-
-  const intl = useIntl();
 
   const setRef = (node, index) => {
     if (index === 0) {
       firstNode.current = node;
     }
 
-    if (index === currentDataIndex) {
+    if (index === currentIndex) {
       currentNode.current = node;
     }
   };
@@ -60,20 +57,13 @@ const Chat = ({ currentDataIndex }) => {
       tabIndex="0"
     >
       <Messages
-        currentDataIndex={currentDataIndex}
+        currentIndex={currentIndex}
         setRef={(node, index) => setRef(node, index)}
       />
     </div>
   );
 };
 
-Chat.propTypes = propTypes;
-Chat.defaultProps = defaultProps;
-
-const areEqual = (prevProps, nextProps) => {
-  if (prevProps.currentDataIndex !== nextProps.currentDataIndex) return false;
-
-  return true;
-};
+const areEqual = () => true;
 
 export default React.memo(Chat, areEqual);

@@ -33,21 +33,21 @@ const seek = (seconds) => {
 
 const skip = (change) => {
   const min = 0;
-  const max = storage.shapes.slides.length - 1;
+  const max = storage.slides.length - 1;
   const time = player.primary.currentTime();
 
-  const current = getCurrentDataIndex(storage.shapes.slides, time);
+  const current = getCurrentDataIndex(storage.slides, time);
   if (current === -1) return null;
 
   const index = current + change;
 
   let timestamp;
   if (index < min) {
-    timestamp = storage.shapes.slides[min].timestamp;
+    timestamp = storage.slides[min].timestamp;
   } else if (index > max) {
-    timestamp = storage.shapes.slides[max].timestamp;
+    timestamp = storage.slides[max].timestamp;
   } else {
-    timestamp = storage.shapes.slides[index].timestamp;
+    timestamp = storage.slides[index].timestamp;
   }
 
   if (typeof timestamp !== 'undefined') {

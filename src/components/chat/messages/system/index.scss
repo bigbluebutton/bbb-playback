@@ -1,8 +1,11 @@
 @import 'src/styles/sizes';
 
+:root {
+  --system-message-wrapper-background-color: var(--secondary-highlight-color);
+}
+
 .system-message-wrapper {
   background-color: var(--system-message-wrapper-background-color);
-  border: $border-width-extra-small solid var(--system-message-wrapper-color);
   padding: $padding-small $padding-small $padding-small $padding-small;
 
   [dir="ltr"] & {

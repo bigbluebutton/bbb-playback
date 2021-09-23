@@ -1,5 +1,12 @@
 @import 'src/styles/sizes';
 
+:root {
+  --application-background-color: var(--secondary-background-color);
+  --application-color: var(--secondary-content-color);
+  --application-control-background-color: var(--tertiary-background-color);
+  --application-control-color: var(--tertiary-content-color);
+}
+
 .application {
   background-color: var(--application-background-color);
   color: var(--application-color);
@@ -18,6 +25,7 @@
 
     .application-icon {
       box-sizing: border-box;
+      color: var(--application-control-color);
       display: flex;
       font-size: large;
       font-weight: var(--font-weight-semi-bold);

@@ -1,5 +1,12 @@
 @import 'src/styles/sizes';
 
+:root {
+  --modal-active-background-color: var(--secondary-highlight-color);
+  --modal-background-color: var(--secondary-background-color);
+  --modal-color: var(--secondary-content-color);
+  --modal-wrapper-background-color: rgba(6, 23, 42, .25);
+}
+
 .modal-wrapper {
   align-items: center;
   background-color: var(--modal-wrapper-background-color);
