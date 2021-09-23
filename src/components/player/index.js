@@ -62,10 +62,16 @@ const Player = () => {
     };
   }, []);
 
+  const style = {
+    'fullscreen-content': fullscreen,
+    'hidden-section': !section,
+    'single-content': layout.single,
+  };
+
   return (
     <div
       aria-label={intl.formatMessage(intlMessages.aria)}
-      className={cx('player-wrapper', layout.getPlayerStyle(fullscreen, section))}
+      className={cx('player-wrapper', style)}
       id={ID.PLAYER}
     >
       <TopBar

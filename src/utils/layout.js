@@ -74,15 +74,6 @@ const layout = {
   get single() {
     return !this.content.presentation && !this.content.screenshare;
   },
-  getPlayerStyle: function (fullscreen, section) {
-    const style = {
-      'fullscreen-content': fullscreen,
-      'hidden-section': !section,
-      'single-content': this.single,
-    };
-
-    return style;
-  },
   hasFullscreenButton: function (content, swap) {
     if (!this.control || !controls.fullscreen) return false;
 
