@@ -18,6 +18,8 @@
   "player.chat.message.poll.option.abstention": "S'abstenir",
   "player.chat.message.poll.option.true": "Vrai",
   "player.chat.message.poll.option.false": "Faux",
+  "player.chat.message.question.name": "Question",
+  "player.chat.message.question.answer": "Answer",
   "player.chat.message.video.name": "Vidéo externe",
   "player.chat.wrapper.aria": "Zone de chat",
   "player.notes.wrapper.aria": "Zone de notes",
