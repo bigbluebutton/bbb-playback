@@ -59,13 +59,15 @@ const Presentation = () => {
   const currentPanzoomIndex = useCurrentIndex(storage.panzooms);
   const viewBox = getViewBox(currentPanzoomIndex);
 
+  const started = currentPanzoomIndex !== -1;
+
   return (
     <div
       aria-label={intl.formatMessage(intlMessages.aria)}
       className={cx('presentation-wrapper', { inactive: currentContent !== ID.PRESENTATION })}
       id={ID.PRESENTATION}
     >
-      <div className={cx('presentation', 'logo')}>
+      <div className={cx('presentation', { logo: !started })}>
         <svg
           viewBox={buildViewBoxAttr(viewBox)}
           xmlns="http://www.w3.org/2000/svg"
