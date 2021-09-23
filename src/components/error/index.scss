@@ -1,5 +1,10 @@
 $error-font-size: 5rem;
 
+:root {
+  --error-background-color: var(--primary-background-color);
+  --error-color: var(--primary-content-color);
+}
+
 .error-wrapper {
   background-color: var(--error-background-color);
   display: flex;

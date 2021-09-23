@@ -5,7 +5,6 @@ import Icon from 'components/utils/icon';
 import './index.scss';
 
 const DEFAULT = 'default';
-const GHOST = 'ghost';
 const SOLID = 'solid';
 
 const propTypes = {
@@ -37,12 +36,10 @@ const Button = ({
   icon,
   type,
 }) => {
-  const ghost = type === GHOST;
   const solid = type === SOLID;
 
   const style = {
-    default: !ghost && !solid && !disabled,
-    ghost: ghost && !active && !disabled,
+    default: !solid && !disabled,
     solid: (solid || active) && !disabled,
     circle,
     disabled,

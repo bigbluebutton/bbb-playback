@@ -1,5 +1,26 @@
 $avatar-size: 2rem;
 
+:root {
+  --avatar-color: var(--white);
+  --avatar-default-background-color: var(--blue);
+  --avatar-zero-background-color: rgb(123, 31, 162);
+  --avatar-one-background-color: rgb(106, 27, 154);
+  --avatar-two-background-color: rgb(74, 20, 140);
+  --avatar-three-background-color: rgb(94, 53, 177);
+  --avatar-four-background-color: rgb(81, 45, 168);
+  --avatar-five-background-color: rgb(69, 39, 160);
+  --avatar-six-background-color: rgb(49, 27, 146);
+  --avatar-seven-background-color: rgb(57, 73, 171);
+  --avatar-eight-background-color: rgb(48, 63, 159);
+  --avatar-nine-background-color: rgb(40, 53, 147);
+  --avatar-ten-background-color: rgb(26, 35, 126);
+  --avatar-eleven-background-color: rgb(25, 118, 210);
+  --avatar-twelve-background-color: rgb(21, 101, 192);
+  --avatar-thirteen-background-color: rgb(13, 71, 161);
+  --avatar-fourteen-background-color: rgb(2, 119, 189);
+  --avatar-fifteen-background-color: rgb(1, 87, 155);
+}
+
 .avatar-wrapper {
   display: flex;
   font-size: medium;

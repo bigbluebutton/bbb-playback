@@ -17,7 +17,6 @@ import logger from 'utils/logger';
 import {
   getLayout,
   getRecordId,
-  getTime,
 } from 'utils/params';
 import './index.scss';
 
@@ -63,14 +62,8 @@ const Loader = ({ match }) => {
 
   if (loaded) {
     layout.mode = getLayout();
-    const time = getTime();
 
-    return (
-      <Player
-        intl={intl}
-        time={time}
-      />
-    );
+    return <Player />;
   }
 
   return (

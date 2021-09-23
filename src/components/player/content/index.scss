@@ -1,0 +1,71 @@
+@import 'src/styles/sizes';
+
+:root {
+  --top-content-background-color: var(--primary-background-color);
+  --top-content-color: var(--primary-content-color);
+
+  --bottom-content-active-background-color: var(--tertiary-highlight-color);
+  --bottom-content-background-color: var(--tertiary-background-color);
+  --bottom-content-color: var(--tertiary-content-color);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  grid-area: content;
+  height: 100%;
+  width: 100%;
+
+  .top-content {
+    background-color: var(--top-content-background-color);
+    color: var(--top-content-color);
+    display: flex;
+    height: 100%;
+    position: relative;
+    width: 100%;
+  }
+
+  .bottom-content {
+    background-color: var(--bottom-content-background-color);
+    color: var(--bottom-content-color);
+    display: flex;
+    min-height: $bottom-content-height;
+    position: relative;
+    width: 100%;
+
+    .active {
+      background-color: var(--bottom-content-active-background-color);
+    }
+
+    .interactive {
+      cursor: pointer;
+      outline: none;
+
+      &:focus,
+      &:hover {
+        background-color:var(--bottom-content-active-background-color);
+      }
+    }
+  }
+
+  .inactive {
+    display: none;
+  }
+
+  .video-js {
+    background-color: var(--top-content-background-color);
+  }
+}
+
+.swapped-content {
+  grid-area: media;
+
+  .top-content {
+    background-color: var(--media-background-color);
+    color: var(--media-color);
+  }
+
+  .video-js {
+    background-color: var(--media-background-color);
+  }
+}

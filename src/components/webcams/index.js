@@ -1,14 +1,17 @@
 import React, { useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
 import {
   defineMessages,
   useIntl,
 } from 'react-intl';
 import videojs from 'video.js/core.es.js';
 import { player as config } from 'config';
-import { ID } from 'utils/constants';
+import {
+  EVENTS,
+  ID,
+} from 'utils/constants';
 import { buildFileURL } from 'utils/data';
 import logger from 'utils/logger';
+import { getTime } from 'utils/params';
 import storage from 'utils/data/storage';
 import player from 'utils/player';
 import './index.scss';
@@ -67,24 +70,17 @@ const buildOptions = (sources, tracks) => {
   };
 };
 
-const propTypes = {
-  onTimeUpdate: PropTypes.func,
-  time: PropTypes.number,
+const dispatchTimeUpdate = (time) => {
+  const event = new CustomEvent(EVENTS.TIME_UPDATE, { detail: { time }});
+  document.dispatchEvent(event);
 };
 
-const defaultProps = {
-  onTimeUpdate: () => {},
-  time: 0,
-};
-
-const Webcams = ({
-  onTimeUpdate,
-  time,
-}) => {
+const Webcams = () => {
   const intl = useIntl();
   const sources = useRef(buildSources());
   const tracks = useRef(buildTracks());
   const element = useRef();
+  const interval = useRef();
 
   useEffect(() => {
     if (!player.webcams) {
@@ -92,17 +88,16 @@ const Webcams = ({
       if (!video) return;
 
       player.webcams = videojs(video, buildOptions(sources, tracks), () => {
-        if (onTimeUpdate) {
-          player.webcams.on('play', () => {
-            setInterval(() => {
-              const currentTime = player.webcams.currentTime();
-              onTimeUpdate(currentTime);
-            }, 1000 / config.rps);
-          });
+        player.webcams.on('play', () => {
+          interval.current = setInterval(() => {
+            const currentTime = player.webcams.currentTime();
+            dispatchTimeUpdate(currentTime);
+          }, 1000 / config.rps);
+        });
 
-          player.webcams.on('pause', () => clearInterval());
-        }
+        player.webcams.on('pause', () => clearInterval(interval.current));
 
+        const time = getTime();
         if (time) {
           player.webcams.on('loadedmetadata', () => {
             const duration = player.webcams.duration();
@@ -114,7 +109,7 @@ const Webcams = ({
       });
       logger.debug(ID.WEBCAMS, 'mounted');
     }
-  }, [ onTimeUpdate, time ]);
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -144,9 +139,6 @@ const Webcams = ({
     </div>
   );
 };
-
-Webcams.propTypes = propTypes;
-Webcams.defaultProps = defaultProps;
 
 // Avoid re-render
 const areEqual = () => true;

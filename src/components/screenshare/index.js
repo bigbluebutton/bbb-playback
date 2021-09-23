@@ -5,6 +5,7 @@ import {
 } from 'react-intl';
 import cx from 'classnames';
 import videojs from 'video.js/core.es.js';
+import { useCurrentContent } from 'components/utils/hooks';
 import { ID } from 'utils/constants';
 import { buildFileURL } from 'utils/data';
 import logger from 'utils/logger';
@@ -39,8 +40,9 @@ const buildOptions = (sources) => {
   };
 };
 
-const Screenshare = ({ active }) => {
+const Screenshare = () => {
   const intl = useIntl();
+  const currentContent = useCurrentContent();
   const sources = useRef(buildSources());
   const element = useRef();
 
@@ -67,7 +69,7 @@ const Screenshare = ({ active }) => {
   return (
     <div
       aria-label={intl.formatMessage(intlMessages.aria)}
-      className={cx('screenshare-wrapper', { inactive: !active })}
+      className={cx('screenshare-wrapper', { inactive: currentContent !== ID.SCREENSHARE })}
       id={ID.SCREENSHARE}
     >
       <div data-vjs-player>
@@ -82,8 +84,6 @@ const Screenshare = ({ active }) => {
   );
 };
 
-const areEqual = (prevProps, nextProps) => {
-  return prevProps.active === nextProps.active;
-};
+const areEqual = () => true;
 
 export default React.memo(Screenshare, areEqual);

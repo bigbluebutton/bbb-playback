@@ -1,0 +1,25 @@
+:root {
+  --media-background-color: var(--secondary-background-color);
+  --media-color: var(--secondary-content-color);
+}
+
+.media {
+  background-color: var(--media-background-color);
+  display: flex;
+  grid-area: media;
+  height: 100%;
+  width: 100%;
+
+  .video-js {
+    background-color: var(--media-background-color);
+  }
+}
+
+.swapped-media {
+  background-color: var(--top-content-background-color);
+  grid-area: content;
+
+  .video-js {
+    background-color: var(--top-content-background-color);
+  }
+}

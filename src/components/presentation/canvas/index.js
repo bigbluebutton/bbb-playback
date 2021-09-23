@@ -1,30 +1,39 @@
 import React from 'react';
 import Poll from './poll';
+import { useCurrentInterval } from 'components/utils/hooks';
 import { SHAPES } from 'utils/constants';
+import storage from 'utils/data/storage';
 import { isEmpty } from 'utils/data/validators';
 import logger from 'utils/logger';
 
-const Canvas = ({
-  draws,
-  drawsInterval,
-}) => {
-  if (isEmpty(drawsInterval)) return null;
+const getCanvasData = (index) => storage.canvases[index].data;
+
+const Canvas = () => {
+  const {
+    index,
+    interval,
+  }= useCurrentInterval(storage.canvases);
+
+  if (index === -1) return null;
+
+  if (isEmpty(interval)) return null;
 
   const canvas = [];
+  for (let i = 0; i < interval.length; i++) {
+    if (!interval[i]) continue;
 
-  for (let i = 0; i < drawsInterval.length; i++) {
-    if (!drawsInterval[i]) continue;
+    const canvasData = getCanvasData(index);
 
     const {
       id,
       shape,
       style,
-    } = draws[i];
+    } = canvasData[i];
 
     const j = i + 1;
     let intermediate = false;
-    if (j < drawsInterval.length) {
-      intermediate = draws[j].id === id;
+    if (j < interval.length) {
+      intermediate = canvasData[j].id === id;
     }
 
     if (intermediate) continue;

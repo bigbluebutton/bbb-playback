@@ -63,12 +63,4 @@ $result-height: $bottom-content-height;
   align-items: center;
   justify-content: flex-end;
   padding: $padding 0;
-
-  .button-wrapper {
-    .solid {
-      &:focus {
-        box-shadow: 0 0 0 $margin-extra-small var(--box-shadow-color);
-      }
-    }
-  }
 }
