@@ -40,6 +40,7 @@ const Modal = ({
           <Button
             aria={intl.formatMessage(intlMessages.close)}
             circle
+            color="var(--secondary-content-color)"
             handleOnClick={onClose}
             icon="close"
           />
