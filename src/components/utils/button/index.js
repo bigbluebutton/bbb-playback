@@ -11,7 +11,6 @@ const propTypes = {
   active: PropTypes.bool,
   aria: PropTypes.string,
   circle: PropTypes.bool,
-  color: PropTypes.string,
   disabled: PropTypes.bool,
   handleOnClick: PropTypes.func,
   icon: PropTypes.string,
@@ -22,7 +21,6 @@ const defaultProps = {
   active: false,
   aria: '',
   circle: false,
-  color: '',
   disabled: false,
   handleOnClick: () => {},
   icon: '',
@@ -33,7 +31,6 @@ const Button = ({
   active,
   aria,
   circle,
-  color,
   disabled,
   handleOnClick,
   icon,
@@ -41,30 +38,20 @@ const Button = ({
 }) => {
   const solid = type === SOLID;
 
-  const classNames = {
+  const style = {
     default: !solid && !disabled,
     solid: (solid || active) && !disabled,
     circle,
     disabled,
   };
 
-  const style = {};
-  if (color.length > 0) {
-    if (solid) {
-      style['background-color'] = color;
-    } else {
-      style['color'] = color;
-    }
-  }
-
   return (
     <div className="button-wrapper">
       <button
         aria-label={aria}
-        className={cx('button', classNames)}
+        className={cx('button', style)}
         disabled={disabled}
         onClick={() => handleOnClick()}
-        style={style}
       >
         <Icon name={icon} />
       </button>
