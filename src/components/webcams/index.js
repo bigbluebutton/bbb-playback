@@ -24,6 +24,15 @@ const intlMessages = defineMessages({
 });
 
 const buildSources = () => {
+  if (storage.fallback) {
+    return [
+      {
+        src: buildFileURL('audio/audio.webm'),
+        type: 'audio/webm',
+      },
+    ];
+  }
+
   return [
     {
       src: buildFileURL('video/webcams.mp4'),
