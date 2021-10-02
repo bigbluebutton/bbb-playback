@@ -1,5 +1,17 @@
-@import 'src/styles/icons';
 @import 'src/styles/sizes';
+
+:root {
+  --button-default-background-color: transparent;
+  --button-default-color: inherit;
+
+  --button-disabled-background-color: var(--gray-light);
+  --button-disabled-color: var(--white);
+
+  --button-solid-background-color: var(--blue);
+  --button-solid-color: var(--white);
+
+  --button-box-shadow-color: var(--gray-light);
+}
 
 $button-size: 2rem;
 
@@ -33,17 +45,7 @@ $button-size: 2rem;
     color: var(--button-solid-color);
 
     &:focus {
-      box-shadow: 0 0 0 $margin-extra-small var(--button-solid-background-color);
-    }
-  }
-
-  .ghost {
-    background-color: var(--button-ghost-background-color);
-    border: solid;
-    color: var(--button-ghost-color);
-
-    &:focus {
-      box-shadow: 0 0 0 $margin-extra-small;
+      box-shadow: 0 0 0 $margin-extra-small var(--button-box-shadow-color);
     }
   }
 

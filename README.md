@@ -16,9 +16,10 @@ https://<domain>/playback/presentation/2.3/<recordId>
 ## URL query strings
 
 - layout:
-  - `l=media`
-  - `l=content`
-  - `l=disabled`
+  - `l=content`: focus on content
+  - `l=disabled`: disabled interactive elements
+  - `l=media`: focus on media
+  - `l=swapped`: content/media swapped
 
 - style: custom style
   - `s=<name>`
@@ -54,18 +55,21 @@ https://<domain>/playback/presentation/2.3/<recordId>
 - locale:
   - `default`: fallback [`ar`|`de`|`en`|`es`|`fr`|`it`|`ja`|`pt`|`ru`|`tr`]
 
+- player: primary media configuration
+  - `rps`: renders per second
+  - `rates`: speed rates
+
 - shortcuts: alt + shift
   - `fullscreen`: `K`
   - `section`: `L`
-  - `slides`: skip
-    - `next`: `ArrowUp`
-    - `previous`: `ArrowDown`
-  - `swap`: `M`
-  - `thumbnails`: `N`
-  - `video`: seek
+  - `seek`:
     - `backward`: `ArrowLeft`
     - `forward`: `ArrowRight`
     - `seconds`: 15
+  - `skip`:
+    - `next`: `ArrowUp`
+    - `previous`: `ArrowDown`
+  - `swap`: `M`
 
 - styles: custom styles
   - `default`: default style
@@ -75,10 +79,6 @@ https://<domain>/playback/presentation/2.3/<recordId>
 - thumbnails:
   - `scroll`: automatic scroll [`true`|`false`]
   - `align`: scroll align [`left`|`center`|`right`]
-
-- video: primary media configuration
-  - `rps`: renders per second
-  - `rates`: speed rates
 
 ## Standalone recordings
 

@@ -1,16 +1,17 @@
 import React, { useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
 import {
   defineMessages,
   useIntl,
 } from 'react-intl';
 import { chat as config } from 'config';
 import Messages from './messages';
+import { useCurrentIndex } from 'components/utils/hooks';
 import {
   ID,
   POSITIONS,
 } from 'utils/constants';
 import { handleAutoScroll } from 'utils/data/handlers';
+import storage from 'utils/data/storage';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -20,35 +21,19 @@ const intlMessages = defineMessages({
   },
 });
 
-const propTypes = {
-  chat: PropTypes.array,
-  currentDataIndex: PropTypes.number,
-  player: PropTypes.object,
-};
-
-const defaultProps = {
-  chat: [],
-  currentDataIndex: 0,
-  player: {},
-};
-
-const Chat = ({
-  chat,
-  currentDataIndex,
-  player,
-}) => {
+const Chat = () => {
+  const intl = useIntl();
+  const currentIndex = useCurrentIndex(storage.messages);
   const interaction = useRef(false);
   const firstNode = useRef();
   const currentNode = useRef();
-
-  const intl = useIntl();
 
   const setRef = (node, index) => {
     if (index === 0) {
       firstNode.current = node;
     }
 
-    if (index === currentDataIndex) {
+    if (index === currentIndex) {
       currentNode.current = node;
     }
   };
@@ -72,24 +57,13 @@ const Chat = ({
       tabIndex="0"
     >
       <Messages
-        chat={chat}
-        currentDataIndex={currentDataIndex}
-        player={player}
+        currentIndex={currentIndex}
         setRef={(node, index) => setRef(node, index)}
       />
     </div>
   );
 };
 
-Chat.propTypes = propTypes;
-Chat.defaultProps = defaultProps;
-
-const areEqual = (prevProps, nextProps) => {
-  if (prevProps.currentDataIndex !== nextProps.currentDataIndex) return false;
-
-  if (!prevProps.player && nextProps.player) return false;
-
-  return true;
-};
+const areEqual = () => true;
 
 export default React.memo(Chat, areEqual);

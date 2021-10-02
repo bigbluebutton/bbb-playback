@@ -6,31 +6,16 @@ import Header from './header';
 import Modal from 'components/utils/modal';
 import './index.scss';
 
-const propTypes = {
-  content: PropTypes.object,
-  metadata: PropTypes.object,
-  toggleModal: PropTypes.func,
-};
+const propTypes = { handleClose: PropTypes.func };
 
-const defaultProps = {
-  content: {},
-  metadata: {},
-  toggleModal: () => {},
-};
+const defaultProps = { handleClose: () => {} };
 
-const About = ({
-  content,
-  metadata,
-  toggleModal,
-}) => {
+const About = ({ handleClose }) => {
 
   return (
-    <Modal onClose={toggleModal}>
-      <Header metadata={metadata} />
-      <Body
-        content={content}
-        users={metadata.participants}
-      />
+    <Modal onClose={handleClose}>
+      <Header />
+      <Body />
       <Footer />
     </Modal>
   );

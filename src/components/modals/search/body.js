@@ -7,23 +7,17 @@ import './index.scss';
 
 const propTypes = {
   handleOnChange: PropTypes.func,
-  metadata: PropTypes.object,
   search: PropTypes.array,
-  thumbnails: PropTypes.array,
 };
 
 const defaultProps = {
   handleOnChange: () => {},
-  metadata: {},
   search: [],
-  thumbnails: [],
 };
 
 const Body = ({
   handleOnChange,
-  metadata,
   search,
-  thumbnails,
 }) => {
 
   return (
@@ -38,11 +32,8 @@ const Body = ({
         <Thumbnails
           currentDataIndex={0}
           handleSearch={null}
-          interactive={false}
           player={null}
-          recordId={metadata.id}
           search={search}
-          thumbnails={thumbnails}
         />
       </div>
     </div>

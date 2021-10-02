@@ -4,41 +4,26 @@ import Title from './title';
 import SearchButton from './buttons/search';
 import SectionButton from './buttons/section';
 import SwapButton from './buttons/swap';
-import { controls as config } from 'config';
+import { ID } from 'utils/constants';
 import './index.scss';
 
 const propTypes = {
-  control: PropTypes.bool,
-  name: PropTypes.string,
+  openModal: PropTypes.func,
   section: PropTypes.bool,
-  single: PropTypes.bool,
-  start: PropTypes.number,
-  toggleAbout: PropTypes.func,
-  toggleSearch: PropTypes.func,
   toggleSection: PropTypes.func,
   toggleSwap: PropTypes.func,
 };
 
 const defaultProps = {
-  control: false,
-  name: '',
+  openModal: () => {},
   section: false,
-  single: false,
-  start: 0,
-  toggleAbout: () => {},
-  toggleSearch: () => {},
   toggleSection: () => {},
   toggleSwap: () => {},
 };
 
 const Top = ({
-  control,
-  name,
+  openModal,
   section,
-  single,
-  start,
-  toggleAbout,
-  toggleSearch,
   toggleSection,
   toggleSwap,
 }) => {
@@ -47,28 +32,16 @@ const Top = ({
     <div className="top-bar">
       <div className="left">
         <SectionButton
-          enabled={control && config.section}
           section={section}
           toggleSection={toggleSection}
         />
       </div>
       <div className="center">
-        <Title
-          interactive={control && config.about}
-          name={name}
-          start={start}
-          toggleAbout={toggleAbout}
-        />
+        <Title openAbout={() => openModal(ID.ABOUT)} />
       </div>
       <div className="right">
-        <SearchButton
-          enabled={control && config.search && !single}
-          toggleSearch={toggleSearch}
-        />
-        <SwapButton
-          enabled={control && config.swap && !single}
-          toggleSwap={toggleSwap}
-        />
+        <SearchButton openSearch={() => openModal(ID.SEARCH)} />
+        <SwapButton toggleSwap={toggleSwap} />
       </div>
     </div>
   );

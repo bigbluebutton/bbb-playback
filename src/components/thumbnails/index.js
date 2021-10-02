@@ -6,12 +6,14 @@ import {
 } from 'react-intl';
 import Item from './item';
 import ClearButton from './buttons/clear';
+import { useCurrentIndex } from 'components/utils/hooks';
 import { thumbnails as config } from 'config';
 import {
   ID,
   POSITIONS,
 } from 'utils/constants';
 import { handleAutoScroll } from 'utils/data/handlers';
+import storage from 'utils/data/storage';
 import {
   isEmpty,
   isEqual,
@@ -26,34 +28,23 @@ const intlMessages = defineMessages({
 });
 
 const propTypes = {
-  currentDataIndex: PropTypes.number,
   handleSearch: PropTypes.func,
   interactive: PropTypes.bool,
-  player: PropTypes.object,
-  recordId: PropTypes.string,
   search: PropTypes.array,
-  thumbnails: PropTypes.array,
 };
 
 const defaultProps = {
-  currentDataIndex: 0,
   handleSearch: () => {},
   interactive: false,
-  player: {},
-  recordId: '',
   search: [],
-  thumbnails: [],
 };
 
 const Thumbnails = ({
-  currentDataIndex,
   handleSearch,
   interactive,
-  player,
-  recordId,
   search,
-  thumbnails,
 }) => {
+  const currentIndex = useCurrentIndex(storage.thumbnails);
   const interaction = useRef(false);
   const firstNode = useRef();
   const currentNode = useRef();
@@ -65,7 +56,7 @@ const Thumbnails = ({
       firstNode.current = node;
     }
 
-    if (index === currentDataIndex) {
+    if (index === currentIndex) {
       currentNode.current = node;
     }
   };
@@ -95,9 +86,9 @@ const Thumbnails = ({
       onMouseLeave={() => interaction.current = false}
       tabIndex="0"
     >
-      {thumbnails.reduce((result, item, index) => {
+      {storage.thumbnails.reduce((result, item, index) => {
         if (!isFiltered(index)) {
-          const active = index === currentDataIndex;
+          const active = index === currentIndex;
 
           result.push(
             <Item
@@ -105,8 +96,6 @@ const Thumbnails = ({
               index={index}
               interactive={interactive}
               item={item}
-              player={player}
-              recordId={recordId}
               setRef={setRef}
             />
           );
@@ -116,7 +105,7 @@ const Thumbnails = ({
       }, [])}
       <ClearButton
         interactive={interactive}
-        handleSearch={handleSearch}
+        onClick={() => handleSearch([])}
         search={search}
       />
     </div>
@@ -127,11 +116,7 @@ Thumbnails.propTypes = propTypes;
 Thumbnails.defaultProps = defaultProps;
 
 const areEqual = (prevProps, nextProps) => {
-  if (prevProps.currentDataIndex !== nextProps.currentDataIndex) return false;
-
   if (!isEqual(prevProps.search, nextProps.search)) return false;
-
-  if (!prevProps.player && nextProps.player) return false;
 
   return true;
 };

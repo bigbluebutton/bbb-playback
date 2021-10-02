@@ -1,6 +1,10 @@
 @import 'src/styles/sizes';
 
-.video-wrapper {
+:root {
+  --control-bar-background-color: var(--gray-dark);
+}
+
+.webcams-wrapper {
   display: flex;
   height: 100%;
   width: 100%;

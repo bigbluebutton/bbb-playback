@@ -1,104 +1,86 @@
 import { controls } from 'config';
-import {
-  getContentFromData,
-  getControlFromLayout,
-  getSectionFromLayout,
-  getSwapFromLayout,
-} from './data';
-import { isContentVisible } from './data/validators';
+import { LAYOUT } from 'utils/constants';
+import storage from 'utils/data/storage';
+import { isContentVisible } from 'utils/data/validators';
 
-export default class Layout {
-  constructor(data, layout) {
-    this.content = getContentFromData(data);
-    this.layout = layout;
-  }
+let MODE = null;
 
-  getContent() {
-    return this.content;
-  }
+const layout = {
+  get content() {
+    return storage.content;
+  },
+  get mode() {
+    return MODE;
+  },
+  set mode(value) {
+    MODE = value;
+  },
+  get control() {
+    const { DISABLED } = LAYOUT;
 
-  initControl() {
-    return getControlFromLayout(this.layout);
-  }
+    let control = true;
+    switch (this.mode) {
+      case DISABLED:
+        control = false;
+        break;
+      default:
+    }
 
-  initSection() {
-    return getSectionFromLayout(this.layout);
-  }
-
-  initSwap() {
-    return getSwapFromLayout(this.layout);
-  }
-
-  getBottomContentStyle(state) {
+    return control;
+  },
+  get section() {
     const {
-      fullscreen,
-      thumbnails,
-    } = state;
+      CONTENT,
+      MEDIA,
+    } = LAYOUT;
 
-    const bottom = thumbnails && !fullscreen;
-    const style = { 'inactive': !bottom };
+    let section = true;
+    switch (this.mode) {
+      case CONTENT:
+        section = false;
+        break;
+      case MEDIA:
+        section = false;
+        break;
+      default:
+    }
 
-    return style;
-  }
-
-  getContentStyle(state) {
-    const { swap } = state;
-    const style = { 'swapped-content': swap };
-
-    return style;
-  }
-
-  getMediaStyle(state) {
-    const { swap } = state;
-    const single = this.isSingle();
-    const style = { 'swapped-media': swap || single };
-
-    return style;
-  }
-
-  getPlayerStyle(state) {
+    return section;
+  },
+  get swap() {
     const {
-      fullscreen,
-      section,
-    } = state;
+      CONTENT,
+      MEDIA,
+      SWAPPED,
+    } = LAYOUT;
 
-    const single = this.isSingle();
+    let swap = false;
+    switch (this.mode) {
+      case CONTENT:
+        swap = false;
+        break;
+      case MEDIA:
+      case SWAPPED:
+        swap = true;
+        break;
+      default:
+    }
 
-    const style = {
-      'fullscreen-content': fullscreen,
-      'hidden-section': !section,
-      'single-content': single,
-    };
+    return swap;
+  },
+  get screenshare() {
+    return this.content.screenshare;
+  },
+  get single() {
+    return !this.content.presentation && !this.content.screenshare;
+  },
+  hasFullscreenButton: function (content, swap) {
+    if (!this.control || !controls.fullscreen) return false;
 
-    return style;
-  }
-
-  hasFullscreenButton(layout, state) {
-    const {
-      control,
-      swap,
-    } = state;
-
-    if (!control || !controls.fullscreen) return false;
-
-    const single = this.isSingle();
-    if (!isContentVisible(layout, swap || single)) return false;
+    if (!isContentVisible(content, swap || this.single)) return false;
 
     return true;
-  }
+  },
+};
 
-  hasScreenshare() {
-    const { screenshare } = this.content;
-
-    return screenshare;
-  }
-
-  isSingle() {
-    const {
-      presentation,
-      screenshare,
-    } = this.content;
-
-    return !presentation && !screenshare;
-  }
-}
+export default layout;

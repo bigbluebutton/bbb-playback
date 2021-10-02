@@ -2,6 +2,10 @@
 @import 'src/styles/fonts';
 @import 'src/styles/sizes';
 
+root {
+  --body-background-color: var(--primary-background-color);
+}
+
 body,
 html {
   height: 100%;

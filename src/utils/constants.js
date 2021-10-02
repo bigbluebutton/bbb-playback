@@ -16,37 +16,48 @@ const ERROR = {
   GONE: 410,
 };
 
+const EVENT_PREFIX = 'bbbplayback';
+
+const EVENTS = {
+  TIME_UPDATE: `${EVENT_PREFIX}timeupdate`,
+};
+
 const ID = {
   ABOUT: 'about',
   ALTERNATES: 'alternates',
+  CANVASES: 'canvases',
   CAPTIONS: 'captions',
   CHAT: 'chat',
   CURSOR: 'cursor',
   DESKSHARE: 'deskshare',
   ERROR: 'error',
   LOADER: 'loader',
+  MEDIA: 'media',
+  MESSAGES: 'messages',
   METADATA: 'metadata',
   NOTES: 'notes',
   PANZOOMS: 'panzooms',
   PLAYER: 'player',
   POLLS: 'polls',
-  EXTERNAL_VIDEOS: 'externalVideos',
   PRESENTATION: 'presentation',
   SCREENSHARE: 'screenshare',
   SEARCH: 'search',
   SETTINGS: 'settings',
   SHAPES: 'shapes',
+  SLIDES: 'slides',
+  STORAGE: 'storage',
   SWAP: 'swap',
   THUMBNAILS: 'thumbnails',
   USERS: 'users',
-  VIDEO: 'video',
+  VIDEOS: 'videos',
+  WEBCAMS: 'webcams',
 };
 
 const CONTENT = [
   ID.PRESENTATION,
   ID.CHAT,
   ID.POLLS,
-  ID.EXTERNAL_VIDEOS,
+  ID.VIDEOS,
   ID.NOTES,
   ID.SCREENSHARE,
   ID.CAPTIONS,
@@ -56,6 +67,7 @@ const LAYOUT = {
   CONTENT: 'content',
   DISABLED: 'disabled',
   MEDIA: 'media',
+  SWAPPED: 'swapped',
 };
 
 const NUMBERS = [
@@ -100,6 +112,7 @@ export {
   BUILD,
   CONTENT,
   ERROR,
+  EVENTS,
   ID,
   LAYOUT,
   MEDIA_ROOT_URL,

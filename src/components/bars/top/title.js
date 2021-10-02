@@ -6,7 +6,10 @@ import {
   FormattedDate,
 } from 'react-intl';
 import cx from 'classnames';
+import { controls as config } from 'config';
 import { handleOnEnterPress } from 'utils/data/handlers';
+import storage from 'utils/data/storage';
+import layout from 'utils/layout';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -16,34 +19,20 @@ const intlMessages = defineMessages({
   },
 });
 
-const propTypes = {
-  interactive: PropTypes.bool,
-  name: PropTypes.string,
-  start: PropTypes.number,
-  toggleAbout: PropTypes.func,
-};
+const propTypes = { openAbout: PropTypes.func };
 
-const defaultProps = {
-  interactive: false,
-  name: '',
-  start: 0,
-  toggleAbout: () => {},
-};
+const defaultProps = { openAbout: () => {} };
 
-const Title = ({
-  interactive,
-  name,
-  start,
-  toggleAbout,
-}) => {
+const Title = ({ openAbout }) => {
   const intl = useIntl();
-  const date = <FormattedDate value={new Date(start)} />;
+  const date = <FormattedDate value={new Date(storage.metadata.start)} />;
 
+  const interactive = layout.control && config.about;
   if (!interactive) {
 
     return (
       <span className="title">
-        {name} - {date}
+        {storage.metadata.name} - {date}
       </span>
     );
   }
@@ -52,11 +41,11 @@ const Title = ({
     <span
       aria={intl.formatMessage(intlMessages.about)}
       className={cx('title', { interactive })}
-      onClick={toggleAbout}
-      onKeyPress={event => handleOnEnterPress(event, toggleAbout)}
+      onClick={openAbout}
+      onKeyPress={event => handleOnEnterPress(event, openAbout)}
       tabIndex="0"
     >
-      {name} - {date}
+      {storage.metadata.name} - {date}
     </span>
   );
 };

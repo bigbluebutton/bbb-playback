@@ -97,6 +97,16 @@ export default class Synchronizer {
       }
     });
 
+    // IMPORTANT: Blink holds the secondary media down while the document
+    // page is not visible
+    // Force medias to sync on visibility change and document is visible
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        const currentTime = this.primary.currentTime();
+        this.secondary.currentTime(currentTime);
+      }
+    });
+
     EVENTS.forEach(event => {
       this.primary.on(event, () => logger.debug(`primary ${event} ${this.status.primary}`));
       this.secondary.on(event, () => logger.debug(`secondary ${event} ${this.status.secondary}`));

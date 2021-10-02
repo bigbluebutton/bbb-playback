@@ -7,8 +7,12 @@ import cx from 'classnames';
 import Cursor from './cursor';
 import Slide from './slide';
 import Canvas from './canvas';
+import {
+  useCurrentContent,
+  useCurrentIndex,
+} from 'components/utils/hooks';
 import { ID } from 'utils/constants';
-import { isEqual } from 'utils/data/validators';
+import storage from 'utils/data/storage';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -29,33 +33,7 @@ const buildViewBoxAttr = (viewBox) => {
   return `${x} ${y} ${width} ${height}`;
 };
 
-const getCursor = (cursors, index, viewBox) => {
-  const inactive = {
-    x: -1,
-    y: -1,
-  }
-
-  if (index === -1) return inactive;
-
-  const currentData = cursors[index];
-  if (currentData.x === -1 && currentData.y === -1) return inactive;
-
-  return {
-    x: viewBox.x + (currentData.x * viewBox.width),
-    y: viewBox.y + (currentData.y * viewBox.height),
-  };
-};
-
-const getSlideId = (index, slides) => {
-  const inactive = -1;
-  if (index === -1) return inactive;
-
-  const currentData = slides[index];
-
-  return currentData.id;
-};
-
-const getViewBox = (index, panzooms) => {
+const getViewBox = (index) => {
   const inactive = {
     height: 0,
     x: 0,
@@ -65,7 +43,7 @@ const getViewBox = (index, panzooms) => {
 
   if (index === -1) return inactive;
 
-  const currentData = panzooms[index];
+  const currentData = storage.panzooms[index];
 
   return {
     height: currentData.height,
@@ -75,31 +53,21 @@ const getViewBox = (index, panzooms) => {
   };
 };
 
-const Presentation = ({
-  active,
-  currentCursorIndex,
-  currentPanzoomIndex,
-  currentSlideIndex,
-  cursors,
-  draws,
-  drawsInterval,
-  panzooms,
-  recordId,
-  slides,
-  thumbnails,
-}) => {
+const Presentation = () => {
   const intl = useIntl();
-  const slideId = getSlideId(currentSlideIndex, slides);
-  const viewBox = getViewBox(currentPanzoomIndex, panzooms);
-  const cursor = getCursor(cursors, currentCursorIndex, viewBox);
+  const currentContent = useCurrentContent();
+  const currentPanzoomIndex = useCurrentIndex(storage.panzooms);
+  const viewBox = getViewBox(currentPanzoomIndex);
+
+  const started = currentPanzoomIndex !== -1;
 
   return (
     <div
       aria-label={intl.formatMessage(intlMessages.aria)}
-      className={cx('presentation-wrapper', { inactive: !active })}
+      className={cx('presentation-wrapper', { inactive: currentContent !== ID.PRESENTATION })}
       id={ID.PRESENTATION}
     >
-      <div className="presentation">
+      <div className={cx('presentation', { logo: !started })}>
         <svg
           viewBox={buildViewBoxAttr(viewBox)}
           xmlns="http://www.w3.org/2000/svg"
@@ -116,21 +84,9 @@ const Presentation = ({
             </clipPath>
           </defs>
           <g clipPath="url(#viewBox)">
-            <Slide
-              id={slideId}
-              recordId={recordId}
-              slides={slides}
-              thumbnails={thumbnails}
-            />
-            <Canvas
-              draws={draws}
-              drawsInterval={drawsInterval}
-              recordId={recordId}
-            />
-            <Cursor
-              x={cursor.x}
-              y={cursor.y}
-            />
+            <Slide />
+            <Canvas />
+            <Cursor viewBox={viewBox} />
           </g>
         </svg>
       </div>
@@ -138,20 +94,6 @@ const Presentation = ({
   );
 };
 
-const areEqual = (prevProps, nextProps) => {
-  if (prevProps.active !== nextProps.active) return false;
-
-  if (prevProps.currentCursorIndex !== nextProps.currentCursorIndex) return false;
-
-  if (prevProps.currentPanzoomIndex !== nextProps.currentPanzoomIndex) return false;
-
-  if (prevProps.currentSlideIndex !== nextProps.currentSlideIndex) return false;
-
-  if (!isEqual(prevProps.draws, nextProps.draws)) return false;
-
-  if (!isEqual(prevProps.drawsInterval, nextProps.drawsInterval)) return false;
-
-  return true;
-};
+const areEqual = () => true;
 
 export default React.memo(Presentation, areEqual);

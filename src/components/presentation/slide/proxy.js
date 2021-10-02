@@ -1,17 +1,15 @@
 import React from 'react';
-import cx from 'classnames';
 import { ID } from 'utils/constants';
 import { buildFileURL } from 'utils/data';
+import storage from 'utils/data/storage';
 import './index.scss';
 
 const Proxy = ({
   id,
   height,
-  recordId,
-  thumbnails,
   width,
 }) => {
-  const thumbnail = thumbnails.find(thumbnails => id === thumbnails.id);
+  const thumbnail = storage.thumbnails.find(thumbnails => id === thumbnails.id);
   if (!thumbnail) return null;
 
   const {
@@ -20,8 +18,6 @@ const Proxy = ({
   } = thumbnail;
 
   if (src === ID.SCREENSHARE) return null;
-
-  const logo = src.includes('logo');
 
   return (
     <foreignObject
@@ -32,8 +28,8 @@ const Proxy = ({
     >
       <img
         alt={alt}
-        className={cx('proxy', { logo })}
-        src={buildFileURL(recordId, src)}
+        className="proxy"
+        src={buildFileURL(src)}
       />
     </foreignObject>
   );

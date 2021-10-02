@@ -1,10 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {
   defineMessages,
   useIntl,
 } from 'react-intl';
 import { ID } from 'utils/constants';
+import storage from 'utils/data/storage';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -14,11 +14,7 @@ const intlMessages = defineMessages({
   },
 });
 
-const propTypes = { notes: PropTypes.text };
-
-const defaultProps = { notes: '' };
-
-const Notes = ({ notes }) => {
+const Notes = () => {
   const intl = useIntl();
 
   return (
@@ -29,14 +25,11 @@ const Notes = ({ notes }) => {
       tabIndex="0"
     >
       <div className="notes">
-        <div dangerouslySetInnerHTML={{ __html: notes }} />
+        <div dangerouslySetInnerHTML={{ __html: storage.notes }} />
       </div>
     </div>
   );
 };
-
-Notes.propTypes = propTypes;
-Notes.defaultProps = defaultProps;
 
 // Avoid re-render
 const areEqual = () => true;

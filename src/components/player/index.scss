@@ -1,0 +1,87 @@
+@import 'src/styles/sizes';
+
+$player-wrapper-padding: $control-bar-height;
+
+.player-wrapper {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-areas:
+    "top-bar content"
+    "media content"
+    "application content"
+    "bottom-bar content";
+  grid-template-columns: 100% auto;
+  grid-template-rows: $top-bar-height auto 50% $bottom-bar-height;
+  height: 100%;
+  padding: 0 0 $player-wrapper-padding 0;
+  width: 100%;
+}
+
+.single-content {
+  grid-template-areas:
+    "top-bar content"
+    "application content"
+    "application content"
+    "bottom-bar content";
+}
+
+.hidden-section {
+  grid-template-areas:
+    "media top-bar"
+    "media content"
+    "application content"
+    "application bottom-bar";
+  grid-template-columns: 0% auto;
+}
+
+.fullscreen-content {
+  grid-template-columns: 0% auto;
+  grid-template-rows: 0% auto auto 0%;
+}
+
+@media (min-width: $media-min-width) {
+  .player-wrapper {
+    grid-template-areas:
+      "media top-bar"
+      "media content"
+      "application content"
+      "application content"
+      "application bottom-bar";
+    grid-template-columns: $section-width auto;
+    grid-template-rows: $top-bar-height $media-fit-height auto auto $bottom-bar-height;
+  }
+
+  .single-content {
+    grid-template-areas:
+      "application top-bar"
+      "application content"
+      "application content"
+      "application content"
+      "application bottom-bar";
+  }
+
+  .hidden-section {
+    grid-template-columns: 0% auto;
+  }
+
+  .fullscreen-content {
+    grid-template-columns: 0% auto;
+    grid-template-rows: 0% auto auto auto 0%;
+  }
+
+  @media (max-height: $media-max-height) {
+    .player-wrapper {
+      grid-template-columns: $section-width-small auto;
+      grid-template-rows: $top-bar-height $media-fit-height-small auto auto $bottom-bar-height;
+    }
+
+    .hidden-section {
+      grid-template-columns: 0% auto;
+    }
+
+    .fullscreen-content {
+      grid-template-columns: 0% auto;
+      grid-template-rows: 0% auto auto auto 0%;
+    }
+  }
+}

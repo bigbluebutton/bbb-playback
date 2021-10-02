@@ -11,7 +11,6 @@ const propTypes = {
   ]),
   icon: PropTypes.string,
   name: PropTypes.string,
-  player: PropTypes.object,
   timestamp: PropTypes.number,
 };
 
@@ -20,7 +19,6 @@ const defaultProps = {
   children: null,
   icon: '',
   name: '',
-  player: {},
   timestamp: 0,
 };
 
@@ -29,7 +27,6 @@ const Message = ({
   children,
   icon,
   name,
-  player,
   timestamp,
 }) => {
 
@@ -38,7 +35,6 @@ const Message = ({
       active={active}
       icon={icon}
       name={name}
-      player={player}
       timestamp={timestamp}
     >
       <div className="system-message-wrapper">

@@ -8,7 +8,6 @@ const propTypes = {
   hyperlink: PropTypes.bool,
   initials: PropTypes.string,
   name: PropTypes.string,
-  player: PropTypes.object,
   text: PropTypes.string,
   timestamp: PropTypes.timestamp,
 };
@@ -18,7 +17,6 @@ const defaultProps = {
   hyperlink: false,
   initials: '',
   name: '',
-  player: {},
   text: '',
   timestamp: 0,
 };
@@ -28,7 +26,6 @@ const User = ({
   hyperlink,
   initials,
   name,
-  player,
   text,
   timestamp,
 }) => {
@@ -39,7 +36,6 @@ const User = ({
       circle
       initials={initials}
       name={name}
-      player={player}
       timestamp={timestamp}
     >
       <Text
@@ -57,8 +53,6 @@ User.defaultProps = defaultProps;
 // Checks the message active state
 const areEqual = (prevProps, nextProps) => {
   if (prevProps.active !== nextProps.active) return false;
-
-  if (!prevProps.player && nextProps.player) return false;
 
   return true;
 };

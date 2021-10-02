@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import './index.scss';
 
+const TRANSITION = .5;
+
 const propTypes = {
   icon: PropTypes.string,
   value: PropTypes.oneOfType([
@@ -22,7 +24,10 @@ const Item = ({
 }) => {
 
   return (
-    <div className={cx('item', { loaded: value })}>
+    <div
+      className={cx('item', { loaded: value })}
+      style={{ transition: `opacity ${TRANSITION}s ease-in` }}
+    >
       <div className={`icon-${icon}`} />
     </div>
   );

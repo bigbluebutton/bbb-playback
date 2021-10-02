@@ -1,36 +1,32 @@
 import React from 'react';
 import Proxy from './proxy';
+import { useCurrentIndex } from 'components/utils/hooks';
 import { buildFileURL } from 'utils/data';
+import storage from 'utils/data/storage';
 
-const Slide = ({
-  id,
-  recordId,
-  slides,
-  thumbnails,
-}) => {
-  const current = slides.find(slide => id === slide.id);
-  if (!current) return null;
+const Slide = () => {
+  const currentIndex = useCurrentIndex(storage.slides);
+  if (currentIndex === -1) return null;
 
   const {
     height,
+    id,
     src,
     width,
     fullId,
-  } = current;
+  } = storage.slides[currentIndex];
 
   return (
     <g>
       <Proxy
         id={id}
         height={height}
-        recordId={recordId}
-        thumbnails={thumbnails}
         width={width}
       />
       <image
         id={fullId}
         height={height}
-        href={buildFileURL(recordId, src)}
+        href={buildFileURL(src)}
         x={0}
         width={width}
         y={0}
@@ -39,8 +35,6 @@ const Slide = ({
   );
 };
 
-const areEqual = (prevProps, nextProps) => {
-  return prevProps.id === nextProps.id;
-};
+const areEqual = () => true;
 
 export default React.memo(Slide, areEqual);

@@ -6,6 +6,7 @@ import Header from './header';
 import { search as config } from 'config';
 import Modal from 'components/utils/modal';
 import { search as getSearch } from 'utils/actions';
+import storage from 'utils/data/storage';
 import {
   isEmpty,
   isEqual,
@@ -27,24 +28,18 @@ const isValid = (value) => {
 };
 
 const propTypes = {
+  handleClose: PropTypes.func,
   handleSearch: PropTypes.func,
-  metadata: PropTypes.object,
-  thumbnails: PropTypes.array,
-  toggleModal: PropTypes.func,
 };
 
 const defaultProps = {
+  handleClose: () => {},
   handleSearch: () => {},
-  metadata: {},
-  thumbnails: [],
-  toggleModal: () => {},
 };
 
 const Search = ({
+  handleClose,
   handleSearch,
-  metadata,
-  thumbnails,
-  toggleModal,
 }) => {
   const [disabled, setDisabled] = useState(true);
   const [search, setSearch] = useState([]);
@@ -52,7 +47,7 @@ const Search = ({
   const handleOnChange = (event) => {
     const value = getValue(event);
     if (isValid(value)) {
-      const result = getSearch(value, thumbnails);
+      const result = getSearch(value, storage.thumbnails);
 
       // If different, update search
       if (!isEqual(search, result)) {
@@ -74,17 +69,15 @@ const Search = ({
 
   const handleOnClick = () => {
     handleSearch(search);
-    toggleModal();
+    handleClose();
   };
 
   return (
-    <Modal onClose={toggleModal}>
+    <Modal onClose={handleClose}>
       <Header />
       <Body
         handleOnChange={(event) => handleOnChange(event)}
-        metadata={metadata}
         search={search}
-        thumbnails={thumbnails}
       />
       <Footer
         disabled={disabled}
