@@ -32,6 +32,8 @@ let STATUS = STATE.WAITING;
 
 const DATA = {};
 
+let FALLBACK = false;
+
 const hasFetched = () => {
   if (STATUS !== STATE.WAITING) return true;
 
@@ -110,6 +112,26 @@ const fetchMedia = (recordId, onUpdate, onLoaded, onError) => {
       onUpdate(ID.MEDIA);
       if (hasLoaded()) onLoaded();
     } else {
+      tryMediaFallback(recordId, onUpdate, onLoaded, onError);
+    }
+  });
+};
+
+// Try playing old recording formats with audio only
+// IMPORTANT: This will only work for webm format
+//
+// TODO: Add support for mp3 format
+const tryMediaFallback = (recordId, onUpdate, onLoaded, onError) => {
+  const url = buildFileURL('audio/audio.webm', recordId);
+  fetch(url, { method: 'HEAD' }).then(response => {
+    const { ok } = response;
+    if (ok) {
+      logger.debug(ID.STORAGE, ID.MEDIA, response);
+      FALLBACK = true;
+      DATA[ID.MEDIA] = ['webm'];
+      onUpdate(ID.MEDIA);
+      if (hasLoaded()) onLoaded();
+    } else {
       onError(ERROR.NOT_FOUND);
     }
   });
@@ -130,6 +152,9 @@ const storage = {
   },
   get data() {
     return DATA;
+  },
+  get fallback() {
+    return FALLBACK;
   },
   get built() {
     return {
