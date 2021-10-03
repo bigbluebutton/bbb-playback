@@ -1,0 +1,10 @@
+@import 'src/styles/sizes';
+
+.question-text,
+.question-answer {
+  padding-bottom: $padding-small;
+}
+
+.question-label {
+  font-weight: var(--font-weight-semi-bold);
+}

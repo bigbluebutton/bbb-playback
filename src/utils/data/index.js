@@ -154,6 +154,7 @@ const getPollLabel = (key, type) => {
 const getMessageType = (item) => {
   if (typeof item.message === 'string') return ID.USERS;
   if (typeof item.question === 'string') return ID.POLLS;
+  if (typeof item.text === 'string') return ID.QUESTIONS;
   if (typeof item.url === 'string') return ID.VIDEOS;
 
   return 'undefined';
