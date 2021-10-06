@@ -265,7 +265,6 @@ const buildCanvases = (group, slides) => {
     canvases = group.map(canvas => {
       const canvasAttr = getAttr(canvas);
       const canvasId = getId(canvasAttr.id);
-      const { timestamp } = slides.find(slide => slide.id === canvasId);
 
       let data = canvas.g.map(g => {
         const drawAttr = getAttr(g);
@@ -320,10 +319,24 @@ const buildCanvases = (group, slides) => {
       return {
         data,
         id: canvasId,
-        timestamp,
       };
     });
   }
+
+  slides.forEach((slide, index) => {
+    const found = canvases.find(canvas => canvas.id === slide.id);
+    if (found) {
+      canvases[index].timestamp = slide.timestamp;
+    } else {
+      const canvas = {
+        data: [],
+        id: slide.id,
+        timestamp: slide.timestamp,
+      };
+
+      canvases.splice(index, 0, canvas);
+    }
+  });
 
   return canvases;
 };
