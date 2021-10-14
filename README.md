@@ -15,6 +15,9 @@ https://<domain>/playback/presentation/2.3/<recordId>
 
 ## URL query strings
 
+- frequency:
+  - `f=<value>`: renders per second (e.g., 5)
+
 - layout:
   - `l=content`: focus on content
   - `l=disabled`: disabled interactive elements

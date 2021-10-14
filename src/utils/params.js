@@ -2,6 +2,14 @@ import config from 'config';
 import { ROUTER } from './constants';
 import logger from './logger';
 
+const getFrequency = () => {
+  const param = getSearchParam('f');
+
+  if (param) return parseFloat(param);
+
+  return null;
+};
+
 const getLayout = () => {
   const param = getSearchParam('l');
 
@@ -119,6 +127,7 @@ const parseTimeToSeconds = time => {
 };
 
 export {
+  getFrequency,
   getLayout,
   getMediaPath,
   getRecordId,
