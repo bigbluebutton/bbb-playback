@@ -11,7 +11,10 @@ import {
 } from 'utils/constants';
 import { buildFileURL } from 'utils/data';
 import logger from 'utils/logger';
-import { getTime } from 'utils/params';
+import {
+  getFrequency,
+  getTime,
+} from 'utils/params';
 import storage from 'utils/data/storage';
 import player from 'utils/player';
 import './index.scss';
@@ -98,10 +101,11 @@ const Webcams = () => {
 
       player.webcams = videojs(video, buildOptions(sources, tracks), () => {
         player.webcams.on('play', () => {
+          const frequency = getFrequency();
           interval.current = setInterval(() => {
             const currentTime = player.webcams.currentTime();
             dispatchTimeUpdate(currentTime);
-          }, 1000 / config.rps);
+          }, 1000 / (frequency ? frequency : config.rps));
         });
 
         player.webcams.on('pause', () => clearInterval(interval.current));
