@@ -110,6 +110,11 @@ const Webcams = () => {
 
         player.webcams.on('pause', () => clearInterval(interval.current));
 
+        player.webcams.on('seeked', () => {
+          const currentTime = player.webcams.currentTime();
+          dispatchTimeUpdate(currentTime);
+        });
+
         const time = getTime();
         if (time) {
           player.webcams.on('loadedmetadata', () => {
