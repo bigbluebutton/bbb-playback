@@ -1,6 +1,7 @@
 {
   "chat": {
     "align": "bottom",
+    "emphasize": true,
     "scroll": true
   },
   "controls": {

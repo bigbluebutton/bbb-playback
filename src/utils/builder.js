@@ -430,6 +430,7 @@ const buildChat = result => {
       const clear = attr.out ? parseFloat(attr.out) : -1;
       const message = decodeXML(clearHyperlink(attr.message));
       const initials = getInitials(attr.name);
+      const moderator = attr.moderator ? true : false;
 
       return {
         clear,
@@ -437,6 +438,7 @@ const buildChat = result => {
         initials,
         name: attr.name,
         message,
+        moderator,
         timestamp: parseFloat(attr.in),
       };
     });

@@ -2,27 +2,31 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Linkify from 'linkifyjs/react';
 import cx from 'classnames';
+import './index.scss';
 
 const propTypes = {
   active: PropTypes.bool,
+  emphasize: PropTypes.bool,
   hyperlink: PropTypes.bool,
   text: PropTypes.string,
 };
 
 const defaultProps = {
   active: false,
+  emphasize: false,
   hyperlink: false,
   text: '',
 };
 
 const Text = ({
   active,
+  emphasize,
   hyperlink,
   text,
 }) => {
   if (hyperlink) {
     const options = {
-      className: cx('linkified', { inactive: !active }),
+      className: cx('linkified', { inactive: !active, emphasize }),
     };
 
     return (
@@ -33,9 +37,9 @@ const Text = ({
   }
 
   return (
-    <React.Fragment>
+    <div className={cx({ emphasize })}>
       {text}
-    </React.Fragment>
+    </div>
   );
 };
 

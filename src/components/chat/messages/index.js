@@ -39,6 +39,7 @@ const Messages = ({
                     active={active}
                     hyperlink={item.hyperlink}
                     initials={item.initials}
+                    moderator={item.moderator}
                     name={item.name}
                     text={item.message}
                     timestamp={timestamp}
