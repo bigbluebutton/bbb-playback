@@ -64,6 +64,7 @@ https://<domain>/playback/presentation/2.3/<recordId>
 
 - shortcuts: alt + shift
   - `fullscreen`: `K`
+  - `play/pause`: `Enter`
   - `section`: `L`
   - `seek`:
     - `backward`: `ArrowLeft`
