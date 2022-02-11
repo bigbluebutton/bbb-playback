@@ -47,6 +47,7 @@
   "shortcuts": {
     "enabled": true,
     "fullscreen": "K",
+    "play": "Enter",
     "section": "L",
     "seek": {
       "backward": "ArrowLeft",
