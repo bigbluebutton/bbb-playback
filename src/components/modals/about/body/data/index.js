@@ -7,10 +7,10 @@ import {
 import storage from 'utils/data/storage';
 import './index.scss';
 
-const Body = () => {
+const Data = () => {
 
   return (
-    <div className="about-body">
+    <div className="body-data">
       <Item
         icon={ID.USERS}
         key={ID.USERS}
@@ -27,4 +27,4 @@ const Body = () => {
   );
 };
 
-export default Body;
+export default Data;

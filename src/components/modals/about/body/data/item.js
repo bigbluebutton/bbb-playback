@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Icon from 'components/utils/icon';
-import './index.scss';
 
 const propTypes = {
   icon: PropTypes.string,
