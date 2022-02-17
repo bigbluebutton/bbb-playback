@@ -1,27 +1,10 @@
 @import 'src/styles/sizes';
 
-.about-body,
 .about-header,
 .about-footer {
   box-sizing: border-box;
   display: flex;
   width: 100%;
-}
-
-.about-body {
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  overflow-x: hidden;
-  overflow-y: auto;
-
-  .item {
-    box-sizing: border-box;
-    display: grid;
-    font-size: large;
-    font-weight: var(--font-weight-semi-bold);
-    grid-gap: $padding-extra-small;
-    padding: $padding-small $padding-extra-small;
-  }
 }
 
 .about-header {
