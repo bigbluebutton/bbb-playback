@@ -7,18 +7,21 @@ const propTypes = {
   active: PropTypes.bool,
   hyperlink: PropTypes.bool,
   text: PropTypes.string,
+  emphasised: PropTypes.bool,
 };
 
 const defaultProps = {
   active: false,
   hyperlink: false,
   text: '',
+  emphasised: false,
 };
 
 const Text = ({
   active,
   hyperlink,
   text,
+  emphasised,
 }) => {
   if (hyperlink) {
     const options = {
@@ -27,14 +30,20 @@ const Text = ({
 
     return (
       <Linkify options={options}>
-        {text}
+        {emphasised ?
+          (<b>{text}</b>):
+          (text)
+        }
       </Linkify>
     );
   }
 
   return (
     <React.Fragment>
-      {text}
+      {emphasised ?
+        (<b>{text}</b>):
+        (text)
+      }
     </React.Fragment>
   );
 };

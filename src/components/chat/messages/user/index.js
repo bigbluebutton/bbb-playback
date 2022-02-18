@@ -10,6 +10,7 @@ const propTypes = {
   name: PropTypes.string,
   text: PropTypes.string,
   timestamp: PropTypes.timestamp,
+  emphasised: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -19,6 +20,7 @@ const defaultProps = {
   name: '',
   text: '',
   timestamp: 0,
+  emphasised: false,
 };
 
 const User = ({
@@ -28,17 +30,20 @@ const User = ({
   name,
   text,
   timestamp,
+  emphasised,
 }) => {
 
   return (
     <Message
       active={active}
-      circle
+      circle={!emphasised}
+      emphasised={emphasised}
       initials={initials}
       name={name}
       timestamp={timestamp}
     >
       <Text
+        emphasised={emphasised}
         active={active}
         hyperlink={hyperlink}
         text={text}

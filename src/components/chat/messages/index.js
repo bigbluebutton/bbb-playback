@@ -18,6 +18,10 @@ const defaultProps = {
   setRef: () => {},
 };
 
+const getEmphasised = (senderRole) => {
+  return senderRole === "MODERATOR";
+}
+
 const Messages = ({
   currentIndex,
   setRef,
@@ -28,7 +32,8 @@ const Messages = ({
       <div className="message-wrapper">
         {storage.messages.map((item, index) => {
           const active = index <= currentIndex;
-          const { timestamp } = item;
+          const { timestamp, senderRole } = item;
+          const emphasised = getEmphasised(senderRole);
           const type = getMessageType(item);
           switch (type) {
             case ID.USERS:
@@ -42,6 +47,7 @@ const Messages = ({
                     name={item.name}
                     text={item.message}
                     timestamp={timestamp}
+                    emphasised={emphasised}
                   />
                 </span>
               );

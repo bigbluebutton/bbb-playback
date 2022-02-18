@@ -430,6 +430,14 @@ const buildChat = result => {
       const clear = attr.out ? parseFloat(attr.out) : -1;
       const message = decodeXML(clearHyperlink(attr.message));
       const initials = getInitials(attr.name);
+      let senderRoleXml;
+      if (attr.senderRole !== undefined){
+        senderRoleXml = decodeXML(clearHyperlink(attr.senderRole));
+        if (senderRoleXml === ""){
+          senderRoleXml = "VIEWER";
+        }
+      }
+      const senderRole = senderRoleXml;
 
       return {
         clear,
@@ -438,6 +446,7 @@ const buildChat = result => {
         name: attr.name,
         message,
         timestamp: parseFloat(attr.in),
+        senderRole: senderRole,
       };
     });
   }

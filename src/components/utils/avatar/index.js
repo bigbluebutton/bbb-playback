@@ -10,6 +10,7 @@ const propTypes = {
   icon: PropTypes.string,
   initials: PropTypes.string,
   name: PropTypes.string,
+  emphasised: PropTypes.bool
 };
 
 const defaultProps = {
@@ -17,6 +18,7 @@ const defaultProps = {
   icon: '',
   initials: '',
   name: '',
+  emphasised: false,
 };
 
 const Avatar = ({
@@ -24,12 +26,13 @@ const Avatar = ({
   icon,
   initials,
   name,
+  emphasised,
 }) => {
-  const style = circle ? getAvatarStyle(name) : 'avatar-default';
+  const style = circle || emphasised ? getAvatarStyle(name) : 'avatar-default';
 
   return (
     <div className="avatar-wrapper">
-      <div className={cx('avatar', { circle }, style)}>
+      <div className={cx('avatar', { circle, "moderator-avatar": emphasised}, style)}>
         {icon ? (
           <Icon name={icon} />
         ) : (

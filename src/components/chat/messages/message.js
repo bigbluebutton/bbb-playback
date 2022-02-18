@@ -17,6 +17,7 @@ const propTypes = {
   initials: PropTypes.string,
   name: PropTypes.string,
   timestamp: PropTypes.number,
+  emphasised: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -27,6 +28,7 @@ const defaultProps = {
   initials: '',
   name: '',
   timestamp: 0,
+  emphasised: false
 };
 
 const Message = ({
@@ -37,6 +39,7 @@ const Message = ({
   initials,
   name,
   timestamp,
+  emphasised,
 }) => {
   const handleOnClick = () => {
     player.primary.currentTime(timestamp);
@@ -47,6 +50,7 @@ const Message = ({
       <Margin
         active={active}
         circle={circle}
+        emphasised={emphasised}
         icon={icon}
         initials={initials}
         name={name}
