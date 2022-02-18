@@ -3,6 +3,7 @@ import messages from './messages';
 import { getSearchParam } from 'utils/params';
 
 const RTL_LOCALES = ['ar', 'fa'];
+const FALBACK_LOCALE = 'en';
 
 const setDirection = (locale) => {
   if (RTL_LOCALES.includes(locale)) {
@@ -30,8 +31,12 @@ const getLocale = () => {
   return locale;
 };
 
-const getMessages = () => {
-  return messages;
+const getMessages = (locale) => {
+  if (locale !== FALBACK_LOCALE) {
+    return Object.assign(messages[FALBACK_LOCALE], messages[locale]);
+  }
+
+  return messages[locale];
 };
 
 export {
