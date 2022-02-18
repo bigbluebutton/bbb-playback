@@ -1,0 +1,20 @@
+{
+  "button.about.aria": "关于",
+  "button.clear.aria": "清楚搜索记录",
+  "button.close.aria": "关闭弹窗",
+  "button.search.aria": "搜索",
+  "player.chat.message.poll.name": "投票结果",
+  "player.chat.message.poll.question": "问题",
+  "player.chat.message.poll.options": "选项",
+  "player.chat.message.poll.option.yes": "是",
+  "player.chat.message.poll.option.no": "否",
+  "player.chat.message.poll.option.abstention": "弃权",
+  "player.chat.message.poll.option.true": "正确",
+  "player.chat.message.poll.option.false": "错误",
+  "player.chat.wrapper.aria": "讨论区",
+  "player.notes.wrapper.aria": "笔记区",
+  "player.presentation.wrapper.aria": "演示区",
+  "player.screenshare.wrapper.aria": "屏幕分享区",
+  "player.search.modal.title": "搜索",
+  "player.thumbnails.wrapper.aria": "缩略图区域"
+}
