@@ -56,7 +56,7 @@ https://<domain>/playback/presentation/2.3/<recordId>
   - `thumbnails`
 
 - locale:
-  - `default`: fallback [`ar`|`de`|`en`|`es`|`fr`|`it`|`ja`|`pt`|`ru`|`tr`]
+  - `default`: fallback [`en`]
 
 - player: primary media configuration
   - `rps`: renders per second

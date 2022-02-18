@@ -1,0 +1,13 @@
+{
+  "button.about.aria": "Giới thiệu",
+  "button.clear.aria": "Xóa tìm kiếm",
+  "button.search.aria": "Tìm kiếm",
+  "button.swap.aria": "Hoán đổi nội dung",
+  "player.chat.message.poll.question": "Câu hỏi",
+  "player.chat.message.poll.option.yes": "Có",
+  "player.chat.message.poll.option.no": "Không",
+  "player.chat.message.poll.option.true": "Đúng",
+  "player.chat.message.poll.option.false": "Sai",
+  "player.screenshare.wrapper.aria": "Vùng chia sẻ màn hình",
+  "player.search.modal.title": "Tìm kiếm"
+}
