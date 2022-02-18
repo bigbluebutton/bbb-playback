@@ -2,6 +2,14 @@ import { getCurrentDataIndex } from 'utils/data';
 import storage from 'utils/data/storage';
 import player from 'utils/player';
 
+const play = () => {
+  if (player.primary.paused()) {
+    player.primary.play();
+  } else {
+    player.primary.pause();
+  }
+};
+
 const search = (text, thumbnails) => {
   const result = [];
 
@@ -56,6 +64,7 @@ const skip = (change) => {
 };
 
 export {
+  play,
   search,
   seek,
   skip,

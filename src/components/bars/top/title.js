@@ -6,7 +6,10 @@ import {
   FormattedDate,
 } from 'react-intl';
 import cx from 'classnames';
-import { controls as config } from 'config';
+import {
+  controls as config,
+  date,
+} from 'config';
 import { handleOnEnterPress } from 'utils/data/handlers';
 import storage from 'utils/data/storage';
 import layout from 'utils/layout';
@@ -25,14 +28,17 @@ const defaultProps = { openAbout: () => {} };
 
 const Title = ({ openAbout }) => {
   const intl = useIntl();
-  const date = <FormattedDate value={new Date(storage.metadata.start)} />;
+  const start = <FormattedDate value={new Date(storage.metadata.start)} />;
 
   const interactive = layout.control && config.about;
   if (!interactive) {
 
     return (
       <span className="title">
-        {storage.metadata.name} - {date}
+        {storage.metadata.name}
+        {date.enabled ? (
+          <> - {start}</>
+        ) : null}
       </span>
     );
   }
@@ -45,7 +51,10 @@ const Title = ({ openAbout }) => {
       onKeyPress={event => handleOnEnterPress(event, openAbout)}
       tabIndex="0"
     >
-      {storage.metadata.name} - {date}
+      {storage.metadata.name}
+      {date.enabled ? (
+        <> - {start}</>
+      ) : null}
     </span>
   );
 };

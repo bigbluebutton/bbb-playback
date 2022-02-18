@@ -2,10 +2,11 @@ import { locale as config } from 'config';
 import messages from './messages';
 import { getSearchParam } from 'utils/params';
 
-const RTL_LOCALES = ['ar', 'fa'];
+const RTL_LOCALES = ['ar', 'dv', 'fa', 'he'];
+const FALBACK_LOCALE = 'en';
 
-const setDirection = (locale) => {
-  if (RTL_LOCALES.includes(locale)) {
+const setDirection = (language) => {
+  if (RTL_LOCALES.includes(language)) {
     document.body.parentNode.setAttribute('dir', 'rtl');
   } else {
     document.body.parentNode.setAttribute('dir', 'ltr');
@@ -20,18 +21,30 @@ const getLocale = () => {
   if (!locale) locale = navigator.language;
 
   // Sanitize
-  locale = locale.split(/[-_]/)[0];
+  locale = locale.replace('-', '_');
+  let [ language, ] = locale.split('_');
 
-  // If the locale is missing, use the default fallback
-  if (!messages[locale]) locale = config.default.split(/[-_]/)[0];
+  // If the locale is missing, try the language fallback
+  if (!messages[locale]) {
+    if (messages[language]) {
+      locale = language;
+    } else {
+      locale = config.default;
+      [ language, ] = config.default.split('_');
+    }
+  }
 
-  setDirection(locale);
+  setDirection(language);
 
   return locale;
 };
 
-const getMessages = () => {
-  return messages;
+const getMessages = (locale) => {
+  if (locale !== FALBACK_LOCALE) {
+    return Object.assign(messages[FALBACK_LOCALE], messages[locale]);
+  }
+
+  return messages[locale];
 };
 
 export {

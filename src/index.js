@@ -12,14 +12,13 @@ import { getStyle } from 'utils/params';
 import './index.scss';
 
 const locale = getLocale();
-const messages = getMessages();
 const style = getStyle();
 
 ReactDOM.render(
   (
     <IntlProvider
       locale={locale}
-      messages={messages[locale]}
+      messages={getMessages(locale)}
     >
       {style ? <link rel="stylesheet" type="text/css" href={style} /> : null}
       {ROUTER ? <Router /> : <Loader />}

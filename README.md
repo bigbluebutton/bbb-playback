@@ -15,6 +15,9 @@ https://<domain>/playback/presentation/2.3/<recordId>
 
 ## URL query strings
 
+- frequency:
+  - `f=<value>`: renders per second (e.g., 5)
+
 - layout:
   - `l=content`: focus on content
   - `l=disabled`: disabled interactive elements
@@ -53,7 +56,7 @@ https://<domain>/playback/presentation/2.3/<recordId>
   - `thumbnails`
 
 - locale:
-  - `default`: fallback [`ar`|`de`|`en`|`es`|`fr`|`it`|`ja`|`pt`|`ru`|`tr`]
+  - `default`: fallback [`en`]
 
 - player: primary media configuration
   - `rps`: renders per second
@@ -61,6 +64,7 @@ https://<domain>/playback/presentation/2.3/<recordId>
 
 - shortcuts: alt + shift
   - `fullscreen`: `K`
+  - `play/pause`: `Enter`
   - `section`: `L`
   - `seek`:
     - `backward`: `ArrowLeft`
