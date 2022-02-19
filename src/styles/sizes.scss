@@ -21,6 +21,8 @@ $modal-bar-height: $bar-height;
 $media-fit-height: calc((#{$webcams-height} / 2) - #{$bar-height});
 $media-fit-height-small: calc(((#{$webcams-height} / 8) * 3) - #{$bar-height});
 
+$shortcuts-list-height: 8rem;
+
 $border-radius: .35rem;
 $border-width: .2rem;
 $border-width-small: .15rem;
