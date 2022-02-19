@@ -8,6 +8,7 @@
     background-color: var(--secondary-highlight-color);
     box-sizing: border-box;
     display: flex;
+    font-size: smaller;
     font-weight: var(--font-weight-semi-bold);
     justify-content: center;
     padding: $padding-extra-small;
@@ -15,11 +16,24 @@
     width: 100%;
   }
 
+  .list {
+    height: $shortcuts-list-height;
+    position: relative;
+    width: 100%;
+  }
+
   .content {
+    bottom: 0;
     box-sizing: border-box;
     display: flex;
     font-size: small;
+    overflow-x: hidden;
+    overflow-y: auto;
     padding: $padding-extra-small;
+    position: absolute;
+    scroll-behavior: smooth;
+    top: 0;
+    width: 100%;
 
     .shortcut {
       box-sizing: border-box;
