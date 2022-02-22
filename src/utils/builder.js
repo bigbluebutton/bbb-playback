@@ -430,7 +430,11 @@ const buildChat = result => {
       const clear = attr.out ? parseFloat(attr.out) : -1;
       const message = decodeXML(clearHyperlink(attr.message));
       const initials = getInitials(attr.name);
+      let chatEmphasizedTextXml = true;
       let senderRoleXml;
+      if (attr.chatEmphasizedText !== undefined && attr.chatEmphasizedText !== null){
+        chatEmphasizedTextXml = JSON.parse(attr.chatEmphasizedText);
+      }
       if (attr.senderRole !== undefined){
         senderRoleXml = decodeXML(clearHyperlink(attr.senderRole));
         if (senderRoleXml === ""){
@@ -438,6 +442,7 @@ const buildChat = result => {
         }
       }
       const senderRole = senderRoleXml;
+      const chatEmphasizedText = chatEmphasizedTextXml;
 
       return {
         clear,
@@ -446,7 +451,8 @@ const buildChat = result => {
         name: attr.name,
         message,
         timestamp: parseFloat(attr.in),
-        senderRole: senderRole,
+        senderRole,
+        chatEmphasizedText,
       };
     });
   }

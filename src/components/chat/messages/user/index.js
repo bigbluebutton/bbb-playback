@@ -11,6 +11,7 @@ const propTypes = {
   text: PropTypes.string,
   timestamp: PropTypes.timestamp,
   emphasised: PropTypes.bool,
+  chatEmphasizedText: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -21,6 +22,7 @@ const defaultProps = {
   text: '',
   timestamp: 0,
   emphasised: false,
+  chatEmphasizedText: true,
 };
 
 const User = ({
@@ -31,6 +33,7 @@ const User = ({
   text,
   timestamp,
   emphasised,
+  chatEmphasizedText,
 }) => {
 
   return (
@@ -47,6 +50,7 @@ const User = ({
         active={active}
         hyperlink={hyperlink}
         text={text}
+        chatEmphasizedText={chatEmphasizedText}
       />
     </Message>
   );

@@ -8,6 +8,7 @@ const propTypes = {
   hyperlink: PropTypes.bool,
   text: PropTypes.string,
   emphasised: PropTypes.bool,
+  chatEmphasizedText: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -15,6 +16,7 @@ const defaultProps = {
   hyperlink: false,
   text: '',
   emphasised: false,
+  chatEmphasizedText: true,
 };
 
 const Text = ({
@@ -22,7 +24,9 @@ const Text = ({
   hyperlink,
   text,
   emphasised,
+  chatEmphasizedText
 }) => {
+  console.log(`Teste absurdo aqui ----> ${chatEmphasizedText}`);
   if (hyperlink) {
     const options = {
       className: cx('linkified', { inactive: !active }),
@@ -30,7 +34,7 @@ const Text = ({
 
     return (
       <Linkify options={options}>
-        {emphasised ?
+        {emphasised && chatEmphasizedText ?
           (<b>{text}</b>):
           (text)
         }
@@ -40,7 +44,7 @@ const Text = ({
 
   return (
     <React.Fragment>
-      {emphasised ?
+      {emphasised && chatEmphasizedText ?
         (<b>{text}</b>):
         (text)
       }

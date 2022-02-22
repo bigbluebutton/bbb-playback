@@ -32,7 +32,7 @@ const Messages = ({
       <div className="message-wrapper">
         {storage.messages.map((item, index) => {
           const active = index <= currentIndex;
-          const { timestamp, senderRole } = item;
+          const { timestamp, senderRole, chatEmphasizedText } = item;
           const emphasised = getEmphasised(senderRole);
           const type = getMessageType(item);
           switch (type) {
@@ -48,6 +48,7 @@ const Messages = ({
                     text={item.message}
                     timestamp={timestamp}
                     emphasised={emphasised}
+                    chatEmphasizedText={chatEmphasizedText}
                   />
                 </span>
               );
