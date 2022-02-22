@@ -419,6 +419,10 @@ const getInitials = name => {
   return initials;
 };
 
+const getEmphasised = (senderRole) => {
+  return senderRole === "MODERATOR";
+}
+
 const buildChat = result => {
   const { popcorn } = result;
   let data = [];
@@ -436,12 +440,12 @@ const buildChat = result => {
         chatEmphasizedTextXml = JSON.parse(attr.chatEmphasizedText);
       }
       if (attr.senderRole !== undefined){
-        senderRoleXml = decodeXML(clearHyperlink(attr.senderRole));
+        senderRoleXml = decodeXML(attr.senderRole);
         if (senderRoleXml === ""){
           senderRoleXml = "VIEWER";
         }
       }
-      const senderRole = senderRoleXml;
+      const emphasised = getEmphasised(senderRoleXml);
       const chatEmphasizedText = chatEmphasizedTextXml;
 
       return {
@@ -451,7 +455,7 @@ const buildChat = result => {
         name: attr.name,
         message,
         timestamp: parseFloat(attr.in),
-        senderRole,
+        emphasised,
         chatEmphasizedText,
       };
     });

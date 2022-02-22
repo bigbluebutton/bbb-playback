@@ -32,7 +32,7 @@ const Avatar = ({
 
   return (
     <div className="avatar-wrapper">
-      <div className={cx('avatar', { circle, "moderator-avatar": emphasised}, style)}>
+      <div className={cx('avatar', { circle }, style)}>
         {icon ? (
           <Icon name={icon} />
         ) : (

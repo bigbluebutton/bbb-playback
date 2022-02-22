@@ -36,7 +36,6 @@ const Margin = ({
 }) => {
   const style = {
     circle,
-    "moderator-avatar": emphasised,
     inactive: !active,
   };
 
