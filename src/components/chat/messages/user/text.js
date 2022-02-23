@@ -26,7 +26,6 @@ const Text = ({
   emphasised,
   chatEmphasizedText
 }) => {
-  console.log(`Teste absurdo aqui ----> ${chatEmphasizedText}`);
   if (hyperlink) {
     const options = {
       className: cx('linkified', { inactive: !active }),
