@@ -46,7 +46,6 @@ const User = ({
       timestamp={timestamp}
     >
       <Text
-        emphasised={emphasised}
         active={active}
         hyperlink={hyperlink}
         text={text}
