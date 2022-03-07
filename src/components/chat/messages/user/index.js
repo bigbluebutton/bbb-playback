@@ -5,42 +5,42 @@ import Message from 'components/chat/messages/message';
 
 const propTypes = {
   active: PropTypes.bool,
+  emphasized: PropTypes.bool,
   hyperlink: PropTypes.bool,
   initials: PropTypes.string,
   name: PropTypes.string,
+  moderator: PropTypes.bool,
   text: PropTypes.string,
   timestamp: PropTypes.timestamp,
-  emphasised: PropTypes.bool,
-  chatEmphasizedText: PropTypes.bool,
 };
 
 const defaultProps = {
   active: false,
+  emphasized: false,
   hyperlink: false,
   initials: '',
   name: '',
+  moderator: false,
   text: '',
   timestamp: 0,
-  emphasised: false,
-  chatEmphasizedText: true,
 };
 
 const User = ({
   active,
+  emphasized,
   hyperlink,
   initials,
   name,
+  moderator,
   text,
   timestamp,
-  emphasised,
-  chatEmphasizedText,
 }) => {
 
   return (
     <Message
       active={active}
-      circle={!emphasised}
-      emphasised={emphasised}
+      circle={!moderator}
+      emphasized={emphasized}
       initials={initials}
       name={name}
       timestamp={timestamp}
@@ -49,7 +49,6 @@ const User = ({
         active={active}
         hyperlink={hyperlink}
         text={text}
-        chatEmphasizedText={chatEmphasizedText}
       />
     </Message>
   );

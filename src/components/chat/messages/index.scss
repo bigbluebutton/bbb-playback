@@ -106,6 +106,10 @@
   .inactive {
     opacity: .5;
   }
+
+  .emphasized {
+    font-weight: var(--font-weight-semi-bold);
+  }
 }
 
 .poll-wrapper {

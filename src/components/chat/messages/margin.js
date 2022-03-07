@@ -12,7 +12,6 @@ const propTypes = {
   initials: PropTypes.string,
   name: PropTypes.string,
   onClick: PropTypes.func,
-  emphasised: PropTypes.bool
 };
 
 const defaultProps = {
@@ -22,7 +21,6 @@ const defaultProps = {
   initials: '',
   name: '',
   onClick: () => {},
-  emphasised: false,
 };
 
 const Margin = ({
@@ -32,7 +30,6 @@ const Margin = ({
   initials,
   name,
   onClick,
-  emphasised,
 }) => {
   const style = {
     circle,
@@ -49,7 +46,6 @@ const Margin = ({
       <Avatar
         active={active}
         circle={circle}
-        emphasised={emphasised}
         icon={icon}
         initials={initials}
         name={name}

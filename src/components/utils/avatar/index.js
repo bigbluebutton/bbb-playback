@@ -10,7 +10,6 @@ const propTypes = {
   icon: PropTypes.string,
   initials: PropTypes.string,
   name: PropTypes.string,
-  emphasised: PropTypes.bool
 };
 
 const defaultProps = {
@@ -18,7 +17,6 @@ const defaultProps = {
   icon: '',
   initials: '',
   name: '',
-  emphasised: false,
 };
 
 const Avatar = ({
@@ -26,9 +24,9 @@ const Avatar = ({
   icon,
   initials,
   name,
-  emphasised,
 }) => {
-  const style = circle || emphasised ? getAvatarStyle(name) : 'avatar-default';
+  // TODO: this should become a property
+  const style = initials.length > 0 ? getAvatarStyle(name) : 'avatar-default';
 
   return (
     <div className="avatar-wrapper">

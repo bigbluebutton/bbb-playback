@@ -13,33 +13,33 @@ const propTypes = {
     PropTypes.node,
   ]),
   circle: PropTypes.bool,
+  emphasized: PropTypes.bool,
   icon: PropTypes.string,
   initials: PropTypes.string,
   name: PropTypes.string,
   timestamp: PropTypes.number,
-  emphasised: PropTypes.bool,
 };
 
 const defaultProps = {
   active: false,
   children: null,
   circle: false,
+  emphasized: false,
   icon: '',
   initials: '',
   name: '',
   timestamp: 0,
-  emphasised: false
 };
 
 const Message = ({
   active,
   children,
   circle,
+  emphasized,
   icon,
   initials,
   name,
   timestamp,
-  emphasised,
 }) => {
   const handleOnClick = () => {
     player.primary.currentTime(timestamp);
@@ -50,7 +50,6 @@ const Message = ({
       <Margin
         active={active}
         circle={circle}
-        emphasised={emphasised}
         icon={icon}
         initials={initials}
         name={name}
@@ -62,7 +61,7 @@ const Message = ({
           name={name}
           timestamp={timestamp}
         />
-        <div className={cx('text', { inactive: !active })}>
+        <div className={cx('text', { inactive: !active, emphasized })}>
           {children}
         </div>
       </div>
