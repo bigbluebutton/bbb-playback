@@ -28,7 +28,7 @@ const Messages = ({
       <div className="message-wrapper">
         {storage.messages.map((item, index) => {
           const active = index <= currentIndex;
-          const { timestamp } = item;
+          const { timestamp, emphasised, chatEmphasizedText } = item;
           const type = getMessageType(item);
           switch (type) {
             case ID.USERS:
@@ -42,6 +42,8 @@ const Messages = ({
                     name={item.name}
                     text={item.message}
                     timestamp={timestamp}
+                    emphasised={emphasised}
+                    chatEmphasizedText={chatEmphasizedText}
                   />
                 </span>
               );

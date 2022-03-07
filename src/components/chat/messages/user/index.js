@@ -10,6 +10,8 @@ const propTypes = {
   name: PropTypes.string,
   text: PropTypes.string,
   timestamp: PropTypes.timestamp,
+  emphasised: PropTypes.bool,
+  chatEmphasizedText: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -19,6 +21,8 @@ const defaultProps = {
   name: '',
   text: '',
   timestamp: 0,
+  emphasised: false,
+  chatEmphasizedText: true,
 };
 
 const User = ({
@@ -28,12 +32,15 @@ const User = ({
   name,
   text,
   timestamp,
+  emphasised,
+  chatEmphasizedText,
 }) => {
 
   return (
     <Message
       active={active}
-      circle
+      circle={!emphasised}
+      emphasised={emphasised}
       initials={initials}
       name={name}
       timestamp={timestamp}
@@ -42,6 +49,7 @@ const User = ({
         active={active}
         hyperlink={hyperlink}
         text={text}
+        chatEmphasizedText={chatEmphasizedText}
       />
     </Message>
   );

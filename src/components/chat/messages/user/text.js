@@ -7,18 +7,21 @@ const propTypes = {
   active: PropTypes.bool,
   hyperlink: PropTypes.bool,
   text: PropTypes.string,
+  chatEmphasizedText: PropTypes.bool,
 };
 
 const defaultProps = {
   active: false,
   hyperlink: false,
   text: '',
+  chatEmphasizedText: true,
 };
 
 const Text = ({
   active,
   hyperlink,
   text,
+  chatEmphasizedText
 }) => {
   if (hyperlink) {
     const options = {
@@ -27,14 +30,20 @@ const Text = ({
 
     return (
       <Linkify options={options}>
-        {text}
+        {chatEmphasizedText ?
+          (<b>{text}</b>):
+          (text)
+        }
       </Linkify>
     );
   }
 
   return (
     <React.Fragment>
-      {text}
+      {chatEmphasizedText ?
+        (<b>{text}</b>):
+        (text)
+      }
     </React.Fragment>
   );
 };
