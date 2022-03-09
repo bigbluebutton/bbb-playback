@@ -84,22 +84,24 @@ const Shortcuts = () => {
       <div className="title">
         {intl.formatMessage(intlMessages.title)}
       </div>
-      <div className="content">
-        {SHORTCUTS.map(shortcut => {
+      <div className="list">
+        <div className="content">
+          {SHORTCUTS.map(shortcut => {
 
-          return (
-            <div className="shortcut">
-              <div className="label">
-                {intl.formatMessage(intlMessages[shortcut])}
+            return (
+              <div className="shortcut">
+                <div className="label">
+                  {intl.formatMessage(intlMessages[shortcut])}
+                </div>
+                <div className="keys">
+                  <Key code={intl.formatMessage(intlMessages.alt)} />
+                  <Key code={intl.formatMessage(intlMessages.shift)} />
+                  <Key code={getCode(shortcut)} />
+                </div>
               </div>
-              <div className="keys">
-                <Key code={intl.formatMessage(intlMessages.alt)} />
-                <Key code={intl.formatMessage(intlMessages.shift)} />
-                <Key code={getCode(shortcut)} />
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );
