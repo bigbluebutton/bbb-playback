@@ -46,6 +46,13 @@
   z-index: 1 !important;
 }
 
+.vjs-menu-button-popup {
+  .vjs-menu {
+    left: unset !important;
+    right: 0 !important;
+  }
+}
+
 [class^="vjs-text-track-cue"] {
   inset: auto 0 calc(#{$control-bar-height} * 2) 0 !important;
   z-index: 2;
