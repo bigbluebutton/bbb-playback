@@ -5,6 +5,10 @@ import { getSearchParam } from 'utils/params';
 const RTL_LOCALES = ['ar', 'dv', 'fa', 'he'];
 const FALLBACK_LOCALE = 'en';
 
+const localeToFile = (locale) => locale.replace('-', '_');
+
+const fileToLocale = (locale) => locale.replace('_', '-');
+
 const setDirection = (language) => {
   if (RTL_LOCALES.includes(language)) {
     document.body.parentNode.setAttribute('dir', 'rtl');
@@ -14,37 +18,33 @@ const setDirection = (language) => {
 };
 
 const getLocale = () => {
-  // Try from the query params
-  let locale = getSearchParam('locale');
+  const locale = getSearchParam('locale') || navigator.language;
 
-  // If not, get browser default
-  if (!locale) locale = navigator.language;
-
-  // Sanitize
-  locale = locale.replace('-', '_');
-  let [ language, ] = locale.split('_');
+  let file = localeToFile(locale);
+  let [ language, ] = file.split('_');
 
   // If the locale is missing, try the language fallback
-  if (!messages[locale]) {
+  if (!messages[file]) {
     if (messages[language]) {
-      locale = language;
+      file = language;
     } else {
-      locale = config.default;
+      file = config.default;
       [ language, ] = config.default.split('_');
     }
   }
 
   setDirection(language);
 
-  return locale;
+  return fileToLocale(file);
 };
 
 const getMessages = (locale) => {
-  if (locale !== FALLBACK_LOCALE) {
-    return Object.assign(messages[FALLBACK_LOCALE], messages[locale]);
+  const file = localeToFile(locale);
+  if (file !== FALLBACK_LOCALE) {
+    return Object.assign(messages[FALLBACK_LOCALE], messages[file]);
   }
 
-  return messages[locale];
+  return messages[file];
 };
 
 export {
