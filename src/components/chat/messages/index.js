@@ -38,8 +38,10 @@ const Messages = ({
                 <span ref={node => setRef(node, index)}>
                   <UserMessage
                     active={active}
+                    emphasized={item.emphasized}
                     hyperlink={item.hyperlink}
                     initials={item.initials}
+                    moderator={item.moderator}
                     name={item.name}
                     text={item.message}
                     timestamp={timestamp}

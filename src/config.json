@@ -11,6 +11,9 @@
     "swap": true,
     "thumbnails": true
   },
+  "date": {
+    "enabled": true
+  },
   "files": {
     "alternates": "presentation_text.json",
     "captions": "captions.json",
@@ -45,6 +48,7 @@
   "shortcuts": {
     "enabled": true,
     "fullscreen": "K",
+    "play": "Enter",
     "section": "L",
     "seek": {
       "backward": "ArrowLeft",

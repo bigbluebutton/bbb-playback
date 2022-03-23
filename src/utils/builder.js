@@ -7,6 +7,7 @@ import {
 } from './data/validators';
 import {
   ID,
+  ROLES,
   SHAPES,
 } from './constants';
 import logger from './logger';
@@ -440,13 +441,17 @@ const buildChat = result => {
       const clear = attr.out ? parseFloat(attr.out) : -1;
       const message = decodeXML(clearHyperlink(attr.message));
       const initials = getInitials(attr.name);
+      const emphasized = attr.chatEmphasizedText === 'true';
+      const moderator = attr.senderRole === ROLES.MODERATOR;
 
       return {
         clear,
+        emphasized,
         hyperlink: message !== attr.message,
         initials,
         name: attr.name,
         message,
+        moderator,
         timestamp: parseFloat(attr.in),
       };
     });

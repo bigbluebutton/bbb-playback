@@ -1,0 +1,19 @@
+@import 'src/styles/sizes';
+
+.body-data {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100%;
+
+  .item {
+    box-sizing: border-box;
+    display: grid;
+    font-size: large;
+    font-weight: var(--font-weight-semi-bold);
+    grid-gap: $padding-extra-small;
+    padding: $padding-small $padding-extra-small;
+  }
+}

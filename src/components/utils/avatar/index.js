@@ -25,7 +25,8 @@ const Avatar = ({
   initials,
   name,
 }) => {
-  const style = circle ? getAvatarStyle(name) : 'avatar-default';
+  // TODO: this should become a property
+  const style = initials.length > 0 ? getAvatarStyle(name) : 'avatar-default';
 
   return (
     <div className="avatar-wrapper">

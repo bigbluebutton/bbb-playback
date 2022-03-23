@@ -1,0 +1,22 @@
+{
+  "button.about.aria": "Tentang",
+  "button.search.aria": "Cari",
+  "button.section.aria": "Bagian sisi",
+  "error.wrapper.aria": "Area galat",
+  "loader.wrapper.aria": "Area pemuat",
+  "player.wrapper.aria": "Area pemain",
+  "player.chat.message.poll.name": "Hasil jajak pendapat",
+  "player.chat.message.poll.question": "Pertanyaan",
+  "player.chat.message.poll.options": "Opsi",
+  "player.chat.message.poll.option.yes": "Ya",
+  "player.chat.message.poll.option.no": "Tidak",
+  "player.chat.message.poll.option.true": "Benar",
+  "player.chat.message.poll.option.false": "Salah",
+  "player.chat.wrapper.aria": "Area oborolan",
+  "player.notes.wrapper.aria": "Area catatan",
+  "player.presentation.wrapper.aria": "Area presentasi",
+  "player.screenshare.wrapper.aria": "Area berbagi layar",
+  "player.search.modal.title": "Cari",
+  "player.search.modal.subtitle": "Cari isi salindia presentasi",
+  "player.thumbnails.wrapper.aria": "Area gambar mini"
+}

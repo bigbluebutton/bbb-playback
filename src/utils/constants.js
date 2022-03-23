@@ -88,6 +88,11 @@ const POSITIONS = {
   TOP: 'top',
 };
 
+const ROLES = {
+  MODERATOR: 'MODERATOR',
+  VIEWER: 'VIEWER',
+};
+
 const SHAPES = {
   CIRCLE: 'circle',
   LINE: 'line',
@@ -118,6 +123,7 @@ export {
   MEDIA_ROOT_URL,
   NUMBERS,
   POSITIONS,
+  ROLES,
   ROUTER,
   SHAPES,
 };

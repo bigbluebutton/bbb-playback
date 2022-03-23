@@ -12,6 +12,7 @@ import Modal from './modal';
 import BottomBar from 'components/bars/bottom';
 import TopBar from 'components/bars/top';
 import {
+  play,
   seek,
   skip,
 } from 'utils/actions';
@@ -43,6 +44,7 @@ const Player = () => {
 
     const actions = {
       fullscreen: () => setFullscreen(prevFullscreen => !prevFullscreen),
+      play: () => play(),
       section: () => setSection(prevSection => !prevSection),
       seek: {
         backward: () => seek(-seconds),

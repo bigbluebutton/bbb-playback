@@ -32,11 +32,7 @@ const Text = ({
     );
   }
 
-  return (
-    <React.Fragment>
-      {text}
-    </React.Fragment>
-  );
+  return <>{text}</>;
 };
 
 Text.propTypes = propTypes;

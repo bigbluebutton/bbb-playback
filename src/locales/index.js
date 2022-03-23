@@ -2,10 +2,15 @@ import { locale as config } from 'config';
 import messages from './messages';
 import { getSearchParam } from 'utils/params';
 
-const RTL_LOCALES = ['ar', 'fa'];
+const RTL_LOCALES = ['ar', 'dv', 'fa', 'he'];
+const FALLBACK_LOCALE = 'en';
 
-const setDirection = (locale) => {
-  if (RTL_LOCALES.includes(locale)) {
+const localeToFile = (locale) => locale.replace('-', '_');
+
+const fileToLocale = (locale) => locale.replace('_', '-');
+
+const setDirection = (language) => {
+  if (RTL_LOCALES.includes(language)) {
     document.body.parentNode.setAttribute('dir', 'rtl');
   } else {
     document.body.parentNode.setAttribute('dir', 'ltr');
@@ -13,25 +18,33 @@ const setDirection = (locale) => {
 };
 
 const getLocale = () => {
-  // Try from the query params
-  let locale = getSearchParam('locale');
+  const locale = getSearchParam('locale') || navigator.language;
 
-  // If not, get browser default
-  if (!locale) locale = navigator.language;
+  let file = localeToFile(locale);
+  let [ language, ] = file.split('_');
 
-  // Sanitize
-  locale = locale.split(/[-_]/)[0];
+  // If the locale is missing, try the language fallback
+  if (!messages[file]) {
+    if (messages[language]) {
+      file = language;
+    } else {
+      file = config.default;
+      [ language, ] = config.default.split('_');
+    }
+  }
 
-  // If the locale is missing, use the default fallback
-  if (!messages[locale]) locale = config.default.split(/[-_]/)[0];
+  setDirection(language);
 
-  setDirection(locale);
-
-  return locale;
+  return fileToLocale(file);
 };
 
-const getMessages = () => {
-  return messages;
+const getMessages = (locale) => {
+  const file = localeToFile(locale);
+  if (file !== FALLBACK_LOCALE) {
+    return Object.assign(messages[FALLBACK_LOCALE], messages[file]);
+  }
+
+  return messages[file];
 };
 
 export {
