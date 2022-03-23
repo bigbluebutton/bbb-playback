@@ -162,6 +162,7 @@ const storage = {
       chat: hasProperty(DATA, ID.CHAT),
       notes: hasProperty(DATA, ID.NOTES),
       polls: hasProperty(DATA, ID.POLLS),
+      questions: hasProperty(DATA, ID.QUESTIONS),
       videos: hasProperty(DATA, ID.VIDEOS),
       presentation: hasProperty(DATA, ID.SHAPES),
       screenshare: hasProperty(DATA, ID.SCREENSHARE),
@@ -173,6 +174,7 @@ const storage = {
       chat: !isEmpty(this.chat),
       notes: !isEmpty(this.notes),
       polls: !isEmpty(this.polls),
+      questions: !isEmpty(this.questions),
       videos: !isEmpty(this.videos),
       presentation: hasPresentation(this.slides),
       screenshare: !isEmpty(this.screenshare),
@@ -190,6 +192,9 @@ const storage = {
   get polls() {
     return DATA[ID.POLLS];
   },
+  get questions() {
+    return DATA[ID.QUESTIONS];
+  },
   get videos() {
     return DATA[ID.VIDEOS];
   },
@@ -204,6 +209,7 @@ const storage = {
       DATA[ID.MESSAGES] = mergeMessages(
         this.chat,
         this.polls,
+        this.questions,
         this.videos,
       );
     }

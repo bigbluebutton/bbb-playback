@@ -18,6 +18,8 @@
   "player.chat.message.poll.option.abstention": "Abstenção",
   "player.chat.message.poll.option.true": "Verdadeiro",
   "player.chat.message.poll.option.false": "Falso",
+  "player.chat.message.question.name": "Pergunta",
+  "player.chat.message.question.answer": "Resposta",
   "player.chat.wrapper.aria": "Área do bate-papo",
   "player.notes.wrapper.aria": "Área das anotações",
   "player.presentation.wrapper.aria": "Área da apresentação",
