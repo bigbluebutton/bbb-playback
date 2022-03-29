@@ -101,6 +101,11 @@ const SHAPES = {
   TEXT: 'text',
 };
 
+const THEME = {
+  DARK: 'dark',
+  LIGHT: 'light',
+};
+
 const getRouter = () => {
   if (typeof NO_ROUTER !== 'undefined') {
     if (NO_ROUTER) return false;
@@ -124,4 +129,5 @@ export {
   ROLES,
   ROUTER,
   SHAPES,
+  THEME,
 };
