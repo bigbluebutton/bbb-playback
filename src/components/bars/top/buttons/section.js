@@ -31,7 +31,7 @@ const Section = ({
 }) => {
   const intl = useIntl();
 
-  if (!layout.control && config.section) return null;
+  if (!layout.control || !config.section) return null;
 
   return (
     <Button

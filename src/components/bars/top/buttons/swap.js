@@ -23,7 +23,7 @@ const defaultProps = { toggleSwap: () => {} };
 const Swap = ({ toggleSwap }) => {
   const intl = useIntl();
 
-  if (!layout.control && config.swap && !layout.single) return null;
+  if (!layout.control || !config.swap || layout.single) return null;
 
   return (
     <Button

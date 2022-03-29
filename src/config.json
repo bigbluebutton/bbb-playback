@@ -9,8 +9,7 @@
     "search": true,
     "section": true,
     "swap": true,
-    "theme": true,
-    "thumbnails": true
+    "theme": true
   },
   "date": {
     "enabled": true
