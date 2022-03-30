@@ -23,7 +23,7 @@ const defaultProps = { openSearch: () => {} };
 const Search = ({ openSearch }) => {
   const intl = useIntl();
 
-  if (!layout.control && config.search && !layout.single) return null;
+  if (!layout.control || !config.search || layout.single) return null;
 
   return (
     <Button
