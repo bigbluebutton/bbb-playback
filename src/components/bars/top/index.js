@@ -4,6 +4,7 @@ import Title from './title';
 import SearchButton from './buttons/search';
 import SectionButton from './buttons/section';
 import SwapButton from './buttons/swap';
+import ThemeButton from './buttons/theme';
 import { ID } from 'utils/constants';
 import './index.scss';
 
@@ -40,6 +41,7 @@ const Top = ({
         <Title openAbout={() => openModal(ID.ABOUT)} />
       </div>
       <div className="right">
+        <ThemeButton />
         <SearchButton openSearch={() => openModal(ID.SEARCH)} />
         <SwapButton toggleSwap={toggleSwap} />
       </div>
