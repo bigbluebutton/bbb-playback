@@ -39,11 +39,11 @@
   width: 100%;
 }
 
-.vjs-control-bar {
-  background-color: var(--control-bar-background-color) !important;
-  display: flex !important;
-  position: fixed !important;
-  z-index: 1 !important;
+.video-js .vjs-control-bar {
+  background-color: var(--control-bar-background-color);
+  display: flex;
+  position: fixed;
+  z-index: 1;
 }
 
 .vjs-menu-button-popup {
