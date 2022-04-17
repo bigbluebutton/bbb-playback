@@ -1,4 +1,4 @@
-import config from 'config';
+import { styles } from 'config';
 import { ROUTER } from './constants';
 import logger from './logger';
 
@@ -41,7 +41,6 @@ const getSearchParam = (name) => {
 
 const getStyle = () => {
   const param = getSearchParam('s');
-  const { styles } = config;
   const { url } = styles;
 
   let style = styles.default ? `${url}/${styles.default}.css` : null;
