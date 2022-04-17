@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Linkify from 'linkifyjs/react';
+import Linkify from 'linkify-react';
 import cx from 'classnames';
 
 const propTypes = {
@@ -23,6 +23,7 @@ const Text = ({
   if (hyperlink) {
     const options = {
       className: cx('linkified', { inactive: !active }),
+      target: '_blank',
     };
 
     return (
