@@ -2,7 +2,7 @@ import React from 'react';
 import {
   BrowserRouter,
   Route,
-  Switch,
+  Routes,
 } from 'react-router-dom';
 import { ERROR } from 'utils/constants';
 import Error from './error';
@@ -12,13 +12,13 @@ const Router = () => {
 
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
-      <Switch>
+      <Routes>
         <Route
           path="/:recordId"
-          component={Loader}
+          element={<Loader />}
         />
         <Route render={() => <Error code={ERROR.NOT_FOUND} />} />
-      </Switch>
+      </Routes>
     </BrowserRouter>
   );
 };
