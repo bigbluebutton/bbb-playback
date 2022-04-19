@@ -7,14 +7,8 @@ import {
   getMessageType,
   getPercentage,
   getPollLabel,
-  getRecordId,
 } from '.';
 import { ID } from 'utils/constants';
-
-const {
-  PRESENTATION,
-  SCREENSHARE,
-} = ID;
 
 it('get a poll bar from a percentage value', () => {
   expect(getBar(0))

@@ -1,4 +1,4 @@
-import config from 'config';
+import { styles } from 'config';
 import { ROUTER } from './constants';
 import logger from './logger';
 
@@ -27,24 +27,6 @@ const getMediaPath = () => {
   return mediaPath;
 };
 
-const getRecordId = match => {
-  if (!ROUTER) return 'local';
-
-  if (match) {
-    const { params } = match;
-    if (params && params.recordId) {
-      const { recordId } = params;
-      const regex = /^[a-z0-9]{40}-[0-9]{13}$/;
-
-      if (recordId.match(regex)) return recordId;
-    }
-  }
-
-  logger.error('missing', 'recordId');
-
-  return null;
-};
-
 const getSearchParam = (name) => {
   const params = new URLSearchParams(window.location.search);
 
@@ -59,7 +41,6 @@ const getSearchParam = (name) => {
 
 const getStyle = () => {
   const param = getSearchParam('s');
-  const { styles } = config;
   const { url } = styles;
 
   let style = styles.default ? `${url}/${styles.default}.css` : null;
@@ -77,6 +58,23 @@ const getTime = () => {
   const param = getSearchParam('t');
 
   if (param) return parseTimeToSeconds(param);
+
+  return null;
+};
+
+const parseRecordId = params => {
+  if (!ROUTER) return 'local';
+
+  if (params) {
+    const { recordId } = params;
+    if (recordId) {
+      const regex = /^[a-z0-9]{40}-[0-9]{13}$/;
+
+      if (recordId.match(regex)) return recordId;
+    }
+  }
+
+  logger.error('missing', 'recordId');
 
   return null;
 };
@@ -130,9 +128,9 @@ export {
   getFrequency,
   getLayout,
   getMediaPath,
-  getRecordId,
   getStyle,
   getSearchParam,
   getTime,
+  parseRecordId,
   parseTimeToSeconds,
 };

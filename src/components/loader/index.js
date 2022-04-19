@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { useParams } from "react-router-dom";
 import {
   defineMessages,
   useIntl,
@@ -16,7 +17,7 @@ import layout from 'utils/layout';
 import logger from 'utils/logger';
 import {
   getLayout,
-  getRecordId,
+  parseRecordId,
 } from 'utils/params';
 import './index.scss';
 
@@ -33,8 +34,9 @@ const initError = (recordId) => recordId ? null : ERROR.BAD_REQUEST;
 
 const Loader = ({ match }) => {
   const intl = useIntl();
+  const params = useParams();
+  const recordId = useRef(parseRecordId(params));
   const counter = useRef(0);
-  const recordId = useRef(getRecordId(match));
 
   const [error, setError] = useState(initError(recordId.current));
   const [, setUpdate] = useState(0);

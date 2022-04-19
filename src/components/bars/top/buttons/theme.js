@@ -28,7 +28,19 @@ const css = `
 }
 `;
 
-const fixes = { css };
+const ignoreInlineStyle = [
+  'g > circle',
+  'g > line',
+  'g > path',
+  'g > polygon',
+  'g > polyline',
+  'g > foreignObject',
+];
+
+const fixes = {
+  css,
+  ignoreInlineStyle,
+};
 
 const Theme = () => {
   const intl = useIntl();
