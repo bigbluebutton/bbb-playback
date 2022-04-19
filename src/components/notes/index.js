@@ -25,7 +25,10 @@ const Notes = () => {
       tabIndex="0"
     >
       <div className="notes">
-        <div dangerouslySetInnerHTML={{ __html: storage.notes }} />
+        <div
+          dangerouslySetInnerHTML={{ __html: storage.notes }}
+          style={{ width: '100%' }}
+        />
       </div>
     </div>
   );
