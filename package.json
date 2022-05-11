@@ -12,10 +12,12 @@
     "react-dom": "^18.0.0",
     "react-intl": "^5.25.0",
     "react-router-dom": "^6.3.0",
-    "react-scripts": "^4.0.3",
     "sass": "^1.50.0",
     "video.js": "^7.18.1",
     "xml2js": "^0.4.23"
+  },
+  "devDependencies": {
+    "react-scripts": "^4.0.3"
   },
   "scripts": {
     "start": "react-scripts start",
