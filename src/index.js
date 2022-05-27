@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { IntlProvider } from "react-intl";
 import Loader from 'components/loader';
 import Router from 'components/router';
@@ -14,7 +14,9 @@ import './index.scss';
 const locale = getLocale();
 const style = getStyle();
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root'));
+
+root.render(
   (
     <IntlProvider
       locale={locale}
@@ -23,6 +25,5 @@ ReactDOM.render(
       {style ? <link rel="stylesheet" type="text/css" href={style} /> : null}
       {ROUTER ? <Router /> : <Loader />}
     </IntlProvider>
-  ),
-  document.getElementById('root')
+  )
 );
