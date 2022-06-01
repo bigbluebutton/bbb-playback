@@ -14,6 +14,7 @@ import logger from 'utils/logger';
 import {
   getFrequency,
   getTime,
+  getWebcamToRender,
 } from 'utils/params';
 import storage from 'utils/data/storage';
 import player from 'utils/player';
@@ -26,7 +27,7 @@ const intlMessages = defineMessages({
   },
 });
 
-const buildSources = () => {
+const buildSources = (webcamToRender) => {
   if (storage.fallback) {
     return [
       {
@@ -36,12 +37,18 @@ const buildSources = () => {
     ];
   }
 
+  if (webcamToRender == "all" || webcamToRender == "" || webcamToRender ==null){
+    webcamToRender = "webcams"
+  }else {
+    webcamToRender = `webcams_${webcamToRender}`
+  }
+
   return [
     {
-      src: buildFileURL('video/webcams.mp4'),
+      src: buildFileURL(`video/${webcamToRender}.mp4`),
       type: 'video/mp4',
     }, {
-      src: buildFileURL('video/webcams.webm'),
+      src: buildFileURL(`video/${webcamToRender}.webm`),
       type: 'video/webm',
     },
   ].filter(source => storage.media.find(m => source.type.includes(m)));
@@ -88,8 +95,9 @@ const dispatchTimeUpdate = (time) => {
 };
 
 const Webcams = () => {
+  const webcamToRender = getWebcamToRender();
   const intl = useIntl();
-  const sources = useRef(buildSources());
+  const sources = useRef(buildSources(webcamToRender));
   const tracks = useRef(buildTracks());
   const element = useRef();
   const interval = useRef();

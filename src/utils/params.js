@@ -10,6 +10,14 @@ const getFrequency = () => {
   return null;
 };
 
+const getWebcamToRender = () => {
+  const param = getSearchParam('webcamToRender');
+
+  if (param) return param;
+
+  return null;
+}
+
 const getLayout = () => {
   const param = getSearchParam('l');
 
@@ -125,6 +133,7 @@ const parseTimeToSeconds = time => {
 };
 
 export {
+  getWebcamToRender,
   getFrequency,
   getLayout,
   getMediaPath,
