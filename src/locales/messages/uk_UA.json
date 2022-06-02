@@ -18,11 +18,13 @@
   "player.chat.message.poll.option.abstention": "Утримався",
   "player.chat.message.poll.option.true": "Вірно",
   "player.chat.message.poll.option.false": "Хибно",
+  "player.chat.message.video.name": "Зовнішнє відео",
   "player.chat.wrapper.aria": "Область чату",
   "player.notes.wrapper.aria": "Область спільних нотаток",
   "player.presentation.wrapper.aria": "Область презентації",
   "player.screenshare.wrapper.aria": "Область демонстрації екрану",
   "player.search.modal.title": "Пошук",
   "player.search.modal.subtitle": "Знайти вміст слайдів презентації",
-  "player.thumbnails.wrapper.aria": "Область мініатюр"
+  "player.thumbnails.wrapper.aria": "Область мініатюр",
+  "player.webcams.wrapper.aria": "Вебкамери"
 }

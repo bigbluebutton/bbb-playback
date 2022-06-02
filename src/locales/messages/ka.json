@@ -1,2 +1,7 @@
 {
+  "button.about.aria": "შესახებ",
+  "player.chat.message.poll.options": "პარამეტრები",
+  "player.chat.message.poll.option.true": "ჭეშმარიტი",
+  "player.chat.message.poll.option.false": "მცდარი",
+  "player.search.modal.title": "ძებნა"
 }
