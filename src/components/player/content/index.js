@@ -1,12 +1,14 @@
 import React from 'react';
 import cx from 'classnames';
 import Presentation from 'components/presentation';
+import TldrawPresentation from 'components/tldraw';
 import Screenshare from 'components/screenshare';
 import Thumbnails from 'components/thumbnails';
 import FullscreenButton from 'components/player/buttons/fullscreen';
 import { LAYOUT } from 'utils/constants';
 import { isEqual } from 'utils/data/validators';
 import layout from 'utils/layout';
+import storage from 'utils/data/storage';
 import './index.scss';
 
 const Content = ({
@@ -18,6 +20,10 @@ const Content = ({
 }) => {
   if (layout.single) return null;
 
+  const isTldrawWhiteboard = storage.tldraw.length ||
+                             storage.panzooms.tldraw ||
+                             storage.cursor.tldraw;
+
   return (
     <div className={cx('content', { 'swapped-content': swap })}>
       <FullscreenButton
@@ -27,7 +33,7 @@ const Content = ({
         toggleFullscreen={toggleFullscreen}
       />
       <div className="top-content">
-        <Presentation />
+        {isTldrawWhiteboard ? <TldrawPresentation /> : <Presentation />}
         {layout.screenshare ? <Screenshare /> : null}
       </div>
       <div className={cx('bottom-content', { 'inactive': fullscreen })}>

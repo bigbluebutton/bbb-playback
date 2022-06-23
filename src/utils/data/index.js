@@ -21,7 +21,9 @@ const buildFileURL = (file, recordId = null) => {
 
   const mediaPath = getMediaPath();
 
-  const rootUrl = MEDIA_ROOT_URL ? MEDIA_ROOT_URL : '/presentation';
+  const rootUrl = MEDIA_ROOT_URL 
+    ? MEDIA_ROOT_URL 
+    : window.location.origin + '/presentation';
 
   const id = recordId ? recordId : storage.metadata.id;
   let fileUrl = `${id}/${file}`;

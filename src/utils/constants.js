@@ -48,6 +48,7 @@ const ID = {
   STORAGE: 'storage',
   SWAP: 'swap',
   THUMBNAILS: 'thumbnails',
+  TLDRAW: 'tldraw',
   USERS: 'users',
   VIDEOS: 'videos',
   WEBCAMS: 'webcams',

@@ -16,21 +16,21 @@ const Poll = ({
     return (
       <g style={style}>
         <rect
-          fill={rect.fill}
-          height={rect.height}
-          stroke={rect.stroke}
-          strokeWidth={rect['stroke-width']}
-          width={rect.width}
-          x={rect.x}
-          y={rect.y}
+          fill={rect._fill}
+          height={rect._height}
+          stroke={rect._stroke}
+          strokeWidth={rect['_stroke-width']}
+          width={rect._width}
+          x={rect._x}
+          y={rect._y}
         />
         <image
-          height={image.height}
-          transform={image.transform}
-          width={image.width}
-          x={image.x}
-          href={buildFileURL(image['xlink:href'])}
-          y={image.y}
+          height={image._height}
+          transform={image._transform}
+          width={image._width}
+          x={image._x}
+          href={buildFileURL(image['_xlink:href'])}
+          y={image._y}
         />
       </g>
     );
@@ -39,11 +39,11 @@ const Poll = ({
      return (
       <g style={style}>
         <image
-          height={image.height}
-          width={image.width}
-          x={image.x}
-          href={buildFileURL(image['xlink:href'])}
-          y={image.y}
+          height={image._height}
+          width={image._width}
+          x={image._x}
+          href={buildFileURL(image['_xlink:href'])}
+          y={image._y}
         />
       </g>
     );

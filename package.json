@@ -3,6 +3,7 @@
   "version": "4.0.0",
   "homepage": "/playback/presentation/2.3",
   "dependencies": {
+    "@tldraw/tldraw": "^1.16.0",
     "classnames": "^2.3.1",
     "darkreader": "^4.9.46",
     "linkify-react": "^3.0.4",
@@ -12,12 +13,12 @@
     "react-dom": "^18.1.0",
     "react-intl": "^6.0.3",
     "react-router-dom": "^6.3.0",
+    "react-sizeme": "^3.0.2",
     "sass": "^1.52.1",
-    "video.js": "^7.19.2",
-    "xml2js": "^0.4.23"
+    "video.js": "^7.19.2"
   },
   "devDependencies": {
-    "react-scripts": "^4.0.3"
+    "react-scripts": "^5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
