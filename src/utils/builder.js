@@ -1,4 +1,4 @@
-import xml2json from './data/xml2json'
+import { parseFromString } from './data/xml2json';
 import { files as config } from 'config';
 import { getFileType } from './data';
 import {
@@ -531,8 +531,7 @@ const build = (filename, value) => {
       }
 
       // Parse XML data
-      const dom = (new DOMParser()).parseFromString(value, "text/xml");
-      const result = JSON.parse(xml2json(dom, ''));
+      const result = parseFromString(value);
 
       if (!result) {
         reject(filename);

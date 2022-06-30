@@ -5,7 +5,7 @@ import {
   useIntl,
 } from 'react-intl';
 import cx from 'classnames';
-import Cursor from './tldraw_cursor';
+import Cursor from './cursor';
 import {
   Tldraw,
   ColorStyle,
@@ -34,7 +34,7 @@ const intlMessages = defineMessages({
 
 const getTldrawData = (index) => storage.tldraw[index].data;
 
-const SlideData = () => {
+const SlideData = (tldrawAPI) => {
   let assets = {};
   let shapes = {};
   const currentIndex = useCurrentIndex(storage.slides);
@@ -53,6 +53,12 @@ const SlideData = () => {
     width,
   } = storage.slides[currentIndex];
 
+  let imageUrl =  buildFileURL(src);
+  // tldraw needs the full address as src
+  if (!imageUrl.startsWith("http")) {
+    imageUrl = window.location.origin + imageUrl;
+  }
+
   assets[`slide-background-asset-${id}`] = {
     id: `slide-background-asset-${id}`,
     size: [width || 0, height || 0],
@@ -66,7 +72,7 @@ const SlideData = () => {
     id: "slide-background-shape",
     name: "Image",
     type: TDShapeType.Image,
-    parentId: 1,
+    parentId: tldrawAPI?.currentPageId,
     point: [0, 0],
     isLocked: true,
     size: [width || 0, height || 0],
@@ -120,28 +126,28 @@ const TldrawPresentation = ({ size }) => {
   const currentSlideIndex = useCurrentIndex(storage.slides);
   const started = currentPanzoomIndex !== -1;
 
-  const result = SlideData();
+  const result = SlideData(tldrawAPI);
 
   let { assets, shapes } = result;
 
-  const calculateCameraFitSlide = (bounds, result) => {
+  const calculateCameraFitSlide = (size, result) => {
     const { width, height } = result;
-    if (bounds && width && height) {
+    if (size && width && height) {
       let zoom = 
         Math.min(
-          (bounds.width) / width,
-          (bounds.height) / height,
+          (size.width) / width,
+          (size.height) / height,
         )        
         
       zoom = Utils.clamp(zoom, 0.1, 5);
     
       let point = [0, 0];
-      if ((bounds.width / bounds.height) > 
+      if ((size.width / size.height) > 
           (width / height)) 
       { 
-        point[0] = (bounds.width - (width * zoom)) / 2 / zoom
+        point[0] = (size.width - (width * zoom)) / 2 / zoom
       } else {
-        point[1] = (bounds.height - (height * zoom)) / 2 / zoom
+        point[1] = (size.height - (height * zoom)) / 2 / zoom
       }
     
       return {point, zoom}
@@ -153,14 +159,14 @@ const TldrawPresentation = ({ size }) => {
   React.useEffect(() => {
     const { xCamera, yCamera, zoom } = getCameraAndZoom(currentPanzoomIndex);
     if (xCamera === 0 && yCamera === 0 && zoom === 0) {
-      const camera = calculateCameraFitSlide(tldrawAPI?.rendererBounds, result);
+      const camera = calculateCameraFitSlide(size, result);
       if (camera) {
         tldrawAPI?.setCamera(camera.point, camera.zoom);
       }
     } else {
       tldrawAPI?.setCamera([xCamera, yCamera], zoom);
     }
-  }, [currentPanzoomIndex, currentSlideIndex, tldrawAPI, result]);
+  }, [currentPanzoomIndex, currentSlideIndex, tldrawAPI, size, result]);
   
   React.useMemo(() => {
     tldrawAPI?.replacePageContent(shapes, {}, assets)

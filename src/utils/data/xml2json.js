@@ -156,4 +156,12 @@ const xml2json = (xml, tab) => {
   return "{\n" + tab + (tab ? json.replace(/\t/g, tab) : json.replace(/\t|\n/g, "")) + "\n}";
 }
 
-export default xml2json;
+const parseFromString = (str) => {
+  const dom = (new DOMParser()).parseFromString(str, "text/xml");
+  return JSON.parse(xml2json(dom, ''));
+}
+
+export {
+  parseFromString,
+  xml2json,
+};
