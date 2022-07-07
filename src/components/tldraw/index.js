@@ -168,7 +168,7 @@ const TldrawPresentation = ({ size }) => {
     }
   }, [currentPanzoomIndex, currentSlideIndex, tldrawAPI, size, result]);
   
-  React.useMemo(() => {
+  React.useEffect(() => {
     tldrawAPI?.replacePageContent(shapes, {}, assets)
   }, [tldrawAPI, shapes, assets]);
  
