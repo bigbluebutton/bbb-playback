@@ -366,25 +366,14 @@ const buildPanzooms = result => {
   if (hasProperty(recording, 'event')) {
     const tldraw = recording._tldraw === 'true';
     data = convertToArray(recording.event).map(panzoom => {
-      if (!tldraw) {
-        const viewbox = getNumbers(panzoom.viewBox);
-        return {
-          timestamp: parseFloat(panzoom._timestamp),
-          x: viewbox.shift(),
-          y: viewbox.shift(),
-          width: viewbox.shift(),
-          height: viewbox.shift(),
-        };
-      }
-      else {
-        const cameraAndZoom = getNumbers(panzoom.cameraAndZoom);
-        return {
-          timestamp: parseFloat(panzoom._timestamp),
-          xCamera: cameraAndZoom.shift(),
-          yCamera: cameraAndZoom.shift(),
-          zoom: cameraAndZoom.shift(),
-        };
-      }
+      const viewbox = getNumbers(panzoom.viewBox);
+      return {
+        timestamp: parseFloat(panzoom._timestamp),
+        x: viewbox.shift(),
+        y: viewbox.shift(),
+        width: viewbox.shift(),
+        height: viewbox.shift(),
+      };
     });
     data.tldraw = tldraw;
   }

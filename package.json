@@ -3,7 +3,7 @@
   "version": "4.0.0",
   "homepage": "/playback/presentation/2.3",
   "dependencies": {
-    "@tldraw/tldraw": "^1.16.0",
+    "@tldraw/tldraw": "^1.20.0",
     "classnames": "^2.3.1",
     "darkreader": "^4.9.46",
     "linkify-react": "^3.0.4",
