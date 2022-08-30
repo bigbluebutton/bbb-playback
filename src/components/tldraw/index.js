@@ -13,7 +13,6 @@ import {
   SizeStyle,
   TDShapeType,
 } from "@tldraw/tldraw";
-import { Utils } from "@tldraw/core";
 import {
   useCurrentContent,
   useCurrentIndex,
@@ -83,7 +82,7 @@ const SlideData = (tldrawAPI) => {
     },
   };
 
-  if (index === -1 || isEmpty(interval)) return { assets, shapes, width, height }
+  if (index === -1 || isEmpty(interval)) return { assets, shapes }
 
   for (let i = 0; i < interval.length; i++) {
     if (!interval[i]) continue;
@@ -94,13 +93,14 @@ const SlideData = (tldrawAPI) => {
       shape,
     } = tldrawData[i];
 
+    shape.parentId = tldrawAPI?.currentPageId;
     shapes[shape.id] = shape;
   }
 
-  return { assets, shapes, width, height }
+  return { assets, shapes }
 }
 
-const getCameraAndZoom = (index) => {
+const getViewBox = (index) => {
   const inactive = {
     height: 0,
     x: 0,
@@ -131,13 +131,17 @@ const TldrawPresentation = ({ size }) => {
   const result = SlideData(tldrawAPI);
 
   let { assets, shapes } = result;
-
-  const { x, y, width, height } = getCameraAndZoom(currentPanzoomIndex);
+  const { 
+    x,
+    y,
+    width: viewboxWidth,
+    height: viewboxHeight
+  } =  getViewBox(currentPanzoomIndex);
 
   let svgWidth;
   let svgHeight;
-  svgWidth = (size.height * width) / height;
-  if (size.height < svgWidth) {
+  svgWidth = (size.height * viewboxWidth) / viewboxHeight;
+  if (size.width < svgWidth) {
     svgHeight = (size.height * size.width) / svgWidth;
     svgWidth = size.width;
   } else {
@@ -147,13 +151,13 @@ const TldrawPresentation = ({ size }) => {
   React.useEffect(() => {
     let zoom = 
       Math.min(
-        (svgWidth) / width,
-        (svgHeight) / height
+        svgWidth / viewboxWidth,
+        svgHeight / viewboxHeight
       );
 
     tldrawAPI?.setCamera([x, y], zoom);
 
-  }, [svgWidth, svgHeight, width, height, x, y, currentSlideIndex, tldrawAPI, size, result]);
+  }, [svgWidth, svgHeight, viewboxWidth, viewboxHeight, x, y, currentSlideIndex, tldrawAPI, size, result]);
   
   React.useEffect(() => {
     tldrawAPI?.replacePageContent(shapes, {}, assets)
@@ -189,13 +193,28 @@ const TldrawPresentation = ({ size }) => {
                 app.setHoveredId = () => {};
                 setTLDrawAPI(app);
               }}
-              //don't allow pan&zoom
               onPatch={(e, t, reason) => {
+                // disable select
+                if (e?.getPageState()?.brush || e?.selectedIds?.length !== 0) {
+                  e.patchState(
+                    {
+                      document: {
+                        pageStates: {
+                          [e?.currentPageId]: {
+                            selectedIds: [],
+                            brush: null,
+                          },
+                        },
+                      },
+                    },
+                  );
+                }
+                //disable pan&zoom
                 if (reason && (reason.includes("zoomed") || reason.includes("panned"))) {
                   let zoom = 
                     Math.min(
-                      (svgWidth) / width,
-                      (svgHeight) / height
+                      svgWidth / viewboxWidth,
+                      svgHeight / viewboxHeight
                     );
                   tldrawAPI?.setCamera([x, y], zoom);
                 }
