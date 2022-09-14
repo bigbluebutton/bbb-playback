@@ -13,7 +13,6 @@ import {
   SizeStyle,
   TDShapeType,
 } from "@tldraw/tldraw";
-import { Utils } from "@tldraw/core";
 import {
   useCurrentContent,
   useCurrentIndex,
@@ -83,7 +82,7 @@ const SlideData = (tldrawAPI) => {
     },
   };
 
-  if (index === -1 || isEmpty(interval)) return { assets, shapes, width, height }
+  if (index === -1 || isEmpty(interval)) return { assets, shapes }
 
   for (let i = 0; i < interval.length; i++) {
     if (!interval[i]) continue;
@@ -94,17 +93,19 @@ const SlideData = (tldrawAPI) => {
       shape,
     } = tldrawData[i];
 
+    shape.parentId = tldrawAPI?.currentPageId;
     shapes[shape.id] = shape;
   }
 
-  return { assets, shapes, width, height }
+  return { assets, shapes }
 }
 
-const getCameraAndZoom = (index) => {
+const getViewBox = (index) => {
   const inactive = {
-    xCamera: 0,
-    yCamera: 0,
-    zoom: 0,
+    height: 0,
+    x: 0,
+    width: 0,
+    y: 0,
   };
 
   if (index === -1) return inactive;
@@ -112,9 +113,10 @@ const getCameraAndZoom = (index) => {
   const currentData = storage.panzooms[index];
 
   return {
-    xCamera: currentData.xCamera,
-    yCamera: currentData.yCamera,
-    zoom: currentData.zoom,
+    height: currentData.height,
+    x: currentData.x,
+    width: currentData.width,
+    y: currentData.y,
   };
 };
 
@@ -129,49 +131,38 @@ const TldrawPresentation = ({ size }) => {
   const result = SlideData(tldrawAPI);
 
   let { assets, shapes } = result;
+  const { 
+    x,
+    y,
+    width: viewboxWidth,
+    height: viewboxHeight
+  } =  getViewBox(currentPanzoomIndex);
 
-  const calculateCameraFitSlide = (size, result) => {
-    const { width, height } = result;
-    if (size && width && height) {
-      let zoom = 
-        Math.min(
-          (size.width) / width,
-          (size.height) / height,
-        )        
-        
-      zoom = Utils.clamp(zoom, 0.1, 5);
-    
-      let point = [0, 0];
-      if ((size.width / size.height) > 
-          (width / height)) 
-      { 
-        point[0] = (size.width - (width * zoom)) / 2 / zoom
-      } else {
-        point[1] = (size.height - (height * zoom)) / 2 / zoom
-      }
-    
-      return {point, zoom}
-    } else {
-      return null
-    }
+  let svgWidth;
+  let svgHeight;
+  svgWidth = (size.height * viewboxWidth) / viewboxHeight;
+  if (size.width < svgWidth) {
+    svgHeight = (size.height * size.width) / svgWidth;
+    svgWidth = size.width;
+  } else {
+    svgHeight = size.height;
   }
 
   React.useEffect(() => {
-    const { xCamera, yCamera, zoom } = getCameraAndZoom(currentPanzoomIndex);
-    if (xCamera === 0 && yCamera === 0 && zoom === 0) {
-      const camera = calculateCameraFitSlide(size, result);
-      if (camera) {
-        tldrawAPI?.setCamera(camera.point, camera.zoom);
-      }
-    } else {
-      tldrawAPI?.setCamera([xCamera, yCamera], zoom);
-    }
-  }, [currentPanzoomIndex, currentSlideIndex, tldrawAPI, size, result]);
+    let zoom = 
+      Math.min(
+        svgWidth / viewboxWidth,
+        svgHeight / viewboxHeight
+      );
+
+    tldrawAPI?.setCamera([x, y], zoom);
+
+  }, [svgWidth, svgHeight, viewboxWidth, viewboxHeight, x, y, currentSlideIndex, tldrawAPI, size, result]);
   
   React.useEffect(() => {
     tldrawAPI?.replacePageContent(shapes, {}, assets)
   }, [tldrawAPI, shapes, assets]);
- 
+
   return (
     <div
       aria-label={intl.formatMessage(intlMessages.aria)}
@@ -180,18 +171,53 @@ const TldrawPresentation = ({ size }) => {
     >
       {!started 
         ? <div className={cx('presentation', 'logo')}/>
-        : <div className={'presentation'}>
+        : <div className={'presentation'}
+            style={{
+              position: 'absolute',
+              width: svgWidth < 0 ? 0 : svgWidth,
+              height: svgHeight < 0 ? 0 : svgHeight,
+          }}>
             <Cursor tldrawAPI={tldrawAPI} size={size}/>
             <Tldraw          
               disableAssets={true}
+              autofocus={false}
               showPages={false}
-              showZoom={true}
+              showZoom={false}
               showUI={false}
               showMenu={false}
               showMultiplayerMenu={false}
               readOnly={true}
               onMount={(app) => {
+                app.onPan = () => {};
+                app.setSelectedIds = () => {};
+                app.setHoveredId = () => {};
                 setTLDrawAPI(app);
+              }}
+              onPatch={(e, t, reason) => {
+                // disable select
+                if (e?.getPageState()?.brush || e?.selectedIds?.length !== 0) {
+                  e.patchState(
+                    {
+                      document: {
+                        pageStates: {
+                          [e?.currentPageId]: {
+                            selectedIds: [],
+                            brush: null,
+                          },
+                        },
+                      },
+                    },
+                  );
+                }
+                //disable pan&zoom
+                if (reason && (reason.includes("zoomed") || reason.includes("panned"))) {
+                  let zoom = 
+                    Math.min(
+                      svgWidth / viewboxWidth,
+                      svgHeight / viewboxHeight
+                    );
+                  tldrawAPI?.setCamera([x, y], zoom);
+                }
               }}
             />
           </div>
