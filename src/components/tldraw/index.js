@@ -67,7 +67,7 @@ const SlideData = (tldrawAPI) => {
 
   shapes["slide-background-shape"] = {
     assetId: `slide-background-asset-${id}`,
-    childIndex: 0.5,
+    childIndex: -1,
     id: "slide-background-shape",
     name: "Image",
     type: TDShapeType.Image,
