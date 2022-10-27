@@ -36,6 +36,7 @@ const ID = {
   MESSAGES: 'messages',
   METADATA: 'metadata',
   NOTES: 'notes',
+  NOTES_FALLBACK: 'notes_fallback',
   PANZOOMS: 'panzooms',
   PLAYER: 'player',
   POLLS: 'polls',
@@ -60,6 +61,7 @@ const CONTENT = [
   ID.POLLS,
   ID.VIDEOS,
   ID.NOTES,
+  ID.NOTES_FALLBACK,
   ID.SCREENSHARE,
   ID.CAPTIONS,
 ];

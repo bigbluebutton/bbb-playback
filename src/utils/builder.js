@@ -458,6 +458,21 @@ const buildChat = result => {
   return data;
 };
 
+const buildNotesEvents = (result) => {
+  const { events } = result.root;
+  let data = [];
+  if (hasProperty(events, "event") ) {
+    const { event } = events;
+    data = event.map(change => {
+      return {
+        timestamp: parseFloat(change._timestamp) / 1000,
+        text: change._text
+      }
+    });
+  }
+  return data;
+}
+
 const buildScreenshare = result => {
   let data = [];
   const { recording } = result;
@@ -504,7 +519,7 @@ const build = (filename, value) => {
       resolve(data);
     } else if (fileType === 'html') {
       switch (filename) {
-        case config.notes:
+        case config.notes_fallback:
           data = buildNotes(value);
           break;
         default:
@@ -543,6 +558,9 @@ const build = (filename, value) => {
             break;
           case config.shapes:
             data = buildShapes(result);
+            break;
+          case config.notes:
+            data = buildNotesEvents(result);
             break;
           default:
             logger.debug('unhandled', 'xml', filename);

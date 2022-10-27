@@ -213,6 +213,9 @@ const storage = {
   get metadata() {
     return DATA[ID.METADATA];
   },
+  get notes_fallback() {
+    return DATA[ID.NOTES_FALLBACK];
+  },
   get notes() {
     return DATA[ID.NOTES];
   },
