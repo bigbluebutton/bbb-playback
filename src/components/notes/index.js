@@ -34,7 +34,7 @@ const Notes = () => {
       note = storage.notes[currentIndex].text;
     }
   } else if (!storage.notes && !storage.notes_fallback) {
-    note = `<span style='color:rgba(0, 0, 0, 0.17);'>--- ${intl.formatMessage(intlMessages.notesToCome)} ---</span>`;
+    note = `<span style='color:rgba(0, 0, 0, 0.17);'>--- ${intl.formatMessage(intlMessages.noNotes)} ---</span>`;
   }
   return (
     <div
