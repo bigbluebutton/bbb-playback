@@ -160,7 +160,7 @@ const storage = {
     return {
       captions: hasProperty(DATA, ID.CAPTIONS),
       chat: hasProperty(DATA, ID.CHAT),
-      notes: hasProperty(DATA, ID.NOTES),
+      notes_dynamic: hasProperty(DATA, ID.NOTES_DYNAMIC),
       polls: hasProperty(DATA, ID.POLLS),
       videos: hasProperty(DATA, ID.VIDEOS),
       presentation: hasProperty(DATA, ID.SHAPES),
@@ -171,7 +171,7 @@ const storage = {
     return {
       captions: !isEmpty(this.captions),
       chat: !isEmpty(this.chat),
-      notes: !isEmpty(this.notes),
+      notes_dynamic: !isEmpty(this.notes_dynamic),
       polls: !isEmpty(this.polls),
       videos: !isEmpty(this.videos),
       presentation: hasPresentation(this.slides),
@@ -213,11 +213,11 @@ const storage = {
   get metadata() {
     return DATA[ID.METADATA];
   },
-  get notes_fallback() {
-    return DATA[ID.NOTES_FALLBACK];
+  get notes_static() {
+    return DATA[ID.NOTES_STATIC];
   },
-  get notes() {
-    return DATA[ID.NOTES];
+  get notes_dynamic() {
+    return DATA[ID.NOTES_DYNAMIC];
   },
   get panzooms() {
     return DATA[ID.PANZOOMS];

@@ -23,17 +23,17 @@ const intlMessages = defineMessages({
 
 const Notes = () => {
   const intl = useIntl();
-  const currentIndex = useCurrentIndex(storage.notes);
+  const currentIndex = useCurrentIndex(storage.notes_dynamic);
   let note;
-  if ( !storage.notes && storage.notes_fallback ) {
-    note = storage.notes_fallback;
-  }else if ( storage.notes ){
+  if ( !storage.notes_dynamic && storage.notes_static ) {
+    note = storage.notes_static;
+  }else if ( storage.notes_dynamic ){
     if (currentIndex === -1) {
       note = `<span style='color:rgba(0, 0, 0, 0.17);'>--- ${intl.formatMessage(intlMessages.notesToCome)} ---</span>`;
     } else {
-      note = storage.notes[currentIndex].text;
+      note = storage.notes_dynamic[currentIndex].text;
     }
-  } else if (!storage.notes && !storage.notes_fallback) {
+  } else if (!storage.notes_dynamic && !storage.notes_static) {
     note = `<span style='color:rgba(0, 0, 0, 0.17);'>--- ${intl.formatMessage(intlMessages.noNotes)} ---</span>`;
   }
   return (

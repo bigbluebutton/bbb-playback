@@ -519,7 +519,7 @@ const build = (filename, value) => {
       resolve(data);
     } else if (fileType === 'html') {
       switch (filename) {
-        case config.notes_fallback:
+        case config.notes_static:
           data = buildNotes(value);
           break;
         default:
@@ -559,7 +559,7 @@ const build = (filename, value) => {
           case config.shapes:
             data = buildShapes(result);
             break;
-          case config.notes:
+          case config.notes_dynamic:
             data = buildNotesEvents(result);
             break;
           default:
