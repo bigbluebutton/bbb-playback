@@ -6,7 +6,9 @@ import {
 import { ID } from 'utils/constants';
 import storage from 'utils/data/storage';
 import './index.scss';
-import { useCurrentIndex } from 'components/utils/hooks';
+import NotesDynamic from './notes_dynamic';
+import NotesStatic from './notes_static';
+import { getTypeOfSharedNotes } from 'utils/params';
 
 const intlMessages = defineMessages({
   aria: {
@@ -15,25 +17,20 @@ const intlMessages = defineMessages({
   },
   noNotes: {
     id: 'player.notes.message.noNotes'
-  },
-  notesToCome: {
-    id: 'player.notes.message.notesToCome'
   }
 });
 
 const Notes = () => {
   const intl = useIntl();
-  const currentIndex = useCurrentIndex(storage.notes_dynamic);
+  const typeOfSharedNotes = getTypeOfSharedNotes();
+  let isThereNoteToDisplay = true;
   let note;
-  if ( !storage.notes_dynamic && storage.notes_static ) {
-    note = storage.notes_static;
-  }else if ( storage.notes_dynamic ){
-    if (currentIndex === -1) {
-      note = `<span style='color:rgba(0, 0, 0, 0.17);'>--- ${intl.formatMessage(intlMessages.notesToCome)} ---</span>`;
-    } else {
-      note = storage.notes_dynamic[currentIndex].text;
-    }
-  } else if (!storage.notes_dynamic && !storage.notes_static) {
+  let isDynamic = true
+  if ( typeOfSharedNotes !== null && typeOfSharedNotes === "static" ) {
+    isDynamic = false;
+  }
+  if (!storage.notes_dynamic && !storage.notes_static) {
+    isThereNoteToDisplay = false;
     note = `<span style='color:rgba(0, 0, 0, 0.17);'>--- ${intl.formatMessage(intlMessages.noNotes)} ---</span>`;
   }
   return (
@@ -44,10 +41,13 @@ const Notes = () => {
       tabIndex="0"
     >
       <div className="notes">
-        <div
+        { !isThereNoteToDisplay ?
+          <div
           dangerouslySetInnerHTML={{ __html: note }}
           style={{ width: '100%' }}
-        />
+          />
+          : isDynamic ? <NotesDynamic /> : <NotesStatic />
+        }
       </div>
     </div>
   );

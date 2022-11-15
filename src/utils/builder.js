@@ -133,6 +133,21 @@ const buildMetadata = result => {
   return data;
 };
 
+const buildNotesEvents = (result) => {
+  const { root } = result;
+  let data = [];
+  if (hasProperty(root, "events") ) {
+    const { events } = root
+    data = events.map(change => {
+      return {
+        timestamp: parseFloat(change.timestamp) / 1000,
+        text: change.text
+      }
+    });
+  }
+  return data;
+}
+
 const buildNotes = result => {
   if (!result) return '';
 
@@ -458,21 +473,6 @@ const buildChat = result => {
   return data;
 };
 
-const buildNotesEvents = (result) => {
-  const { events } = result.root;
-  let data = [];
-  if (hasProperty(events, "event") ) {
-    const { event } = events;
-    data = event.map(change => {
-      return {
-        timestamp: parseFloat(change._timestamp) / 1000,
-        text: change._text
-      }
-    });
-  }
-  return data;
-}
-
 const buildScreenshare = result => {
   let data = [];
   const { recording } = result;
@@ -511,6 +511,10 @@ const build = (filename, value) => {
           break;
         case config.tldraw:
           data = buildTldraw(value);
+          break;
+        case config.notes_dynamic:
+          data = buildNotesEvents(value);
+          console.log(data, filename);
           break;
         default:
           logger.debug('unhandled', 'json', filename);
@@ -558,9 +562,6 @@ const build = (filename, value) => {
             break;
           case config.shapes:
             data = buildShapes(result);
-            break;
-          case config.notes_dynamic:
-            data = buildNotesEvents(result);
             break;
           default:
             logger.debug('unhandled', 'xml', filename);

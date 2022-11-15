@@ -20,7 +20,7 @@ const files = {
   chat: 'slides_new.xml',
   cursor: 'cursor.xml',
   metadata: 'metadata.xml',
-  notes_dynamic: 'notes_events.xml',
+  notes_dynamic: 'notes_events.json',
   notes_static: 'notes.html',
   panzooms: 'panzooms.xml',
   polls: 'polls.json',
