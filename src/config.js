@@ -11,6 +11,10 @@ const controls = {
   swap: true,
   theme: true,
 };
+const getConfigs = async (fn) => {
+  return await fetch("./config.json").then(response => response.json())
+    .then(fn)
+}
 
 const date = { enabled: true };
 
@@ -78,6 +82,7 @@ const thumbnails = {
 };
 
 export {
+  getConfigs,
   chat,
   controls,
   date,

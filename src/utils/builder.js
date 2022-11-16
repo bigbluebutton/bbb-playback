@@ -514,7 +514,6 @@ const build = (filename, value) => {
           break;
         case config.notes_dynamic:
           data = buildNotesEvents(value);
-          console.log(data, filename);
           break;
         default:
           logger.debug('unhandled', 'json', filename);
