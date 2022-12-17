@@ -14,7 +14,7 @@
     "react-intl": "^6.0.3",
     "react-router-dom": "^6.3.0",
     "react-sizeme": "^3.0.2",
-    "sass": "^1.52.1",
+    "sass": "^1.56.1",
     "video.js": "^7.19.2"
   },
   "devDependencies": {
