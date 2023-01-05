@@ -35,7 +35,7 @@ const Result = ({
 
         return(
           <div className="poll-label">
-            {id + 1}: <span className="poll-bar">{getBar(percentage)}</span> {percentage}%
+            {id + 1}: {numVotes} <span className="poll-bar">{getBar(percentage)}</span> {percentage}%
           </div>
         );
       })}

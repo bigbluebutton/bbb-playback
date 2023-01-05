@@ -1,6 +1,6 @@
 import { parseFromString } from './data/xml2json';
 import { files as config } from 'config';
-import { getFileType } from './data';
+import { getFileType, caseInsensitiveReducer } from './data';
 import {
   hasProperty,
   isEmpty,
@@ -89,9 +89,14 @@ const buildCaptions = result => {
 // TODO
 const buildPolls = result => {
   if (!result) return [];
-
-  let data = [];
-  data = result;
+  
+  const data = result.map(r => {
+    const answers = r.answers.reduce(caseInsensitiveReducer, []);
+    return {
+      ...r,
+      answers,
+    };
+  });
 
   return data;
 };
