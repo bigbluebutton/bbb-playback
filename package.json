@@ -14,8 +14,9 @@
     "react-intl": "^6.2.5",
     "react-router-dom": "^6.4.3",
     "react-sizeme": "^3.0.2",
-    "sass": "^1.56.1",
-    "video.js": "^7.21.1"
+    "sass": "^1.52.1",
+    "video.js": "^7.21.1",
+    "videojs-seek-buttons": "^3.0.1"
   },
   "devDependencies": {
     "react-scripts": "^5.0.1"
