@@ -24,6 +24,10 @@ import { isEmpty } from 'utils/data/validators';
 import { buildFileURL } from 'utils/data';
 import './index.scss';
 
+// The size of the scaled coordinate system for tldraw whiteboard
+const MAX_IMAGE_WIDTH = 2048;
+const MAX_IMAGE_HEIGHT = 1536;
+
 const intlMessages = defineMessages({
   aria: {
     id: 'player.presentation.wrapper.aria',
@@ -42,8 +46,8 @@ const SlideData = (tldrawAPI) => {
     index,
     interval,
   } = useCurrentInterval(storage.tldraw);
-  
-  if (currentIndex === -1) return { assets, shapes }
+
+  if (currentIndex === -1) return { assets, shapes, scaleRatio: 1.0 }
 
   const {
     height,
@@ -52,15 +56,19 @@ const SlideData = (tldrawAPI) => {
     width,
   } = storage.slides[currentIndex];
 
-  let imageUrl =  buildFileURL(src);
+  let imageUrl = buildFileURL(src);
   // tldraw needs the full address as src
   if (!imageUrl.startsWith("http")) {
     imageUrl = window.location.origin + imageUrl;
   }
 
+  const scaleRatio = Math.min(MAX_IMAGE_WIDTH / width, MAX_IMAGE_HEIGHT / height);
+  const scaledWidth = width * scaleRatio;
+  const scaledHeight = height * scaleRatio;
+
   assets[`slide-background-asset-${id}`] = {
     id: `slide-background-asset-${id}`,
-    size: [width || 0, height || 0],
+    size: [scaledWidth || 0, scaledHeight || 0],
     src: buildFileURL(src),
     type: "image",
   };
@@ -74,7 +82,7 @@ const SlideData = (tldrawAPI) => {
     parentId: tldrawAPI?.currentPageId,
     point: [0, 0],
     isLocked: true,
-    size: [width || 0, height || 0],
+    size: [scaledWidth || 0, scaledHeight || 0],
     style: {
       dash: DashStyle.Draw,
       size: SizeStyle.Medium,
@@ -82,7 +90,7 @@ const SlideData = (tldrawAPI) => {
     },
   };
 
-  if (index === -1 || isEmpty(interval)) return { assets, shapes }
+  if (index === -1 || isEmpty(interval)) return { assets, shapes, scaleRatio }
 
   for (let i = 0; i < interval.length; i++) {
     if (!interval[i]) continue;
@@ -97,10 +105,10 @@ const SlideData = (tldrawAPI) => {
     shapes[shape.id] = shape;
   }
 
-  return { assets, shapes }
+  return { assets, shapes, scaleRatio }
 }
 
-const getViewBox = (index) => {
+const getViewBox = (index, scaleRatio) => {
   const inactive = {
     height: 0,
     x: 0,
@@ -111,11 +119,13 @@ const getViewBox = (index) => {
   if (index === -1) return inactive;
 
   const currentData = storage.panzooms[index];
+  const scaledViewBoxWidth = currentData.width * scaleRatio;
+  const scaledViewBoxHeight = currentData.height * scaleRatio;
 
   return {
-    height: currentData.height,
+    height: scaledViewBoxHeight,
     x: currentData.x,
-    width: currentData.width,
+    width: scaledViewBoxWidth,
     y: currentData.y,
   };
 };
@@ -130,13 +140,13 @@ const TldrawPresentation = ({ size }) => {
 
   const result = SlideData(tldrawAPI);
 
-  let { assets, shapes } = result;
-  const { 
+  let { assets, shapes, scaleRatio } = result;
+  const {
     x,
     y,
     width: viewboxWidth,
     height: viewboxHeight
-  } =  getViewBox(currentPanzoomIndex);
+  } = getViewBox(currentPanzoomIndex, scaleRatio);
 
   let svgWidth;
   let svgHeight;
@@ -149,7 +159,7 @@ const TldrawPresentation = ({ size }) => {
   }
 
   React.useEffect(() => {
-    let zoom = 
+    let zoom =
       Math.min(
         svgWidth / viewboxWidth,
         svgHeight / viewboxHeight
@@ -158,7 +168,7 @@ const TldrawPresentation = ({ size }) => {
     tldrawAPI?.setCamera([x, y], zoom);
 
   }, [svgWidth, svgHeight, viewboxWidth, viewboxHeight, x, y, currentSlideIndex, tldrawAPI, size, result]);
-  
+
   React.useEffect(() => {
     tldrawAPI?.replacePageContent(shapes, {}, assets)
   }, [tldrawAPI, shapes, assets]);
@@ -169,58 +179,58 @@ const TldrawPresentation = ({ size }) => {
       className={cx('presentation-wrapper', { inactive: currentContent !== ID.PRESENTATION })}
       id={ID.PRESENTATION}
     >
-      {!started 
-        ? <div className={cx('presentation', 'logo')}/>
+      {!started
+        ? <div className={cx('presentation', 'logo')} />
         : <div className={'presentation'}
-            style={{
-              position: 'absolute',
-              width: svgWidth < 0 ? 0 : svgWidth,
-              height: svgHeight < 0 ? 0 : svgHeight,
+          style={{
+            position: 'absolute',
+            width: svgWidth < 0 ? 0 : svgWidth,
+            height: svgHeight < 0 ? 0 : svgHeight,
           }}>
-            <Cursor tldrawAPI={tldrawAPI} size={size}/>
-            <Tldraw          
-              disableAssets={true}
-              autofocus={false}
-              showPages={false}
-              showZoom={false}
-              showUI={false}
-              showMenu={false}
-              showMultiplayerMenu={false}
-              readOnly={true}
-              onMount={(app) => {
-                app.onPan = () => {};
-                app.setSelectedIds = () => {};
-                app.setHoveredId = () => {};
-                setTLDrawAPI(app);
-              }}
-              onPatch={(e, t, reason) => {
-                // disable select
-                if (e?.getPageState()?.brush || e?.selectedIds?.length !== 0) {
-                  e.patchState(
-                    {
-                      document: {
-                        pageStates: {
-                          [e?.currentPageId]: {
-                            selectedIds: [],
-                            brush: null,
-                          },
+          <Cursor tldrawAPI={tldrawAPI} size={size} />
+          <Tldraw
+            disableAssets={true}
+            autofocus={false}
+            showPages={false}
+            showZoom={false}
+            showUI={false}
+            showMenu={false}
+            showMultiplayerMenu={false}
+            readOnly={true}
+            onMount={(app) => {
+              app.onPan = () => { };
+              app.setSelectedIds = () => { };
+              app.setHoveredId = () => { };
+              setTLDrawAPI(app);
+            }}
+            onPatch={(e, t, reason) => {
+              // disable select
+              if (e?.getPageState()?.brush || e?.selectedIds?.length !== 0) {
+                e.patchState(
+                  {
+                    document: {
+                      pageStates: {
+                        [e?.currentPageId]: {
+                          selectedIds: [],
+                          brush: null,
                         },
                       },
                     },
+                  },
+                );
+              }
+              //disable pan&zoom
+              if (reason && (reason.includes("zoomed") || reason.includes("panned"))) {
+                let zoom =
+                  Math.min(
+                    svgWidth / viewboxWidth,
+                    svgHeight / viewboxHeight
                   );
-                }
-                //disable pan&zoom
-                if (reason && (reason.includes("zoomed") || reason.includes("panned"))) {
-                  let zoom = 
-                    Math.min(
-                      svgWidth / viewboxWidth,
-                      svgHeight / viewboxHeight
-                    );
-                  tldrawAPI?.setCamera([x, y], zoom);
-                }
-              }}
-            />
-          </div>
+                tldrawAPI?.setCamera([x, y], zoom);
+              }
+            }}
+          />
+        </div>
       }
     </div>
   );
