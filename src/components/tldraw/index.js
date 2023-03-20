@@ -25,8 +25,8 @@ import { buildFileURL } from 'utils/data';
 import './index.scss';
 
 // The size of the scaled coordinate system for tldraw whiteboard
-const MAX_IMAGE_WIDTH = 2048;
-const MAX_IMAGE_HEIGHT = 1536;
+const MAX_IMAGE_WIDTH = 1440;
+const MAX_IMAGE_HEIGHT = 1080;
 
 const intlMessages = defineMessages({
   aria: {
