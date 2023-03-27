@@ -10,6 +10,9 @@
   "error.wrapper.aria": "Area errori",
   "loader.wrapper.aria": "Area caricatore",
   "player.wrapper.aria": "Area riproduttore",
+  "player.about.modal.shortcuts.title": "Scorciatoie",
+  "player.about.modal.shortcuts.skip.next": "Prossima slide",
+  "player.about.modal.shortcuts.skip.previous": "Slide precedente",
   "player.chat.message.poll.name": "Risultati sondaggio",
   "player.chat.message.poll.question": "Domanda",
   "player.chat.message.poll.options": "Opzioni",
@@ -18,11 +21,13 @@
   "player.chat.message.poll.option.abstention": "Astensione",
   "player.chat.message.poll.option.true": "Vero",
   "player.chat.message.poll.option.false": "Falso",
+  "player.chat.message.video.name": "Video esterno",
   "player.chat.wrapper.aria": "Area chat",
   "player.notes.wrapper.aria": "Area note",
   "player.presentation.wrapper.aria": "Area presentazione",
   "player.screenshare.wrapper.aria": "Area condivisione schermo",
   "player.search.modal.title": "Cerca",
   "player.search.modal.subtitle": "Trova contenuto nelle slide della presentazione",
-  "player.thumbnails.wrapper.aria": "Area miniature"
+  "player.thumbnails.wrapper.aria": "Area miniature",
+  "player.webcams.wrapper.aria": "Area delle webcam"
 }

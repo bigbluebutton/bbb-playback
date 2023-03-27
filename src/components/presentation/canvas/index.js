@@ -48,9 +48,9 @@ const Canvas = () => {
         canvas.push(
           <circle
             style={style}
-            cx={data.cx}
-            cy={data.cy}
-            r={data.r}
+            cx={data._cx}
+            cy={data._cy}
+            r={data._r}
           />
         );
         break;
@@ -58,10 +58,10 @@ const Canvas = () => {
         canvas.push(
           <line
             style={style}
-            x1={data.x1}
-            y1={data.y1}
-            x2={data.x2}
-            y2={data.y2}
+            x1={data._x1}
+            y1={data._y1}
+            x2={data._x2}
+            y2={data._y2}
           />
         );
         break;
@@ -69,7 +69,7 @@ const Canvas = () => {
         canvas.push(
           <path
             style={style}
-            d={data.d}
+            d={data._d}
           />
         );
         break;
@@ -86,7 +86,7 @@ const Canvas = () => {
         canvas.push(
           <polygon
             style={style}
-            points={data.points}
+            points={data._points}
           />
         );
         break;
@@ -94,7 +94,7 @@ const Canvas = () => {
         canvas.push(
           <polyline
             style={style}
-            points={data.points}
+            points={data._points}
           />
         );
         break;
@@ -102,10 +102,10 @@ const Canvas = () => {
         canvas.push(
           <foreignObject
             style={style}
-            height={data.height}
-            width={data.width}
-            x={data.x}
-            y={data.y}
+            height={data._height}
+            width={data._width}
+            x={data._x}
+            y={data._y}
           >
             <div xmlns="http://www.w3.org/1999/xhtml">
               {data.text.split('\r').map(line => <span>{line}<br /></span>)}
