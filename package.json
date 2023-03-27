@@ -1,6 +1,6 @@
 {
   "name": "bbb-playback",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "homepage": "/playback/presentation/2.3",
   "dependencies": {
     "@tldraw/tldraw": "^1.27.0",
