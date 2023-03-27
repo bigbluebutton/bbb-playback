@@ -89,7 +89,7 @@ const buildCaptions = result => {
 // TODO
 const buildPolls = result => {
   if (!result) return [];
-  
+
   const data = result.map(r => {
     const answers = r.answers.reduce(caseInsensitiveReducer, []);
     return {
@@ -343,6 +343,12 @@ const buildShapes = result => {
 const buildTldraw = result => {
   if (!result) return [];
 
+  let bbb_version = null;
+  if (result['bbb_version']) {
+    bbb_version = result['bbb_version'];
+    delete result['bbb_version'];
+  }
+
   let tldraw = [];
   tldraw = Object.keys(result).map(i => {
     let data = result[i].shapes.map(shape => {
@@ -358,6 +364,7 @@ const buildTldraw = result => {
       data,
       timestamp: result[i].timestamp,
       id: i,
+      bbb_version: bbb_version,
     };
   })
 

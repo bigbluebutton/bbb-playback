@@ -5,6 +5,7 @@ import {
   useIntl,
 } from 'react-intl';
 import cx from 'classnames';
+import { gte as semverGte } from 'semver';
 import Cursor from './cursor';
 import {
   Tldraw,
@@ -25,8 +26,8 @@ import { buildFileURL } from 'utils/data';
 import './index.scss';
 
 // The size of the scaled coordinate system for tldraw whiteboard
-const MAX_IMAGE_WIDTH = 1440;
-const MAX_IMAGE_HEIGHT = 1080;
+let MAX_IMAGE_WIDTH = 2048;
+let MAX_IMAGE_HEIGHT = 1536;
 
 const intlMessages = defineMessages({
   aria: {
@@ -36,6 +37,7 @@ const intlMessages = defineMessages({
 });
 
 const getTldrawData = (index) => storage.tldraw[index].data;
+const getTldrawBbbVersion = (index) => storage.tldraw[index]?.bbb_version;
 
 const SlideData = (tldrawAPI) => {
   let assets = {};
@@ -60,6 +62,12 @@ const SlideData = (tldrawAPI) => {
   // tldraw needs the full address as src
   if (!imageUrl.startsWith("http")) {
     imageUrl = window.location.origin + imageUrl;
+  }
+
+  const bbbVersion = getTldrawBbbVersion(index);
+  if (bbbVersion && semverGte(bbbVersion, '2.6.1')) {
+    MAX_IMAGE_WIDTH = 1440;
+    MAX_IMAGE_HEIGHT = 1080;
   }
 
   const scaleRatio = Math.min(MAX_IMAGE_WIDTH / width, MAX_IMAGE_HEIGHT / height);

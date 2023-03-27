@@ -15,11 +15,15 @@
     "react-router-dom": "^6.4.3",
     "react-sizeme": "^3.0.2",
     "sass": "^1.52.1",
+    "semver": "^7.3.8",
     "video.js": "^7.21.1",
     "videojs-seek-buttons": "^3.0.1"
   },
   "devDependencies": {
     "react-scripts": "^5.0.1"
+  },
+  "overrides": {
+    "nth-check": "2.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
