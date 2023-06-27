@@ -23,6 +23,9 @@ const Result = ({
 }) => {
   if (isEmpty(answers)) return null;
 
+  const answersDigits = Math.trunc(answers.length / 10) + 1;
+  const maxVotes = Math.max(...answers.map((item) => { return item.numVotes; }));
+  const maxVotesDigits = Math.trunc(maxVotes) / 10 + 1;
   return (
     <div className="poll-result">
       {answers.map((item) => {
@@ -35,7 +38,7 @@ const Result = ({
 
         return(
           <div className="poll-label">
-            {id + 1}: {(""+numVotes).padEnd(2,' ')} <span className="poll-bar">{getBar(percentage)}</span> {percentage}%
+            {(""+(id + 1)).padEnd(answersDigits,' ')}: {(""+numVotes).padEnd(maxVotesDigits,' ')} <span className="poll-bar">{getBar(percentage)}</span> {percentage}%
           </div>
         );
       })}
