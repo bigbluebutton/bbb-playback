@@ -17,15 +17,17 @@ const defaultProps = {
   responders: 0,
 };
 
+const getDigits = (n) => { return Math.ceil(Math.log10(n + 1)); };
+
 const Result = ({
   answers,
   responders,
 }) => {
   if (isEmpty(answers)) return null;
 
-  const answersDigits = Math.ceil(Math.log10(answers.length + 1));
+  const answersDigits = getDigits(answers.length);
   const maxVotes = Math.max(...answers.map((item) => { return item.numVotes; }));
-  const maxVotesDigits = Math.ceil(Math.log10(maxVotes + 1));
+  const maxVotesDigits = getDigits(maxVotes);
   return (
     <div className="poll-result">
       {answers.map((item) => {
