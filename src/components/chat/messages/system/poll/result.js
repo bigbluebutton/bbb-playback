@@ -23,9 +23,9 @@ const Result = ({
 }) => {
   if (isEmpty(answers)) return null;
 
-  const answersDigits = Math.trunc(answers.length / 10) + 1;
+  const answersDigits = Math.ceil(Math.log10(answers.length + 1));
   const maxVotes = Math.max(...answers.map((item) => { return item.numVotes; }));
-  const maxVotesDigits = Math.trunc(maxVotes) / 10 + 1;
+  const maxVotesDigits = Math.ceil(Math.log10(maxVotes + 1));
   return (
     <div className="poll-result">
       {answers.map((item) => {
