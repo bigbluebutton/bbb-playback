@@ -38,6 +38,7 @@ const Result = ({
         } = item;
 
         const percentage = getPercentage(numVotes, responders);
+
         return(
           <div className="poll-label">
             {id + 1}
