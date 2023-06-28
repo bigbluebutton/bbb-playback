@@ -17,7 +17,7 @@ const defaultProps = {
   responders: 0,
 };
 
-const getDigits = (n) => { return Math.ceil(Math.log10(n + 1)); };
+const getDigits = (n) => { return n.toString().length; };
 
 const Result = ({
   answers,
@@ -37,10 +37,20 @@ const Result = ({
         } = item;
 
         const percentage = getPercentage(numVotes, responders);
+        const spaceId = '█'.repeat(answersDigits - getDigits(id+1));
+        const spaceVotes = '█'.repeat(maxVotesDigits - getDigits(numVotes));
 
         return(
           <div className="poll-label">
-            {(""+(id + 1)).padEnd(answersDigits,' ')}: {(""+numVotes).padEnd(maxVotesDigits,' ')} <span className="poll-bar">{getBar(percentage)}</span> {percentage}%
+            {id + 1}
+            <span className="poll-pads">
+              {spaceId}
+            </span>
+            : {numVotes}
+            <span className="poll-pads">
+              {spaceVotes + ' '}
+            </span>
+            <span className="poll-bar">{getBar(percentage)}</span> {percentage}%
           </div>
         );
       })}
