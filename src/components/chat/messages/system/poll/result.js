@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   getBar,
+  getPads,
   getPercentage,
 } from 'utils/data';
 import { isEmpty } from 'utils/data/validators';
@@ -37,18 +38,15 @@ const Result = ({
         } = item;
 
         const percentage = getPercentage(numVotes, responders);
-        const spaceId = '█'.repeat(answersDigits - getDigits(id+1));
-        const spaceVotes = '█'.repeat(maxVotesDigits - getDigits(numVotes));
-
         return(
           <div className="poll-label">
             {id + 1}
             <span className="poll-pads">
-              {spaceId}
+              {getPads(answersDigits - getDigits(id+1))}
             </span>
             : {numVotes}
             <span className="poll-pads">
-              {spaceVotes + ' '}
+              {getPads(maxVotesDigits - getDigits(numVotes)) + ' '}
             </span>
             <span className="poll-bar">{getBar(percentage)}</span> {percentage}%
           </div>
