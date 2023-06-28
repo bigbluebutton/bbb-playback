@@ -63,6 +63,10 @@ const getBar = (percentage) => {
   return bar;
 };
 
+const getPads = (n) => {
+  return FULL_BLOCK.repeat(n);
+}
+
 const getCurrentContent = (time) => {
   const {
     SCREENSHARE,
@@ -180,6 +184,7 @@ export {
   buildFileURL,
   getAvatarStyle,
   getBar,
+  getPads,
   getCurrentContent,
   getCurrentDataIndex,
   getCurrentDataInterval,
