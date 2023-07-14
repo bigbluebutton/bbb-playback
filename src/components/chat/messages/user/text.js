@@ -28,7 +28,7 @@ const Text = ({
 
     return (
       <Linkify options={options}>
-        {text}
+        {text.replace(/(\S)(https?:\/\/)/g, '$1 $2')}
       </Linkify>
     );
   }
