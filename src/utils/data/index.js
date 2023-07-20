@@ -68,7 +68,7 @@ const getBar = (percentage) => {
 };
 
 const getPads = (n) => {
-  if (deviceInfo.osName == "Linux") {
+  if (deviceInfo.osName === "Linux") {
     if (browserInfo.isChrome) {
       return FIGURE_SPACE.repeat(n);
     } else if (browserInfo.isFirefox) {
