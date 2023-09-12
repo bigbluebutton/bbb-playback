@@ -36,7 +36,7 @@ const intlMessages = defineMessages({
   },
 });
 
-const getTldrawData = (index, pageId) => storage.tldraw[index].id === pageId.toString() 
+const getTldrawData = (index, pageNumber) => storage.tldraw[index].id === pageNumber.toString() 
   ? storage.tldraw[index].data : [];
 const getTldrawBbbVersion = (index) => storage.tldraw[index]?.bbb_version;
 
@@ -149,6 +149,7 @@ const TldrawPresentation = ({ size }) => {
   const currentSlideIndex = useCurrentIndex(storage.slides);
   const started = currentPanzoomIndex !== -1;
 
+  console.log("Teste aqui antes do SlideData: \n\n\n\n\n", tldrawAPI);
   const result = SlideData(tldrawAPI);
 
   let { assets, shapes, scaleRatio } = result;
