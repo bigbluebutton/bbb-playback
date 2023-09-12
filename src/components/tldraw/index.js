@@ -149,7 +149,6 @@ const TldrawPresentation = ({ size }) => {
   const currentSlideIndex = useCurrentIndex(storage.slides);
   const started = currentPanzoomIndex !== -1;
 
-  console.log("Teste aqui antes do SlideData: \n\n\n\n\n", tldrawAPI);
   const result = SlideData(tldrawAPI);
 
   let { assets, shapes, scaleRatio } = result;
