@@ -36,7 +36,8 @@ const intlMessages = defineMessages({
   },
 });
 
-const getTldrawData = (index) => storage.tldraw[index].data;
+const getTldrawData = (index, pageNumber) => storage.tldraw[index].id === pageNumber.toString() 
+  ? storage.tldraw[index].data : [];
 const getTldrawBbbVersion = (index) => storage.tldraw[index]?.bbb_version;
 
 const SlideData = (tldrawAPI) => {
@@ -103,14 +104,16 @@ const SlideData = (tldrawAPI) => {
   for (let i = 0; i < interval.length; i++) {
     if (!interval[i]) continue;
 
-    const tldrawData = getTldrawData(index);
+    const tldrawData = getTldrawData(index, id);
 
-    const {
-      shape,
-    } = tldrawData[i];
-
-    shape.parentId = tldrawAPI?.currentPageId;
-    shapes[shape.id] = shape;
+    if (tldrawData[i]) {
+      const {
+        shape,
+      } = tldrawData[i];
+  
+      shape.parentId = tldrawAPI?.currentPageId;
+      shapes[shape.id] = shape; 
+    }
   }
 
   return { assets, shapes, scaleRatio }
