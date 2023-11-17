@@ -15,6 +15,8 @@ import {
 } from 'utils/data/validators';
 import hash from 'utils/hash';
 import { getMediaPath } from 'utils/params';
+import browserInfo from 'utils/browserInfo';
+import deviceInfo from 'utils/deviceInfo';
 
 const buildFileURL = (file, recordId = null) => {
   if (!ROUTER) return file;
@@ -40,6 +42,8 @@ const FULL_BLOCK = '█';
 const LEFT_HALF_BLOCK = '▌';
 const RIGHT_HALF_BLOCK = '▐';
 const EMPTY_BLOCK = '-';
+const FIGURE_SPACE = ' ';
+const EN_SPACE = ' '
 
 const getBar = (percentage) => {
   const p = parseInt(percentage);
@@ -62,6 +66,18 @@ const getBar = (percentage) => {
 
   return bar;
 };
+
+const getPads = (n) => {
+  if (deviceInfo.osName === "Linux") {
+    if (browserInfo.isChrome) {
+      return FIGURE_SPACE.repeat(n);
+    } else if (browserInfo.isFirefox) {
+      return EN_SPACE.repeat(n);
+    }
+  } else {
+    return FULL_BLOCK.repeat(n);
+  }
+}
 
 const getCurrentContent = (time) => {
   const {
@@ -180,6 +196,7 @@ export {
   buildFileURL,
   getAvatarStyle,
   getBar,
+  getPads,
   getCurrentContent,
   getCurrentDataIndex,
   getCurrentDataInterval,
