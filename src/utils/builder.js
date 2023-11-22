@@ -138,6 +138,21 @@ const buildMetadata = result => {
   return data;
 };
 
+const buildNotesEvents = (result) => {
+  const { root } = result;
+  let data = [];
+  if (hasProperty(root, "events") ) {
+    const { events } = root
+    data = events.map(change => {
+      return {
+        timestamp: parseFloat(change.timestamp) / 1000,
+        text: change.text
+      }
+    });
+  }
+  return data;
+}
+
 const buildNotes = result => {
   if (!result) return '';
 
@@ -509,6 +524,9 @@ const build = (filename, value) => {
         case config.tldraw:
           data = buildTldraw(value);
           break;
+        case config.notes_dynamic:
+          data = buildNotesEvents(value);
+          break;
         default:
           logger.debug('unhandled', 'json', filename);
           reject(filename);
@@ -516,7 +534,7 @@ const build = (filename, value) => {
       resolve(data);
     } else if (fileType === 'html') {
       switch (filename) {
-        case config.notes:
+        case config.notes_static:
           data = buildNotes(value);
           break;
         default:

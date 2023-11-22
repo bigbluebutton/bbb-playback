@@ -36,6 +36,8 @@ const ID = {
   MESSAGES: 'messages',
   METADATA: 'metadata',
   NOTES: 'notes',
+  NOTES_DYNAMIC: 'notes_dynamic',
+  NOTES_STATIC: 'notes_static',
   PANZOOMS: 'panzooms',
   PLAYER: 'player',
   POLLS: 'polls',
@@ -59,7 +61,8 @@ const CONTENT = [
   ID.CHAT,
   ID.POLLS,
   ID.VIDEOS,
-  ID.NOTES,
+  ID.NOTES_DYNAMIC,
+  ID.NOTES_STATIC,
   ID.SCREENSHARE,
   ID.CAPTIONS,
 ];
