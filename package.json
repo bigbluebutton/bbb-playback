@@ -16,6 +16,7 @@
     "react-sizeme": "^3.0.2",
     "sass": "^1.52.1",
     "semver": "^7.5.2",
+    "tldraw-alpha": "npm:@tldraw/tldraw@^2.0.0-alpha.19",
     "video.js": "^7.21.1",
     "videojs-seek-buttons": "^3.0.1"
   },

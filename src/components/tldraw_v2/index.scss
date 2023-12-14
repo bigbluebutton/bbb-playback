@@ -1,0 +1,23 @@
+@import 'src/styles/images';
+
+.presentation-wrapper {
+  align-items: center;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 0;
+}
+
+.presentation {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+#TD-ContextMenu {
+  display: none;
+}

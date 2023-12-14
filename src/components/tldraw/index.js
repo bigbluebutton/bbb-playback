@@ -24,6 +24,7 @@ import storage from 'utils/data/storage';
 import { isEmpty } from 'utils/data/validators';
 import { buildFileURL } from 'utils/data';
 import './index.scss';
+import { getTldrawBbbVersion, getTldrawData } from 'utils/tldraw';
 
 // The size of the scaled coordinate system for tldraw whiteboard
 let MAX_IMAGE_WIDTH = 2048;
@@ -35,10 +36,6 @@ const intlMessages = defineMessages({
     description: 'Aria label for the presentation wrapper',
   },
 });
-
-const getTldrawData = (index, pageNumber) => storage.tldraw[index].id === pageNumber.toString() 
-  ? storage.tldraw[index].data : [];
-const getTldrawBbbVersion = (index) => storage.tldraw[index]?.bbb_version;
 
 const SlideData = (tldrawAPI) => {
   let assets = {};
@@ -184,6 +181,7 @@ const TldrawPresentation = ({ size }) => {
     tldrawAPI?.replacePageContent(shapes, {}, assets)
   }, [tldrawAPI, shapes, assets]);
 
+  console.log('rendering tldraw v1 somehow');
   return (
     <div
       aria-label={intl.formatMessage(intlMessages.aria)}
