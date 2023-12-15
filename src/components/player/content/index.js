@@ -38,11 +38,9 @@ const Content = ({
     const bbbVersion = getTldrawBbbVersion(index);
 
     if (bbbVersion && !semverGte(bbbVersion, '3.0.0')) {
-      console.log('Choosing v1');
       presentation = <TldrawPresentation />;
     }
     else if (bbbVersion) {
-      console.log('Choosing v2');
       presentation = <TldrawPresentationV2 />;
     }
   }

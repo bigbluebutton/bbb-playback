@@ -13,7 +13,7 @@ import {
   DashStyle,
   SizeStyle,
   TDShapeType,
-} from "@tldraw/tldraw";
+} from "tldraw-v1";
 import {
   useCurrentContent,
   useCurrentIndex,
@@ -24,7 +24,7 @@ import storage from 'utils/data/storage';
 import { isEmpty } from 'utils/data/validators';
 import { buildFileURL } from 'utils/data';
 import './index.scss';
-import { getTldrawBbbVersion, getTldrawData } from 'utils/tldraw';
+import { getTldrawData, getViewBox, getTldrawBbbVersion } from 'utils/tldraw';
 
 // The size of the scaled coordinate system for tldraw whiteboard
 let MAX_IMAGE_WIDTH = 2048;
@@ -116,28 +116,6 @@ const SlideData = (tldrawAPI) => {
   return { assets, shapes, scaleRatio }
 }
 
-const getViewBox = (index, scaleRatio) => {
-  const inactive = {
-    height: 0,
-    x: 0,
-    width: 0,
-    y: 0,
-  };
-
-  if (index === -1) return inactive;
-
-  const currentData = storage.panzooms[index];
-  const scaledViewBoxWidth = currentData.width * scaleRatio;
-  const scaledViewBoxHeight = currentData.height * scaleRatio;
-
-  return {
-    height: scaledViewBoxHeight,
-    x: currentData.x,
-    width: scaledViewBoxWidth,
-    y: currentData.y,
-  };
-};
-
 const TldrawPresentation = ({ size }) => {
   const [tldrawAPI, setTLDrawAPI] = React.useState(null);
   const intl = useIntl();
@@ -181,7 +159,6 @@ const TldrawPresentation = ({ size }) => {
     tldrawAPI?.replacePageContent(shapes, {}, assets)
   }, [tldrawAPI, shapes, assets]);
 
-  console.log('rendering tldraw v1 somehow');
   return (
     <div
       aria-label={intl.formatMessage(intlMessages.aria)}

@@ -3,7 +3,7 @@
   "version": "5.0.2",
   "homepage": "/playback/presentation/2.3",
   "dependencies": {
-    "@tldraw/tldraw": "^1.27.0",
+    "@tldraw/tldraw": "^2.0.0-alpha.19",
     "classnames": "^2.3.1",
     "darkreader": "^4.9.46",
     "linkify-react": "^3.0.4",
@@ -16,7 +16,7 @@
     "react-sizeme": "^3.0.2",
     "sass": "^1.52.1",
     "semver": "^7.5.2",
-    "tldraw-alpha": "npm:@tldraw/tldraw@^2.0.0-alpha.19",
+    "tldraw-v1": "npm:@tldraw/tldraw@^1.2.7",
     "video.js": "^7.21.1",
     "videojs-seek-buttons": "^3.0.1"
   },

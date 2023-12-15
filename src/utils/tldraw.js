@@ -20,10 +20,33 @@ const getTldrawBbbVersion = (index) => storage.tldraw[index]?.bbb_version;
  * @returns {Array|Object} The data associated with the Tldraw instance if the page number matches the instance's ID, 
  *                         or an empty array if there's no match or the instance is not found.
  */
-const getTldrawData = (index, pageNumber) => storage.tldraw[index].id === pageNumber.toString() 
+const getTldrawData = (index, pageNumber) => storage.tldraw[index].id === pageNumber.toString()
   ? storage.tldraw[index].data : [];
 
+const getViewBox = (index, scaleRatio) => {
+  const inactive = {
+    height: 0,
+    x: 0,
+    width: 0,
+    y: 0,
+  };
+
+  if (index === -1) return inactive;
+
+  const currentData = storage.panzooms[index];
+  const scaledViewBoxWidth = currentData.width * scaleRatio;
+  const scaledViewBoxHeight = currentData.height * scaleRatio;
+
+  return {
+    height: scaledViewBoxHeight,
+    x: currentData.x,
+    width: scaledViewBoxWidth,
+    y: currentData.y,
+  };
+};
+
 export {
-    getTldrawBbbVersion,
-    getTldrawData,
+  getTldrawBbbVersion,
+  getTldrawData,
+  getViewBox,
 };
