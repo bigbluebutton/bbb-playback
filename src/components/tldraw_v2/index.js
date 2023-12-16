@@ -159,6 +159,11 @@ const TldrawPresentationV2 = ({ size }) => {
   }, [svgWidth, svgHeight, viewboxWidth, viewboxHeight, x, y, currentSlideIndex, tldrawAPI, size, result]);
 
   React.useEffect(() => {
+    // Remove all current shapes
+    const currentShapesSet = tldrawAPI?.getCurrentPageShapeIds() || (new Set());
+    const curentShapes = Array.from(currentShapesSet);
+    if (curentShapes.length > 0) { tldrawAPI?.deleteShapes(curentShapes); }
+  
     // Remove unnecessary properties from shapes to prevent Tldraw's validation from failing
     const validatedShapes = Object.values(shapes).map((shape) => {
       if ('isModerator' in shape) {
