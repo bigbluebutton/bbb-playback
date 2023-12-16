@@ -52,7 +52,8 @@ const SlideData = (tldrawAPI) => {
   } = storage.slides[currentIndex];
 
   let imageUrl = buildFileURL(src);
-  // tldraw needs the full address as src
+
+  // Tldraw neeed the full address as the source
   if (!imageUrl.startsWith("http")) {
     imageUrl = window.location.origin + imageUrl;
   }
@@ -65,7 +66,6 @@ const SlideData = (tldrawAPI) => {
   const assetId = AssetRecordType.createId(curPageId);
   
   assets[`slide-background-asset-${id}`] = createTldrawImageAsset(assetId, imageUrl, scaledWidth, scaledHeight)
-
   shapes["slide-background-shape"] = createTldrawBackgroundShape(assetId, curPageId, scaledWidth, scaledHeight)
 
   if (index === -1 || isEmpty(interval)) return { assets, shapes, scaleRatio }
@@ -169,7 +169,7 @@ const TldrawPresentationV2 = ({ size }) => {
           autofocus={false}
           hideUi={true}
           onMount={(app) => {
-            app.onPan = () => { };
+            app.updateInstanceState({ canMoveCamera: false });
             app.setSelectedIds = () => { };
             app.setHoveredId = () => { };
             app.setSelectedShapes = () => { };
