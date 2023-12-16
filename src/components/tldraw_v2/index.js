@@ -18,6 +18,7 @@ import './index.scss';
 import { getTldrawData, getViewBox } from 'utils/tldraw';
 import { buildFileURL } from 'utils/data';
 import { isEmpty } from 'utils/data/validators';
+import Cursor from './cursor';
 
 const MAX_IMAGE_WIDTH = 1440;
 const MAX_IMAGE_HEIGHT = 1080;
@@ -153,7 +154,7 @@ const TldrawPresentationV2 = ({ size }) => {
         svgHeight / viewboxHeight
       );
 
-    tldrawAPI?.setCamera([x, y], zoom);
+    tldrawAPI?.setCamera({x, y, z: zoom});
 
   }, [svgWidth, svgHeight, viewboxWidth, viewboxHeight, x, y, currentSlideIndex, tldrawAPI, size, result]);
 
@@ -190,9 +191,17 @@ const TldrawPresentationV2 = ({ size }) => {
             app.onPan = () => { };
             app.setSelectedIds = () => { };
             app.setHoveredId = () => { };
+            app.setSelectedShapes = () => { };
+            app.setHoveredShapes = () => { };
+            app.onRightClick = () => { };
+            app.onDoubleClick = () => { };
+            app.onTripleClick = () => { };
+            app.onQuadrupleClick = () => { };
+            app.onWheel = () => { };
             setTLDrawAPI(app);
           }}
         />
+        <Cursor tldrawAPI={tldrawAPI} size={size} />
       </div>
       }
     </div>
