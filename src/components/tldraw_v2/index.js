@@ -15,10 +15,11 @@ import {
 import { ID } from 'utils/constants';
 import storage from 'utils/data/storage';
 import './index.scss';
-import { getTldrawData, getViewBox } from 'utils/tldraw';
+import { getTldrawData, getViewBox, createTldrawImageAsset,
+         createTldrawBackgroundShape, createTldrawCursorShape } from 'utils/tldraw';
 import { buildFileURL } from 'utils/data';
 import { isEmpty } from 'utils/data/validators';
-import Cursor from './cursor';
+import getCursor from './cursor';
 
 const MAX_IMAGE_WIDTH = 1440;
 const MAX_IMAGE_HEIGHT = 1080;
@@ -34,6 +35,7 @@ const SlideData = (tldrawAPI) => {
   let assets = {};
   let shapes = {};
   const currentIndex = useCurrentIndex(storage.slides);
+  const currentCursorIndex = useCurrentIndex(storage.cursor);
 
   const {
     index,
@@ -62,42 +64,9 @@ const SlideData = (tldrawAPI) => {
   const curPageId = tldrawAPI?.getCurrentPageId();
   const assetId = AssetRecordType.createId(curPageId);
   
-  assets[`slide-background-asset-${id}`] = {
-    id: assetId,
-    typeName: "asset",
-    type: "image",
-    meta: {},
-    props: {
-      w: scaledWidth,
-      h: scaledHeight,
-      src: imageUrl,
-      name: "",
-      isAnimated: false,
-      mimeType: null,
-    }
-  };
+  assets[`slide-background-asset-${id}`] = createTldrawImageAsset(assetId, imageUrl, scaledWidth, scaledHeight)
 
-  shapes["slide-background-shape"] = {
-    x: 1,
-    y: 1, 
-    rotation: 0,
-    isLocked: true,
-    opacity: 1,
-    meta: {},
-    id: `shape:BG-${curPageId}`,
-    type: "image",
-    props: {
-      w: scaledWidth || 1,
-      h: scaledHeight || 1,
-      assetId: assetId,
-      playing: true,
-      url: "",
-      crop: null,
-    },
-    parentId: `page:${curPageId}`,
-    index: 'a0',
-    typeName: 'shape'
-  };
+  shapes["slide-background-shape"] = createTldrawBackgroundShape(assetId, curPageId, scaledWidth, scaledHeight)
 
   if (index === -1 || isEmpty(interval)) return { assets, shapes, scaleRatio }
 
@@ -114,6 +83,13 @@ const SlideData = (tldrawAPI) => {
       shape.parentId = tldrawAPI?.getCurrentPageId();
       shapes[shape.id] = shape;
     }
+  }
+
+  const camera = tldrawAPI?.getCamera();
+  const { x, y } = getCursor(currentCursorIndex, camera);
+
+  if (!(x === -1 || y === -1)) {
+    shapes['cursor'] = createTldrawCursorShape(x, y, curPageId);
   }
 
   return { assets, shapes, scaleRatio }
@@ -206,7 +182,6 @@ const TldrawPresentationV2 = ({ size }) => {
             setTLDrawAPI(app);
           }}
         />
-        <Cursor tldrawAPI={tldrawAPI} size={size} />
       </div>
       }
     </div>

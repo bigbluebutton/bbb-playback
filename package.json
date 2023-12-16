@@ -21,6 +21,8 @@
     "videojs-seek-buttons": "^3.0.1"
   },
   "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.33.2",
     "react-scripts": "^5.0.1"
   },
   "overrides": {
@@ -29,7 +31,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test"
+    "test": "react-scripts test",
+    "lint": "eslint ./src/ --ext .js,.jsx"
   },
   "eslintConfig": {
     "extends": "react-app"
