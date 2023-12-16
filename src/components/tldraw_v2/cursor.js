@@ -3,13 +3,13 @@ import { useCurrentIndex } from 'components/utils/hooks';
 import storage from 'utils/data/storage';
 import './index.scss';
 
-const getCursor = (index, size, pageState) => {
+const getCursor = (index, size, cam) => {
   const inactive = {
     x: -1,
     y: -1,
   }
 
-  if (index === -1) return inactive;
+  if (index === -1 || cam?.x == null || cam?.y == null || cam?.z == null) return inactive;
 
   const currentData = storage.cursor[index];
   if (currentData.x === -1 && currentData.y === -1) return inactive;
@@ -17,8 +17,8 @@ const getCursor = (index, size, pageState) => {
   let _x = null;
   let _y = null;
 
-  _x = (currentData.x + pageState?.camera?.point[0]) * pageState?.camera?.zoom;
-  _y = (currentData.y + pageState?.camera?.point[1]) * pageState?.camera?.zoom;
+  _x = (currentData.x + cam.x) * cam.z;
+  _y = (currentData.y + cam.y) * cam.z;
 
   if (_x > size.width || _y > size.height ) return inactive;
 
@@ -30,19 +30,13 @@ const getCursor = (index, size, pageState) => {
 
 const Cursor = ({ tldrawAPI, size }) => {
   const currentIndex = useCurrentIndex(storage.cursor);
-
-  console.log("CURSOR CURRENT INDEX IS " + currentIndex);
-
-  const { x, y } = getCursor(currentIndex, size, tldrawAPI?.getPageStates());
-  console.log("CURSOR IS AT " + x + ", " + y)
-
-  tldrawAPI?.setCursor(x, y);
+  const { x, y } = getCursor(currentIndex, size, tldrawAPI?.getCamera());
   if (x === -1 || y === -1) return null;
 
   return (
     <div
       style={{
-        zIndex: 2,
+        zIndex: 1000,
         position: "absolute",
         left: x - 5.0,
         top: y - 5.0,
