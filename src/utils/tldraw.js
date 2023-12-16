@@ -119,6 +119,15 @@ const createTldrawBackgroundShape = (assetId, curPageId, scaledWidth, scaledHeig
   };
 }
 
+/**
+ * Creates a Tldraw shape object representing the cursor.
+ *
+ * @param {number} x - The x-coordinate of the cursor shape.
+ * @param {number} y - The y-coordinate of the cursor shape.
+ * @param {string} curPageId - The current page ID of the slide the cursor is rendering on.
+ * @returns {object} A Tldraw cursor shape object.
+ *
+ */
 const createTldrawCursorShape = (x, y, curPageId) => {
   return {
     x,
