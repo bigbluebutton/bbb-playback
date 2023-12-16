@@ -146,7 +146,7 @@ const createTldrawCursorShape = (x, y, curPageId) => {
       url: ""
     },
     parentId: `page:${curPageId}`,
-    index: "a1",
+    index: "z9",
     typeName: "shape"
   }
 }
