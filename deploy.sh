@@ -9,6 +9,7 @@ export REACT_APP_BBB_PLAYBACK_BUILD=$(git rev-parse --short HEAD)
 
 npm run-script build
 sudo rm -rf $BBB_PLAYBACK
+sudo mkdir -p $BBB_PLAYBACK
 grep \"version\"\: package.json | sed -e 's|.*\ \"||g' -e 's|\".*||g' > bbb-playback-version
 sudo cp -r ./build bbb-playback-version $BBB_PLAYBACK
 sudo chown --recursive bigbluebutton:bigbluebutton $BBB_PLAYBACK
