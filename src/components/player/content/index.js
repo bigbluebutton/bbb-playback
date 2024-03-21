@@ -34,7 +34,7 @@ const Content = ({
 
   let presentation = <Presentation />;
   
-  if (isTldrawWhiteboard ) {
+  if (isTldrawWhiteboard) {
     const bbbVersion = getTldrawBbbVersion(index);
 
     if (bbbVersion && !semverGte(bbbVersion, '3.0.0')) {
