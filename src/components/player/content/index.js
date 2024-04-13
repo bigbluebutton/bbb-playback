@@ -32,17 +32,20 @@ const Content = ({
                              storage.panzooms.tldraw ||
                              storage.cursor.tldraw;
 
-  let presentation = <Presentation />;
+  const presentation;
   
   if (isTldrawWhiteboard) {
     const bbbVersion = getTldrawBbbVersion(index);
 
-    if (bbbVersion && !semverGte(bbbVersion, '3.0.0')) {
-      presentation = <TldrawPresentation />;
-    }
-    else if (bbbVersion) {
+    if (bbbVersion && semverGte(bbbVersion, '3.0.0')) {
       presentation = <TldrawPresentationV2 />;
     }
+    else {
+      presentation = <TldrawPresentation />;
+    }
+  }
+  else {
+    presentation = <Presentation />;
   }
 
   return (
