@@ -32,7 +32,7 @@ const Content = ({
                              storage.panzooms.tldraw ||
                              storage.cursor.tldraw;
 
-  const presentation;
+  let presentation;
   
   if (isTldrawWhiteboard) {
     const bbbVersion = getTldrawBbbVersion(index);
