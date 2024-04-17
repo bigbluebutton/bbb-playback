@@ -4,6 +4,7 @@
   "homepage": "/playback/presentation/2.3",
   "dependencies": {
     "@tldraw/tldraw": "^2.0.0-alpha.18",
+    "bowser": "^2.11.0",
     "classnames": "^2.3.1",
     "darkreader": "^4.9.46",
     "linkify-react": "^3.0.4",
