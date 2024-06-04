@@ -5,8 +5,8 @@ import {
   useIntl,
 } from 'react-intl';
 import cx from 'classnames';
-import { Tldraw, AssetRecordType } from '@tldraw/tldraw';
-import '@tldraw/tldraw/tldraw.css'
+import { Tldraw, AssetRecordType } from '@bigbluebutton/tldraw';
+import '@bigbluebutton/tldraw/tldraw.css'
 import {
   useCurrentContent,
   useCurrentIndex,
