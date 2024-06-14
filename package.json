@@ -3,7 +3,7 @@
   "version": "5.1.0",
   "homepage": "/playback/presentation/2.3",
   "dependencies": {
-    "@bigbluebutton/tldraw": "^2.0.0-alpha.20",
+    "@bigbluebutton/tldraw": "^2.0.0-alpha.21",
     "bowser": "^2.11.0",
     "classnames": "^2.3.1",
     "darkreader": "^4.9.46",
