@@ -1,9 +1,9 @@
 {
   "name": "bbb-playback",
-  "version": "5.1.1",
+  "version": "5.1.2",
   "homepage": "/playback/presentation/2.3",
   "dependencies": {
-    "@bigbluebutton/tldraw": "^2.0.0-alpha.21",
+    "@bigbluebutton/tldraw": "^2.0.0-alpha.25",
     "bowser": "^2.11.0",
     "classnames": "^2.3.1",
     "darkreader": "^4.9.46",
@@ -19,7 +19,9 @@
     "semver": "^7.5.2",
     "tldraw-v1": "npm:@tldraw/tldraw@^1.2.7",
     "video.js": "^7.21.1",
-    "videojs-seek-buttons": "^3.0.1"
+    "videojs-seek-buttons": "^3.0.1",
+    "recharts": "^2.12.7",
+    "styled-components": "^6.1.13"
   },
   "devDependencies": {
     "react-scripts": "^5.0.1"
