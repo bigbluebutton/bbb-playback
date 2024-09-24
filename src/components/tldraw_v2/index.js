@@ -51,13 +51,6 @@ const SlideData = (tldrawAPI) => {
     width,
   } = storage.slides[currentIndex];
 
-  let imageUrl = buildFileURL(src);
-
-  // Tldraw neeed the full address as the source
-  if (!imageUrl.startsWith("http")) {
-    imageUrl = window.location.origin + imageUrl;
-  }
-
   const scaleRatio = Math.min(MAX_IMAGE_WIDTH / width, MAX_IMAGE_HEIGHT / height);
   const scaledWidth = width * scaleRatio;
   const scaledHeight = height * scaleRatio;
@@ -65,7 +58,7 @@ const SlideData = (tldrawAPI) => {
   const curPageId = tldrawAPI?.getCurrentPageId();
   const assetId = AssetRecordType.createId(curPageId);
   
-  assets[`slide-background-asset-${id}`] = createTldrawImageAsset(assetId, imageUrl, scaledWidth, scaledHeight)
+  assets[`slide-background-asset-${id}`] = createTldrawImageAsset(assetId, buildFileURL(src), scaledWidth, scaledHeight)
   shapes["slide-background-shape"] = createTldrawBackgroundShape(assetId, curPageId, scaledWidth, scaledHeight)
 
   if (index === -1 || isEmpty(interval)) return { assets, shapes, scaleRatio }
