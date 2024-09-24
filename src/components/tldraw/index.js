@@ -56,12 +56,6 @@ const SlideData = (tldrawAPI) => {
     width,
   } = storage.slides[currentIndex];
 
-  let imageUrl = buildFileURL(src);
-  // tldraw needs the full address as src
-  if (!imageUrl.startsWith("http")) {
-    imageUrl = window.location.origin + imageUrl;
-  }
-
   const bbbVersion = getTldrawBbbVersion(index);
   if (bbbVersion && semverGte(bbbVersion, '2.6.1')) {
     MAX_IMAGE_WIDTH = 1440;
