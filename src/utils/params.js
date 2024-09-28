@@ -27,6 +27,14 @@ const getMediaPath = () => {
   return mediaPath;
 };
 
+const getTypeOfSharedNotes = () => {
+  const param = getSearchParam('typeOfSharedNotes');
+
+  if (param) return param;
+
+  return null;
+};
+
 const getSearchParam = (name) => {
   const params = new URLSearchParams(window.location.search);
 
@@ -125,6 +133,7 @@ const parseTimeToSeconds = time => {
 };
 
 export {
+  getTypeOfSharedNotes,
   getFrequency,
   getLayout,
   getMediaPath,

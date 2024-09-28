@@ -33,6 +33,8 @@
   "player.chat.message.video.name": "External video",
   "player.chat.wrapper.aria": "Chat area",
   "player.notes.wrapper.aria": "Notes area",
+  "player.notes.message.noNotes": "Shared notes were not used",
+  "player.notes.message.notesToCome": "Nothing written yet",
   "player.presentation.wrapper.aria": "Presentation area",
   "player.screenshare.wrapper.aria": "Screenshare area",
   "player.search.modal.title": "Search",

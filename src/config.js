@@ -11,6 +11,10 @@ const controls = {
   swap: true,
   theme: true,
 };
+const getConfigs = async (fn) => {
+  return await fetch("./config.json").then(response => response.json())
+    .then(fn)
+}
 
 const date = { enabled: true };
 
@@ -20,7 +24,8 @@ const files = {
   chat: 'slides_new.xml',
   cursor: 'cursor.xml',
   metadata: 'metadata.xml',
-  notes: 'notes.html',
+  notes_dynamic: 'notes_events.json',
+  notes_static: 'notes.html',
   panzooms: 'panzooms.xml',
   polls: 'polls.json',
   screenshare: 'deskshare.xml',
@@ -77,6 +82,7 @@ const thumbnails = {
 };
 
 export {
+  getConfigs,
   chat,
   controls,
   date,
