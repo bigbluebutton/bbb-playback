@@ -8,7 +8,8 @@ import {
   getCurrentDataIndex,
   getCurrentDataInterval,
 } from 'utils/data';
-import { isEqual } from 'utils/data/validators';
+import storage from 'utils/data/storage';
+import { isEqual, isShowScreenshareAsContent } from 'utils/data/validators';
 
 const useCurrentContent = () => {
   const [currentContent, setCurrentContent] = useState(ID.PRESENTATION);
@@ -27,6 +28,24 @@ const useCurrentContent = () => {
 
   return currentContent;
 };
+
+const useShouldShowScreenShare = () => {
+  const [shouldShowScreenShare, setShouldShowScreenShare] = useState(false);
+
+  useEffect(() => {
+    const handleTimeUpdate = (event) => {
+      const nextShouldShowScreenShare = isShowScreenshareAsContent(storage.layoutSwap, event.detail.time);
+      if (shouldShowScreenShare !== nextShouldShowScreenShare) setShouldShowScreenShare(nextShouldShowScreenShare);
+    };
+
+    document.addEventListener(EVENTS.TIME_UPDATE, handleTimeUpdate);
+    return () => {
+      document.removeEventListener(EVENTS.TIME_UPDATE, handleTimeUpdate);
+    };
+  }, [shouldShowScreenShare]);
+
+  return shouldShowScreenShare;
+}
 
 const useCurrentIndex = (data) => {
   const [currentIndex, setCurrentIndex] = useState(-1);
@@ -77,4 +96,5 @@ export {
   useCurrentContent,
   useCurrentIndex,
   useCurrentInterval,
+  useShouldShowScreenShare,
 };

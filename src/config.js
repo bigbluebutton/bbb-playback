@@ -27,6 +27,7 @@ const files = {
   shapes: 'shapes.svg',
   tldraw: 'tldraw.json',
   videos: 'external_videos.json',
+  layout: 'layout_swap.xml',
 };
 
 const locale = { default: 'en' };

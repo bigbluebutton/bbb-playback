@@ -52,6 +52,7 @@ const ID = {
   USERS: 'users',
   VIDEOS: 'videos',
   WEBCAMS: 'webcams',
+  LAYOUT: 'layout',
 };
 
 const CONTENT = [
