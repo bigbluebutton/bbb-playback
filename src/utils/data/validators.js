@@ -169,7 +169,7 @@ function getMostRecentEvent(arr, time) {
 }
 
 const isShowScreenshareAsContent = (data, time) => {
-  if (isEmpty(data)) return false;
+  if (isEmpty(data)) return true;
 
   const event = getMostRecentEvent(data, time);
 
