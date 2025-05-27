@@ -110,8 +110,10 @@ const Webcams = () => {
         player.webcams.on('play', () => {
           const frequency = getFrequency();
           interval.current = setInterval(() => {
-            const currentTime = player.webcams.currentTime();
-            dispatchTimeUpdate(currentTime);
+            if (player.webcams) {
+              const currentTime = player.webcams.currentTime();
+              dispatchTimeUpdate(currentTime);
+            }
           }, 1000 / (frequency ? frequency : config.rps));
         });
 
