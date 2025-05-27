@@ -55,7 +55,7 @@ export default class Shortcuts {
 
   destroy() {
     this.listeners.forEach(listener => {
-      document.removeEventListener(listener);
+      document.removeEventListener('keydown', listener);
     });
   }
 }
