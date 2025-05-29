@@ -18,6 +18,10 @@
   width: 100%;
 }
 
-#TD-ContextMenu {
+.tlui-menu {
   display: none;
+}
+
+.tl-container {
+  --tl-cursor-default: unset;
 }
