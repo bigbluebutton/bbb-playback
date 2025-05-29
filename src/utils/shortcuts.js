@@ -43,18 +43,19 @@ export default class Shortcuts {
       return null;
     }
 
-    const listener = document.addEventListener('keydown', (e) => {
-      if (e.altKey && e.shiftKey) {
-        if (e.key === key) action();
+    const handler = (e) => {
+      if (e.altKey && e.shiftKey && e.key === key) {
+        action();
       }
-    });
+    };
 
-    this.listeners.push(listener);
+    document.addEventListener('keydown', handler);
+    this.listeners.push(handler);
   }
 
   destroy() {
     this.listeners.forEach(listener => {
-      document.removeEventListener(listener);
+      document.removeEventListener('keydown', listener);
     });
   }
 }
