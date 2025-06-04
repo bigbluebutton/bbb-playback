@@ -121,6 +121,9 @@ const TldrawPresentationV2 = ({ size }) => {
   }
 
   React.useEffect(() => {
+    if (size.width <= 0 || size.height <= 0) {
+      return;
+    }
     let zoom =
       Math.min(
         svgWidth / viewboxWidth,
