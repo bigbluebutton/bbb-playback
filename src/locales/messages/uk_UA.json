@@ -11,6 +11,7 @@
   "loader.wrapper.aria": "Область завантажувача",
   "player.wrapper.aria": "Область програвача",
   "player.chat.message.poll.name": "Результати опитування",
+  "player.chat.message.poll.quiz": "Результати вікторини",
   "player.chat.message.poll.question": "Питання",
   "player.chat.message.poll.options": "Варіанти",
   "player.chat.message.poll.option.yes": "Так",

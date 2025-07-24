@@ -17,6 +17,7 @@
   "player.about.modal.shortcuts.skip.next": "다음 슬라이드",
   "player.about.modal.shortcuts.skip.previous": "이전 슬라이드",
   "player.chat.message.poll.name": "설문조사 결과",
+  "player.chat.message.poll.quiz": "퀴즈 결과",
   "player.chat.message.poll.question": "질문",
   "player.chat.message.poll.options": "옵션",
   "player.chat.message.poll.option.yes": "예",

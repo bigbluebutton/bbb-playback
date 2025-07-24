@@ -16,6 +16,10 @@ const intlMessages = defineMessages({
     id: 'player.chat.message.poll.name',
     description: 'Label for the poll message name',
   },
+  quiz: {
+    id: 'player.chat.message.poll.quiz',
+    description: 'Label for the quiz message name',
+  },
 });
 
 const propTypes = {
@@ -25,6 +29,8 @@ const propTypes = {
   responders: PropTypes.number,
   timestamp: PropTypes.number,
   type: PropTypes.string,
+  isQuiz: PropTypes.bool,
+  showCorrectAnswer: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -34,6 +40,8 @@ const defaultProps = {
   responders: 0,
   timestamp: 0,
   type: '',
+  isQuiz: false,
+  showCorrectAnswer: false,
 };
 
 const Poll = ({
@@ -43,6 +51,8 @@ const Poll = ({
   responders,
   timestamp,
   type,
+  isQuiz,
+  showCorrectAnswer,
 }) => {
   const intl = useIntl();
 
@@ -50,7 +60,7 @@ const Poll = ({
     <SystemMessage
       active={active}
       icon={ID.POLLS}
-      name={intl.formatMessage(intlMessages.name)}
+      name={isQuiz ? intl.formatMessage(intlMessages.quiz) : intl.formatMessage(intlMessages.name)}
       timestamp={timestamp}
     >
       <Question question={question} />
@@ -61,6 +71,7 @@ const Poll = ({
       <Options
         answers={answers}
         type={type}
+        showCorrectAnswer={showCorrectAnswer}
       />
     </SystemMessage>
   );
