@@ -23,6 +23,7 @@
   "player.about.modal.shortcuts.skip.previous": "Previous Slide",
   "player.about.modal.shortcuts.swap": "Swap content",
   "player.chat.message.poll.name": "Poll result",
+  "player.chat.message.poll.quiz": "Quiz result",
   "player.chat.message.poll.question": "Question",
   "player.chat.message.poll.options": "Options",
   "player.chat.message.poll.option.yes": "Yes",

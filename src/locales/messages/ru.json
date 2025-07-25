@@ -21,6 +21,7 @@
   "player.about.modal.shortcuts.skip.previous": "Предыдущий слайд",
   "player.about.modal.shortcuts.swap": "Поменять местами содержимое",
   "player.chat.message.poll.name": "Результаты голосования",
+  "player.chat.message.poll.quiz": "Результаты викторины",
   "player.chat.message.poll.question": "Вопрос",
   "player.chat.message.poll.options": "Варианты",
   "player.chat.message.poll.option.yes": "Да",

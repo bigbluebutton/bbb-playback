@@ -11,6 +11,7 @@
   "loader.wrapper.aria": "Área de carregamento",
   "player.wrapper.aria": "Área do reprodutor",
   "player.chat.message.poll.name": "Resultado da sondagem",
+  "player.chat.message.poll.quiz": "Resultado do questionário",
   "player.chat.message.poll.question": "Pergunta",
   "player.chat.message.poll.options": "Opções",
   "player.chat.message.poll.option.yes": "Sim",

@@ -38,16 +38,19 @@ const intlMessages = defineMessages({
 const propTypes = {
   answers: PropTypes.array,
   type: PropTypes.string,
+  showCorrectAnswer: PropTypes.bool,
 };
 
 const defaultProps = {
   answers: [],
   type: '',
+  showCorrectAnswer: false,
 };
 
 const Options = ({
   answers,
   type,
+  showCorrectAnswer,
 }) => {
   const intl = useIntl();
 
@@ -62,13 +65,14 @@ const Options = ({
         const {
           id,
           key,
+          isCorrectAnswer
         } = item;
 
         const label = getPollLabel(key, type);
 
-        return(
+        return (
           <div>
-            {id + 1}: {label ? intl.formatMessage(intlMessages[label]) : key}
+            {id + 1}: {label ? intl.formatMessage(intlMessages[label]) : key} {showCorrectAnswer && isCorrectAnswer && '✅'}
           </div>
         );
       })}

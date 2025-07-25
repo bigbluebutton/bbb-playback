@@ -4,6 +4,7 @@
   "button.search.aria": "Tìm kiếm",
   "button.swap.aria": "Hoán đổi nội dung",
   "player.chat.message.poll.name": "Kết quả khảo sát",
+  "player.chat.message.poll.quiz": "Kết quả trắc nghiệm",
   "player.chat.message.poll.question": "Câu hỏi",
   "player.chat.message.poll.options": "Tùy chọn",
   "player.chat.message.poll.option.yes": "Có",

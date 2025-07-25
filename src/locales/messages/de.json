@@ -23,6 +23,7 @@
   "player.about.modal.shortcuts.skip.previous": "Vorherige Folie",
   "player.about.modal.shortcuts.swap": "Inhalt umschalten",
   "player.chat.message.poll.name": "Umfrageergebnis",
+  "player.chat.message.poll.quiz": "Quizergebnis",
   "player.chat.message.poll.question": "Frage",
   "player.chat.message.poll.options": "Einstellungen",
   "player.chat.message.poll.option.yes": "Ja",

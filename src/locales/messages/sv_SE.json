@@ -11,6 +11,7 @@
   "loader.wrapper.aria": "Laddningsfält",
   "player.wrapper.aria": "Spelar-fält",
   "player.chat.message.poll.name": "Omröstningsresultat",
+  "player.chat.message.poll.quiz": "Quizresultat",
   "player.chat.message.poll.question": "Fråga",
   "player.chat.message.poll.options": "Alternativ",
   "player.chat.message.poll.option.yes": "Ja",

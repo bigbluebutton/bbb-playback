@@ -23,6 +23,7 @@
   "player.about.modal.shortcuts.skip.previous": "Diapositive précédente",
   "player.about.modal.shortcuts.swap": "Permuter le contenu",
   "player.chat.message.poll.name": "Résultat du sondage",
+  "player.chat.message.poll.quiz": "Résultat du quiz",
   "player.chat.message.poll.question": "Question",
   "player.chat.message.poll.options": "Options",
   "player.chat.message.poll.option.yes": "Oui",

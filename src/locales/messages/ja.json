@@ -23,6 +23,7 @@
   "player.about.modal.shortcuts.skip.previous": "前のスライド",
   "player.about.modal.shortcuts.swap": "コンテンツ入れ替え",
   "player.chat.message.poll.name": "投票結果",
+  "player.chat.message.poll.quiz": "クイズ結果",
   "player.chat.message.poll.question": "質問",
   "player.chat.message.poll.options": "項目",
   "player.chat.message.poll.option.yes": "はい",

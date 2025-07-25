@@ -11,6 +11,7 @@
   "loader.wrapper.aria": "Sekce Loader",
   "player.wrapper.aria": "Sekce přehrávače",
   "player.chat.message.poll.name": "Výsledky ankety",
+  "player.chat.message.poll.quiz": "Výsledek kvízu",
   "player.chat.message.poll.question": "Otázka",
   "player.chat.message.poll.options": "Možnosti",
   "player.chat.message.poll.option.yes": "Ano",

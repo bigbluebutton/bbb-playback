@@ -23,6 +23,7 @@
   "player.about.modal.shortcuts.skip.previous": "上一頁",
   "player.about.modal.shortcuts.swap": "互換內容",
   "player.chat.message.poll.name": "投票結果",
+  "player.chat.message.poll.quiz": "測驗結果",
   "player.chat.message.poll.question": "問題",
   "player.chat.message.poll.options": "選項",
   "player.chat.message.poll.option.yes": "是",
