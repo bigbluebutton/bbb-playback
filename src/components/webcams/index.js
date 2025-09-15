@@ -3,9 +3,8 @@ import {
   defineMessages,
   useIntl,
 } from 'react-intl';
-import videojs from 'video.js/dist/video.es.js';
-import 'videojs-seek-buttons'
-import { player as config, shortcuts } from 'config';
+import videojs from 'video.js/core.es.js';
+import { player as config } from 'config';
 import {
   EVENTS,
   ID,
@@ -80,12 +79,6 @@ const buildOptions = (sources, tracks) => {
     playbackRates: config.rates,
     sources: sources.current,
     tracks: tracks.current,
-    plugins: {
-      seekButtons: {
-        forward: shortcuts.seek.seconds,
-        back: shortcuts.seek.seconds,
-      }
-    }
   };
 };
 
@@ -110,10 +103,8 @@ const Webcams = () => {
         player.webcams.on('play', () => {
           const frequency = getFrequency();
           interval.current = setInterval(() => {
-            if (player.webcams) {
-              const currentTime = player.webcams.currentTime();
-              dispatchTimeUpdate(currentTime);
-            }
+            const currentTime = player.webcams.currentTime();
+            dispatchTimeUpdate(currentTime);
           }, 1000 / (frequency ? frequency : config.rps));
         });
 
