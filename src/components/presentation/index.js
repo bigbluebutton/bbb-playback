@@ -10,7 +10,6 @@ import Canvas from './canvas';
 import {
   useCurrentContent,
   useCurrentIndex,
-  useShouldShowScreenShare,
 } from 'components/utils/hooks';
 import { ID } from 'utils/constants';
 import storage from 'utils/data/storage';
@@ -61,11 +60,11 @@ const Presentation = () => {
   const viewBox = getViewBox(currentPanzoomIndex);
 
   const started = currentPanzoomIndex !== -1;
-  const shouldShowScreenshare = useShouldShowScreenShare();
+
   return (
     <div
       aria-label={intl.formatMessage(intlMessages.aria)}
-      className={cx('presentation-wrapper', { inactive: (currentContent !== ID.PRESENTATION && shouldShowScreenshare) })}
+      className={cx('presentation-wrapper', { inactive: currentContent !== ID.PRESENTATION })}
       id={ID.PRESENTATION}
     >
       <div className={cx('presentation', { logo: !started })}>
