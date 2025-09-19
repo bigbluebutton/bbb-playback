@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
   defineMessages,
@@ -34,7 +34,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-  handleSearch: () => {},
+  handleSearch: () => { },
   interactive: false,
   search: [],
 };
@@ -44,6 +44,7 @@ const Thumbnails = ({
   interactive,
   search,
 }) => {
+  const currentIndex = useCurrentIndex(storage.thumbnails);
   const interaction = useRef(false);
   const firstNode = useRef();
   const currentNode = useRef();
@@ -76,52 +77,6 @@ const Thumbnails = ({
     }
   });
 
-  const items = useMemo(()=> {
-    const thumbnails = storage.thumbnails;
-    const layoutSwap = storage.layoutSwap ?? [];
-    const merged = [...thumbnails, ...layoutSwap];
-    const sorted = merged.sort((a, b) => a.timestamp - b.timestamp);
-    
-    const addThumbsForSwap = sorted.map((item, index, arr) => {
-      const previousItem = arr[index - 1];
-      const nextItem = arr[index + 1];
-      if (item.hasOwnProperty('showScreenshare')) {
-        if (!item.showScreenshare) {
-          const previousThumbs = arr.slice(0, index)
-          const Thumbnail = previousThumbs.find((t) => t.src && t.src !== 'screenshare');
-          return {
-            ...item,
-            src: Thumbnail?.src ?? '',
-            alt: Thumbnail?.alt ?? '',
-          };
-        } else if (
-            item.showScreenshare 
-            && (nextItem && nextItem.src !== 'screenshare') 
-            && (previousItem && previousItem.src !== 'screenshare')
-          ) {
-          return {
-            ...item,
-            src: 'screenshare',
-            alt: 'screenshare',
-          }
-        }
-        return null;
-      }
-      return item;
-    }).filter((item) => item !== null);
-
-    const reworkIds = addThumbsForSwap.map((item, index) => {
-      return {
-        ...item,
-        id: index + 1,
-      }
-    });
-  
-    return reworkIds;
-  }, [storage.thumbnails, storage.layoutSwap]);
-
-  const currentIndex = useCurrentIndex(items);
-
   return (
     <div
       aria-label={intl.formatMessage(intlMessages.aria)}
@@ -131,7 +86,7 @@ const Thumbnails = ({
       onMouseLeave={() => interaction.current = false}
       tabIndex="0"
     >
-      {items.reduce((result, item, index) => {
+      {storage.thumbnails.reduce((result, item, index) => {
         if (!isFiltered(index)) {
           const active = index === currentIndex;
 

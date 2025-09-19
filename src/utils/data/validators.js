@@ -52,7 +52,7 @@ const isContentVisible = (layout, swap) => {
 
   let visible;
   switch (layout) {
-    case  CONTENT:
+    case CONTENT:
       visible = !swap;
       break;
     case MEDIA:
@@ -159,24 +159,6 @@ const isVisible = (time, timestamp) => timestamp <= time;
 
 const wasCleared = (time, clear) => clear !== -1 && clear <= time;
 
-function getMostRecentEvent(arr, time) {
-  return arr
-    .filter(item => item.timestamp <= time)
-    .reduce(
-      (prev, curr) => (prev?.timestamp > curr.timestamp ? prev : curr),
-      null
-    );
-}
-
-const isShowScreenshareAsContent = (data, time) => {
-  if (isEmpty(data)) return true;
-
-  const event = getMostRecentEvent(data, time);
-
-  if (!event) return false;
-  return event.showScreenshare;
-}
-
 export {
   hasIndex,
   hasPresentation,
@@ -191,5 +173,4 @@ export {
   isValid,
   isVisible,
   wasCleared,
-  isShowScreenshareAsContent,
 };
