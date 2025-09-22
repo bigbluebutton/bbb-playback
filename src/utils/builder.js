@@ -336,7 +336,7 @@ const buildShapes = result => {
     data.thumbnails = buildThumbnails(data.slides);
     data.canvases = buildCanvases(g, data.slides);
   }
-
+  data.slides = data.slides.filter(slide => !slide.src.includes(ID.DESKSHARE));
   return data;
 };
 
@@ -370,6 +370,22 @@ const buildTldraw = result => {
 
   return tldraw;
 }
+
+const buildLayout = result => {
+  const { recording } = result;
+
+  if (recording?.event) {
+    const newData = convertToArray(recording.event).map(layout => {
+      return {
+        timestamp: parseFloat(layout._timestamp),
+        showScreenshare: layout._show_screenshare === 'true',
+      }
+    });
+    return newData;
+  }
+
+  return [];
+};
 
 const buildPanzooms = result => {
   let data = [];
@@ -566,6 +582,9 @@ const build = (filename, value) => {
             break;
           case config.shapes:
             data = buildShapes(result);
+            break;
+          case config.layout:
+            data = buildLayout(result);
             break;
           default:
             logger.debug('unhandled', 'xml', filename);
