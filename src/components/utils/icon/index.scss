@@ -45,6 +45,28 @@
   content: "\e94a";
 }
 
+
+.icon-summary{
+  position: relative;
+  display: inline-block;
+  width: 1.1em;      /* was 1.25em */
+  height: 1.1em;     /* was 1.25em */
+  line-height: 1;
+  color: #3a3a3a;
+  vertical-align: -0.06em; /* nudge to align with text baseline */
+}
+
+.icon-summary::before{
+  content:'';
+  position:absolute; inset:0;
+  background-color: currentColor;
+  -webkit-mask: url("./file-multiple.svg") center / contain no-repeat;
+  mask: url("./file-multiple.svg") center / contain no-repeat;
+  mask-type: luminance;
+}
+
+
+
 .icon-polls:before {
   content: "\e927";
 }

@@ -14,11 +14,11 @@
   cursor: pointer;
   font-family: var(--font-family);
   font-weight: var(--font-weight-regular);
+  position: relative;
 }
 
 .video-js .vjs-big-play-button,
-.vjs-text-track-display,
-.vjs-loading-spinner,
+.video-js .vjs-loading-spinner,
 .video-js .vjs-modal-dialog {
   position: fixed;
   z-index: 2;
@@ -53,7 +53,95 @@
   }
 }
 
-[class^="vjs-text-track-cue"] {
+.webcams-wrapper [class^="vjs-text-track-cue"] {
   inset: auto 0 calc(#{$control-bar-height} * 2) 0 !important;
   z-index: 2;
 }
+
+.webcams-wrapper .video-js .vjs-text-track-display {
+  inset: 0;
+  position: absolute;
+}
+
+
+/* Hide the default in-video captions so we don’t see two */
+.video-js .vjs-text-track-display { display: none !important; }
+
+/* Fixed overlay centered horizontally; put it wherever you want */
+.screen-subs{
+  position: fixed;           /* outside the video; relative to viewport */
+  left: 50%;
+  bottom: 40px;              /* move up/down as you like. Use 50% for vertical middle */
+  transform: translateX(-50%);  /* center horizontally */
+  pointer-events: none;
+  z-index: 9999;             /* above your UI */
+  text-align: center;
+}
+
+.screen-subs > span{
+  display: inline-block;
+  max-width: min(1000px, 90vw);
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: rgba(0,0,0,.85);
+  color: #fff;
+  font-size: 18px;
+  line-height: 1.4;
+  white-space: pre-wrap;      /* keep line breaks from VTT */
+  box-shadow: 0 4px 12px rgba(0,0,0,.3);
+  font-family: system-ui, "Noto Naskh Arabic", sans-serif;
+}
+
+/* Hide Video.js in-video captions so you don't get duplicates */
+/* already have this — keeps Video.js overlay hidden */
+.video-js .vjs-text-track-display { display: none !important; }
+
+/* belt & suspenders for Safari/iOS native overlay */
+video::-webkit-media-text-track-display { display: none !important; }
+
+
+.screen-subs > span{
+  display: inline-block;
+  max-width: min(1100px, 92vw);
+  padding: 10px 16px;
+  border-radius: 10px;
+
+  /* Gray background + white text */
+  background: rgba(128, 128, 128, 0.85); /* medium gray */
+  /* or solid: background: #808080; */
+  color: #fff;
+
+  backdrop-filter: blur(2px);
+  font-size: clamp(16px, 2.2vw, 24px);
+  line-height: 1.45;
+  white-space: pre-wrap;
+
+  text-shadow:
+          0 1px 1px rgba(0,0,0,.6),
+          0 0 2px rgba(0,0,0,.5);
+
+  box-shadow: 0 6px 20px rgba(0,0,0,.25);
+  font-family: system-ui, "Noto Naskh Arabic", "Noto Sans", Arial, sans-serif;
+}
+
+
+
+// .screen-subs > span{
+//   display: inline-block;
+//   max-width: min(1000px, 90vw);
+//   padding: 8px 14px;
+//   border-radius: 8px;
+//   background: rgba(0,0,0,.85);
+//   color: #fff;
+//   font-size: 18px;
+//   line-height: 1.4;
+//   white-space: pre-wrap;   /* keep line breaks */
+//   box-shadow: 0 4px 12px rgba(0,0,0,.3);
+//   font-family: system-ui, "Noto Naskh Arabic", sans-serif;
+// }
+
+
+/* If you truly want vertical center of the screen instead of bottom:
+.screen-subs{ top: 50%; bottom: auto; transform: translate(-50%, -50%); }
+*/
+
