@@ -26,6 +26,14 @@ const css = `
 .video-js .vjs-play-progress {
   background-color: white;
 }
+.tl-container {
+  .tl-image {
+    background-color: white !important;
+  }
+}
+.tl-background {
+    background-color: #222425 !important;
+}
 `;
 
 const ignoreInlineStyle = [
@@ -35,6 +43,22 @@ const ignoreInlineStyle = [
   'g > polygon',
   'g > polyline',
   'g > foreignObject',
+  'path',
+  'svg',
+  'g',
+  'line',
+  'textarea',
+  'rect',
+  'circle',
+  '.tl-html-container > div.tl-text-shape__wrapper.tl-text-shadow',
+  '.tl-text',
+  '.tl-text-input',
+  '.tl-text-content',
+  '.tl-text-label__inner',
+  '.tl-note__container',
+  '.tl-text.tl-text-content',
+  '.tl-arrow-label',
+  '.tl-arrow-label__inner',
 ];
 
 const fixes = {
