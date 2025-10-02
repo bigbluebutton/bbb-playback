@@ -83,7 +83,7 @@ const fetchFile = (data, recordId, onUpdate, onLoaded, onError) => {
     }
   }).then(value => {
     build(file, value).then(content => {
-      if (content) logger.debug(ID.STORAGE, 'builded', file);
+      if (content) logger.debug(ID.STORAGE, 'built', file);
       DATA[data] = content;
       onUpdate(data);
       if (hasLoaded()) onLoaded();
