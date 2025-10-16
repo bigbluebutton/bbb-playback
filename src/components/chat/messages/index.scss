@@ -17,6 +17,13 @@
   line-height: 1;
 }
 
+.text-vanilla {
+  margin-top: 0.25rem;
+  > * {
+    margin: 0;
+  }
+}
+
 .user-message-wrapper {
   transition: background-color .5s ease;
 }
