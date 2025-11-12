@@ -4,6 +4,10 @@
   --gray-light-color: var(--gray-light);
   --gray-lightest-color: var(--gray-lightest);
   --highlight-color: var(--blue);
+  --color-text: #111;
+  --color-off-white: #F3F6F9;
+  --color-gray-lightest: #D4D9DF;
+  --color-danger-dark: #AE1010;
 }
 
 .reply-tag {
@@ -16,6 +20,59 @@
   align-items: center;
   line-height: 1;
 }
+
+.text-vanilla {
+  color: var(--color-text);
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  p {
+    margin: 0;
+    white-space: pre-wrap;
+  }
+
+  pre:has(code),
+  p code:not(pre > code) {
+    background-color: var(--color-off-white);
+    border: solid 1px var(--color-gray-lightest);
+    border-radius: 4px;
+    padding: 2px;
+    margin: 0;
+    font-size: 12px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  p code:not(pre > code) {
+    color: var(--color-danger-dark);
+  }
+
+  h1 {
+    font-size: 1.5em;
+    margin: 0;
+  }
+
+  h2 {
+    font-size: 1.3em;
+    margin: 0;
+  }
+
+  h3 {
+    font-size: 1.1em;
+    margin: 0;
+  }
+
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+  }
+}
+
 
 .user-message-wrapper {
   transition: background-color .5s ease;
