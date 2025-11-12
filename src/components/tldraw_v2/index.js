@@ -18,7 +18,8 @@ import storage from 'utils/data/storage';
 import './index.scss';
 import {
   getTldrawData, getViewBox, createTldrawImageAsset,
-  createTldrawBackgroundShape, createTldrawCursorShape
+  createTldrawBackgroundShape, createTldrawCursorShape,
+  setupColorThemePaletteOverrides
 } from 'utils/tldraw';
 import { buildFileURL } from 'utils/data';
 import { isEmpty } from 'utils/data/validators';
@@ -26,6 +27,8 @@ import getCursor from './cursor';
 
 const MAX_IMAGE_WIDTH = 1440;
 const MAX_IMAGE_HEIGHT = 1080;
+
+setupColorThemePaletteOverrides();
 
 const intlMessages = defineMessages({
   aria: {
