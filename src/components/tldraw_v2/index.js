@@ -67,6 +67,12 @@ const SlideData = (tldrawAPI) => {
   assets[`slide-background-asset-${id}`] = createTldrawImageAsset(assetId, buildFileURL(src), scaledWidth, scaledHeight)
   shapes["slide-background-shape"] = createTldrawBackgroundShape(assetId, curPageId, scaledWidth, scaledHeight)
 
+  const { x, y } = getCursor(currentCursorIndex);
+
+  if (!(x === -1 || y === -1)) {
+    shapes['cursor'] = createTldrawCursorShape(x, y, curPageId);
+  }
+
   if (index === -1 || isEmpty(interval)) return { assets, shapes, scaleRatio }
 
   for (let i = 0; i < interval.length; i++) {
@@ -82,13 +88,6 @@ const SlideData = (tldrawAPI) => {
       shape.parentId = tldrawAPI?.getCurrentPageId();
       shapes[shape.id] = shape;
     }
-  }
-
-  const camera = tldrawAPI?.getCamera();
-  const { x, y } = getCursor(currentCursorIndex, camera);
-
-  if (!(x === -1 || y === -1)) {
-    shapes['cursor'] = createTldrawCursorShape(x, y, curPageId);
   }
 
   return { assets, shapes, scaleRatio }

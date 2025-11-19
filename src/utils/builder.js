@@ -343,33 +343,36 @@ const buildShapes = result => {
 const buildTldraw = result => {
   if (!result) return [];
 
-  let bbb_version = null;
-  if (result['bbb_version']) {
-    bbb_version = result['bbb_version'];
-    delete result['bbb_version'];
+  const { bbb_version, ...slides } = result;
+
+  if (Object.keys(slides).length === 0) {
+    if (bbb_version) {
+      return [{
+        data: [],
+        bbb_version,
+      }];
+    }
+    return [];
   }
 
-  let tldraw = [];
-  tldraw = Object.keys(result).map(i => {
-    let data = result[i].shapes.map(shape => {
-      return {
-        clear: shape.undo,
-        id: shape.id,
-        shape: shape.shape_data,
-        timestamp: shape.timestamp,
-      }
-    })
+  const tldraw = Object.entries(slides).map(([id, slideData]) => {
+    const data = slideData.shapes.map(shape => ({
+      clear: shape.undo,
+      id: shape.id,
+      shape: shape.shape_data,
+      timestamp: shape.timestamp,
+    }));
 
     return {
       data,
-      timestamp: result[i].timestamp,
-      id: i,
-      bbb_version: bbb_version,
+      timestamp: slideData.timestamp,
+      id,
+      bbb_version,
     };
-  })
+  });
 
   return tldraw;
-}
+};
 
 const buildLayout = result => {
   const { recording } = result;
@@ -473,9 +476,9 @@ const buildChat = result => {
       // Normalize reactions to always be an array
       const reactionsList = chat.reactions ? convertToArray(chat.reactions.reaction) : [];
       const reactions = reactionsList.map((messageReaction) => ({
-          emoji: messageReaction._emoji,
-          count: messageReaction._count,
-        }),
+        emoji: messageReaction._emoji,
+        count: messageReaction._count,
+      }),
       );
       return {
         clear,

@@ -8,7 +8,12 @@ import { DefaultColorThemePalette } from '@bigbluebutton/tldraw';
  * @returns {(string|undefined)} The BBB version associated with the Tldraw instance at the specified index. 
  *                               Returns undefined if no instance is found at the index.
  */
-const getTldrawBbbVersion = (index) => storage.tldraw[index]?.bbb_version;
+const getTldrawBbbVersion = (index) => {
+  if (index === -1) {
+    return storage.tldraw[0]?.bbb_version;
+  }
+  return storage.tldraw[index]?.bbb_version;
+};
 
 /**
  * Retrieves Tldraw data for a given slide index and page number.
@@ -99,7 +104,7 @@ const createTldrawImageAsset = (assetId, imageUrl, scaledWidth, scaledHeight) =>
 const createTldrawBackgroundShape = (assetId, curPageId, scaledWidth, scaledHeight) => {
   return {
     x: 1,
-    y: 1, 
+    y: 1,
     rotation: 0,
     isLocked: true,
     opacity: 1,
