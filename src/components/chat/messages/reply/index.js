@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import '../index.scss';
+import DOMPurify from 'dompurify';
 
 const propTypes = {
   active: PropTypes.bool,
@@ -34,9 +35,9 @@ const Reply = ({
   return (
     <span
       onClick={handleClickReply}
-      className={cx('reply-tag', {inactive: !active})}
+      className={cx('reply-tag', 'text-vanilla', {inactive: !active})}
+      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(text) }}
     >
-      {text}
     </span>
   );
 };
