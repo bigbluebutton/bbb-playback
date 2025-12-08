@@ -53,6 +53,7 @@ export default class Synchronizer {
   constructor(primary, secondary) {
     this.primary = primary;
     this.secondary = secondary;
+    this.listeners = [];
 
     this.status = {
       primary: 'waiting',
@@ -64,66 +65,91 @@ export default class Synchronizer {
     this.init();
   }
 
+  _on(target, event, callback) {
+    target.on(event, callback);
+    this.listeners.push({ target, event, callback });
+  }
+
+  destroy() {
+    this.listeners.forEach(({ target, event, callback }) => {
+      target.off(event, callback);
+    });
+    this.listeners = [];
+
+    if (this.visibilityHandler) {
+      document.removeEventListener('visibilitychange', this.visibilityHandler);
+      this.visibilityHandler = null;
+    }
+  }
+
   init() {
     STATUSES.forEach(status => {
-      this.primary.on(status, () => this.status.primary = status);
-      this.secondary.on(status, () => this.status.secondary = status);
+      this._on(this.primary, status, () => this.status.primary = status);
+      this._on(this.secondary, status, () => this.status.secondary = status);
     });
 
-    this.primary.on('play', () => safePlay(this.secondary));
-    this.primary.on('pause', () => this.secondary.pause());
+    this._on(this.primary, 'play', () => {
+      if (!this.secondary?.isDisposed?.()) safePlay(this.secondary)
+    });
+    this._on(this.primary, 'pause', () => {
+      if (!this.secondary?.isDisposed?.()) this.secondary?.pause();
+    });
 
-    this.primary.on('seeking', () => {
+    this._on(this.primary, 'seeking', () => {
+      if (this.primary.isDisposed?.()) return;
       const currentTime = this.primary.currentTime();
-      this.secondary.currentTime(currentTime);
+      if (!this.secondary?.isDisposed?.()) this.secondary?.currentTime(currentTime);
     });
 
-    this.primary.on('ratechange', () => {
+    this._on(this.primary, 'ratechange', () => {
+      if (this.primary.isDisposed?.()) return;
       const playbackRate = this.primary.playbackRate();
-      this.secondary.playbackRate(playbackRate);
+      if (!this.secondary?.isDisposed?.()) this.secondary?.playbackRate(playbackRate);
     });
 
-    this.primary.on('waiting', () => {
+    this._on(this.primary, 'waiting', () => {
       if (!this.synching && this.status.secondary === 'canplay') {
         this.synching = true;
-        this.primary.pause();
+        if (!this.primary.isDisposed?.()) this.primary.pause();
       }
     });
 
-    this.primary.on('canplay', () => {
+    this._on(this.primary, 'canplay', () => {
       if (this.synching) {
         this.synching = false;
-        safePlay(this.primary);
+        if (!this.primary.isDisposed?.()) safePlay(this.primary);
       }
     });
 
-    this.secondary.on('waiting', () => {
+    this._on(this.secondary, 'waiting', () => {
       if (!this.synching && this.status.primary === 'canplay') {
         this.synching = true;
-        this.primary.pause();
+        if (!this.primary.isDisposed?.()) this.primary.pause();
       }
     });
 
-    this.secondary.on('canplay', () => {
+    this._on(this.secondary, 'canplay', () => {
       if (this.synching) {
         this.synching = false;
-        safePlay(this.primary);
+        if (!this.primary.isDisposed?.()) safePlay(this.primary);
       }
     });
 
     // IMPORTANT: Blink holds the secondary media down while the document
     // page is not visible
     // Force medias to sync on visibility change and document is visible
-    document.addEventListener('visibilitychange', () => {
+    this.visibilityHandler = () => {
       if (document.visibilityState === 'visible') {
+        if (this.primary.isDisposed?.()) return;
         const currentTime = this.primary.currentTime();
-        this.secondary.currentTime(currentTime);
+        if (!this.secondary?.isDisposed?.()) this.secondary?.currentTime(currentTime);
       }
-    });
+    };
+    document.addEventListener('visibilitychange', this.visibilityHandler);
 
     EVENTS.forEach(event => {
-      this.primary.on(event, () => logger.debug(`primary ${event} ${this.status.primary}`));
-      this.secondary.on(event, () => logger.debug(`secondary ${event} ${this.status.secondary}`));
+      this._on(this.primary, event, () => logger.debug(`primary ${event} ${this.status.primary}`));
+      this._on(this.secondary, event, () => logger.debug(`secondary ${event} ${this.status.secondary}`));
     });
   }
 }

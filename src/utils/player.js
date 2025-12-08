@@ -18,19 +18,29 @@ const player = {
     return PLAYERS[ID.WEBCAMS];
   },
   set screenshare(value) {
-    if (!PLAYERS[ID.SCREENSHARE]) PLAYERS[ID.SCREENSHARE] = value;
+    PLAYERS[ID.SCREENSHARE] = value;
 
-    if (this.webcams) {
+    if (this.synchronizer) {
+      this.synchronizer.destroy();
+      this.synchronizer = null;
+    }
+
+    if (value && this.webcams) {
       this.synchronizer = new Synchronizer(this.webcams, this.screenshare);
     }
   },
   set synchronizer(value) {
-    if (!SYNCHRONIZER) SYNCHRONIZER = value;
+    SYNCHRONIZER = value;
   },
   set webcams(value) {
-    if (!PLAYERS[ID.WEBCAMS]) PLAYERS[ID.WEBCAMS] = value;
+    PLAYERS[ID.WEBCAMS] = value;
 
-    if (this.screenshare) {
+    if (this.synchronizer) {
+      this.synchronizer.destroy();
+      this.synchronizer = null;
+    }
+
+    if (value && this.screenshare) {
       this.synchronizer = new Synchronizer(this.webcams, this.screenshare);
     }
   },
