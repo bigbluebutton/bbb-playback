@@ -19,6 +19,7 @@ import {
 import { ID } from 'utils/constants';
 import layout from 'utils/layout';
 import Shortcuts from 'utils/shortcuts';
+import { useLayoutSwap } from 'components/utils/hooks';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -38,6 +39,17 @@ const Player = () => {
   const [swap, setSwap] = useState(layout.swap);
 
   const shortcuts = useRef();
+
+  const { showPresentation } = useLayoutSwap();
+  const hidePresentation = showPresentation === false;
+
+  useEffect(() => {
+    if (showPresentation === false) {
+      setSwap(true);
+    } else {
+      setSwap(false);
+    }
+  }, [showPresentation]);
 
   useEffect(() => {
     const { seconds } = config.seek;
@@ -67,7 +79,7 @@ const Player = () => {
   const style = {
     'fullscreen-content': fullscreen,
     'hidden-section': !section,
-    'single-content': layout.single,
+    'single-content': layout.single || hidePresentation,
   };
 
   return (
@@ -81,11 +93,13 @@ const Player = () => {
         section={section}
         toggleSection={() => setSection(prevSection => !prevSection)}
         toggleSwap={() => setSwap(prevSwap => !prevSwap)}
+        hidePresentation={hidePresentation}
       />
       <Media
         fullscreen={fullscreen}
         swap={swap}
         toggleFullscreen={() => setFullscreen(prevFullscreen => !prevFullscreen)}
+        hidePresentation={hidePresentation}
       />
       <Application />
       <Content
@@ -94,6 +108,7 @@ const Player = () => {
         search={search}
         swap={swap}
         toggleFullscreen={() => setFullscreen(prevFullscreen => !prevFullscreen)}
+        hidePresentation={hidePresentation}
       />
       <BottomBar />
       <Modal

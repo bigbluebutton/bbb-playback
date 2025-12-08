@@ -390,10 +390,16 @@ const buildLayout = result => {
 
   if (recording?.event) {
     const newData = convertToArray(recording.event).map(layout => {
-      return {
+      const data = {
         timestamp: parseFloat(layout._timestamp),
-        showScreenshare: layout._show_screenshare === 'true',
+      };
+      if (layout._show_screenshare) {
+        data.showScreenshare = layout._show_screenshare === 'true';
       }
+      if (layout._show_presentation) {
+        data.showPresentation = layout._show_presentation === 'true';
+      }
+      return data;
     });
     return newData;
   }

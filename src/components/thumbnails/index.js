@@ -78,7 +78,7 @@ const Thumbnails = ({
 
   const items = useMemo(() => {
     const thumbnails = storage.thumbnails;
-    const layoutSwap = storage.layoutSwap ?? [];
+    const layoutSwap = (storage.layoutSwap ?? []).filter(item => item.hasOwnProperty('showScreenshare'));
     const merged = [...thumbnails, ...layoutSwap];
     const sorted = merged.sort((a, b) => a.timestamp - b.timestamp);
 
