@@ -432,21 +432,6 @@ const buildCursor = result => {
   return data;
 };
 
-const clearHyperlink = message => {
-  const regex = /<a href="(.*)" rel="nofollow"><u>\1<\/u><\/a>/g;
-
-  return message.replace(regex, '$1');
-};
-
-const decodeXML = message => {
-  return message
-    .replace(/&(quot|#34);/g, '"')
-    .replace(/&(amp|#38);/g, '&')
-    .replace(/&(apos|#39);/g, "'")
-    .replace(/&(lt|#60);/g, '<')
-    .replace(/&(gt|#62);/g, '>');
-};
-
 const getInitials = name => {
   let initials;
 
@@ -468,7 +453,7 @@ const buildChat = result => {
     const { chattimeline } = popcorn;
     data = convertToArray(chattimeline).map(chat => {
       const clear = chat._out ? parseFloat(chat._out) : -1;
-      const message = decodeXML(clearHyperlink(chat._message));
+      const message = chat._message;
       const initials = getInitials(chat._name);
       const emphasized = chat._chatEmphasizedText === 'true';
       const moderator = chat._senderRole === ROLES.MODERATOR;
@@ -626,7 +611,6 @@ export {
   addAlternatesToThumbnails,
   build,
   buildStyle,
-  decodeXML,
   getAttr,
   getId,
   getNumbers,
