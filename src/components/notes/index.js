@@ -6,6 +6,7 @@ import {
 import { ID } from 'utils/constants';
 import storage from 'utils/data/storage';
 import './index.scss';
+import DOMPurify from 'dompurify';
 
 const intlMessages = defineMessages({
   aria: {
@@ -26,7 +27,7 @@ const Notes = () => {
     >
       <div className="notes">
         <div
-          dangerouslySetInnerHTML={{ __html: storage.notes }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(storage.notes) }}
           style={{ width: '100%' }}
         />
       </div>

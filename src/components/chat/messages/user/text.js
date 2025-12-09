@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import DOMPurify from 'dompurify';
 
 const propTypes = {
   active: PropTypes.bool,
@@ -21,7 +22,7 @@ const Text = ({
   return (
     <div
       className='text-vanilla'
-      dangerouslySetInnerHTML={{ __html: text }}
+      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(text) }}
     />
   );
 };
