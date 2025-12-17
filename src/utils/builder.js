@@ -63,9 +63,10 @@ const buildAlternates = result => {
       for (const slide in slides) {
         if (hasProperty(slides, slide)) {
           const text = slides[slide];
+          const slidepath = slide.replace('-','');
 
           data.push({
-            src: `presentation/${presentation}/${slide}.png`,
+            src: `presentation/${presentation}/svgs/${slidepath}.svg`,
             text,
           });
         }
