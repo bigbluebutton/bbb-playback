@@ -83,46 +83,70 @@ const Thumbnails = ({
     const sorted = merged.sort((a, b) => a.timestamp - b.timestamp);
 
     const addThumbsForSwap = sorted.map((item, index, arr) => {
+      // If the item is a standard thumbnail (not a layout event), preserve it.
+      if (!item.hasOwnProperty('showScreenshare')) {
+        return item;
+      }
+
       const previousItem = arr[index - 1];
       const nextItem = arr[index + 1];
-      if (item.hasOwnProperty('showScreenshare')) {
-        if (!item.showScreenshare) {
-          const previousThumbs = arr.slice(0, index)
-          const Thumbnail = previousThumbs.find((t) => t.src && t.src !== 'screenshare');
-          // don't add if the src is the same as before
-          if (Thumbnail?.src === previousItem?.src) {
-            return null;
-          } else {
-            return {
-              ...item,
-              src: Thumbnail?.src ?? '',
-              alt: Thumbnail?.alt ?? '',
-            };
-          }
-        } else if (
-          item.showScreenshare
-          && (nextItem && nextItem.src !== 'screenshare')
-          && (previousItem && previousItem.src !== 'screenshare')
+
+      // Handle logic when screenshare is inactive (restore presentation)
+      if (!item.showScreenshare) {
+        // Prevent duplicate consecutive 'restore' actions
+        if (
+          previousItem?.hasOwnProperty('showScreenshare')
+          && !previousItem.showScreenshare
         ) {
+          return null;
+        }
+
+        const previousThumbs = arr.slice(0, index);
+        const restoredSlide = previousThumbs.find((t) => t.src && t.src !== 'screenshare');
+
+        // Only add if the restored slide is different from the immediate previous item
+        if (restoredSlide?.src && restoredSlide?.src !== previousItem?.src) {
+          return {
+            ...item,
+            src: restoredSlide.src,
+            alt: restoredSlide.alt ?? '',
+          };
+        }
+        return null;
+      }
+
+      // Handle logic when screenshare is active
+      if (item.showScreenshare) {
+        // Prevent duplicate consecutive 'screenshare' actions
+        if (
+          previousItem?.hasOwnProperty('showScreenshare')
+          && previousItem.showScreenshare
+        ) {
+          return null;
+        }
+
+        // Ensure strictly valid boundaries (must have valid next/prev items)
+        const hasValidNeighbors =
+          (nextItem && nextItem.src !== 'screenshare') &&
+          (previousItem && previousItem.src !== 'screenshare');
+
+        if (hasValidNeighbors) {
           return {
             ...item,
             src: 'screenshare',
             alt: 'screenshare',
-          }
+          };
         }
-        return null;
       }
-      return item;
+
+      return null;
     }).filter((item) => item !== null);
 
-    const reworkIds = addThumbsForSwap.map((item, index) => {
-      return {
-        ...item,
-        id: index + 1,
-      }
-    });
-
-    return reworkIds;
+    // Re-index all items sequentially
+    return addThumbsForSwap.map((item, index) => ({
+      ...item,
+      id: index + 1,
+    }));
   }, []);
 
   const currentIndex = useCurrentIndex(items);
