@@ -30,9 +30,9 @@ const css = `
   .tl-image {
     background-color: white !important;
   }
-}
-.tl-background {
-    background-color: #222425 !important;
+  .tl-background {
+    background-color: #F9FAFB !important;
+  }
 }
 `;
 
