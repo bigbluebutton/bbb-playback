@@ -193,6 +193,12 @@ const setupColorThemePaletteOverrides = () => {
   };
 };
 
+const isTldrawWhiteboard = () => {
+  return (storage.tldraw && storage.tldraw.length > 0) ||
+    (storage.panzooms && storage.panzooms.tldraw) ||
+    (storage.cursor && storage.cursor.tldraw);
+};
+
 export {
   getTldrawBbbVersion,
   getTldrawData,
@@ -200,5 +206,6 @@ export {
   createTldrawImageAsset,
   createTldrawBackgroundShape,
   createTldrawCursorShape,
+  isTldrawWhiteboard,
   setupColorThemePaletteOverrides,
 };

@@ -1,6 +1,7 @@
 import { parseFromString } from './data/xml2json';
 import { files as config } from 'config';
 import { getFileType, caseInsensitiveReducer } from './data';
+import { isTldrawWhiteboard } from './tldraw';
 import {
   hasProperty,
   isEmpty,
@@ -56,6 +57,8 @@ const buildAlternates = result => {
   if (!result) return [];
 
   let data = [];
+  const useSvg = isTldrawWhiteboard();
+
   for (const presentation in result) {
     if (hasProperty(result, presentation)) {
       const slides = result[presentation];
@@ -63,10 +66,12 @@ const buildAlternates = result => {
       for (const slide in slides) {
         if (hasProperty(slides, slide)) {
           const text = slides[slide];
-          const slidepath = slide.replace('-','');
+          const slidepath = slide.replace('-', '');
 
           data.push({
-            src: `presentation/${presentation}/svgs/${slidepath}.svg`,
+            src: useSvg
+              ? `presentation/${presentation}/svgs/${slidepath}.svg`
+              : `presentation/${presentation}/${slide}.png`,
             text,
           });
         }
