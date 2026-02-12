@@ -32,6 +32,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:proxy": "bash start-proxy.sh",
     "build": "react-scripts build",
     "test": "react-scripts test"
   },
