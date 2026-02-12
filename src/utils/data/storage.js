@@ -47,7 +47,7 @@ const hasLoaded = () => {
   const stored = Object.keys(DATA).length;
   const data = Object.keys(files).length;
 
-  if (stored > data) {
+  if (stored >= data) {
     logger.debug(ID.STORAGE, STATE.LOADED);
     STATUS = STATE.LOADED;
 
