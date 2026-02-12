@@ -17,7 +17,7 @@ const Router = () => {
           path="/:recordId"
           element={<Loader />}
         />
-        <Route render={() => <Error code={ERROR.NOT_FOUND} />} />
+        <Route path="*" element={<Error code={ERROR.NOT_FOUND} />} />
       </Routes>
     </BrowserRouter>
   );
