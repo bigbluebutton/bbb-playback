@@ -47,7 +47,7 @@ const hasLoaded = () => {
   const stored = Object.keys(DATA).length;
   const data = Object.keys(files).length;
 
-  if (stored > data) {
+  if (stored >= data) {
     logger.debug(ID.STORAGE, STATE.LOADED);
     STATUS = STATE.LOADED;
 
@@ -196,7 +196,8 @@ const storage = {
     return DATA[ID.VIDEOS];
   },
   get cursor() {
-    return DATA[ID.CURSOR];
+    const result = DATA[ID.CURSOR];
+    return result ? result.data : [];
   },
   get media() {
     return DATA[ID.MEDIA];
@@ -219,7 +220,8 @@ const storage = {
     return DATA[ID.NOTES];
   },
   get panzooms() {
-    return DATA[ID.PANZOOMS];
+    const result = DATA[ID.PANZOOMS];
+    return result ? result.data : [];
   },
   get screenshare() {
     return DATA[ID.SCREENSHARE];

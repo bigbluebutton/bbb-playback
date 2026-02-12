@@ -79,13 +79,13 @@ const xml2json = (xml, tab) => {
       }
       else if (o == null)
         json += (name && ":") + "null";
-      else if (typeof (o) == "object") {
+      else if (typeof (o) === "object") {
         var arr = [];
         for (var m in o)
           arr[arr.length] = X.toJson(o[m], m, ind + "\t");
         json += (name ? ":{" : "{") + (arr.length > 1 ? ("\n" + ind + "\t" + arr.join(",\n" + ind + "\t") + "\n" + ind) : arr.join("")) + "}";
       }
-      else if (typeof (o) == "string")
+      else if (typeof (o) === "string")
         json += (name && ":") + "\"" + o.toString() + "\"";
       else
         json += (name && ":") + o.toString();

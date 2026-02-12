@@ -4,19 +4,16 @@ import DOMPurify from 'dompurify';
 
 const propTypes = {
   active: PropTypes.bool,
-  hyperlink: PropTypes.bool,
   text: PropTypes.string,
 };
 
 const defaultProps = {
   active: false,
-  hyperlink: false,
   text: '',
 };
 
 const Text = ({
   active,
-  hyperlink,
   text,
 }) => {
   return (

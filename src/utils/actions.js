@@ -4,7 +4,14 @@ import player from 'utils/player';
 
 const play = () => {
   if (player.primary.paused()) {
-    player.primary.play();
+    const playPromise = player.primary.play();
+    if (playPromise !== undefined) {
+      playPromise.catch((error) => {
+        if (error.name !== 'AbortError') {
+          throw error;
+        }
+      });
+    }
   } else {
     player.primary.pause();
   }

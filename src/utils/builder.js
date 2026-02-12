@@ -196,10 +196,10 @@ const buildSlides = image => {
       timestamps.forEach(timestamp => {
         slides.push({
           id: slideId,
-          height: parseInt(img._height),
+          height: parseInt(img._height, 10),
           src,
           timestamp,
-          width: parseInt(img._width),
+          width: parseInt(img._width, 10),
         });
       });
     });
@@ -341,8 +341,13 @@ const buildShapes = result => {
     data.slides = buildSlides(image);
     data.thumbnails = buildThumbnails(data.slides);
     data.canvases = buildCanvases(g, data.slides);
+    data.slides = data.slides.filter(slide => !slide.src.includes(ID.DESKSHARE));
+  } else {
+    data.slides = [];
+    data.thumbnails = [];
+    data.canvases = [];
   }
-  data.slides = data.slides.filter(slide => !slide.src.includes(ID.DESKSHARE));
+
   return data;
 };
 
@@ -398,10 +403,11 @@ const buildLayout = result => {
 
 const buildPanzooms = result => {
   let data = [];
+  let tldraw = false;
   const { recording } = result;
 
   if (hasProperty(recording, 'event')) {
-    const tldraw = recording._tldraw === 'true';
+    tldraw = recording._tldraw === 'true';
     data = convertToArray(recording.event).map(panzoom => {
       const viewbox = getNumbers(panzoom.viewBox);
       return {
@@ -412,17 +418,18 @@ const buildPanzooms = result => {
         height: viewbox.shift(),
       };
     });
-    data.tldraw = tldraw;
   }
 
-  return data;
+  return { data, tldraw };
 };
 
 const buildCursor = result => {
   let data = [];
+  let tldraw = false;
   const { recording } = result;
 
   if (hasProperty(recording, 'event')) {
+    tldraw = recording._tldraw === 'true';
     data = convertToArray(recording.event).map(cursor => {
       const position = getNumbers(cursor.cursor);
 
@@ -432,10 +439,9 @@ const buildCursor = result => {
         y: position.shift(),
       };
     });
-    data.tldraw = recording._tldraw === 'true';
   }
 
-  return data;
+  return { data, tldraw };
 };
 
 const getInitials = name => {
@@ -475,7 +481,6 @@ const buildChat = result => {
         clear,
         id: chat._id,
         emphasized,
-        hyperlink: message !== chat._message,
         initials,
         name: chat._name,
         message,
@@ -605,7 +610,7 @@ const addAlternatesToThumbnails = (thumbnails, alternates) => {
   });
 };
 
-const mergeMessages = (chat, polls, videos) => {
+const mergeMessages = (chat = [], polls = [], videos = []) => {
   return [
     ...chat,
     ...polls,

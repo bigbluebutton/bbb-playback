@@ -28,7 +28,7 @@ const hasPresentation = slides => {
 };
 
 const hasProperty = (object, property) => {
-  if (object && object.hasOwnProperty(property)) {
+  if (object && Object.hasOwn(object, property)) {
     if (typeof object[property] !== 'undefined') return true;
   }
 
@@ -52,7 +52,7 @@ const isContentVisible = (layout, swap) => {
 
   let visible;
   switch (layout) {
-    case  CONTENT:
+    case CONTENT:
       visible = !swap;
       break;
     case MEDIA:

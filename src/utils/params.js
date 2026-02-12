@@ -95,12 +95,12 @@ const parseTimeToSeconds = time => {
       let timeToSeconds = 0;
 
       if (hours) {
-        const h = parseInt(hours[1]);
+        const h = parseInt(hours[1], 10);
         if (h >= 0) timeToSeconds += h * 3600;
       }
 
       if (minutes) {
-        const m = parseInt(minutes[1]);
+        const m = parseInt(minutes[1], 10);
         if (m >= 0 && m < 60) {
           timeToSeconds += m * 60;
         } else {
@@ -109,7 +109,7 @@ const parseTimeToSeconds = time => {
       }
 
       if (seconds) {
-        const s = parseInt(seconds[1]);
+        const s = parseInt(seconds[1], 10);
         if (s >= 0 && s < 60) {
           timeToSeconds += s;
         } else {

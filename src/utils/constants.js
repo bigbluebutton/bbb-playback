@@ -110,7 +110,7 @@ const THEME = {
 
 const getRouter = () => {
   if (typeof NO_ROUTER !== 'undefined') {
-    if (NO_ROUTER) return false;
+    if (NO_ROUTER === '1') return false;
   }
 
   return true;
