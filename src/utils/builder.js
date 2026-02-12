@@ -611,7 +611,7 @@ const addAlternatesToThumbnails = (thumbnails, alternates) => {
   });
 };
 
-const mergeMessages = (chat, polls, videos) => {
+const mergeMessages = (chat = [], polls = [], videos = []) => {
   return [
     ...chat,
     ...polls,
