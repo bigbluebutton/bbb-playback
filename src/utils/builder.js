@@ -196,10 +196,10 @@ const buildSlides = image => {
       timestamps.forEach(timestamp => {
         slides.push({
           id: slideId,
-          height: parseInt(img._height),
+          height: parseInt(img._height, 10),
           src,
           timestamp,
-          width: parseInt(img._width),
+          width: parseInt(img._width, 10),
         });
       });
     });

@@ -46,7 +46,7 @@ const FIGURE_SPACE = ' ';
 const EN_SPACE = ' '
 
 const getBar = (percentage) => {
-  const p = parseInt(percentage);
+  const p = parseInt(percentage, 10);
 
   let bar;
   if (p === 0) {
@@ -183,8 +183,8 @@ const getTimestampAsMilliseconds = timestamp => timestamp * 1000;
 
 const caseInsensitiveReducer = (acc, item) => {
   const index = acc.findIndex(ans => ans.key.toLowerCase() === item.key.toLowerCase());
-  if(index !== -1) {
-    if(acc[index].numVotes >= item.numVotes) acc[index].numVotes += item.numVotes;
+  if (index !== -1) {
+    if (acc[index].numVotes >= item.numVotes) acc[index].numVotes += item.numVotes;
     else {
       const tempVotes = acc[index].numVotes;
       acc[index] = item;
