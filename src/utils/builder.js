@@ -341,8 +341,13 @@ const buildShapes = result => {
     data.slides = buildSlides(image);
     data.thumbnails = buildThumbnails(data.slides);
     data.canvases = buildCanvases(g, data.slides);
+    data.slides = data.slides.filter(slide => !slide.src.includes(ID.DESKSHARE));
+  } else {
+    data.slides = [];
+    data.thumbnails = [];
+    data.canvases = [];
   }
-  data.slides = data.slides.filter(slide => !slide.src.includes(ID.DESKSHARE));
+
   return data;
 };
 
