@@ -13,6 +13,39 @@ You will be able to play your recordings using the following URL
 https://<domain>/playback/presentation/2.3/<recordId>
 ```
 
+## Development proxy
+
+The development proxy allows you to test the playback player locally against
+recordings hosted on a remote BigBlueButton or Scalelite server (e.g. a
+production instance). This is useful when you want to develop or debug the player
+using real session data without having to download the recording files. It works
+with any publicly accessible recording that is not behind authentication.
+
+The proxy forwards all `/presentation` requests from the local dev server to the
+remote host, avoiding browser CORS restrictions.
+
+Start the dev server with the proxy enabled:
+```
+npm run start:proxy
+```
+
+The script will prompt you for the remote host URL:
+```
+Remote host URL (e.g. https://scalelite.example.com):
+```
+
+Then open the recording in your browser:
+```
+http://localhost:<port>/playback/presentation/2.3/<recordId>
+```
+
+When no URL is provided, the dev server starts normally without any proxy.
+
+> **Note:** The proxy uses `secure: false` so it works with self-signed
+> certificates commonly found on development and staging servers. This setting
+> only affects the local development proxy and has **no impact** on production
+> builds.
+
 ## URL query strings
 
 - frequency:
