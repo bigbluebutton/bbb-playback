@@ -481,7 +481,6 @@ const buildChat = result => {
         clear,
         id: chat._id,
         emphasized,
-        hyperlink: message !== chat._message,
         initials,
         name: chat._name,
         message,

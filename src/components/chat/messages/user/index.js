@@ -6,7 +6,6 @@ import Message from 'components/chat/messages/message';
 const propTypes = {
   active: PropTypes.bool,
   emphasized: PropTypes.bool,
-  hyperlink: PropTypes.bool,
   initials: PropTypes.string,
   name: PropTypes.string,
   moderator: PropTypes.bool,
@@ -17,7 +16,6 @@ const propTypes = {
 const defaultProps = {
   active: false,
   emphasized: false,
-  hyperlink: false,
   initials: '',
   name: '',
   moderator: false,
@@ -28,7 +26,6 @@ const defaultProps = {
 const User = ({
   active,
   emphasized,
-  hyperlink,
   initials,
   name,
   moderator,
@@ -55,10 +52,9 @@ const User = ({
     >
       <Text
         active={active}
-        hyperlink={hyperlink}
         text={text}
       />
-      
+
     </Message>
   );
 };
