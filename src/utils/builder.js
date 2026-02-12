@@ -403,10 +403,11 @@ const buildLayout = result => {
 
 const buildPanzooms = result => {
   let data = [];
+  let tldraw = false;
   const { recording } = result;
 
   if (hasProperty(recording, 'event')) {
-    const tldraw = recording._tldraw === 'true';
+    tldraw = recording._tldraw === 'true';
     data = convertToArray(recording.event).map(panzoom => {
       const viewbox = getNumbers(panzoom.viewBox);
       return {
@@ -417,17 +418,18 @@ const buildPanzooms = result => {
         height: viewbox.shift(),
       };
     });
-    data.tldraw = tldraw;
   }
 
-  return data;
+  return { data, tldraw };
 };
 
 const buildCursor = result => {
   let data = [];
+  let tldraw = false;
   const { recording } = result;
 
   if (hasProperty(recording, 'event')) {
+    tldraw = recording._tldraw === 'true';
     data = convertToArray(recording.event).map(cursor => {
       const position = getNumbers(cursor.cursor);
 
@@ -437,10 +439,9 @@ const buildCursor = result => {
         y: position.shift(),
       };
     });
-    data.tldraw = recording._tldraw === 'true';
   }
 
-  return data;
+  return { data, tldraw };
 };
 
 const getInitials = name => {

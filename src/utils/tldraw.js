@@ -1,4 +1,5 @@
 import storage from 'utils/data/storage';
+import { ID } from 'utils/constants';
 import { DefaultColorThemePalette } from '@bigbluebutton/tldraw';
 
 /**
@@ -194,9 +195,12 @@ const setupColorThemePaletteOverrides = () => {
 };
 
 const isTldrawWhiteboard = () => {
+  const panzooms = storage.data[ID.PANZOOMS];
+  const cursor = storage.data[ID.CURSOR];
+
   return (storage.tldraw && storage.tldraw.length > 0) ||
-    (storage.panzooms && storage.panzooms.tldraw) ||
-    (storage.cursor && storage.cursor.tldraw);
+    (panzooms && panzooms.tldraw) ||
+    (cursor && cursor.tldraw);
 };
 
 export {
