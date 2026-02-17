@@ -102,9 +102,10 @@ const SlideData = (tldrawAPI) => {
       const {
         shape,
       } = tldrawData[i];
-  
-      shape.parentId = tldrawAPI?.currentPageId;
-      shapes[shape.id] = shape; 
+
+      const newShape = { ...shape };
+      newShape.parentId = tldrawAPI?.currentPageId;
+      shapes[newShape.id] = newShape;
     }
   }
 
