@@ -68,6 +68,7 @@ const getBar = (percentage) => {
 };
 
 const getPads = (n) => {
+  if (n <= 0) return '';
   if (deviceInfo.osName === "Linux") {
     // Note the conditional branch below could be the other way around
     //  i.e. FIGURE_SPACE for Firefox and EN_SPACE for Chrome
