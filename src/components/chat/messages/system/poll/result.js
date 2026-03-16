@@ -27,11 +27,11 @@ const Result = ({
   if (isEmpty(answers)) return null;
 
   const answersDigits = getDigits(answers.length);
-  const maxVotes = Math.max(...answers.map((item) => { return item.numVotes; }));
+  const maxVotes = Math.max(...answers.filter(Boolean).map((item) => { return item.numVotes; }));
   const maxVotesDigits = getDigits(maxVotes);
   return (
     <div className="poll-result">
-      {answers.map((item) => {
+      {answers.filter(Boolean).map((item) => {
         const {
           id,
           numVotes,
