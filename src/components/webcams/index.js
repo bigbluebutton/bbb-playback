@@ -16,6 +16,7 @@ import {
   getFrequency,
   getTime,
 } from 'utils/params';
+import progress from 'utils/progress';
 import storage from 'utils/data/storage';
 import player from 'utils/player';
 import './index.scss';
@@ -107,12 +108,17 @@ const Webcams = () => {
       if (!video) return;
 
       player.webcams = videojs(video, buildOptions(sources, tracks), () => {
+        const recordId = storage.metadata.id;
+
         player.webcams.on('play', () => {
           const frequency = getFrequency();
           interval.current = setInterval(() => {
             if (player.webcams) {
               const currentTime = player.webcams.currentTime();
               dispatchTimeUpdate(currentTime);
+              // Save progress to localStorage
+              const duration = player.webcams.duration();
+              progress.save(recordId, currentTime, duration);
             }
           }, 1000 / (frequency ? frequency : config.rps));
         });
@@ -124,15 +130,19 @@ const Webcams = () => {
           dispatchTimeUpdate(currentTime);
         });
 
-        const time = getTime();
-        if (time) {
-          player.webcams.on('loadedmetadata', () => {
-            const duration = player.webcams.duration();
-            if (time < duration) {
-              player.webcams.currentTime(time);
+        // Restore position: URL time param takes priority, then localStorage
+        player.webcams.on('loadedmetadata', () => {
+          const duration = player.webcams.duration();
+          const urlTime = getTime();
+          if (urlTime && urlTime < duration) {
+            player.webcams.currentTime(urlTime);
+          } else {
+            const savedTime = progress.load(recordId);
+            if (savedTime && savedTime < duration) {
+              player.webcams.currentTime(savedTime);
             }
-          });
-        }
+          }
+        });
       });
       logger.debug(ID.WEBCAMS, 'mounted');
     }
