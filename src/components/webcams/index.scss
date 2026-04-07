@@ -53,96 +53,39 @@
   }
 }
 
-.webcams-wrapper [class^="vjs-text-track-cue"] {
-  inset: auto 0 calc(#{$control-bar-height} * 2) 0 !important;
-  z-index: 2;
-}
-
-.webcams-wrapper .video-js .vjs-text-track-display {
-  inset: 0;
-  position: absolute;
-}
-
-
-/* Hide the default in-video captions so we don’t see two */
+/* Hide default Video.js and native browser captions to avoid duplicates */
 .video-js .vjs-text-track-display { display: none !important; }
-
-/* Fixed overlay centered horizontally; put it wherever you want */
-.screen-subs{
-  position: fixed;           /* outside the video; relative to viewport */
-  left: 50%;
-  bottom: 40px;              /* move up/down as you like. Use 50% for vertical middle */
-  transform: translateX(-50%);  /* center horizontally */
-  pointer-events: none;
-  z-index: 9999;             /* above your UI */
-  text-align: center;
-}
-
-.screen-subs > span{
-  display: inline-block;
-  max-width: min(1000px, 90vw);
-  padding: 8px 14px;
-  border-radius: 8px;
-  background: rgba(0,0,0,.85);
-  color: #fff;
-  font-size: 18px;
-  line-height: 1.4;
-  white-space: pre-wrap;      /* keep line breaks from VTT */
-  box-shadow: 0 4px 12px rgba(0,0,0,.3);
-  font-family: system-ui, "Noto Naskh Arabic", sans-serif;
-}
-
-/* Hide Video.js in-video captions so you don't get duplicates */
-/* already have this — keeps Video.js overlay hidden */
-.video-js .vjs-text-track-display { display: none !important; }
-
-/* belt & suspenders for Safari/iOS native overlay */
 video::-webkit-media-text-track-display { display: none !important; }
 
-.screen-subs > span{
-  display: inline-block;
+/* External caption overlay — fixed at bottom center of viewport */
+.screen-subs {
+  position: fixed;
+  left: 50%;
+  bottom: 48px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 9999;
+  text-align: center;
   max-width: min(1100px, 92vw);
-
-  /* ↓ slimmer chip without changing font size */
-  padding: 2px 10px;          /* less vertical padding, keep readable sides */
-  border-radius: 6px;
-  line-height: 1.3;          /* tighter lines (was 1.5) */
-
-  background: rgba(128,128,128,0.98);
-  color: #fff;
-  backdrop-filter: blur(1.5px);
-
-  /* keep your size as-is */
-  font-size: clamp(16px, 2.0vw, 22px);
-
-  white-space: pre-wrap;
-
-  /* lighter shadow so it doesn’t “grow” visually */
-  text-shadow:
-          0 1px 1px rgba(0,0,0,.4);
-
-  box-shadow: 0 2px 8px rgba(0,0,0,.18);
-  font-family: system-ui, "Noto Naskh Arabic", "Noto Sans", Arial, sans-serif;
+  transition: opacity 0.15s ease;
 }
 
+.screen-subs:empty {
+  opacity: 0;
+}
 
-
-// .screen-subs > span{
-//   display: inline-block;
-//   max-width: min(1000px, 90vw);
-//   padding: 8px 14px;
-//   border-radius: 8px;
-//   background: rgba(0,0,0,.85);
-//   color: #fff;
-//   font-size: 18px;
-//   line-height: 1.4;
-//   white-space: pre-wrap;   /* keep line breaks */
-//   box-shadow: 0 4px 12px rgba(0,0,0,.3);
-//   font-family: system-ui, "Noto Naskh Arabic", sans-serif;
-// }
-
-
-/* If you truly want vertical center of the screen instead of bottom:
-.screen-subs{ top: 50%; bottom: auto; transform: translate(-50%, -50%); }
-*/
+.screen-subs > span {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 6px;
+  line-height: 1.45;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: clamp(16px, 2vw, 22px);
+  font-family: system-ui, -apple-system, “Segoe UI”, “Noto Naskh Arabic”, “Noto Sans”, sans-serif;
+  white-space: pre-wrap;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  letter-spacing: 0.01em;
+}
 
