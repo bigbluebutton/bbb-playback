@@ -16,6 +16,7 @@ import {
   getFrequency,
   getTime,
 } from 'utils/params';
+import progress from 'utils/progress';
 import storage from 'utils/data/storage';
 import player from 'utils/player';
 import './index.scss';
@@ -100,6 +101,7 @@ const Webcams = () => {
   const tracks = useRef(buildTracks());
   const element = useRef();
   const interval = useRef();
+  const lastProgressSave = useRef(0);
 
   useEffect(() => {
     if (!player.webcams) {
@@ -107,32 +109,49 @@ const Webcams = () => {
       if (!video) return;
 
       player.webcams = videojs(video, buildOptions(sources, tracks), () => {
+        const recordId = storage.metadata.id;
+
         player.webcams.on('play', () => {
           const frequency = getFrequency();
           interval.current = setInterval(() => {
             if (player.webcams) {
               const currentTime = player.webcams.currentTime();
               dispatchTimeUpdate(currentTime);
+              const now = Date.now();
+              if (now - lastProgressSave.current >= progress.SAVE_INTERVAL) {
+                progress.save(recordId, currentTime);
+                lastProgressSave.current = now;
+              }
             }
           }, 1000 / (frequency ? frequency : config.rps));
         });
 
-        player.webcams.on('pause', () => clearInterval(interval.current));
+        player.webcams.on('pause', () => {
+          clearInterval(interval.current);
+          progress.save(recordId, player.webcams.currentTime());
+        });
 
         player.webcams.on('seeked', () => {
           const currentTime = player.webcams.currentTime();
           dispatchTimeUpdate(currentTime);
+          progress.save(recordId, currentTime);
         });
 
-        const time = getTime();
-        if (time) {
-          player.webcams.on('loadedmetadata', () => {
-            const duration = player.webcams.duration();
-            if (time < duration) {
-              player.webcams.currentTime(time);
+        player.webcams.on('ended', () => progress.clear(recordId));
+
+        // Restore position: URL time param takes priority, then localStorage
+        player.webcams.on('loadedmetadata', () => {
+          const duration = player.webcams.duration();
+          const urlTime = getTime();
+          if (urlTime !== null && urlTime < duration) {
+            player.webcams.currentTime(urlTime);
+          } else {
+            const savedTime = progress.load(recordId);
+            if (savedTime && savedTime < duration) {
+              player.webcams.currentTime(savedTime);
             }
-          });
-        }
+          }
+        });
       });
       logger.debug(ID.WEBCAMS, 'mounted');
     }
