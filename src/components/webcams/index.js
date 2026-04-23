@@ -101,6 +101,7 @@ const Webcams = () => {
   const tracks = useRef(buildTracks());
   const element = useRef();
   const interval = useRef();
+  const lastProgressSave = useRef(0);
 
   useEffect(() => {
     if (!player.webcams) {
@@ -116,25 +117,33 @@ const Webcams = () => {
             if (player.webcams) {
               const currentTime = player.webcams.currentTime();
               dispatchTimeUpdate(currentTime);
-              // Save progress to localStorage
-              const duration = player.webcams.duration();
-              progress.save(recordId, currentTime, duration);
+              const now = Date.now();
+              if (now - lastProgressSave.current >= progress.SAVE_INTERVAL) {
+                progress.save(recordId, currentTime);
+                lastProgressSave.current = now;
+              }
             }
           }, 1000 / (frequency ? frequency : config.rps));
         });
 
-        player.webcams.on('pause', () => clearInterval(interval.current));
+        player.webcams.on('pause', () => {
+          clearInterval(interval.current);
+          progress.save(recordId, player.webcams.currentTime());
+        });
 
         player.webcams.on('seeked', () => {
           const currentTime = player.webcams.currentTime();
           dispatchTimeUpdate(currentTime);
+          progress.save(recordId, currentTime);
         });
+
+        player.webcams.on('ended', () => progress.clear(recordId));
 
         // Restore position: URL time param takes priority, then localStorage
         player.webcams.on('loadedmetadata', () => {
           const duration = player.webcams.duration();
           const urlTime = getTime();
-          if (urlTime && urlTime < duration) {
+          if (urlTime !== null && urlTime < duration) {
             player.webcams.currentTime(urlTime);
           } else {
             const savedTime = progress.load(recordId);

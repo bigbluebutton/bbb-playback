@@ -5,10 +5,8 @@ const STORAGE_KEY = 'bbb-playback-progress';
 // Minimum seconds before saving (avoid saving at the very start)
 const MIN_TIME = 5;
 
-// Save interval throttle — save at most every N seconds
-const SAVE_INTERVAL = 5;
-
-let lastSaveTime = 0;
+// Milliseconds between periodic saves during playback
+const SAVE_INTERVAL = 5000;
 
 /**
  * Get all saved progress entries from localStorage.
@@ -25,24 +23,15 @@ const getAll = () => {
 
 /**
  * Save the current playback time for a given recording.
- * Throttled to avoid excessive writes.
  */
-const save = (recordId, currentTime, duration) => {
-  if (!recordId || currentTime < MIN_TIME) return;
-
-  const now = Date.now();
-  if (now - lastSaveTime < SAVE_INTERVAL * 1000) return;
-  lastSaveTime = now;
+const save = (recordId, time) => {
+  if (!recordId || time < MIN_TIME) return;
 
   try {
     const entries = getAll();
-    entries[recordId] = {
-      time: currentTime,
-      duration,
-      updatedAt: now,
-    };
+    entries[recordId] = time;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
-    logger.debug('progress: saved', recordId, currentTime.toFixed(1));
+    logger.debug('progress: saved', recordId, time.toFixed(1));
   } catch (e) {
     logger.warn('progress: failed to save', e);
   }
@@ -57,10 +46,10 @@ const load = (recordId) => {
 
   try {
     const entries = getAll();
-    const entry = entries[recordId];
-    if (entry && entry.time > MIN_TIME) {
-      logger.debug('progress: restored', recordId, entry.time.toFixed(1));
-      return entry.time;
+    const time = entries[recordId];
+    if (time > MIN_TIME) {
+      logger.debug('progress: restored', recordId, time.toFixed(1));
+      return time;
     }
   } catch (e) {
     logger.warn('progress: failed to load', e);
@@ -82,4 +71,6 @@ const clear = (recordId) => {
   }
 };
 
-export default { save, load, clear };
+const progress = { save, load, clear, SAVE_INTERVAL };
+
+export default progress;
