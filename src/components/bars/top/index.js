@@ -13,13 +13,14 @@ const propTypes = {
   section: PropTypes.bool,
   toggleSection: PropTypes.func,
   toggleSwap: PropTypes.func,
+  hidePresentation: PropTypes.bool,
 };
 
 const defaultProps = {
-  openModal: () => {},
+  openModal: () => { },
   section: false,
-  toggleSection: () => {},
-  toggleSwap: () => {},
+  toggleSection: () => { },
+  toggleSwap: () => { },
 };
 
 const Top = ({
@@ -27,6 +28,7 @@ const Top = ({
   section,
   toggleSection,
   toggleSwap,
+  hidePresentation,
 }) => {
 
   return (
@@ -43,7 +45,7 @@ const Top = ({
       <div className="right">
         <ThemeButton />
         <SearchButton openSearch={() => openModal(ID.SEARCH)} />
-        <SwapButton toggleSwap={toggleSwap} />
+        <SwapButton toggleSwap={toggleSwap} hidePresentation={hidePresentation} />
       </div>
     </div>
   );
@@ -54,6 +56,7 @@ Top.defaultProps = defaultProps;
 
 // Checks the side section state
 const areEqual = (prevProps, nextProps) => {
+  if (prevProps.hidePresentation !== nextProps.hidePresentation) return false;
   return prevProps.section === nextProps.section;
 };
 

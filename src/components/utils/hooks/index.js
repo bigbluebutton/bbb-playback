@@ -9,7 +9,7 @@ import {
   getCurrentDataInterval,
 } from 'utils/data';
 import storage from 'utils/data/storage';
-import { isEqual, isShowScreenshareAsContent } from 'utils/data/validators';
+import { isEqual, getLayoutEvent } from 'utils/data/validators';
 
 const useCurrentContent = () => {
   const [currentContent, setCurrentContent] = useState(ID.PRESENTATION);
@@ -29,22 +29,33 @@ const useCurrentContent = () => {
   return currentContent;
 };
 
-const useShouldShowScreenShare = () => {
-  const [shouldShowScreenShare, setShouldShowScreenShare] = useState(false);
+const useLayoutSwap = () => {
+  const [layoutSwap, setLayoutSwap] = useState({
+    showPresentation: true,
+    showScreenshare: false,
+  });
 
   useEffect(() => {
     const handleTimeUpdate = (event) => {
-      const nextShouldShowScreenShare = isShowScreenshareAsContent(storage.layoutSwap, event.detail.time);
-      if (shouldShowScreenShare !== nextShouldShowScreenShare) setShouldShowScreenShare(nextShouldShowScreenShare);
+      const layoutEvent = getLayoutEvent(storage.layoutSwap, event.detail.time);
+      const nextShowPresentation = layoutEvent ? layoutEvent.showPresentation : true;
+      const nextShowScreenshare = layoutEvent ? layoutEvent.showScreenshare : false;
+
+      if (layoutSwap.showPresentation !== nextShowPresentation || layoutSwap.showScreenshare !== nextShowScreenshare) {
+        setLayoutSwap({
+          showPresentation: nextShowPresentation,
+          showScreenshare: nextShowScreenshare,
+        });
+      }
     };
 
     document.addEventListener(EVENTS.TIME_UPDATE, handleTimeUpdate);
     return () => {
       document.removeEventListener(EVENTS.TIME_UPDATE, handleTimeUpdate);
     };
-  }, [shouldShowScreenShare]);
+  }, [layoutSwap]);
 
-  return shouldShowScreenShare;
+  return layoutSwap;
 }
 
 const useCurrentIndex = (data) => {
@@ -96,5 +107,5 @@ export {
   useCurrentContent,
   useCurrentIndex,
   useCurrentInterval,
-  useShouldShowScreenShare,
+  useLayoutSwap,
 };

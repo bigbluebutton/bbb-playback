@@ -16,14 +16,14 @@ const intlMessages = defineMessages({
   },
 });
 
-const propTypes = { toggleSwap: PropTypes.func };
+const propTypes = { toggleSwap: PropTypes.func, hidePresentation: PropTypes.bool };
 
-const defaultProps = { toggleSwap: () => {} };
+const defaultProps = { toggleSwap: () => { }, hidePresentation: false };
 
-const Swap = ({ toggleSwap }) => {
+const Swap = ({ toggleSwap, hidePresentation }) => {
   const intl = useIntl();
 
-  if (!layout.control || !config.swap || layout.single) return null;
+  if (!layout.control || !config.swap || layout.single || hidePresentation) return null;
 
   return (
     <Button

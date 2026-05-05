@@ -10,10 +10,11 @@ const Media = ({
   fullscreen,
   swap,
   toggleFullscreen,
+  hidePresentation,
 }) => {
 
   return (
-    <div className={cx('media', { 'swapped-media': swap || layout.single })}>
+    <div className={cx('media', { 'swapped-media': swap || layout.single || hidePresentation })}>
       <FullscreenButton
         content={LAYOUT.MEDIA}
         fullscreen={fullscreen}
@@ -27,6 +28,8 @@ const Media = ({
 
 const areEqual = (prevProps, nextProps) => {
   if (prevProps.fullscreen !== nextProps.fullscreen) return false;
+
+  if (prevProps.hidePresentation !== nextProps.hidePresentation) return false;
 
   if (prevProps.swap !== nextProps.swap) return false;
 

@@ -91,7 +91,7 @@ const buildOptions = (sources, tracks) => {
 };
 
 const dispatchTimeUpdate = (time) => {
-  const event = new CustomEvent(EVENTS.TIME_UPDATE, { detail: { time }});
+  const event = new CustomEvent(EVENTS.TIME_UPDATE, { detail: { time } });
   document.dispatchEvent(event);
 };
 
@@ -112,9 +112,10 @@ const Webcams = () => {
         const recordId = storage.metadata.id;
 
         player.webcams.on('play', () => {
+          if (interval.current) clearInterval(interval.current);
           const frequency = getFrequency();
           interval.current = setInterval(() => {
-            if (player.webcams) {
+            if (player.webcams && !player.webcams.isDisposed()) {
               const currentTime = player.webcams.currentTime();
               dispatchTimeUpdate(currentTime);
               const now = Date.now();
@@ -159,6 +160,7 @@ const Webcams = () => {
 
   useEffect(() => {
     return () => {
+      if (interval.current) clearInterval(interval.current);
       if (player.webcams) {
         player.webcams.dispose();
         player.webcams = null;

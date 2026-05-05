@@ -18,7 +18,7 @@ import {
   useCurrentContent,
   useCurrentIndex,
   useCurrentInterval,
-  useShouldShowScreenShare,
+  useLayoutSwap,
 } from 'components/utils/hooks';
 import { ID } from 'utils/constants';
 import storage from 'utils/data/storage';
@@ -119,7 +119,7 @@ const TldrawPresentation = ({ size }) => {
   const currentPanzoomIndex = useCurrentIndex(storage.panzooms);
   const currentSlideIndex = useCurrentIndex(storage.slides);
   const started = currentPanzoomIndex !== -1;
-  const shouldShowScreenShare = useShouldShowScreenShare();
+  const { showScreenshare } = useLayoutSwap();
   const result = SlideData(tldrawAPI);
 
   let { assets, shapes, scaleRatio } = result;
@@ -158,7 +158,7 @@ const TldrawPresentation = ({ size }) => {
   return (
     <div
       aria-label={intl.formatMessage(intlMessages.aria)}
-      className={cx('presentation-wrapper', { inactive: (currentContent !== ID.PRESENTATION && shouldShowScreenShare) })}
+      className={cx('presentation-wrapper', { inactive: (currentContent !== ID.PRESENTATION && showScreenshare) })}
       id={ID.PRESENTATION}
     >
       {!started

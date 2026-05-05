@@ -159,22 +159,19 @@ const isVisible = (time, timestamp) => timestamp <= time;
 
 const wasCleared = (time, clear) => clear !== -1 && clear <= time;
 
-function getMostRecentEvent(arr, time) {
+function getMostRecentEvent(arr, time, property) {
   return arr
-    .filter(item => item.timestamp <= time)
+    .filter(item => item.timestamp <= time && (!property || hasProperty(item, property)))
     .reduce(
       (prev, curr) => (prev?.timestamp > curr.timestamp ? prev : curr),
       null
     );
 }
 
-const isShowScreenshareAsContent = (data, time) => {
-  if (isEmpty(data)) return true;
+const getLayoutEvent = (data, time) => {
+  if (isEmpty(data)) return null;
 
-  const event = getMostRecentEvent(data, time);
-
-  if (!event) return false;
-  return event.showScreenshare;
+  return getMostRecentEvent(data, time);
 }
 
 export {
@@ -191,5 +188,5 @@ export {
   isValid,
   isVisible,
   wasCleared,
-  isShowScreenshareAsContent,
+  getLayoutEvent,
 };
