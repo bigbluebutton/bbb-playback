@@ -18,6 +18,7 @@ import {
   isEmpty,
   isEqual,
 } from 'utils/data/validators';
+import { buildThumbnailItems } from './utils';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -77,76 +78,7 @@ const Thumbnails = ({
   });
 
   const items = useMemo(() => {
-    const thumbnails = storage.thumbnails;
-    const layoutSwap = (storage.layoutSwap ?? []).filter(item => item.hasOwnProperty('showScreenshare'));
-    const merged = [...thumbnails, ...layoutSwap];
-    const sorted = merged.sort((a, b) => a.timestamp - b.timestamp);
-
-    const addThumbsForSwap = sorted.map((item, index, arr) => {
-      // If the item is a standard thumbnail (not a layout event), preserve it.
-      if (!item.hasOwnProperty('showScreenshare')) {
-        return item;
-      }
-
-      const previousItem = arr[index - 1];
-      const nextItem = arr[index + 1];
-
-      // Handle logic when screenshare is inactive (restore presentation)
-      if (!item.showScreenshare) {
-        // Prevent duplicate consecutive 'restore' actions
-        if (
-          previousItem?.hasOwnProperty('showScreenshare')
-          && !previousItem.showScreenshare
-        ) {
-          return null;
-        }
-
-        const previousThumbs = arr.slice(0, index);
-        const restoredSlide = previousThumbs.find((t) => t.src && t.src !== 'screenshare');
-
-        // Only add if the restored slide is different from the immediate previous item
-        if (restoredSlide?.src && restoredSlide?.src !== previousItem?.src) {
-          return {
-            ...item,
-            src: restoredSlide.src,
-            alt: restoredSlide.alt ?? '',
-          };
-        }
-        return null;
-      }
-
-      // Handle logic when screenshare is active
-      if (item.showScreenshare) {
-        // Prevent duplicate consecutive 'screenshare' actions
-        if (
-          previousItem?.hasOwnProperty('showScreenshare')
-          && previousItem.showScreenshare
-        ) {
-          return null;
-        }
-
-        // Ensure strictly valid boundaries (must have valid next/prev items)
-        const hasValidNeighbors =
-          (nextItem && nextItem.src !== 'screenshare') &&
-          (previousItem && previousItem.src !== 'screenshare');
-
-        if (hasValidNeighbors) {
-          return {
-            ...item,
-            src: 'screenshare',
-            alt: 'screenshare',
-          };
-        }
-      }
-
-      return null;
-    }).filter((item) => item !== null);
-
-    // Re-index all items sequentially
-    return addThumbsForSwap.map((item, index) => ({
-      ...item,
-      id: index + 1,
-    }));
+    return buildThumbnailItems(storage.thumbnails, storage.layoutSwap, storage.screenshare);
   }, []);
 
   const currentIndex = useCurrentIndex(items);
