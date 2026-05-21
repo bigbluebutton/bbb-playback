@@ -1,6 +1,6 @@
 {
   "name": "bbb-playback",
-  "version": "5.4.6",
+  "version": "5.4.7",
   "homepage": "/playback/presentation/2.3",
   "dependencies": {
     "@bigbluebutton/tldraw": "^2.0.0-alpha.35",
