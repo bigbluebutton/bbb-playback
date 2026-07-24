@@ -12,7 +12,7 @@ import storage from 'utils/data/storage';
 import { isEqual, getLayoutEvent } from 'utils/data/validators';
 
 const useCurrentContent = () => {
-  const [currentContent, setCurrentContent] = useState(ID.PRESENTATION);
+  const [currentContent, setCurrentContent] = useState(() => getCurrentContent(0));
 
   useEffect(() => {
     const handleTimeUpdate = (event) => {
@@ -30,22 +30,23 @@ const useCurrentContent = () => {
 };
 
 const useLayoutSwap = () => {
-  const [layoutSwap, setLayoutSwap] = useState({
-    showPresentation: true,
-    showScreenshare: false,
-  });
+  const getSwap = (time) => {
+    const event = getLayoutEvent(storage.layoutSwap, time);
+
+    return {
+      showPresentation: event?.showPresentation ?? true,
+      showScreenshare: event?.showScreenshare ?? getCurrentContent(time) === ID.SCREENSHARE,
+    };
+  };
+
+  const [layoutSwap, setLayoutSwap] = useState(() => getSwap(0));
 
   useEffect(() => {
     const handleTimeUpdate = (event) => {
-      const layoutEvent = getLayoutEvent(storage.layoutSwap, event.detail.time);
-      const nextShowPresentation = layoutEvent ? layoutEvent.showPresentation : true;
-      const nextShowScreenshare = layoutEvent ? layoutEvent.showScreenshare : false;
+      const next = getSwap(event.detail.time);
 
-      if (layoutSwap.showPresentation !== nextShowPresentation || layoutSwap.showScreenshare !== nextShowScreenshare) {
-        setLayoutSwap({
-          showPresentation: nextShowPresentation,
-          showScreenshare: nextShowScreenshare,
-        });
+      if (layoutSwap.showPresentation !== next.showPresentation || layoutSwap.showScreenshare !== next.showScreenshare) {
+        setLayoutSwap(next);
       }
     };
 
