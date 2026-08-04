@@ -161,18 +161,41 @@ const wasCleared = (time, clear) => clear !== -1 && clear <= time;
 
 function getMostRecentEvent(arr, time, property) {
   return arr
-    .filter(item => item.timestamp <= time && (!property || hasProperty(item, property)))
+    // Object.hasOwn instead of hasProperty: a missing property is expected here.
+    // It is how we skip events that did not change this property.
+    .filter(item => item.timestamp <= time && (!property || Object.hasOwn(item, property)))
     .reduce(
       (prev, curr) => (prev?.timestamp > curr.timestamp ? prev : curr),
       null
     );
 }
 
-const getLayoutEvent = (data, time) => {
+// Most recent layout event at or before time. A property filter restricts the
+// search to events that set that property, so each layout property resolves from
+// its own last change.
+const getLayoutEvent = (data, time, property) => {
   if (isEmpty(data)) return null;
 
-  return getMostRecentEvent(data, time);
+  return getMostRecentEvent(data, time, property);
 }
+
+// Resolves which content areas the layout should show at a given time, from the
+// layout.xml events (layoutSwap) and the deskshare.xml events (screenshare).
+//
+// layout.xml only exists in recordings processed by BigBlueButton 3.0.2 and later,
+// and before 3.0.27 its events carry show_screenshare only, so a property can have
+// no event at a given time. Fall back to the behavior those recordings were played
+// back with: the presentation is visible, and the screenshare is the content while
+// it is being shared.
+const getLayoutSwap = (layoutSwap, screenshare, time) => {
+  const presentationEvent = getLayoutEvent(layoutSwap, time, 'showPresentation');
+  const screenshareEvent = getLayoutEvent(layoutSwap, time, 'showScreenshare');
+
+  return {
+    showPresentation: presentationEvent?.showPresentation ?? true,
+    showScreenshare: screenshareEvent?.showScreenshare ?? isEnabled(screenshare, time),
+  };
+};
 
 export {
   hasIndex,
@@ -189,4 +212,5 @@ export {
   isVisible,
   wasCleared,
   getLayoutEvent,
+  getLayoutSwap,
 };
