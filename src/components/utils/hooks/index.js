@@ -1,18 +1,22 @@
 import { useState, useEffect } from 'react';
-import {
-  EVENTS,
-  ID,
-} from 'utils/constants';
+import { EVENTS } from 'utils/constants';
 import {
   getCurrentContent,
   getCurrentDataIndex,
   getCurrentDataInterval,
 } from 'utils/data';
 import storage from 'utils/data/storage';
-import { isEqual, getLayoutEvent } from 'utils/data/validators';
+import { getLayoutSwap, isEqual } from 'utils/data/validators';
+
+// No time update is dispatched until playback starts, so without this the first
+// render reports the presentation as the content even for a recording that begins
+// with a screenshare, and only corrects itself once playback starts.
+const INITIAL_TIME = 0;
+
+const getLayoutSwapAt = (time) => getLayoutSwap(storage.layoutSwap, storage.screenshare, time);
 
 const useCurrentContent = () => {
-  const [currentContent, setCurrentContent] = useState(ID.PRESENTATION);
+  const [currentContent, setCurrentContent] = useState(() => getCurrentContent(INITIAL_TIME));
 
   useEffect(() => {
     const handleTimeUpdate = (event) => {
@@ -30,22 +34,14 @@ const useCurrentContent = () => {
 };
 
 const useLayoutSwap = () => {
-  const [layoutSwap, setLayoutSwap] = useState({
-    showPresentation: true,
-    showScreenshare: false,
-  });
+  const [layoutSwap, setLayoutSwap] = useState(() => getLayoutSwapAt(INITIAL_TIME));
 
   useEffect(() => {
     const handleTimeUpdate = (event) => {
-      const layoutEvent = getLayoutEvent(storage.layoutSwap, event.detail.time);
-      const nextShowPresentation = layoutEvent ? layoutEvent.showPresentation : true;
-      const nextShowScreenshare = layoutEvent ? layoutEvent.showScreenshare : false;
+      const next = getLayoutSwapAt(event.detail.time);
 
-      if (layoutSwap.showPresentation !== nextShowPresentation || layoutSwap.showScreenshare !== nextShowScreenshare) {
-        setLayoutSwap({
-          showPresentation: nextShowPresentation,
-          showScreenshare: nextShowScreenshare,
-        });
+      if (layoutSwap.showPresentation !== next.showPresentation || layoutSwap.showScreenshare !== next.showScreenshare) {
+        setLayoutSwap(next);
       }
     };
 
