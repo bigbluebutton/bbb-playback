@@ -40,3 +40,16 @@ it('rejects a malformed asset id', () => {
 
   expect(getTldrawImageFilePath(shape)).toBeNull();
 });
+
+it('rejects an image shape without an asset id', () => {
+  expect(getTldrawImageFilePath({ ...validShape, props: {} })).toBeNull();
+});
+
+it('rejects a non string source', () => {
+  const shape = {
+    ...validShape,
+    meta: { bbbImageSrc: 42 },
+  };
+
+  expect(getTldrawImageFilePath(shape)).toBeNull();
+});

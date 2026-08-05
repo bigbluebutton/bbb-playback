@@ -99,6 +99,7 @@ const getTldrawImageFilePath = (shape) => {
   const assetId = shape?.props?.assetId;
 
   if (shape?.type !== 'image' || !src || !assetId) return null;
+  if (typeof src !== 'string') return null;
   if (!TLDRAW_ASSET_ID_PATTERN.test(assetId)) return null;
 
   return src.match(UPLOADED_IMAGE_SRC_PATTERN)?.[1] || null;
