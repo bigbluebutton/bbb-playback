@@ -148,7 +148,7 @@ const buildNotes = result => {
   if (!result) return '';
 
   // Extract the notes' body
-  const regex = /<body>\n.*\n<\/body>/g;
+  const regex = /<body>[\s\S]*<\/body>/g;
   const match = result.match(regex);
 
   let data = '';
