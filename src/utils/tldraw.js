@@ -91,7 +91,10 @@ const createTldrawImageAsset = (assetId, imageUrl, scaledWidth, scaledHeight) =>
 }
 
 // Match the published counterpart of the upload path accepted by the whiteboard client.
-const UPLOADED_IMAGE_SRC_PATTERN = /^\/presentation\/[A-Za-z0-9-]+\/(uploads\/[a-f0-9-]+\.(?:png|jpe?g|gif|webp))$/;
+// The file-uploads directory name is part of the recording format.
+// Must match bbb-file-upload, bbb-shared-notes-server, the bbb-file-upload
+// nginx template, the record-and-playback scripts and bbb-presentation-video.
+const UPLOADED_IMAGE_SRC_PATTERN = /^\/presentation\/[A-Za-z0-9-]+\/(file-uploads\/[a-f0-9-]+\.(?:png|jpe?g|gif|webp))$/;
 const TLDRAW_ASSET_ID_PATTERN = /^asset:[A-Za-z0-9_-]+$/;
 
 const getTldrawImageFilePath = (shape) => {
