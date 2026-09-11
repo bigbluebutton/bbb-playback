@@ -30,6 +30,9 @@
   "overrides": {
     "nth-check": "2.0.1"
   },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "start": "react-scripts start",
     "start:proxy": "bash start-proxy.sh",
