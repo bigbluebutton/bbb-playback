@@ -29,5 +29,10 @@
       padding-left: $padding-extra-small;
       padding-right: $padding;
     }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
   }
 }
