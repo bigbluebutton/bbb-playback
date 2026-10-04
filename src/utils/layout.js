@@ -71,8 +71,11 @@ const layout = {
   get screenshare() {
     return this.content.screenshare;
   },
+  get external_videos() {
+    return this.content.externalVideos;
+  },
   get single() {
-    return !this.content.presentation && !this.content.screenshare;
+    return !this.content.presentation && !this.content.screenshare && !this.content.externalVideos;
   },
   hasFullscreenButton: function (content, swap) {
     if (!this.control || !controls.fullscreen) return false;

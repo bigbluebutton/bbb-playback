@@ -6,6 +6,7 @@ import TldrawPresentationV2 from 'components/tldraw_v2';
 import { getTldrawBbbVersion, isTldrawWhiteboard as isTldraw } from 'utils/tldraw';
 import { useCurrentInterval, useLayoutSwap } from 'components/utils/hooks';
 import Screenshare from 'components/screenshare';
+import ExternalVideoPlayer from 'components/external-video-player';
 import Thumbnails from 'components/thumbnails';
 import FullscreenButton from 'components/player/buttons/fullscreen';
 import { LAYOUT } from 'utils/constants';
@@ -13,6 +14,7 @@ import { isEqual } from 'utils/data/validators';
 import layout from 'utils/layout';
 import storage from 'utils/data/storage';
 import './index.scss';
+import { useIntl } from 'react-intl';
 import { gte as semverGte } from 'semver';
 
 const Content = ({
@@ -28,6 +30,7 @@ const Content = ({
   } = useCurrentInterval(storage.tldraw);
 
   const { showScreenshare } = useLayoutSwap();
+  const intl = useIntl();
 
   if (layout.single || hidePresentation) return null;
 
@@ -71,6 +74,9 @@ const Content = ({
           }}>
             <Screenshare />
           </span>
+        ) : null}
+        {layout.external_videos ? (
+          <ExternalVideoPlayer intl={intl} videos={storage.external_videos} />
         ) : null}
       </div>
       <div className={cx('bottom-content', { 'inactive': fullscreen })}>

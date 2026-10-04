@@ -39,5 +39,8 @@
   "player.search.modal.title": "Search",
   "player.search.modal.subtitle": "Find presentation slides content",
   "player.thumbnails.wrapper.aria": "Thumbnails area",
-  "player.webcams.wrapper.aria": "Webcams area"
+  "player.webcams.wrapper.aria": "Webcams area",
+  "player.video.wrapper.aria": "Video area",
+  "player.externalVideo.autoPlayWarning": "If the video does not start, press play in the video.",
+  "player.externalVideo.error": "The external video could not be played (error: {code})."
 }
