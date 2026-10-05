@@ -27,7 +27,6 @@ const files = {
   shapes: 'shapes.svg',
   tldraw: 'tldraw.json',
   videos: 'external_videos.json',
-  externalVideos: 'external_videos.xml',
   layout: 'layout.xml',
 };
 

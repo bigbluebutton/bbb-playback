@@ -526,31 +526,19 @@ const buildScreenshare = result => {
 };
 
 const buildExternalVideos = result => {
-  let data = [];
-  const { recording } = result;
+  if (!result) return [];
 
-  if (hasProperty(recording, 'video')) {
-    const v = recording.video;
-    const videos = Array.isArray(v) ? v : [v];
-    data = videos.map(video => {
-      const rawEvents = video.event ? (Array.isArray(video.event) ? video.event : [video.event]) : [];
-      const events = rawEvents.map(event => ({
-        timestamp: parseFloat(event._timestamp),
-        type: event._type,
-        time: event._time,
-        rate: parseFloat(event._rate),
-        playing: (event._playing === 'true'),
-      })).sort((a, b) => a.timestamp - b.timestamp);
-      return {
-        timestamp: parseFloat(video._start_timestamp),
-        clear: parseFloat(video._stop_timestamp),
-        url: video._url,
-        events,
-      };
-    });
-  }
-
-  return data;
+  // Legacy JSON still supplies chat links, but lacks playback intervals.
+  return result.filter(video => Number.isFinite(video.start_timestamp)
+    && Number.isFinite(video.stop_timestamp)
+    && video.start_timestamp < video.stop_timestamp).map(video => ({
+      timestamp: video.start_timestamp,
+      clear: video.stop_timestamp,
+      url: video.external_video_url,
+      events: (Array.isArray(video.events) ? video.events : [])
+        .filter(event => Number.isFinite(event.timestamp))
+        .sort((a, b) => a.timestamp - b.timestamp),
+    })).sort((a, b) => a.timestamp - b.timestamp);
 };
 
 const build = (filename, value) => {
@@ -570,7 +558,10 @@ const build = (filename, value) => {
           data = buildPolls(value);
           break;
         case config.videos:
-          data = buildVideos(value);
+          data = {
+            videos: buildVideos(value),
+            externalVideos: buildExternalVideos(value),
+          };
           break;
         case config.tldraw:
           data = buildTldraw(value);
@@ -618,9 +609,6 @@ const build = (filename, value) => {
             break;
           case config.screenshare:
             data = buildScreenshare(result);
-            break;
-          case config.externalVideos:
-            data = buildExternalVideos(result);
             break;
           case config.shapes:
             data = buildShapes(result);
