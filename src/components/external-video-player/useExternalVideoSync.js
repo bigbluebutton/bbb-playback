@@ -20,8 +20,6 @@ const newPlaybackStatus = () => ({
   forceSeek: true, lastSeekAt: -Infinity, lastEventIndex: -1,
 });
 
-// React state describes the props/UI to render. Provider observations and seek
-// bookkeeping stay in refs: they must be available synchronously to callbacks.
 export default function useExternalVideoSync(videos, getPrimary = getPrimaryPlayer) {
   const [view, setView] = useState(initialView);
   const playerRef = useRef(null);
@@ -30,8 +28,7 @@ export default function useExternalVideoSync(videos, getPrimary = getPrimaryPlay
   const playback = useRef(newPlaybackStatus());
   const connection = useRef(null);
 
-  // A URL/key or playing/rate change must reach ReactPlayer before seekTo runs.
-  // This replaces setState(..., sync), without a timer reading an old render.
+  // To avoid a small skip by seekTo just after a playing rate change.
   useLayoutEffect(() => {
     committedView.current = view;
     connection.current?.sync();
