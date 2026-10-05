@@ -5,6 +5,7 @@ import { getVideoState } from './timeline';
 
 const SYNC_INTERVAL_MS = 250;
 const DRIFT_SECONDS = 1;
+const EVENT_DRIFT_SECONDS = 0.5;
 const SEEK_COOLDOWN_MS = 1000;
 const PLAY_START_TIMEOUT_MS = 5000;
 const PRIMARY_EVENTS = ['play', 'pause', 'ended', 'seeking', 'seeked',
@@ -16,6 +17,7 @@ const initialView = {
 };
 const newPlaybackStatus = () => ({
   ready: false, buffering: false, actualPlaying: false, externalEnded: false,
+  positionReady: false, initialSeekStartedAt: null,
   forceSeek: true, lastSeekAt: -Infinity, lastEventIndex: -1,
 });
 
@@ -71,7 +73,7 @@ export default function useExternalVideoSync(videos, getPrimary = getPrimaryPlay
     function onPrimaryEvent(event) {
       if (event.type === 'waiting') primaryWaiting = true;
       if (['playing', 'canplay', 'seeked'].includes(event.type)) primaryWaiting = false;
-      if (['seeking', 'seeked', 'play', 'pause', 'ended'].includes(event.type)) {
+      if (['seeking', 'seeked'].includes(event.type)) {
         playback.current.forceSeek = true;
       }
       sync();
@@ -94,26 +96,61 @@ export default function useExternalVideoSync(videos, getPrimary = getPrimaryPlay
         playTimeout = setTimeout(() => {
           playTimeout = null;
           const latest = playback.current;
-          if (active && desiredView.current.playing && !latest.actualPlaying && !latest.buffering) {
+          if (active && (desiredView.current.playing || !latest.positionReady)
+            && !latest.actualPlaying && !latest.buffering) {
             publish({ autoPlayBlocked: true });
           }
         }, PLAY_START_TIMEOUT_MS);
       }
     }
 
+    function preparePosition(target) {
+      const status = playback.current;
+      if (status.positionReady) return true;
+      const external = playerRef.current;
+      if (!status.ready || primary.seeking() || !external) return false;
+      const now = Date.now();
+      if (status.initialSeekStartedAt === null) status.initialSeekStartedAt = now;
+      if (!status.buffering && (status.forceSeek || target.eventIndex !== status.lastEventIndex
+        || now - status.lastSeekAt >= SEEK_COOLDOWN_MS)) {
+        // Keep playing=false until the provider reports the requested position.
+        status.forceSeek = false;
+        status.lastEventIndex = target.eventIndex;
+        status.lastSeekAt = now;
+        external.seekTo(target.position, 'seconds', false);
+      }
+      const currentTime = external.getCurrentTime();
+      // The recording keeps advancing while the provider seeks. Allow at most
+      // one sync tick of movement when the viewer uses a high playback rate.
+      const tolerance = Math.max(EVENT_DRIFT_SECONDS,
+        SYNC_INTERVAL_MS / 1000 * target.rate * primary.playbackRate());
+      if (Number.isFinite(currentTime) && Math.abs(currentTime - target.position) <= tolerance) {
+        status.positionReady = true;
+      } else if (now - status.initialSeekStartedAt >= PLAY_START_TIMEOUT_MS) {
+        // Some providers cannot seek/report time until play. Do not prevent
+        // autoplay or the user's manual start indefinitely in that case.
+        status.positionReady = true;
+        status.forceSeek = true;
+      }
+      return status.positionReady;
+    }
+
     function correctPosition(target, playing) {
       const status = playback.current;
       const external = playerRef.current;
-      if (!status.ready || primary.seeking() || !external) return;
-      const force = status.forceSeek || target.eventIndex !== status.lastEventIndex;
+      if (!status.ready || status.buffering || primary.seeking() || !external) return;
+      const eventChanged = target.eventIndex !== status.lastEventIndex;
       const currentTime = external.getCurrentTime();
+      const measured = Number.isFinite(currentTime);
+      const difference = measured ? Math.abs(currentTime - target.position) : Infinity;
+      const eventNeedsSeek = eventChanged && difference > EVENT_DRIFT_SECONDS;
       const now = Date.now();
-      const drifted = playing && status.actualPlaying && !status.buffering
-        && Number.isFinite(currentTime) && Math.abs(currentTime - target.position) > DRIFT_SECONDS
+      const drifted = playing && status.actualPlaying && measured && difference > DRIFT_SECONDS
         && now - status.lastSeekAt >= SEEK_COOLDOWN_MS;
-      if (force || drifted) {
+      // Consume small event corrections too, so the next tick does not retry.
+      status.lastEventIndex = target.eventIndex;
+      if (status.forceSeek || eventNeedsSeek || drifted) {
         status.forceSeek = false;
-        status.lastEventIndex = target.eventIndex;
         status.lastSeekAt = now;
         external.seekTo(target.position, 'seconds', playing);
       }
@@ -129,12 +166,17 @@ export default function useExternalVideoSync(videos, getPrimary = getPrimaryPlay
       if (!target || desiredView.current.error) return;
       // Wait for the new player and its key/props to be committed, then retry.
       if (committedView.current !== desiredView.current) return;
-      const playing = playback.current.ready && target.playing && !primary.paused()
+      const wantsPlay = playback.current.ready && target.playing && !primary.paused()
         && !primary.ended() && !primary.seeking() && !primaryWaiting;
-      publish({ playing, playbackRate: target.rate * primary.playbackRate(),
+      publish({ playing: playback.current.positionReady && wantsPlay,
+        playbackRate: target.rate * primary.playbackRate(),
         volume: primary.volume(), muted: primary.muted() });
       if (committedView.current !== desiredView.current) return;
-      updatePlayWarning(playing);
+      updatePlayWarning(wantsPlay);
+      if (!preparePosition(target)) return;
+      const playing = wantsPlay;
+      publish({ playing });
+      if (committedView.current !== desiredView.current) return;
       correctPosition(target, playing);
     }
 
@@ -148,6 +190,10 @@ export default function useExternalVideoSync(videos, getPrimary = getPrimaryPlay
           status.forceSeek = true;
           break;
         case 'play':
+          if (!status.positionReady) {
+            status.positionReady = true;
+            status.forceSeek = true;
+          }
           status.actualPlaying = true;
           status.externalEnded = false;
           status.buffering = false;
