@@ -1,14 +1,25 @@
 // Event positions must be genuine media positions (BBB fix for #24050).
 // Old recordings with incorrect positions are not heuristically repaired.
+// Match BBB 3.0's UrlTimeExtractor, rather than treating every t/start as an
+// offset. This is only a fallback before recorded event positions are available.
+const START_PARAMETERS = [
+  ['youtube.com', 't'], ['youtu.be', 't'], ['peertube', 'start'],
+  ['wistia', 'wtime'], ['soundcloud', '#t'], ['streamable', 't'],
+  ['twitch.tv', 't'], ['kaltura', 'st'],
+];
+
 const getStartPosition = (url) => {
   try {
     const parsed = new URL(url);
-    const fragment = new URLSearchParams(parsed.hash.slice(1));
-    const value = parsed.searchParams.get('t') ?? parsed.searchParams.get('start')
-      ?? fragment.get('t');
+    const parameter = START_PARAMETERS.find(([host]) => parsed.hostname.includes(host))?.[1];
+    if (!parameter) return 0;
+    const value = parameter === '#t'
+      ? (parsed.hash.startsWith('#t=') ? parsed.hash.slice(3) : null)
+      : parsed.searchParams.get(parameter);
     if (!value) return 0;
-    if (/^\d+(?:\.\d+)?$/.test(value)) return Number(value);
-    const parts = /^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+(?:\.\d+)?)s)?$/.exec(value);
+    if (/^\d+$/.test(value)) return Number(value);
+    const parts = /^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/.exec(value)
+      || /^(?:(\d+):)?(\d+):(\d+)$/.exec(value);
     return parts ? Number(parts[1] || 0) * 3600 + Number(parts[2] || 0) * 60
       + Number(parts[3] || 0) : 0;
   } catch {
