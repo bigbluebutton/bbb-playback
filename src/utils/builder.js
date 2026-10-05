@@ -641,6 +641,28 @@ const addAlternatesToThumbnails = (thumbnails, alternates) => {
   });
 };
 
+const addExternalVideoThumbnails = (thumbnails, videos = []) => {
+  if (isEmpty(videos)) return thumbnails;
+
+  // External-video markers used to come from BBB's shapes.svg placeholders.
+  // Derive them from JSON intervals so publishing does not need those images.
+  const slides = thumbnails.filter(item => item.src !== ID.EXTERNAL_VIDEOS)
+    .sort((a, b) => a.timestamp - b.timestamp);
+  const videoActive = time => videos.some(video => video.timestamp <= time && time < video.clear);
+  const visibleSlides = slides.filter(item => !videoActive(item.timestamp));
+  const videoThumbnails = videos.flatMap(video => {
+    const items = [{ src: ID.EXTERNAL_VIDEOS, timestamp: video.timestamp }];
+    const restoredSlide = slides.filter(item => item.timestamp <= video.clear).pop();
+    if (restoredSlide && !videoActive(video.clear)
+      && !slides.some(item => item.timestamp === video.clear)) {
+      items.push({ ...restoredSlide, timestamp: video.clear });
+    }
+    return items;
+  });
+
+  return [...visibleSlides, ...videoThumbnails].sort((a, b) => a.timestamp - b.timestamp);
+};
+
 const mergeMessages = (chat = [], polls = [], videos = []) => {
   return [
     ...chat,
@@ -651,6 +673,7 @@ const mergeMessages = (chat = [], polls = [], videos = []) => {
 
 export {
   addAlternatesToThumbnails,
+  addExternalVideoThumbnails,
   build,
   buildStyle,
   buildExternalVideos,

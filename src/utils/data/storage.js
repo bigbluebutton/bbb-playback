@@ -4,6 +4,7 @@ import {
 } from 'config';
 import {
   addAlternatesToThumbnails,
+  addExternalVideoThumbnails,
   build,
   mergeMessages,
 } from 'utils/builder';
@@ -247,7 +248,8 @@ const storage = {
   },
   get thumbnails() {
     if (!hasProperty(DATA, ID.THUMBNAILS)) {
-      DATA[ID.THUMBNAILS] = addAlternatesToThumbnails(this.shapes[ID.THUMBNAILS], this.alternates);
+      const thumbnails = addExternalVideoThumbnails(this.shapes[ID.THUMBNAILS], this.external_videos);
+      DATA[ID.THUMBNAILS] = addAlternatesToThumbnails(thumbnails, this.alternates);
     }
 
     return DATA[ID.THUMBNAILS];
