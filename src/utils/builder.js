@@ -643,9 +643,6 @@ const addAlternatesToThumbnails = (thumbnails, alternates) => {
 
 const addExternalVideoThumbnails = (thumbnails, videos = []) => {
   if (isEmpty(videos)) return thumbnails;
-
-  // External-video markers used to come from BBB's shapes.svg placeholders.
-  // Derive them from JSON intervals so publishing does not need those images.
   const slides = thumbnails.filter(item => item.src !== ID.EXTERNAL_VIDEOS)
     .sort((a, b) => a.timestamp - b.timestamp);
   const videoActive = time => videos.some(video => video.timestamp <= time && time < video.clear);
