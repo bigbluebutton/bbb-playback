@@ -17,7 +17,6 @@ const initialView = {
 };
 const newPlaybackStatus = () => ({
   ready: false, buffering: false, actualPlaying: false, externalEnded: false,
-  positionSet: false,
   forceSeek: true, lastSeekAt: -Infinity, lastEventIndex: -1,
 });
 
@@ -103,22 +102,6 @@ export default function useExternalVideoSync(videos, getPrimary = getPrimaryPlay
       }
     }
 
-    function setInitialPosition(target) {
-      const status = playback.current;
-      if (status.positionSet) return true;
-      const external = playerRef.current;
-      if (!status.ready || primary.seeking() || !external) return false;
-      // Issue the initial seek before enabling playing. Mark it first because
-      // provider callbacks may run synchronously while seekTo is executing.
-      // This records the request, not confirmation of an asynchronous seek.
-      status.positionSet = true;
-      status.forceSeek = false;
-      status.lastEventIndex = target.eventIndex;
-      status.lastSeekAt = Date.now();
-      external.seekTo(target.position, 'seconds', status.actualPlaying);
-      return true;
-    }
-
     function correctPosition(target, playing) {
       const status = playback.current;
       const external = playerRef.current;
@@ -152,12 +135,8 @@ export default function useExternalVideoSync(videos, getPrimary = getPrimaryPlay
       if (committedView.current !== desiredView.current) return;
       const playing = playback.current.ready && target.playing && !primary.paused()
         && !primary.ended() && !primary.seeking() && !primaryWaiting;
-      publish({ playing: playback.current.positionSet && playing,
-        playbackRate: target.rate * primary.playbackRate(),
+      publish({ playing, playbackRate: target.rate * primary.playbackRate(),
         volume: primary.volume(), muted: primary.muted() });
-      if (committedView.current !== desiredView.current) return;
-      if (!setInitialPosition(target)) return;
-      publish({ playing });
       if (committedView.current !== desiredView.current) return;
       updatePlayWarning(playing);
       correctPosition(target, playing);
