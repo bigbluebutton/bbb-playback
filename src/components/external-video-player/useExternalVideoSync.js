@@ -5,6 +5,7 @@ import { getVideoState } from './timeline';
 
 const SYNC_INTERVAL_MS = 250;
 const DRIFT_SECONDS = 1;
+const EVENT_DRIFT_SECONDS = 0.5;
 const SEEK_COOLDOWN_MS = 1000;
 const PLAY_START_TIMEOUT_MS = 5000;
 const PRIMARY_EVENTS = ['play', 'pause', 'ended', 'seeking', 'seeked',
@@ -16,6 +17,7 @@ const initialView = {
 };
 const newPlaybackStatus = () => ({
   ready: false, buffering: false, actualPlaying: false, externalEnded: false,
+  positionSet: false,
   forceSeek: true, lastSeekAt: -Infinity, lastEventIndex: -1,
 });
 
@@ -71,7 +73,7 @@ export default function useExternalVideoSync(videos, getPrimary = getPrimaryPlay
     function onPrimaryEvent(event) {
       if (event.type === 'waiting') primaryWaiting = true;
       if (['playing', 'canplay', 'seeked'].includes(event.type)) primaryWaiting = false;
-      if (['seeking', 'seeked', 'play', 'pause', 'ended'].includes(event.type)) {
+      if (['seeking', 'seeked'].includes(event.type)) {
         playback.current.forceSeek = true;
       }
       sync();
@@ -101,19 +103,38 @@ export default function useExternalVideoSync(videos, getPrimary = getPrimaryPlay
       }
     }
 
+    function setInitialPosition(target) {
+      const status = playback.current;
+      if (status.positionSet) return true;
+      const external = playerRef.current;
+      if (!status.ready || primary.seeking() || !external) return false;
+      // Issue the initial seek before enabling playing. Mark it first because
+      // provider callbacks may run synchronously while seekTo is executing.
+      // This records the request, not confirmation of an asynchronous seek.
+      status.positionSet = true;
+      status.forceSeek = false;
+      status.lastEventIndex = target.eventIndex;
+      status.lastSeekAt = Date.now();
+      external.seekTo(target.position, 'seconds', status.actualPlaying);
+      return true;
+    }
+
     function correctPosition(target, playing) {
       const status = playback.current;
       const external = playerRef.current;
-      if (!status.ready || primary.seeking() || !external) return;
-      const force = status.forceSeek || target.eventIndex !== status.lastEventIndex;
+      if (!status.ready || status.buffering || primary.seeking() || !external) return;
+      const eventChanged = target.eventIndex !== status.lastEventIndex;
       const currentTime = external.getCurrentTime();
+      const measured = Number.isFinite(currentTime);
+      const difference = measured ? Math.abs(currentTime - target.position) : Infinity;
+      const eventNeedsSeek = eventChanged && difference > EVENT_DRIFT_SECONDS;
       const now = Date.now();
-      const drifted = playing && status.actualPlaying && !status.buffering
-        && Number.isFinite(currentTime) && Math.abs(currentTime - target.position) > DRIFT_SECONDS
+      const drifted = playing && status.actualPlaying && measured && difference > DRIFT_SECONDS
         && now - status.lastSeekAt >= SEEK_COOLDOWN_MS;
-      if (force || drifted) {
+      // Small event corrections are consumed without retrying on the next tick.
+      status.lastEventIndex = target.eventIndex;
+      if (status.forceSeek || eventNeedsSeek || drifted) {
         status.forceSeek = false;
-        status.lastEventIndex = target.eventIndex;
         status.lastSeekAt = now;
         external.seekTo(target.position, 'seconds', playing);
       }
@@ -131,8 +152,12 @@ export default function useExternalVideoSync(videos, getPrimary = getPrimaryPlay
       if (committedView.current !== desiredView.current) return;
       const playing = playback.current.ready && target.playing && !primary.paused()
         && !primary.ended() && !primary.seeking() && !primaryWaiting;
-      publish({ playing, playbackRate: target.rate * primary.playbackRate(),
+      publish({ playing: playback.current.positionSet && playing,
+        playbackRate: target.rate * primary.playbackRate(),
         volume: primary.volume(), muted: primary.muted() });
+      if (committedView.current !== desiredView.current) return;
+      if (!setInitialPosition(target)) return;
+      publish({ playing });
       if (committedView.current !== desiredView.current) return;
       updatePlayWarning(playing);
       correctPosition(target, playing);
@@ -145,7 +170,6 @@ export default function useExternalVideoSync(videos, getPrimary = getPrimaryPlay
       switch (type) {
         case 'ready':
           status.ready = true;
-          status.forceSeek = true;
           break;
         case 'play':
           status.actualPlaying = true;
