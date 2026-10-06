@@ -125,7 +125,7 @@ export default function useExternalVideoSync(videos, getPrimary = getPrimaryPlay
       const nextPrimary = getPrimary();
       connectPrimary(nextPrimary?.isDisposed?.() ? null : nextPrimary || null);
       if (!primary) return;
-      const target = getVideoState(videos, primary.currentTime());
+      const target = getVideoState(videos, primary.currentTime(), primary.duration?.());
       selectVideo(target?.video || null);
       if (!target || desiredView.current.error) return;
       // Wait for the new player and its key/props to be committed, then retry.

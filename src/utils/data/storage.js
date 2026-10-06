@@ -6,6 +6,7 @@ import {
   addAlternatesToThumbnails,
   addExternalVideoThumbnails,
   build,
+  buildExternalVideos,
   mergeMessages,
 } from 'utils/builder';
 import {
@@ -32,6 +33,7 @@ const STATE = {
 let STATUS = STATE.WAITING;
 
 const DATA = {};
+let EXTERNAL_VIDEO_JSON = null;
 
 let FALLBACK = false;
 
@@ -48,6 +50,8 @@ const hasLoaded = () => {
   // Derived datasets (such as externalVideos) are not separate file loads.
   if (Object.keys(files).every(data => Object.hasOwn(DATA, data))
     && Object.hasOwn(DATA, ID.MEDIA)) {
+    // Resolve legacy intervals only after JSON and SVG have both loaded.
+    DATA[ID.EXTERNAL_VIDEOS] = buildExternalVideos(EXTERNAL_VIDEO_JSON, DATA[ID.SHAPES]?.slides);
     logger.debug(ID.STORAGE, STATE.LOADED);
     STATUS = STATE.LOADED;
 
@@ -85,6 +89,7 @@ const fetchFile = (data, recordId, onUpdate, onLoaded, onError) => {
     build(file, value).then(content => {
       if (content) logger.debug(ID.STORAGE, 'built', file);
       if (data === ID.VIDEOS) {
+        EXTERNAL_VIDEO_JSON = value;
         DATA[data] = content.videos;
         DATA[ID.EXTERNAL_VIDEOS] = content.externalVideos;
         onUpdate(ID.EXTERNAL_VIDEOS);

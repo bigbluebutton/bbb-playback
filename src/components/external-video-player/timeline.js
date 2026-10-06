@@ -27,8 +27,10 @@ const getStartPosition = (url) => {
   }
 };
 
-export const getVideoState = (videos = [], recordingTime) => {
-  const video = videos.find(item => item.timestamp <= recordingTime && recordingTime < item.clear);
+export const getVideoState = (videos = [], recordingTime, duration = Infinity) => {
+  const end = Number.isFinite(duration) ? duration : Infinity;
+  const video = videos.find(item => item.timestamp <= recordingTime
+    && recordingTime < Math.min(item.clear, end));
   if (!video) return null;
 
   let position = getStartPosition(video.url);
