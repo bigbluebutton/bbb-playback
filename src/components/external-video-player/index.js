@@ -1,8 +1,7 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import ReactPlayer from 'react-player';
 import { defineMessages } from 'react-intl';
 import useExternalVideoSync from './useExternalVideoSync';
-import useExternalVideoSlots from './useExternalVideoSlots';
 import './styles.css';
 
 const messages = defineMessages({
@@ -21,13 +20,12 @@ const config = {
   file: { attributes: { playsInline: true } },
 };
 
-function SyncedVideo({ source, intl }) {
-  const videos = useMemo(() => [source], [source]);
-  const { video, visible, playing, playbackRate, volume, muted, autoPlayBlocked, error,
+export default function ExternalVideoPlayer({ videos, intl }) {
+  const { video, playing, playbackRate, volume, muted, autoPlayBlocked, error,
     playerRef, notify } = useExternalVideoSync(videos);
   if (!video) return null;
   return (
-    <div className={`externalVideos-wrapper${visible ? '' : ' preloading'}`} aria-hidden={!visible}>
+    <div className="externalVideos-wrapper">
       {(autoPlayBlocked || error) && (
         <p className="autoPlayWarning" role="status">
           {error ? intl.formatMessage(messages.error, { code: error })
@@ -57,11 +55,4 @@ function SyncedVideo({ source, intl }) {
       />
     </div>
   );
-}
-
-export default function ExternalVideoPlayer({ videos, intl }) {
-  const slots = useExternalVideoSlots(videos);
-  return slots.map(video => (
-    <SyncedVideo key={`${video.timestamp}:${video.clear}:${video.url}`} source={video} intl={intl} />
-  ));
 }

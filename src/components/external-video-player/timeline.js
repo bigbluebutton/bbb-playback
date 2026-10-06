@@ -27,13 +27,6 @@ const getStartPosition = (url) => {
   }
 };
 
-export const getUpcomingVideo = (videos = [], recordingTime, duration, preloadSeconds) => {
-  const end = Number.isFinite(duration) ? duration : Infinity;
-  return videos.find(video => recordingTime < video.timestamp
-    && video.timestamp <= recordingTime + preloadSeconds
-    && video.timestamp < Math.min(video.clear, end)) || null;
-};
-
 export const getVideoState = (videos = [], recordingTime, duration = Infinity) => {
   const end = Number.isFinite(duration) ? duration : Infinity;
   const video = videos.find(item => item.timestamp <= recordingTime

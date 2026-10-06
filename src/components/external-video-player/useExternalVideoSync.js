@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import logger from 'utils/logger';
 import player from 'utils/player';
-import { externalVideos as config } from 'config';
-import { getUpcomingVideo, getVideoState } from './timeline';
+import { getVideoState } from './timeline';
 
 const SYNC_INTERVAL_MS = 250;
 const DRIFT_SECONDS = 1;
@@ -13,7 +12,7 @@ const PRIMARY_EVENTS = ['play', 'pause', 'ended', 'seeking', 'seeked',
   'ratechange', 'volumechange', 'waiting', 'playing', 'canplay'];
 const getPrimaryPlayer = () => player.primary;
 const initialView = {
-  video: null, visible: false, playing: false, playbackRate: 1, volume: 0, muted: true,
+  video: null, playing: false, playbackRate: 1, volume: 1, muted: false,
   autoPlayBlocked: false, error: null,
 };
 const newPlaybackStatus = () => ({
@@ -76,15 +75,11 @@ export default function useExternalVideoSync(videos, getPrimary = getPrimaryPlay
       sync();
     }
 
-    function selectVideo(video, visible) {
-      if (video === desiredView.current.video) {
-        publish({ visible });
-        return;
-      }
+    function selectVideo(video) {
+      if (video === desiredView.current.video) return;
       clearPlayTimeout();
       playback.current = newPlaybackStatus();
-      publish({ video, visible, playing: false, volume: 0, muted: true,
-        error: null, autoPlayBlocked: false });
+      publish({ video, playing: false, error: null, autoPlayBlocked: false });
     }
 
     function updatePlayWarning(playing) {
@@ -130,16 +125,9 @@ export default function useExternalVideoSync(videos, getPrimary = getPrimaryPlay
       const nextPrimary = getPrimary();
       connectPrimary(nextPrimary?.isDisposed?.() ? null : nextPrimary || null);
       if (!primary) return;
-      const time = primary.currentTime();
-      const duration = primary.duration?.();
-      const target = getVideoState(videos, time, duration);
-      selectVideo(target?.video || getUpcomingVideo(videos, time, duration, config.preloadSeconds), !!target);
-      if (!target) {
-        publish({ playing: false, volume: 0, muted: true });
-        updatePlayWarning(false);
-        return;
-      }
-      if (desiredView.current.error) return;
+      const target = getVideoState(videos, primary.currentTime(), primary.duration?.());
+      selectVideo(target?.video || null);
+      if (!target || desiredView.current.error) return;
       // Wait for the new player and its key/props to be committed, then retry.
       if (committedView.current !== desiredView.current) return;
       const playing = playback.current.ready && target.playing && !primary.paused()
