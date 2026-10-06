@@ -19,3 +19,8 @@
   width: 95%;
   left: 2.5%;
 }
+
+.externalVideos-wrapper.preloading {
+  visibility: hidden;
+  pointer-events: none;
+}

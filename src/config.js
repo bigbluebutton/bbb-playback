@@ -14,6 +14,8 @@ const controls = {
 
 const date = { enabled: true };
 
+const externalVideos = { preloadSeconds: 10 };
+
 const files = {
   alternates: 'presentation_text.json',
   captions: 'captions.json',
@@ -81,6 +83,7 @@ export {
   chat,
   controls,
   date,
+  externalVideos,
   files,
   locale,
   medias,
