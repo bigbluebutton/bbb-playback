@@ -78,6 +78,10 @@
     "url": "https://github.com/bigbluebutton/bbb-playback/issues"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
+  },
+  "allowScripts": {
+    "core-js": false,
+    "core-js-pure": false
   }
 }
