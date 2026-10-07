@@ -181,6 +181,7 @@ const Webcams = () => {
           className="video-js"
           playsInline
           preload="auto"
+          autoPlay
           ref={element}
         />
       </div>
