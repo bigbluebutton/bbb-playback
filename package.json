@@ -79,5 +79,9 @@
   },
   "engines": {
     "node": ">=22"
+  },
+  "allowScripts": {
+    "core-js": false,
+    "core-js-pure": false
   }
 }
