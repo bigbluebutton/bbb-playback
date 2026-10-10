@@ -381,7 +381,7 @@ module RecordingEditor
         beep_ranges: history && history['revision'] == revision ? history.fetch('beep_ranges', []) : [],
         assets: media, slides: slides, events: events, warnings: warnings.uniq,
         published_url: "/playback/presentation/2.3/#{id}",
-        preview_key: Digest::SHA256.hexdigest([revision, *media.filter_map { |a| a['relative'] && File.stat(repo.raw_file(id, a['relative'])).then { |s| "#{a['relative']}:#{s.size}:#{s.mtime.to_f}" } }].join('|'))[0, 24] }
+        preview_key: Digest::SHA256.hexdigest(['preview-clock-v2', revision, *media.filter_map { |a| a['relative'] && File.stat(repo.raw_file(id, a['relative'])).then { |s| "#{a['relative']}:#{s.size}:#{s.mtime.to_f}" } }].join('|'))[0, 24] }
     end
 
     def edited_xml(record_ranges, replacements = {})
@@ -450,13 +450,20 @@ module RecordingEditor
         batch.each_with_index do |asset, i|
           command += ['-i', rec.repo.raw_file(rec.id, asset['relative'])]
           seconds = (asset['end_ms'] - asset['start_ms']) / 1000.0
-          filter << "[#{i}:a:0]aresample=48000:async=1000:first_pts=0,atempo=#{speed(asset)},atrim=duration=#{seconds},apad=whole_dur=#{seconds},adelay=#{asset['start_ms']}:all=1[a#{i}]"
+          correction = speed(asset)
+          tempo = correction == 1.0 ? '' : ",atempo=#{correction}"
+          # adelay can emit NOPTS for leading silence while atempo buffers
+          # input. Rebuild PTS from samples AFTER all silence/delay has been
+          # materialized, preserving source gaps and the event-clock offset.
+          filter << "[#{i}:a:0]aresample=48000:async=1000:first_pts=0#{tempo},atrim=duration=#{seconds},apad=whole_dur=#{seconds},adelay=#{asset['start_ms']}:all=1,asetpts=N/SR/TB[a#{i}]"
         end
         labels = batch.each_index.map { |i| "[a#{i}]" }.join
-        filter << "#{labels}amix=inputs=#{batch.size}:duration=longest:normalize=0,apad,atrim=duration=#{rec.duration / 1000.0}[mix]"
+        # Bound trailing padding as well as output duration: unlimited apad
+        # can otherwise keep draining silence when upstream PTS are invalid.
+        filter << "#{labels}amix=inputs=#{batch.size}:duration=longest:normalize=0,apad=whole_dur=#{rec.duration / 1000.0},atrim=duration=#{rec.duration / 1000.0}[mix]"
         script = File.join(dir, "mix-#{batch_i}.filter")
         File.write(script, filter.join(';'))
-        command += ['-filter_complex_script', script, '-map', '[mix]', '-ac', '2', '-c:a', 'flac', path]
+        command += ['-filter_complex_script', script, '-map', '[mix]', '-t', (rec.duration / 1000.0).to_s, '-ac', '2', '-c:a', 'flac', path]
         RecordingEditor.run(*command)
         path
       end

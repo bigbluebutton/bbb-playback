@@ -149,6 +149,53 @@ class RecordingEditorTest < Minitest::Test
     assert_equal result, RecordingEditor::Media.new(rec).preview(key)
   end
 
+  def test_preview_with_silent_meeting_tail_finishes_and_preserves_timing
+    skip 'GNU timeout is required for this termination regression test' unless system('timeout', '--version', out: File::NULL, err: File::NULL)
+    # Cover ordinary Opus and the legacy WAV time-stretch path separately.
+    [['webm', 'libopus', 3.5], ['wav', 'pcm_s16le', 3.43]].each do |extension, codec, length|
+      filename = "microphone.#{extension}"
+      RecordingEditor.run('ffmpeg', '-nostdin', '-v', 'error', '-y', '-f', 'lavfi', '-i', "sine=frequency=440:duration=#{length}", '-ac', '2', '-c:a', codec, File.join(@raw, 'audio', filename))
+      xml = RecordingEditor.xml(@events.gsub('microphone.wav', filename))
+      xml.xpath('/recording/event[@eventname="StartWebRTCDesktopShareEvent" or @eventname="StopWebRTCDesktopShareEvent"]').each(&:remove)
+      xml.at_xpath('/recording/event[@eventname="StartRecordingEvent"]')['timestamp'] = (@origin + 2500).to_s
+      ending = xml.at_xpath('/recording/event[@eventname="EndAndKickAllEvent"]')
+      ending['timestamp'] = (@origin + 10_000).to_s
+      ending.at_xpath('timestampUTC').content = (@utc + 10_000).to_s
+      File.write(File.join(@raw, 'events.xml'), xml.to_xml)
+      rec = @repo.recording(@id)
+      key = rec.to_h[:preview_key]
+      # The old Opus chain hangs even with a short silent tail. Kill the
+      # actual FFmpeg command on regression instead of leaving a test running.
+      run = RecordingEditor.method(:run)
+      result = RecordingEditor.stub(:run, ->(*args) { run.call('timeout', '10s', *args) }) do
+        RecordingEditor::Media.new(rec).preview(key)
+      end
+      file = File.join(@repo.state_dir(@id), 'preview', key, 'audio.webm')
+      assert_in_delta 10, @repo.probe(file).dig('format', 'duration').to_f, 0.05
+      assert_operator rms(samples(file, 0.2)), :<, 0.003
+      assert_operator rms(samples(file, 2.8)), :>, 0.04
+      assert_operator rms(samples(file, 7.5)), :<, 0.003
+      assert_equal 2048, result[:peaks].size
+    end
+  end
+
+  def test_preview_preserves_embedded_audio_delay_and_event_offset
+    sources
+    screen = File.join(@raw, 'deskshare', 'screen.mp4')
+    RecordingEditor.run('ffmpeg', '-nostdin', '-v', 'error', '-y', '-f', 'lavfi', '-i', 'color=c=blue:s=160x90:r=5:d=4', '-itsoffset', '0.3', '-f', 'lavfi', '-i', 'sine=frequency=880:duration=3.7', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-c:a', 'aac', screen)
+    xml = RecordingEditor.xml(@events)
+    xml.xpath('/recording/event[@module="VOICE"]').each(&:remove)
+    File.write(File.join(@raw, 'events.xml'), xml.to_xml)
+    rec = @repo.recording(@id)
+    key = rec.to_h[:preview_key]
+    RecordingEditor::Media.new(rec).preview(key)
+    file = File.join(@repo.state_dir(@id), 'preview', key, 'audio.webm')
+    assert_in_delta 6, @repo.probe(file).dig('format', 'duration').to_f, 0.05
+    assert_operator rms(samples(file, 1.05, 0.1)), :<, 0.003
+    assert_operator rms(samples(file, 1.5)), :>, 0.04
+    assert_operator rms(samples(file, 5.5)), :<, 0.003
+  end
+
   def test_livekit_individual_tracks_and_three_zero_events
     xml = @events.gsub('bbb_version="4.0.0"', 'bbb_version="3.0.0"')
     xml = xml.gsub('module="VOICE" eventname="StartRecordingEvent"', 'module="bbb-webrtc-sfu" eventname="AudioTrackPublishedEvent"')
