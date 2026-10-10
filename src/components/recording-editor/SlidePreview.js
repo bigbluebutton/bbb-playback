@@ -3,8 +3,10 @@ import { Tldraw, AssetRecordType } from '@bigbluebutton/tldraw';
 import '@bigbluebutton/tldraw/tldraw.css';
 import { createTldrawImageAsset, createTldrawBackgroundShape } from 'utils/tldraw';
 import { slideState } from './model';
+import { useEditorI18n } from './i18n';
 
 export default function SlidePreview({ recording, time }) {
+  const { t, message } = useEditorI18n();
   const visible = recording.events.filter(e => e.time_ms <= time).length;
   // Reconstruct on event boundaries (including backwards seeks), not every tick.
   const state = useMemo(() => slideState(recording.events, recording.events[visible - 1]?.time_ms ?? -1), [recording.events, visible]);
@@ -52,10 +54,10 @@ export default function SlidePreview({ recording, time }) {
         try { editor.createShapes([{ ...shape, parentId: page }]); } catch { invalid += 1; }
       });
       editor.updateInstanceState({ isReadonly: true });
-      setError(invalid ? `${invalid}件の描画を表示できません。保存時には元のイベントを保持します。` : '');
+      setError(invalid ? { id: 'invalidShapes', values: { count: invalid } } : '');
     } catch {
       editor.updateInstanceState({ isReadonly: true });
-      setError('描画の表示に失敗しました。元のイベントは保存時に保持します。');
+      setError({ id: 'shapeError' });
     }
     const fit = () => {
       if (!container.current) return;
@@ -74,10 +76,10 @@ export default function SlidePreview({ recording, time }) {
     return () => resize.disconnect();
   }, [editor, slide, state, dimensions]);
 
-  if (!slide) return <div className="re-placeholder">この位置にはスライドがありません</div>;
+  if (!slide) return <div className="re-placeholder">{t('noSlide')}</div>;
   return <div className="re-slide" ref={container}>
     <Tldraw hideUi onMount={setEditor} />
-    {error && <span className="re-render-warning">{error}</span>}
-    <span className="re-slide-label">スライド {state.page}</span>
+    {error && <span className="re-render-warning">{message(error)}</span>}
+    <span className="re-slide-label">{t('slide', { page: state.page })}</span>
   </div>;
 }

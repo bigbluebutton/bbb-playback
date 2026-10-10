@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { act, Simulate } from 'react-dom/test-utils';
 import MeetingList from './MeetingList';
+import { IntlProvider } from 'react-intl';
 
 const meeting = (name, publication, recording = 'marked', raw = true) => ({
   id: `${name}-1700000000000`, name, date: '2026-10-10T08:00:00Z',
@@ -16,6 +17,7 @@ let container;
 let root;
 let onOpen;
 let onRefresh;
+const localized = component => <IntlProvider locale="ja" defaultLocale="ja" messages={{}}>{component}</IntlProvider>;
 const rows = () => [...container.querySelectorAll('.re-meeting')];
 async function filter(value) {
   await act(async () => { Simulate.change(container.querySelector('select'), { target: { value } }); });
@@ -25,7 +27,7 @@ beforeEach(async () => {
   global.IS_REACT_ACT_ENVIRONMENT = true;
   onOpen = jest.fn(); onRefresh = jest.fn();
   container = document.createElement('div'); document.body.appendChild(container); root = createRoot(container);
-  await act(async () => { root.render(<MeetingList meetings={meetings} selectedId={meetings[0].id} onOpen={onOpen} onRefresh={onRefresh} />); });
+  await act(async () => { root.render(localized(<MeetingList meetings={meetings} selectedId={meetings[0].id} onOpen={onOpen} onRefresh={onRefresh} />)); });
 });
 afterEach(async () => { await act(async () => root.unmount()); container.remove(); });
 
@@ -64,14 +66,14 @@ test('opening meetings and refreshing still call the supplied actions', async ()
 
 test('new meeting data keeps the filter and gives a clear empty result', async () => {
   await filter('published');
-  await act(async () => { root.render(<MeetingList meetings={[meetings[1]]} selectedId={meetings[1].id} onOpen={onOpen} onRefresh={onRefresh} />); });
+  await act(async () => { root.render(localized(<MeetingList meetings={[meetings[1]]} selectedId={meetings[1].id} onOpen={onOpen} onRefresh={onRefresh} />)); });
   expect(container.querySelector('select').value).toBe('published');
   expect(rows()).toHaveLength(0);
   expect(container.textContent).toContain('条件に一致する会議がありません');
 });
 
 test('unknown metadata is not guessed to be published or unmarked', async () => {
-  await act(async () => { root.render(<MeetingList meetings={[{ id: 'fallback-1700000000000', warnings: ['Metadata unavailable'] }]} onOpen={onOpen} onRefresh={onRefresh} />); });
+  await act(async () => { root.render(localized(<MeetingList meetings={[{ id: 'fallback-1700000000000', warnings: ['Metadata unavailable'] }]} onOpen={onOpen} onRefresh={onRefresh} />)); });
   expect(rows()[0].textContent).toContain('会議 — · 録画区間 —');
   expect(rows()[0].querySelector('.re-status-unknown').textContent).toBe('区間不明');
   expect(rows()[0].textContent).toContain('Metadata unavailable');

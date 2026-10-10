@@ -12,8 +12,10 @@
 .recording-editor h1 { font-size:20px; font-weight:650; }
 .recording-editor h2,.recording-editor h3 { font-size:14px; font-weight:650; }
 .recording-editor small,.re-muted { color:var(--re-muted); }
-.re-header { height:64px; flex:none; border-bottom:1px solid var(--re-line); padding:12px 22px; background:var(--re-panel); display:flex; align-items:center; justify-content:space-between; gap:15px; }
-.re-header>div { display:flex; align-items:center; gap:12px; }
+.re-header { min-height:64px; height:auto; flex-wrap:wrap; flex:none; border-bottom:1px solid var(--re-line); padding:12px 22px; background:var(--re-panel); display:flex; align-items:center; justify-content:space-between; gap:15px; }
+.re-header>div { display:flex; flex-wrap:wrap; align-items:center; gap:12px; }
+.re-header-actions { justify-content:flex-end; }
+.re-language { display:flex; align-items:center; gap:6px; font-size:12px; }
 .re-brand { color:#87d0ff; font-size:20px; font-weight:800; letter-spacing:-1px; }
 .re-header strong { font-size:17px; }
 .re-badge { color:#aec0d2; font-size:11px; border:1px solid #44566a; padding:2px 6px; border-radius:4px; }
