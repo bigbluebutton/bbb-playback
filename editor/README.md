@@ -256,6 +256,86 @@ sudo tail -n 30 /var/log/nginx/error.log
 
 上記の不足を、設置手順とトラブル対処へ反映しています。技術的な参考: [BBBのNginx追加設定](https://docs.bigbluebutton.org/administration/customize/)、[Nokogiriの導入](https://nokogiri.org/tutorials/installing_nokogiri.html)、[NginxのBasic認証](https://nginx.org/en/docs/http/ngx_http_auth_basic_module.html)。
 
+## アンインストール
+
+以下は、標準の配置先・設定ファイル名で導入した場合の手順です。配置先や環境変数を変更している場合は、削除前に `/etc/bbb-recording-editor.env` を確認してパスを合わせてください。
+
+**アンインストールは編集内容の取り消しではありません。** 編集済みのraw `events.xml` とピー音入り素材はそのまま残ります。元の録画へ戻したい場合は、先に「現時点の制約と復旧」の手順でXMLを復旧してください。公開済み録画を変更するための再構築は、引き続き管理者が実行します。
+
+1. 保存・プレビュー生成ジョブが終わっていることを確認し、サービスを停止・自動起動を解除する。
+
+   ```bash
+   sudo systemctl disable --now bbb-recording-editor
+   ```
+
+2. Nginxの振り分け設定を撤去する。
+
+   `server` ブロックにlocationを直接追加した場合は、そのエディター用locationを削除してください。同梱ファイルを個別にincludeした場合は、そのinclude行も削除してください。標準の `/etc/bigbluebutton/nginx/*.nginx` による読み込みでは、include行自体は残します。
+
+   ```bash
+   sudo rm -f /etc/bigbluebutton/nginx/recording-editor.nginx
+   sudo nginx -t
+   ```
+
+   `test is successful` が出てから反映します。失敗した場合は、残った個別includeなどを直して、設定チェックを再実行してください。
+
+   ```bash
+   sudo systemctl reload nginx
+   ```
+
+3. systemd設定、環境設定、専用の認証ファイルを削除する。
+
+   認証ファイルを他のlocationでも使っている場合は、下記の認証ファイル・認証バックアップの削除コマンドを省略してください。
+
+   ```bash
+   sudo systemctl reset-failed bbb-recording-editor
+   sudo rm -f /etc/systemd/system/bbb-recording-editor.service
+   sudo rm -rf /etc/systemd/system/bbb-recording-editor.service.d
+   sudo systemctl daemon-reload
+   sudo rm -f /etc/bbb-recording-editor.env
+   sudo rm -f /etc/nginx/bbb-recording-editor.htpasswd
+   sudo rm -f /etc/nginx/bbb-recording-editor.htpasswd.bak.*
+   ```
+
+   `.service.d` は、独自に追加したサービスの上書き設定がある場合も撤去するためのものです。
+
+4. アプリの配置ディレクトリを削除する。
+
+   ```bash
+   sudo rm -rf /opt/bbb-recording-editor
+   ```
+
+   ソース、`node_modules/`、`build-editor/` も削除されます。独自の変更や、このディレクトリ内に別途置いたバックアップが必要なら、先に退避してください。
+
+5. 停止・設定撤去を確認する。
+
+   ```bash
+   sudo ss -lntp 'sport = :8099'
+   sudo nginx -T 2>&1 | grep -n -E 'recording-editor|8099'
+   ```
+
+   標準ポート8099の待ち受けと、エディター用のNginx設定が残っていないことを確認します。公開URLは、既存のGreenlightなどへ渡って404になる場合があります。
+
+### 残すデータと、任意の追加削除
+
+通常のアンインストールでは、次のデータを残します。
+
+| 場所 | 残す理由 |
+|---|---|
+| `/var/lib/bbb-recording-editor/` | 元XML・元素材のバックアップ、編集履歴、下書き、プレビュー。再導入時の編集基準や復旧に使う |
+| `/var/bigbluebutton/recording/raw/` | BBBのraw録画。編集済みXML、XMLバックアップ、元の素材、ピー音入り素材を含む |
+| `/var/bigbluebutton/published/` | BBBの公開済み録画 |
+
+状態ディレクトリも不要な場合は、必要なバックアップを別の場所に保存した上で、次を実行します。`BBB_EDITOR_STATE_ROOT` を変更している場合は、その配置先に読み替えてください。
+
+```bash
+sudo rm -rf /var/lib/bbb-recording-editor
+```
+
+この削除により、再導入しても従来の編集履歴を引き継げなくなります。raw内の `bbb-editor-*` 素材は編集済み `events.xml` から参照されるため、アプリ撤去時にまとめて削除しないでください。raw・公開録画の保持や削除は、従来のBBB運用で管理してください。
+
+Ruby、Nokogiri、WEBrick、FFmpeg、`apache2-utils` などの共用パッケージ・gemは、BBBや他のアプリでも使用する可能性があるため、この手順では削除しません。
+
 ## 開発とテスト
 
 ```bash
