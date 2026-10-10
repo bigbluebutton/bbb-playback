@@ -28,6 +28,16 @@
 .recording-editor .re-meeting.active { border-color:#63b7f1; background:#203b53; }
 .re-meeting strong { overflow-wrap:anywhere; font-size:13px; }
 .re-meeting span,.re-meeting small { font-size:11px; }
+.re-meeting-filter { display:flex; align-items:center; gap:8px; margin-bottom:12px; font-size:12px; }
+.re-meeting-filter select { flex:1; min-width:0; width:100%; }
+.re-meeting-status { display:flex; flex-wrap:wrap; gap:4px; }
+.recording-editor .re-status { display:inline-block; border:1px solid #526274; border-radius:4px; padding:1px 5px; color:#c3cedb; background:#23303e; font-size:10px; }
+.recording-editor .re-status-published { color:#b9f0d1; background:#173b2c; border-color:#3d8861; }
+.recording-editor .re-status-unpublished { color:#ffdda0; background:#45351c; border-color:#997139; }
+.recording-editor .re-status-marked { color:#c8e8ff; background:#203c53; border-color:#4f84aa; }
+.recording-editor .re-status-processing { color:#dbcfff; background:#352a4f; border-color:#8166ac; }
+.recording-editor .re-status-missing { color:#ffc3c3; background:#46262a; border-color:#a75d64; }
+.re-meeting-warning { color:#e9cca3; }
 .re-main { flex:1; min-width:0; overflow:auto; padding:20px 24px 40px; }
 .re-welcome { max-width:650px; margin:100px auto; }
 .re-welcome p { color:var(--re-muted); margin-top:20px; }

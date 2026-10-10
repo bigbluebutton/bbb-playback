@@ -208,6 +208,9 @@ if $PROGRAM_NAME == __FILE__
     raw_root: ENV.fetch('BBB_EDITOR_RAW_ROOT', '/var/bigbluebutton/recording/raw'),
     state_root: ENV.fetch('BBB_EDITOR_STATE_ROOT', '/var/lib/bbb-recording-editor'),
     published_root: ENV.fetch('BBB_EDITOR_PUBLISHED_ROOT', '/var/bigbluebutton/published/presentation'),
+    unpublished_root: ENV.fetch('BBB_EDITOR_UNPUBLISHED_ROOT', '/var/bigbluebutton/unpublished/presentation'),
+    process_root: ENV['BBB_EDITOR_PROCESS_ROOT'],
+    status_root: ENV['BBB_EDITOR_STATUS_ROOT'],
     prefix: ENV.fetch('BBB_EDITOR_PREFIX', '/recording-editor')
   )
   username, password = ENV['BBB_EDITOR_USERNAME'], ENV['BBB_EDITOR_PASSWORD']

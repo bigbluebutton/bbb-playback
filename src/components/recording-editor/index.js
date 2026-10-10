@@ -3,6 +3,7 @@ import { useIntl } from 'react-intl';
 import ExternalVideoPlayer from 'components/external-video-player';
 import SlidePreview from './SlidePreview';
 import VideoPreview from './VideoPreview';
+import MeetingList from './MeetingList';
 import useAudioPreview from './useAudioPreview';
 import { audioAdapter, externalVideos, formatTime, normalizeRanges, parseTime, removeRange } from './model';
 import './styles.css';
@@ -207,6 +208,7 @@ export default function RecordingEditor() {
       setRecording(data); setEdit({ record_ranges: data.record_ranges, beep_ranges: data.beep_ranges });
       setHistory({ past: [], future: [] }); setReview(false);
       setMessage(`保存しました。XMLバックアップ: ${result.xml_backup}。bbb-recordによる再構築は管理者が手動で行ってください。`);
+      await refreshList();
     } catch (e) { setError(e.message); } finally { setBusy(''); }
   };
   const activeAssets = recording?.assets.filter(a => a.has_video && !a.error && a.start_ms <= time && time < a.end_ms) || [];
@@ -218,11 +220,7 @@ export default function RecordingEditor() {
     <header className="re-header"><div><span className="re-brand">BBB</span><strong>録画エディター</strong><span className="re-badge">管理者用 · raw</span></div>
       <div>{recording && <><span className="re-dirty">{dirty ? '未保存の変更あり' : '保存済み'}</span><button disabled={!!busy} onClick={draft}>下書きを保存</button><button className="re-primary" disabled={!!busy} onClick={() => setReview(!review)}>rawへ保存…</button></>}</div>
     </header>
-    <div className="re-shell"><aside className="re-meetings"><div className="re-sidebar-title"><h2>最近の会議</h2><button disabled={!!busy} onClick={refreshList} title="一覧を更新">↻</button></div><p className="re-muted">過去14日 · rawがない会議は警告</p>
-      {meetings.map(m => <button className={`re-meeting ${recording?.id === m.id ? 'active' : ''}`} key={m.id} disabled={!!busy} onClick={() => open(m.id)}><strong>{m.name || m.id.slice(0, 8)}</strong><span>{new Date(m.date || Number(m.id.split('-')[1])).toLocaleString('ja-JP')}</span><small>{m.warnings?.join(' / ') || (m.duration_ms ? formatTime(m.duration_ms).slice(0, 8) : 'rawあり')}</small></button>)}
-      {!meetings.length && <p className="re-muted">対象の会議がありません。</p>}
-      {dirty && <p className="re-muted">会議を切り替える前に下書きかrawへ保存してください。</p>}
-    </aside><main className="re-main">
+    <div className="re-shell"><MeetingList meetings={meetings} selectedId={recording?.id} busy={busy} dirty={dirty} onRefresh={refreshList} onOpen={open} /><main className="re-main">
       {busy && <div className="re-notice" role="status">◌ {busy}</div>}{error && <div className="re-error" role="alert">{error}</div>}{message && <div className="re-success" role="status">{message}</div>}
       {!recording ? <div className="re-welcome"><h1>会議の録画区間と音声を編集</h1><p>左の一覧から会議を選んでください。</p><p>録画を残す区間と、ピー音で置き換える区間を指定します。保存時にはバックアップを作成し、events.xmlと参照するraw音声を更新します。</p><p>録画の再構築・公開は管理者が手動で行います。</p></div> : <>
         <div className="re-title"><div><h1>{recording.name || recording.id}</h1><small>{recording.id} · 会議全体 {formatTime(duration)}</small></div><a href={recording.published_url} target="_blank" rel="noreferrer">公開済み録画 ↗</a></div>

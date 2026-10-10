@@ -34,9 +34,11 @@ beforeEach(async () => {
     const payload = options?.body ? JSON.parse(options.body) : null;
     calls.push({ url, payload, headers: options?.headers });
     let result;
-    if (url.endsWith('/recordings')) result = [{ id, name: manifest.name, date: '2026-10-10T08:00:00Z', warnings: [] }];
+    if (url.endsWith('/recordings')) result = [{ id, name: manifest.name, date: '2026-10-10T08:00:00Z', duration_ms: 60000,
+      recorded_duration_ms: 58000, recording_status: 'marked', publication_status: 'unpublished', raw_available: true, warnings: [] }];
     else if (url.endsWith('/preview')) result = { status: 'done', result: { audio_url: '/demo.webm', peaks: [0.1, 0.5] } };
     else if (url.endsWith('/draft')) result = payload;
+    else if (url.endsWith('/save')) result = { status: 'done', result: { xml_backup: '/backup/events.xml' } };
     else result = manifest;
     return { ok: true, json: async () => result };
   });
@@ -73,4 +75,12 @@ test('record-off splits the range and bad time input cannot edit it', async () =
   expect(calls.find(c => c.url.endsWith('/draft')).payload.record_ranges).toEqual([
     { start_ms: 1000, end_ms: 6500 }, { start_ms: 9500, end_ms: 59000 },
   ]);
+});
+
+test('saving refreshes meeting summaries and keeps the current publication badge', async () => {
+  await click('rawへ保存…');
+  await click('バックアップを作成して保存');
+  expect(calls.filter(call => call.url.endsWith('/recordings'))).toHaveLength(2);
+  expect(container.querySelector('.re-meeting .re-status-unpublished').textContent).toBe('非公開');
+  expect(container.textContent).toContain('XMLバックアップ: /backup/events.xml');
 });

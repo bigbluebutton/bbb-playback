@@ -13,6 +13,37 @@
 
 このアプリは `bbb-record`、rebuild、publishを実行しません。公開済み録画も保存直後には変わりません。管理者が既存の運用手順で再構築してください。
 
+## 会議リストの状態表示と絞り込み
+
+左側の一覧には、録画区間の有無と、BBBでの公開状態を別々のバッジで表示します。「録画区間あり」は現在のraw `events.xml` に有効な `RecordStatusEvent` の区間があるという意味で、公開済みという意味ではありません。
+
+| 表示 | 判定・意味 |
+| --- | --- |
+| 録画区間あり／録画区間なし | raw XMLの録画開始・停止から判定。録画ボタンを使っていない会議は「録画区間なし」。 |
+| 区間不明 | raw XMLがない、または読み込めないため録画区間を判定できない。 |
+| 公開／非公開 | BBBのpublished／unpublished側の `metadata.xml` の状態から判定。「非公開」はBBBのunpublishを指す。 |
+| 未生成 | 公開・非公開・処理用の録画ディレクトリと処理失敗マーカーが見つからない。 |
+| 処理中 | process側のメタデータがprocessing、またはprocessed（publish待ち）。 |
+| 不明 | メタデータの不足・破損・矛盾、処理失敗などで公開状態を確認できない。理由を警告表示する。 |
+| rawなし | raw XMLがない、または読み込めない。公開状態とは独立して表示する。 |
+
+「公開／非公開」はBBBの録画状態です。Greenlightで録画を一覧に載せるかどうかなど、Greenlight独自の表示設定は判定しません。「処理中」はファイル上の状態であり、実行中のワーカーやRedisキューを監視するものではありません。処理ディレクトリ作成前のキュー待ちは「未生成」に見える場合があります。
+
+各行に「会議」と「録画区間」の長さを表示します。会議長はrawのイベント全体の時間差、録画区間長は有効な区間の合計です。rawがない場合はメタデータの会議長を利用し、区間長が分からなければ「—」を表示します。録画ボタン未使用の会議をエディターで開くと会議全体を編集候補として提示しますが、一覧で録画済みとみなすことはありません。raw保存後は一覧を更新します。表示する区間長は編集後のXMLに基づくため、管理者が再構築するまで公開済みPlaybackの長さとは異なる場合があります。
+
+上部の選択欄で「すべて／公開／非公開／未生成／処理中／録画区間なし／rawなし／状態不明」を絞り込めます。各選択肢には該当件数を表示し、日時の新しい順を保ちます。絞り込みで選択中の会議が一覧から消えても、右側の編集画面は維持します。外部でpublish／unpublishなどを行った後は「更新」を押してください。
+
+標準の参照先は次のとおりです。独自の保存先を使う場合は `/etc/bbb-recording-editor.env` に設定してください。既存の設定ファイルに追記しなくても標準パスは有効です。
+
+| 環境変数 | 標準の参照先 |
+| --- | --- |
+| `BBB_EDITOR_PUBLISHED_ROOT` | `/var/bigbluebutton/published/presentation` |
+| `BBB_EDITOR_UNPUBLISHED_ROOT` | `/var/bigbluebutton/unpublished/presentation` |
+| `BBB_EDITOR_PROCESS_ROOT` | `/var/bigbluebutton/recording/process/presentation` |
+| `BBB_EDITOR_STATUS_ROOT` | `/var/bigbluebutton/recording/status` |
+
+processとstatusの既定パスは `BBB_EDITOR_RAW_ROOT` の親ディレクトリから求めます。上表は標準のraw保存先の場合です。
+
 ## 録画OFF中のメディアについて
 
 BBB 2.6.9以降（3.0／4.0を含む）の標準設定は `recordFullDurationMedia=false` です。音声・カメラ・画面共有のメディアは、会議内で録画がONになっている区間だけ保存されます。会議全体のイベントが `events.xml` に残っていても、録画OFF中のメディアがrawに存在するとは限りません。14日間のraw保持期間も、保存されなかったメディアを復元できるという意味ではありません。
@@ -182,6 +213,20 @@ XMLは読み込み時のSHA-256と保存直前のSHA-256を比較します。外
    ブラウザで `https://<BBB-host>/recording-editor/` を開き、手順5の認証情報を使います。まず別コピーのrawで、再生位置・スライド・音声境界・保存後の再構築結果を確認してください。
 
 `BBB_EDITOR_RAW_ROOT`、`BBB_EDITOR_STATE_ROOT`、`BBB_EDITOR_PUBLISHED_ROOT`、`BBB_EDITOR_BUILD_ROOT`、`BBB_EDITOR_PORT` は環境変数で変更できます。URLは標準 `/recording-editor`。変更する場合はサーバの `BBB_EDITOR_PREFIX` と、ビルド時の `PUBLIC_URL` / `REACT_APP_EDITOR_PREFIX`、Nginx locationを揃えてください。
+
+### 既存インストールの更新
+
+画面とRuby APIの両方を変更した更新では、ビルドとサービス再起動の両方が必要です。作業ブランチをGitで取得した標準構成なら、次の手順を使います。
+
+```bash
+cd /opt/bbb-recording-editor
+git pull --ff-only
+npm run build:editor
+# ビルドが成功したことを確認してから実行
+sudo systemctl restart bbb-recording-editor
+```
+
+その後、ブラウザを再読み込みしてください。ビルドに失敗した場合は新しい画面が配信されません。手動でソースを変更していて `git pull` が拒否された場合は、変更を確認・退避してから更新してください。標準パスを使う今回の一覧表示更新では、既存のNginx設定や認証ファイルの再配置は不要です。
 
 ### aptが使えない場合
 
@@ -359,12 +404,13 @@ Ruby、Nokogiri、WEBrick、FFmpeg、`apache2-utils` などの共用パッケー
 
 ```bash
 ruby editor/test/recording_editor_test.rb
+ruby editor/test/meeting_list_test.rb
 ruby editor/test/server_test.rb
 CI=true npm test -- --watchAll=false --runInBand
 npm run build:editor
 ```
 
-音声テストは合成したWAV、映像＋AAC、OpusをFFmpegで生成します。元素材の保持、全音声の置換、映像パケットの保持、XMLイベントと時計、空区間、競合、危険な参照、認証、Range、保存ジョブを検証します。
+音声テストは合成したWAV、映像＋AAC、OpusをFFmpegで生成します。元素材の保持、全音声の置換、映像パケットの保持、XMLイベントと時計、空区間、競合、危険な参照、認証、Range、保存ジョブを検証します。会議リストのテストでは、公開・非公開・処理中・rawなし・不明の判定、録画区間の合計、絞り込みと保存後の更新も確認します。
 
 実録画を使わずに動かす例:
 

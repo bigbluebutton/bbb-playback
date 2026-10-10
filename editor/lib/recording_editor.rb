@@ -71,12 +71,16 @@ module RecordingEditor
   end
 
   class Repository
-    attr_reader :raw_root, :state_root, :published_root, :prefix, :ffmpeg, :ffprobe
+    attr_reader :raw_root, :state_root, :published_root, :unpublished_root, :process_root, :status_root, :prefix, :ffmpeg, :ffprobe
     def initialize(raw_root:, state_root:, published_root: '/var/bigbluebutton/published/presentation',
+                   unpublished_root: '/var/bigbluebutton/unpublished/presentation', process_root: nil, status_root: nil,
                    prefix: '/recording-editor', ffmpeg: 'ffmpeg', ffprobe: 'ffprobe')
       @raw_root = File.expand_path(raw_root)
       @state_root = File.expand_path(state_root)
       @published_root = File.expand_path(published_root)
+      @unpublished_root = File.expand_path(unpublished_root)
+      @process_root = File.expand_path(process_root || File.join(File.dirname(@raw_root), 'process', 'presentation'))
+      @status_root = File.expand_path(status_root || File.join(File.dirname(@raw_root), 'status'))
       @prefix = prefix.delete_suffix('/')
       @ffmpeg, @ffprobe = ffmpeg, ffprobe
       @probes = {}
@@ -124,24 +128,92 @@ module RecordingEditor
       Recording.new(self, id)
     end
 
+    def metadata_info(root, id, warnings)
+      path = File.join(root, id, 'metadata.xml')
+      unless File.file?(path)
+        warnings << '録画メタデータがありません。公開状態を確認できません。'
+        return nil
+      end
+      raise Error, '録画メタデータの参照先が不正です。' unless File.realpath(path).start_with?(File.realpath(root) + '/')
+      doc = RecordingEditor.xml(File.binread(path))
+      text = ->(xpath) { doc.at_xpath(xpath)&.text&.strip }
+      start_time, end_time = %w[start_time end_time].map { |key| Integer(text.call("/recording/#{key}"), exception: false) }
+      playback = Integer(text.call('/recording/playback/duration'), exception: false)
+      { state: text.call('/recording/state'), published: text.call('/recording/published'),
+        name: text.call('/recording/meta/meetingName') || doc.at_xpath('/recording/meeting')&.[]('name'),
+        duration_ms: start_time && end_time && end_time > start_time ? end_time - start_time : nil,
+        playback_duration_ms: playback && playback >= 0 ? playback : nil }
+    rescue Error, SystemCallError => e
+      warnings << "録画メタデータを確認できません: #{e.message}"
+      nil
+    end
+
+    def publication_info(id)
+      check_id(id)
+      warnings = []
+      ready_roots = [published_root, unpublished_root].select { |root| File.directory?(File.join(root, id)) }
+      info = ready_roots.filter_map { |root| metadata_info(root, id, warnings) }.first
+      status = 'not_generated'
+      if ready_roots.size > 1
+        warnings << '公開・非公開の両方に録画が存在します。公開状態を確認してください。'
+        status = 'unknown'
+      elsif !ready_roots.empty?
+        status = case info&.[](:state)
+                 when 'published' then info[:published] == 'false' ? 'unknown' : 'published'
+                 when 'unpublished' then info[:published] == 'true' ? 'unknown' : 'unpublished'
+                 when nil, ''
+                   { 'true' => 'published', 'false' => 'unpublished' }.fetch(info&.[](:published), 'unknown')
+                 else 'unknown'
+                 end
+        warnings << '録画メタデータの公開状態が不明または矛盾しています。' if status == 'unknown' && warnings.empty?
+      else
+        failed = %w[processed published].any? { |step| File.file?(File.join(status_root, step, "#{id}-presentation.fail")) }
+        processing = File.directory?(File.join(process_root, id))
+        info = metadata_info(process_root, id, warnings) if processing
+        if failed
+          warnings << '録画処理の失敗マーカーがあります。BBBの処理ログを確認してください。'
+          status = 'unknown'
+        elsif processing
+          # "processed" is waiting for publish; neither state means a ready
+          # playback exists. Metadata is a snapshot, not a live Redis job check.
+          status = %w[processing processed].include?(info&.[](:state)) ? 'processing' : 'unknown'
+          warnings << '処理中の録画メタデータの状態を確認できません。' if status == 'unknown' && warnings.empty?
+        end
+      end
+      { publication_status: status, metadata_name: info&.[](:name), metadata_duration_ms: info&.[](:duration_ms),
+        playback_duration_ms: info&.[](:playback_duration_ms), warnings: warnings }
+    end
+
     def list(now: Time.now)
-      ids = Dir.glob(File.join(raw_root, '*')).select { |p| File.directory?(p) }.map { |p| File.basename(p) }
-      ids.concat(Dir.glob(File.join(published_root, '*')).select { |p| File.directory?(p) }.map { |p| File.basename(p) })
+      ids = [raw_root, published_root, unpublished_root, process_root].flat_map do |root|
+        Dir.glob(File.join(root, '*')).select { |p| File.directory?(p) }.map { |p| File.basename(p) }
+      end
       ids.uniq.filter_map do |id|
         next unless id.match?(/\A[a-z0-9]{40}-[0-9]{13}\z/)
         # This is a list filter only; no expiry locks or retention changes.
         time = Time.at(id.split('-').last.to_i / 1000.0)
         next if time < now - 14 * 86_400 || time > now
-        if File.file?(File.join(raw_root, id, 'events.xml'))
-          rec = recording(id)
-          { id: id, name: rec.name, date: rec.start_utc, duration_ms: rec.duration,
-            raw_available: true, warnings: rec.warnings }
-        else
-          { id: id, name: id, date: time.iso8601, raw_available: false,
-            warnings: ['rawデータがありません。'] }
+        publication = publication_info(id)
+        item = { id: id, name: publication[:metadata_name] || id, date: time.iso8601,
+                 duration_ms: publication[:metadata_duration_ms], raw_available: false,
+                 recording_status: 'unknown', recorded_duration_ms: nil,
+                 publication_status: publication[:publication_status], playback_duration_ms: publication[:playback_duration_ms],
+                 warnings: publication[:warnings] }
+        begin
+          if File.file?(File.join(raw_root, id, 'events.xml'))
+            rec = recording(id)
+            ranges = rec.record_ranges(rec.current_doc, full_when_empty: false)
+            item.merge!(name: rec.name, date: rec.start_utc, duration_ms: rec.duration, raw_available: true,
+                        recording_status: ranges.empty? ? 'unmarked' : 'marked',
+                        recorded_duration_ms: ranges.sum { |r| r['end_ms'] - r['start_ms'] })
+            item[:warnings].concat(rec.warnings)
+          else
+            item[:warnings] << 'rawデータがありません。'
+          end
+        rescue Error, SystemCallError, ArgumentError, JSON::ParserError => e
+          item[:warnings] << "rawデータを読み込めません: #{e.message}"
         end
-      rescue Error => e
-        { id: id, name: id, raw_available: false, warnings: [e.message] }
+        item
       end.sort_by { |r| r[:id].split('-').last.to_i }.reverse
     end
   end
@@ -210,10 +282,10 @@ module RecordingEditor
       nil
     end
 
-    def record_ranges(source_doc = current_doc)
+    def record_ranges(source_doc = current_doc, full_when_empty: true)
       start = nil
       marks = source_doc.xpath('/recording/event[@eventname="RecordStatusEvent"]').sort_by { |e| e['timestamp'].to_i }
-      return [{ 'start_ms' => 0, 'end_ms' => duration }] if marks.empty?
+      return full_when_empty ? [{ 'start_ms' => 0, 'end_ms' => duration }] : [] if marks.empty?
       marks.each_with_object([]) do |event, result|
         t = [[time(event), 0].max, duration].min
         if field(event, 'status') == 'true'
