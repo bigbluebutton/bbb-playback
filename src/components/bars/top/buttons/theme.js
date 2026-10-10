@@ -31,7 +31,7 @@ const css = `
     background-color: white !important;
   }
   .tl-background {
-    background-color: var(--bbb-playback-slide-background, #F9FAFB) !important;
+    background-color: #F9FAFB !important;
   }
 }
 `;
