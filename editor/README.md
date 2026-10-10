@@ -43,7 +43,7 @@ XMLは読み込み時のSHA-256と保存直前のSHA-256を比較します。外
 
 ## BBBサーバへの設置
 
-例はUbuntu、配置先 `/opt/bbb-recording-editor`、サービス実行ユーザー `bigbluebutton`、HTTPSの既存Nginxを前提にしています。既存Playbackの配信先には上書きしません。
+例はUbuntu、配置先 `/opt/bbb-recording-editor`、サービス実行ユーザー `bigbluebutton`、既存BBBのNginxを前提にしています。公開URLはHTTPSです。以下の相対パスを使うコマンドは、リポジトリのルート `/opt/bbb-recording-editor` で実行してください。既存Playbackの配信先には上書きしません。
 
 1. コード一式ZIPを `/opt` に展開するか、公開済みの作業ブランチを専用ディレクトリに取得する。
 
@@ -56,7 +56,7 @@ XMLは読み込み時のSHA-256と保存直前のSHA-256を比較します。外
    npm run build:editor
    ```
 
-   ブランチがGitHubへ公開された後は、次の方法でも取得できます。
+   GitHubのブランチから取得する場合:
 
    ```bash
    git clone --branch feat/raw-recording-editor https://github.com/hiroshisuga/bbb-playback.git /opt/bbb-recording-editor
@@ -74,7 +74,18 @@ XMLは読み込み時のSHA-256と保存直前のSHA-256を比較します。外
    sudo install -d -o bigbluebutton -g bigbluebutton -m 0700 /var/lib/bbb-recording-editor
    ```
 
-   Ruby 3.0以上を想定。OSパッケージの代わりに `editor/Gemfile` からBundlerで導入しても構いません（その場合はサービスも `bundle exec ruby` に合わせてください）。実行ユーザーにはraw XMLの書き換えと素材ディレクトリへの書き込み権限が必要です。
+   `htpasswd` コマンドは `apache2-utils` パッケージに含まれます。`apt install htpasswd` では導入できません。`ruby-minitest` はテスト用です。
+
+   **aptがカスタムBBBパッケージの依存関係で失敗する場合は、「aptが使えない場合」を先に参照してください。** 依存ライブラリが未導入のままサービスを起動すると、NokogiriのLoadErrorなどで停止します。
+
+   サービスと同じユーザー・Rubyで、依存ライブラリを読み込めることを確認します。
+
+   ```bash
+   sudo -u bigbluebutton /usr/bin/ruby -e \
+     'require "nokogiri"; require "webrick"; puts "OK"'
+   ```
+
+   `OK` が表示されてから次へ進んでください。Ruby 3.0以上を想定。OSパッケージの代わりに `editor/Gemfile` からBundlerで導入しても構いません（その場合はサービスも `bundle exec ruby` に合わせてください）。実行ユーザーにはraw XMLの書き換えと素材ディレクトリへの書き込み権限が必要です。
 
 3. サービス設定を配置する。
 
@@ -85,22 +96,165 @@ XMLは読み込み時のSHA-256と保存直前のSHA-256を比較します。外
    sudo systemctl enable --now bbb-recording-editor
    ```
 
-4. 管理者専用の認証を設定する。
+4. Nginxを通さず、編集アプリ本体の起動を確認する。
+
+   ```bash
+   sudo systemctl status bbb-recording-editor --no-pager
+   curl -sS -I http://127.0.0.1:8099/recording-editor/
+   ```
+
+   標準設定なら `200 OK` が返ります。再起動直後に接続できない場合は、起動ログの `WEBrick::HTTPServer#start: ... port=8099` を確認してから再実行してください。サービスが停止している場合は「起動・接続の切り分け」を参照してください。組み込み認証を別途有効にした場合は、ここでも認証が必要です。
+
+5. 管理者専用の認証を設定する。
+
+   **Linuxのログインユーザー・パスワードとは別です。** 以下の例では、ユーザー名 `admin` と、コマンド実行時に入力するパスワードをブラウザで使います。GreenlightアカウントやBBB会議内の「モデレーター」権限とも別の認証です。
+
+   初回作成:
 
    ```bash
    sudo htpasswd -c /etc/nginx/bbb-recording-editor.htpasswd admin
    ```
 
-   `editor/deploy/nginx.conf` のlocationを、既存BBBのHTTPS `server` ブロックに追加してください。編集GUI、API、XML、raw素材、プレビューの全てに認証がかかります。サーバは `127.0.0.1:8099` にだけbindします。BBB会議内の「モデレーター」権限やGreenlightアカウントとは別の、管理者専用認証です。
+   既存ファイルへのユーザー追加・パスワード変更では `-c` を付けません（`-c` はファイルを新規作成・上書きします）。
 
    ```bash
+   sudo htpasswd /etc/nginx/bbb-recording-editor.htpasswd admin
+   ```
+
+   `htpasswd: command not found` で、aptも使えない場合は、後述のOpenSSLによる代替手順を使ってください。
+
+   Ubuntu標準のNginx実行ユーザー `www-data` が認証ファイルを読めるようにします。Nginxの実行ユーザーを変更している場合は、グループ名を合わせてください。
+
+   ```bash
+   sudo chown root:www-data /etc/nginx/bbb-recording-editor.htpasswd
+   sudo chmod 640 /etc/nginx/bbb-recording-editor.htpasswd
+   ```
+
+6. **Nginxの設定ファイルをインストールして反映する。**
+
+   標準的なBBB構成では、既存BBBの `server` ブロックが `/etc/bigbluebutton/nginx/*.nginx` を読み込みます。リポジトリ内に `editor/deploy/nginx.conf` があるだけでは有効になりません。次のコマンドで、読み込み対象のディレクトリへ `.nginx` 拡張子で配置してください。
+
+   ```bash
+   sudo install -D -m 0644 \
+     /opt/bbb-recording-editor/editor/deploy/nginx.conf \
+     /etc/bigbluebutton/nginx/recording-editor.nginx
+
    sudo nginx -t
+   ```
+
+   `test is successful` が出てから反映します。
+
+   ```bash
    sudo systemctl reload nginx
    ```
 
-5. `https://<BBB-host>/recording-editor/` を開く。まず別コピーのrawで、再生位置・スライド・音声境界・保存後の再構築結果を確認してください。
+   独自のNginx構成でこのディレクトリを読み込んでいない場合は、公開ホストへのリクエストを処理する既存BBBの `server` ブロック内に、同梱設定を一度だけincludeしてください。すでにlocationを手動追加している場合は重複させません。同梱設定は `server` ブロックを含まないため、`/etc/nginx/conf.d/` へそのまま配置する方法は使えません。
+
+   編集GUI、API、XML、raw素材、プレビューの全てに認証がかかります。アプリ本体は `127.0.0.1:8099` にだけbindします。
+
+7. 公開URLの認証・接続を確認する。
+
+   ```bash
+   curl -sS -I https://<BBB-host>/recording-editor/
+   curl -u admin -I https://<BBB-host>/recording-editor/
+   ```
+
+   未認証の一つ目は `401 Unauthorized` / `401 Authorization Required`、パスワードを入力する二つ目は `200 OK` が正常です。パスワードをコマンド引数に書かず、入力プロンプトで入力してください。
+
+   ブラウザで `https://<BBB-host>/recording-editor/` を開き、手順5の認証情報を使います。まず別コピーのrawで、再生位置・スライド・音声境界・保存後の再構築結果を確認してください。
 
 `BBB_EDITOR_RAW_ROOT`、`BBB_EDITOR_STATE_ROOT`、`BBB_EDITOR_PUBLISHED_ROOT`、`BBB_EDITOR_BUILD_ROOT`、`BBB_EDITOR_PORT` は環境変数で変更できます。URLは標準 `/recording-editor`。変更する場合はサーバの `BBB_EDITOR_PREFIX` と、ビルド時の `PUBLIC_URL` / `REACT_APP_EDITOR_PREFIX`、Nginx locationを揃えてください。
+
+### aptが使えない場合
+
+カスタムビルドのBBBでは、`bigbluebutton` メタパッケージが要求する `bbb-apps-akka` のバージョンと、導入済みのカスタム版のバージョンが一致せず、無関係なパッケージの追加もaptに拒否されることがあります。今回のgl2では、要求バージョン `2:4.0.0~rc.5+20261007T140917-git.local-build-0a2ccd433e` と、カスタム版 `0.0.4` の不一致が表示されました。
+
+この状態で、編集アプリを入れるためだけに `apt --fix-broken install` を実行しないでください。既存のBBBパッケージを変更・削除する可能性があります。以下は、Ruby・RubyGems・OpenSSL・FFmpegがすでにある場合の代替手順です。apt全体の依存関係を修復するものではありません。
+
+NokogiriをRubyGemsから導入します。
+
+```bash
+sudo /usr/bin/gem install nokogiri --no-document
+```
+
+WEBrickも読み込めない場合だけ、追加します（今回のgl2ではOSパッケージが導入済みでした）。
+
+```bash
+sudo /usr/bin/gem install webrick --version '~> 1.8' --no-document
+```
+
+手順2のRuby読み込み確認を実行し、状態ディレクトリも作成してください。サービスの `ExecStart=/usr/bin/ruby ...` は変更不要です。gemの導入が失敗する場合は、エラーに加えて `/usr/bin/ruby -v` と `/usr/bin/gem --version` を確認してください。
+
+`htpasswd` がない場合は、OpenSSLでNginxの認証ファイルを作成できます。次のコマンドは、パスワード入力後、既存ファイルをバックアップして **`admin` 1名の構成に置き換えます**。既存の他のユーザーも保持したい場合は、`htpasswd` による更新手順を使ってください。
+
+```bash
+sudo sh -c '
+set -e
+editor_hash=$(openssl passwd -6)
+editor_file=/etc/nginx/bbb-recording-editor.htpasswd
+if [ -f "$editor_file" ]; then
+  cp -p "$editor_file" "$editor_file.bak.$(date +%Y%m%d%H%M%S)"
+fi
+umask 027
+printf "admin:%s\n" "$editor_hash" > "$editor_file"
+chown root:www-data "$editor_file"
+chmod 640 "$editor_file"
+'
+```
+
+認証ファイルのパスワード更新だけならNginxのreloadは不要です。location設定の追加・変更には、手順6の設定チェックとreloadが必要です。
+
+### 起動・接続の切り分け
+
+アプリ本体、Nginxの振り分け、管理者認証の順に確認します。
+
+| 症状 | 確認・対処 |
+|---|---|
+| localhost:8099に接続できない | サービスの状態と最新ログを確認。NokogiriのLoadErrorなら依存ライブラリを導入し、下記のreset-failedとrestartを実行 |
+| 再起動直後だけcurlが接続失敗する | WEBrickの待ち受け開始ログを確認して再試行。`systemctl restart` の完了だけでは待ち受け開始を保証しない |
+| localhostは200だが公開URLでGreenlightの404 | Nginxのlocationが適用されていない。設定ファイルの配置、include先、`nginx -t`、reloadを確認 |
+| 認証画面が繰り返し出る／401 | LinuxやGreenlightのログイン情報ではなく、認証ファイルに作成したユーザー名・パスワードを使う |
+| 認証後に403や500 | パスワード違いだけとは断定せず、Nginxとアプリの最新ログを確認。認証ファイルの存在・読み取り権限も確認 |
+
+```bash
+sudo systemctl status bbb-recording-editor --no-pager
+sudo ss -lntp 'sport = :8099'
+sudo journalctl -u bbb-recording-editor --since "5 minutes ago" --no-pager
+```
+
+起動失敗を繰り返して `Start request repeated too quickly` になった場合は、原因を直した後で再起動します。
+
+```bash
+sudo systemctl reset-failed bbb-recording-editor
+sudo systemctl restart bbb-recording-editor
+curl -sS -I http://127.0.0.1:8099/recording-editor/
+```
+
+公開URL側の問題は、次で読み込まれた設定とエラーを確認します。
+
+```bash
+sudo nginx -T 2>&1 | grep -n -C 5 -E \
+  'server_name|include.*bigbluebutton/nginx|recording-editor|8099'
+sudo tail -n 30 /var/log/nginx/error.log
+```
+
+ログの日時にも注意してください。gl2では、13:34のNokogiriエラーが残っていても、13:52の最新ログではWEBrickが正常起動していました。
+
+### gl2での導入経過と、初版READMEに不足していた説明
+
+2026-10-10、BBB 4.0のgl2で初版READMEに沿って導入し、ブラウザから編集画面へ接続できることを確認しました。録画編集・再構築の動作確認まで完了したという意味ではありません。
+
+| 作業・つまずき | 実施した対処・結果 | 初版READMEの記載状況 |
+|---|---|---|
+| コード配置・編集画面ビルド・systemd設定 | READMEに沿って導入。サービスの起動ログが記録された | 記載あり |
+| 公開URLでGreenlightのReact Routerによる404 | 配信HTMLがGreenlightであることを確認し、localhostのバックエンドと別に切り分けた | 切り分け手順・期待するHTTPステータスの記載なし |
+| サービスがNokogiriのLoadErrorで停止 | `ruby-nokogiri` のapt導入を試したが、BBBのバージョン依存関係で失敗。RubyGemsでNokogiriを導入 | aptの必要パッケージは記載あり。aptが失敗する環境向けのRubyGems手順は記載なし |
+| 連続失敗によるsystemdの起動制限と、再起動直後のcurl失敗 | `reset-failed` と `restart` を実行。最新のWEBrick起動ログを確認し、curl再実行でlocalhostが200になった | 起動確認、reset-failed、古いログとの区別の記載なし。直後のcurl失敗は起動タイミングによる可能性があるが、原因は断定していない |
+| localhostは200だが公開URLでは引き続きGreenlightの404 | 同梱設定を `/etc/bigbluebutton/nginx/recording-editor.nginx` にインストールし、設定チェック・reloadで編集アプリへ振り分けた | 「locationをserverブロックに追加」とチェック・reloadは記載あり。具体的な配置先とインストールコマンドは記載なし |
+| 認証情報が不明／403を表示 | Linuxログインとは別の認証であることを確認。403の具体的な原因はログでは確認されていない | `htpasswd ... admin` とGreenlight・モデレーター権限との違いは記載あり。Linuxログインとの違いは明記なし |
+| `htpasswd: command not found`、`apt install htpasswd` も失敗 | OpenSSLで認証ファイルを作成し、パスワードを設定すると編集画面が動いた | `apache2-utils` とhtpasswd作成コマンドは記載あり。両者の対応、OpenSSLの代替手順、認証ファイルの権限設定は記載なし |
+
+上記の不足を、設置手順とトラブル対処へ反映しています。技術的な参考: [BBBのNginx追加設定](https://docs.bigbluebutton.org/administration/customize/)、[Nokogiriの導入](https://nokogiri.org/tutorials/installing_nokogiri.html)、[NginxのBasic認証](https://nginx.org/en/docs/http/ngx_http_auth_basic_module.html)。
 
 ## 開発とテスト
 
