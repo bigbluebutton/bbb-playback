@@ -11,6 +11,8 @@ import { ROUTER } from 'utils/constants';
 import { getStyle } from 'utils/params';
 import './index.scss';
 
+const RecordingEditor = React.lazy(() => import('components/recording-editor'));
+
 const locale = getLocale();
 const style = getStyle();
 
@@ -23,7 +25,8 @@ root.render(
       messages={getMessages(locale)}
     >
       {style ? <link rel="stylesheet" type="text/css" href={style} /> : null}
-      {ROUTER ? <Router /> : <Loader />}
+      {process.env.REACT_APP_RECORDING_EDITOR === '1' || new URLSearchParams(window.location.search).get('editor') === '1'
+        ? <React.Suspense fallback={<p>録画エディターを読み込んでいます…</p>}><RecordingEditor /></React.Suspense> : ROUTER ? <Router /> : <Loader />}
     </IntlProvider>
   )
 );

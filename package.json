@@ -42,7 +42,8 @@
     "start": "react-scripts start",
     "start:proxy": "bash start-proxy.sh",
     "build": "react-scripts build",
-    "test": "react-scripts test"
+    "test": "react-scripts test",
+    "build:editor": "BUILD_PATH=build-editor PUBLIC_URL=/recording-editor REACT_APP_RECORDING_EDITOR=1 react-scripts build"
   },
   "eslintConfig": {
     "extends": "react-app"

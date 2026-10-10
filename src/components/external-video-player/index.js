@@ -20,9 +20,9 @@ const config = {
   file: { attributes: { playsInline: true } },
 };
 
-export default function ExternalVideoPlayer({ videos, intl }) {
+export default function ExternalVideoPlayer({ videos, intl, getPrimary }) {
   const { video, playing, playbackRate, volume, muted, autoPlayBlocked, error,
-    playerRef, notify } = useExternalVideoSync(videos);
+    playerRef, notify } = useExternalVideoSync(videos, getPrimary);
   if (!video) return null;
   return (
     <div className="externalVideos-wrapper">
