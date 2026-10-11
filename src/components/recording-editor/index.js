@@ -313,7 +313,7 @@ function Editor() {
         <div className="re-transport"><button className="re-play" disabled={!preview || !!busy} onClick={() => { if (audio.paused) audio.play().catch(e => setError(e.message)); else audio.pause(); }}>{playing ? t('pause') : t('play')}</button>
           <TimeField label={t('position')} value={Math.round(time)} max={duration} onChange={seek} onFocus={() => audio?.pause()} /><span>/ {formatTime(duration)}</span>
           <select aria-label={t('speed')} value={rate} onChange={e => { const value = Number(e.target.value); setRate(value); if (audio) audio.playbackRate = value; }}>{[0.5, 1, 1.5, 2].map(r => <option key={r} value={r}>{r}×</option>)}</select>
-          <label><input type="checkbox" checked={beepPreview} onChange={e => setBeepPreview(e.target.checked)} /> {t(beepPreview ? 'previewBeep' : 'previewOriginal')}</label><span className="re-muted">{t('playOff')}</span>
+          <label><input type="checkbox" checked={beepPreview} onChange={e => setBeepPreview(e.target.checked)} /> {t('previewBeep')}</label><span className="re-muted">{t('playOff')}</span>
           {preview && <audio ref={setAudio} src={preview.audio_url} preload="auto" onError={() => setError({ id: 'audioError' })} />}
         </div>
         <div className="re-tools"><button disabled={!history.past.length || !!busy} onClick={undo}>{t('undo')}</button><button disabled={!history.future.length || !!busy} onClick={redo}>{t('redo')}</button><label>{t('zoom')} <select value={zoom} onChange={e => setZoom(Number(e.target.value))}>{[1, 2, 4, 8, 16].map(z => <option key={z} value={z}>{z}×</option>)}</select></label><span className="re-muted">{t('dragHint')}</span></div>
