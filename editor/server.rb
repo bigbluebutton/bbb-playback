@@ -132,6 +132,11 @@ module RecordingEditor
         require_method(req, 'POST')
         data = payload(req)
         json(res, @jobs.add('save', key: id) { |progress| @editor.save(id, data, progress: progress) }, 202)
+      when '/reset'
+        require_method(req, 'POST')
+        data = payload(req)
+        raise Error, '初期化の影響を確認してください。' unless data['confirmed'] == true
+        json(res, @jobs.add('reset', key: id) { |progress| @editor.reset(id, data, progress: progress) }, 202)
       when '/rebuild'
         require_method(req, 'GET', 'POST')
         if req.request_method == 'GET'

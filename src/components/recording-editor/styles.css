@@ -91,3 +91,6 @@
 .re-events { border:1px solid var(--re-line); border-radius:5px; padding:12px; }.re-events>div { margin-top:10px; max-height:250px; overflow:auto; }.recording-editor .re-events button { display:flex; width:100%; gap:10px; background:none; border:0; border-bottom:1px solid var(--re-line); padding:8px 2px; white-space:normal; text-align:left; font-size:11px; }.re-events time { color:#8cc7ef; flex:none; font:10px ui-monospace,monospace; }.re-events span { overflow-wrap:anywhere; }
 @media(max-width:1050px) { .re-meetings { width:190px; }.re-main { padding:15px; }.re-cameras { width:165px; }.re-bottom { grid-template-columns:1fr; }.re-header { padding:10px 15px; }.re-badge { display:none; } }
 @media(max-width:700px) { .re-meetings { width:140px; }.re-header strong { font-size:14px; }.re-header>div { gap:7px; }.re-dirty { display:none; }.re-preview { height:220px; }.re-cameras { width:100px; }.re-main { padding:10px; }.re-title { display:block; }.re-bottom { display:block; } }
+
+.re-reset { display: flex; align-items: center; gap: 12px; margin: 12px 0; }
+.re-reset small { color: #64748b; }

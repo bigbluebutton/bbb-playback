@@ -84,6 +84,29 @@ class ServerTest < Minitest::Test
     assert_equal [1500, 4000], RecordingEditor.xml(File.read(File.join(@raw, 'events.xml'))).xpath('/recording/event[@eventname="RecordStatusEvent"]').map { |e| e['timestamp'].to_i }
   end
 
+  def test_reset_route_requires_auth_and_confirmation_then_restores_exact_original
+    path = "recordings/#{@id}/reset"
+    assert_equal '401', request(path, method: Net::HTTP::Post, auth: false, body: '{}').code
+    assert_equal '403', request(path, method: Net::HTTP::Post, body: '{}').code
+    assert_equal '403', request(path, method: Net::HTTP::Post, headers: { 'X-BBB-Editor' => '1', 'Origin' => 'https://elsewhere.invalid' }, body: '{}').code
+    assert_equal '400', request(path, method: Net::HTTP::Post, headers: { 'X-BBB-Editor' => '1' }, body: '{}').code
+    rec = @repo.recording(@id)
+    saved = RecordingEditor::Editor.new(@repo).save(@id, { 'revision' => rec.revision, 'record_ranges' => [{ 'start_ms' => 500, 'end_ms' => 3000 }], 'beep_ranges' => [] })
+    body = JSON.generate(revision: saved['revision'], confirmed: true)
+    response = request(path, method: Net::HTTP::Post, headers: { 'X-BBB-Editor' => '1' }, body: body)
+    assert_equal '202', response.code
+    job = JSON.parse(response.body)
+    100.times do
+      job = JSON.parse(request("jobs/#{job['id']}").body)
+      break if %w[done failed].include?(job['status'])
+      sleep 0.01
+    end
+    assert_equal 'done', job['status'], job['message']
+    assert_equal 'reset', job.dig('result', 'operation')
+    assert_equal @xml, File.read(File.join(@raw, 'events.xml'))
+    assert_equal [], @repo.recording(@id).to_h[:beep_ranges]
+  end
+
   def test_rebuild_route_reports_requested_and_never_marks_command_success_as_completion
     xml = @xml.sub('</recording>', '<event timestamp="2000" eventname="RecordStatusEvent"><status>true</status></event><event timestamp="4000" eventname="RecordStatusEvent"><status>false</status></event></recording>')
     File.write(File.join(@raw, 'events.xml'), xml)

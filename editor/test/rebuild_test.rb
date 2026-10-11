@@ -67,6 +67,7 @@ class RebuildTest < Minitest::Test
     rebuild
     assert_equal 409, assert_raises(RecordingEditor::Error) { @editor.rebuild(@id, @payload) }.status
     assert_equal 409, assert_raises(RecordingEditor::Error) { @editor.save(@id, @payload) }.status
+    assert_equal 409, assert_raises(RecordingEditor::Error) { @editor.reset(@id, @payload) }.status
     assert_equal @xml, File.read(File.join(@repo.raw_root, @id, 'events.xml'))
   end
 
@@ -109,6 +110,7 @@ class RebuildTest < Minitest::Test
     File.write(path, '<recording><state>processing</state></recording>')
     assert_equal 409, assert_raises(RecordingEditor::Error) { @editor.rebuild(@id, @payload) }.status
     assert_equal 409, assert_raises(RecordingEditor::Error) { @editor.save(@id, @payload) }.status
+    assert_equal 409, assert_raises(RecordingEditor::Error) { @editor.reset(@id, @payload) }.status
   end
 
   def test_queue_rejects_concurrent_mutations_and_releases_key_after_failure

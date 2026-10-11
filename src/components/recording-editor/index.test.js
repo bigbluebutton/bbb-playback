@@ -4,10 +4,11 @@ import { act, Simulate } from 'react-dom/test-utils';
 import { IntlProvider } from 'react-intl';
 import RecordingEditor from './index';
 import { LANGUAGE_KEY } from './i18n';
+import useAudioPreview from './useAudioPreview';
 
 jest.mock('./SlidePreview', () => () => <div>slide preview</div>);
 jest.mock('./VideoPreview', () => () => <div>video preview</div>);
-jest.mock('./useAudioPreview', () => () => {});
+jest.mock('./useAudioPreview', () => jest.fn());
 jest.mock('components/external-video-player', () => () => <div>external preview</div>);
 
 const id = `${'a'.repeat(40)}-1700000000000`;
@@ -16,6 +17,7 @@ const manifest = {
   record_ranges: [{ start_ms: 1000, end_ms: 59000 }], beep_ranges: [],
   events: [], assets: [], slides: [], warnings: [], published_url: '/playback/test',
   rebuild: { available: true, status: 'not_requested' },
+  reset: { available: true },
 };
 let container;
 let root;
@@ -46,6 +48,7 @@ beforeEach(async () => {
     else if (url.endsWith('/draft')) result = payload;
     else if (url.endsWith('/rebuild')) result = { status: 'done', result: { available: true, status: 'requested' } };
     else if (url.endsWith('/save')) result = { status: 'done', result: { xml_backup: '/backup/events.xml' } };
+    else if (url.endsWith('/reset')) result = { status: 'done', result: { archive: '/history/reset' } };
     else result = manifest;
     return { ok: true, json: async () => result };
   });
@@ -70,6 +73,32 @@ test('editing, undo/redo and draft send meeting-time ranges with revision', asyn
   expect(draft.payload).toMatchObject({ revision: 'revision-one', beep_ranges: [{ start_ms: 6500, end_ms: 9500 }] });
   expect(draft.headers['X-BBB-Editor']).toBe('1');
   expect(calls.some(c => c.url.endsWith('/save'))).toBe(false);
+});
+
+test('reopening restores saved beep intervals and enables edited audio preview', async () => {
+  const beeps = [{ start_ms: 6500, end_ms: 9500 }];
+  const checkbox = container.querySelector('.re-transport input[type="checkbox"]');
+  await act(async () => { Simulate.change(checkbox, { target: { checked: false } }); });
+  global.fetch.mockImplementation(async url => ({ ok: true, json: async () => url.endsWith('/preview')
+    ? { status: 'done', result: { audio_url: '/demo.webm', peaks: [] } } : { ...manifest, beep_ranges: beeps } }));
+  await act(async () => { Simulate.click(container.querySelector('.re-meeting')); });
+  expect(container.querySelector('[aria-label="ピー音で置き換える区間1 開始"]').value).toBe('00:00:06.500');
+  expect(container.querySelector('.re-transport input[type="checkbox"]').checked).toBe(true);
+  expect(useAudioPreview).toHaveBeenLastCalledWith(expect.anything(), beeps, true);
+});
+
+test('reset requires confirmation and clears edits, draft and undo without rebuilding', async () => {
+  await click('ピー音を追加');
+  await click('初期状態に戻す…');
+  expect(calls.some(call => call.url.endsWith('/reset'))).toBe(false);
+  expect(container.querySelector('.re-reset-review').textContent).toContain('履歴へ退避');
+  await click('確認して初期状態に戻す');
+  expect(calls.find(call => call.url.endsWith('/reset')).payload).toEqual({ revision: 'revision-one', confirmed: true });
+  expect(container.querySelector('[aria-label="ピー音で置き換える区間1 開始"]')).toBeNull();
+  expect(button('↶ 元に戻す').disabled).toBe(true);
+  expect(container.textContent).toContain('初期状態に戻しました');
+  expect(calls.filter(call => call.url.endsWith('/preview'))).toHaveLength(2);
+  expect(calls.some(call => call.url.endsWith('/rebuild'))).toBe(false);
 });
 
 test('record-off splits the range and bad time input cannot edit it', async () => {

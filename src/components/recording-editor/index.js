@@ -135,6 +135,7 @@ function Editor() {
   const [error, setError] = useState('');
   const [review, setReview] = useState(false);
   const [rebuildReview, setRebuildReview] = useState(false);
+  const [resetReview, setResetReview] = useState(false);
   const duration = recording?.duration_ms || 0;
   const dirty = recording && JSON.stringify(edit) !== JSON.stringify({ record_ranges: recording.record_ranges, beep_ranges: recording.beep_ranges });
   const rebuilding = ['requesting', 'requested'].includes(recording?.rebuild?.status);
@@ -178,17 +179,17 @@ function Editor() {
   const replaceEdit = useCallback(next => {
     if (busy) return;
     setHistory(h => ({ past: [...h.past, edit].slice(-100), future: [] }));
-    setEdit(next); setReview(false); setRebuildReview(false); setMessage('');
+    setEdit(next); setReview(false); setRebuildReview(false); setResetReview(false); setMessage('');
   }, [edit, busy]);
   const change = (kind, ranges) => replaceEdit({ ...edit, [kind]: normalizeRanges(ranges, duration) });
   const undo = useCallback(() => {
     if (!history.past.length) return;
     setEdit(history.past[history.past.length - 1]);
-    setHistory({ past: history.past.slice(0, -1), future: [edit, ...history.future] }); setReview(false); setRebuildReview(false);
+    setHistory({ past: history.past.slice(0, -1), future: [edit, ...history.future] }); setReview(false); setRebuildReview(false); setResetReview(false);
   }, [edit, history]);
   const redo = () => {
     if (!history.future.length) return;
-    setEdit(history.future[0]); setHistory({ past: [...history.past, edit], future: history.future.slice(1) }); setReview(false); setRebuildReview(false);
+    setEdit(history.future[0]); setHistory({ past: [...history.past, edit], future: history.future.slice(1) }); setReview(false); setRebuildReview(false); setResetReview(false);
   };
   useEffect(() => {
     const key = e => {
@@ -208,7 +209,7 @@ function Editor() {
     return job.result;
   };
   const open = async id => {
-    setBusy({ id: 'loadingMedia' }); setError(''); setMessage(''); setReview(false); setRebuildReview(false);
+    setBusy({ id: 'loadingMedia' }); setError(''); setMessage(''); setReview(false); setRebuildReview(false); setResetReview(false); setBeepPreview(true);
     audio?.pause(); setRecording(null); setPreview(null); setTime(0); setPlaying(false);
     try {
       const data = await request(`/recordings/${id}`);
@@ -246,6 +247,21 @@ function Editor() {
       await refreshList();
     } catch (e) { setError(e.message); } finally { setBusy(''); }
   };
+  const reset = async () => {
+    if (rebuilding || busy || !recording.reset?.available) return;
+    const id = recording.id;
+    setBusy({ id: 'resetting' }); setError(''); setMessage(''); audio?.pause();
+    try {
+      await runJob(`/recordings/${id}/reset`, { revision: recording.revision, confirmed: true });
+      setPreview(null); setTime(0); setPlaying(false); setBeepPreview(true);
+      const data = await request(`/recordings/${id}`);
+      setRecording(data); setEdit({ record_ranges: data.record_ranges, beep_ranges: data.beep_ranges });
+      setHistory({ past: [], future: [] }); setSelection({ start_ms: 0, end_ms: Math.min(10000, data.duration_ms) });
+      setReview(false); setRebuildReview(false); setResetReview(false);
+      setPreview(await runJob(`/recordings/${id}/preview`, {}));
+      setMessage({ id: 'resetCompleted' }); await refreshList();
+    } catch (e) { setError(e.message); } finally { setBusy(''); }
+  };
   const activeAssets = recording?.assets.filter(a => a.has_video && !a.error && a.start_ms <= time && time < a.end_ms) || [];
   const screen = activeAssets.find(a => a.kind === 'deskshare');
   const external = videos.find(v => v.timestamp * 1000 <= time && time < v.clear * 1000);
@@ -253,7 +269,7 @@ function Editor() {
 
   return <div className="recording-editor">
     <header className="re-header"><div><span className="re-brand">BigBlueButton</span><strong>{t('title')}</strong><span className="re-badge">{t('admin')}</span></div>
-      <div className="re-header-actions"><label className="re-language">{t('language')} <select aria-label={t('language')} value={locale} onChange={e => setLocale(e.target.value)}>{languages.map(language => <option key={language.code} value={language.code}>{language.label}</option>)}</select></label>{recording && <><span className="re-dirty">{dirty ? t('unsaved') : t('saved')}</span><button disabled={!!busy} onClick={draft}>{t('saveDraft')}</button><button className="re-primary" disabled={!!busy || rebuilding} onClick={() => { setReview(!review); setRebuildReview(false); }}>{t('saveRaw')}</button><button disabled={!!busy || dirty || rebuilding || !recording.rebuild?.available} title={dirty ? t('saveBeforeRebuild') : !recording.rebuild?.available ? t('rebuildSetup') : ''} onClick={() => { setRebuildReview(!rebuildReview); setReview(false); }}>{t('rebuildRecording')}</button></>}</div>
+      <div className="re-header-actions"><label className="re-language">{t('language')} <select aria-label={t('language')} value={locale} onChange={e => setLocale(e.target.value)}>{languages.map(language => <option key={language.code} value={language.code}>{language.label}</option>)}</select></label>{recording && <><span className="re-dirty">{dirty ? t('unsaved') : t('saved')}</span><button disabled={!!busy} onClick={draft}>{t('saveDraft')}</button><button className="re-primary" disabled={!!busy || rebuilding} onClick={() => { setReview(!review); setRebuildReview(false); setResetReview(false); }}>{t('saveRaw')}</button><button disabled={!!busy || dirty || rebuilding || !recording.rebuild?.available} title={dirty ? t('saveBeforeRebuild') : !recording.rebuild?.available ? t('rebuildSetup') : ''} onClick={() => { setRebuildReview(!rebuildReview); setReview(false); setResetReview(false); }}>{t('rebuildRecording')}</button></>}</div>
     </header>
     <div className="re-shell"><MeetingList meetings={meetings} selectedId={recording?.id} busy={busy} dirty={dirty} onRefresh={refreshList} onOpen={open} /><main className="re-main">
       {busy && <div className="re-notice" role="status">◌ {displayMessage(busy)}</div>}{error && <div className="re-error" role="alert">{displayMessage(error)}</div>}{message && <div className="re-success" role="status">{displayMessage(message)}</div>}
@@ -264,6 +280,10 @@ function Editor() {
         {!recording.rebuild?.available && <p className="re-muted">{t('rebuildSetup')}</p>}
         {rebuilding && <div className="re-notice" role="status">{t('rebuildRequested')}</div>}
         {['failed', 'command_failed'].includes(recording.rebuild?.status) && <div className="re-error" role="alert">{t('rebuildFailed')}</div>}
+        <div className="re-reset"><button disabled={!!busy || rebuilding || !recording.reset?.available} onClick={() => { setResetReview(!resetReview); setReview(false); setRebuildReview(false); }}>{t('resetOriginal')}</button>{!recording.reset?.available && <small>{t('resetUnavailable')}</small>}</div>
+        {resetReview && <div className="re-review re-reset-review"><h3>{t('resetReviewTitle')}</h3><p>{t('resetReviewDetails')}</p><p className="re-warnings">{t('resetWarning')}</p><p>{t('resetPublished')}</p>
+          <button disabled={!!busy || rebuilding} onClick={reset}>{t('confirmReset')}</button><button disabled={!!busy} onClick={() => setResetReview(false)}>{t('close')}</button>
+        </div>}
         {rebuildReview && <div className="re-review re-rebuild-review"><h3>{t('rebuildReviewTitle')}</h3><p>{t('rebuildReviewDetails')}</p><p className="re-warnings">{t('rebuildWarning')}</p><p>{t('rebuildPublishedWarning')}</p>
           <button className="re-primary" disabled={!!busy || dirty || rebuilding} onClick={rebuild}>{t('confirmRebuild')}</button><button disabled={!!busy} onClick={() => setRebuildReview(false)}>{t('close')}</button>
         </div>}
@@ -280,7 +300,7 @@ function Editor() {
         <div className="re-transport"><button className="re-play" disabled={!preview || !!busy} onClick={() => { if (audio.paused) audio.play().catch(e => setError(e.message)); else audio.pause(); }}>{playing ? t('pause') : t('play')}</button>
           <TimeField label={t('position')} value={Math.round(time)} max={duration} onChange={seek} onFocus={() => audio?.pause()} /><span>/ {formatTime(duration)}</span>
           <select aria-label={t('speed')} value={rate} onChange={e => { const value = Number(e.target.value); setRate(value); if (audio) audio.playbackRate = value; }}>{[0.5, 1, 1.5, 2].map(r => <option key={r} value={r}>{r}×</option>)}</select>
-          <label><input type="checkbox" checked={beepPreview} onChange={e => setBeepPreview(e.target.checked)} /> {t('previewBeep')}</label><span className="re-muted">{t('playOff')}</span>
+          <label><input type="checkbox" checked={beepPreview} onChange={e => setBeepPreview(e.target.checked)} /> {t(beepPreview ? 'previewBeep' : 'previewOriginal')}</label><span className="re-muted">{t('playOff')}</span>
           {preview && <audio ref={setAudio} src={preview.audio_url} preload="auto" onError={() => setError({ id: 'audioError' })} />}
         </div>
         <div className="re-tools"><button disabled={!history.past.length || !!busy} onClick={undo}>{t('undo')}</button><button disabled={!history.future.length || !!busy} onClick={redo}>{t('redo')}</button><label>{t('zoom')} <select value={zoom} onChange={e => setZoom(Number(e.target.value))}>{[1, 2, 4, 8, 16].map(z => <option key={z} value={z}>{z}×</option>)}</select></label><span className="re-muted">{t('dragHint')}</span></div>

@@ -163,7 +163,7 @@ module RecordingEditor
 
     def ensure_not_rebuilding(id)
       if %w[requesting requested].include?(rebuild_info(id)['status']) || publication_info(id)[:publication_status] == 'processing'
-        raise Error.new('録画の再構築・処理中はraw保存や再構築を実行できません。完了後に一覧を更新してください。', 409)
+        raise Error.new('録画の再構築・処理中はraw保存・初期化・再構築を実行できません。完了後に一覧を更新してください。', 409)
       end
     end
 
@@ -495,7 +495,7 @@ module RecordingEditor
       history = history_data
       { id: id, name: name, start_utc: start_utc, origin_timestamp: origin, duration_ms: duration,
         revision: revision, record_ranges: record_ranges, original_record_ranges: record_ranges(doc),
-        rebuild: repo.rebuild_info(id),
+        rebuild: repo.rebuild_info(id), reset: Original.new(repo, id).info,
         beep_ranges: history && history['revision'] == revision ? history.fetch('beep_ranges', []) : [],
         assets: media, slides: slides, events: events, warnings: warnings.uniq,
         published_url: "/playback/presentation/2.3/#{id}",
@@ -729,6 +729,122 @@ module RecordingEditor
     end
   end
 
+  # Immutable first-save snapshot. Legacy XML baselines were serialized; only a
+  # matching pre-save .bak can establish their exact original bytes.
+  class Original
+    attr_reader :repo, :id, :root
+    def initialize(repo, id)
+      @repo, @id, @root = repo, repo.check_id(id), repo.state_dir(id)
+    end
+
+    def manifest
+      path = File.join(root, 'original.json')
+      File.file?(path) ? JSON.parse(File.read(path)) : nil
+    end
+
+    def info
+      data = manifest
+      { available: !!data || legacy_xml_available?, legacy: !data }
+    end
+
+    def legacy_xml_available?
+      File.file?(File.join(root, 'original-events.xml')) && !legacy_xml.nil?
+    end
+
+    def legacy_xml
+      baseline = File.join(root, 'original-events.xml')
+      return nil unless File.file?(baseline)
+      expected = RecordingEditor.xml(File.binread(baseline)).to_xml
+      # Journals identify the first save even when several backups share a second.
+      journals = Dir.glob(File.join(root, 'edit-*.json')).sort_by { |path| File.mtime(path) }
+      recorded = journals.filter_map { |path| JSON.parse(File.read(path))['xml_backup'] }
+      candidates = recorded + Dir.glob(File.join(repo.raw_dir(id), 'events.xml.bak.*')).sort
+      candidates.uniq.each do |path|
+        next unless File.dirname(path) == repo.raw_dir(id) && File.file?(path)
+        bytes = File.binread(repo.raw_file(id, File.basename(path)))
+        begin
+          return bytes if RecordingEditor.xml(bytes).to_xml == expected
+        rescue Error
+          next
+        end
+      end
+      nil
+    end
+
+    def capture(rec, progress: ->(_) {})
+      return manifest if manifest
+      bytes = rec.history_data ? legacy_xml : File.binread(repo.raw_file(id, 'events.xml'))
+      return nil unless bytes
+      raise Error.new('処理中にevents.xmlが変更されました。保存していません。', 409) if !rec.history_data && Digest::SHA256.hexdigest(bytes) != rec.revision
+      progress.call('初回のXMLとraw音声・動画をバックアップしています。')
+      originals = %w[audio video deskshare].flat_map do |kind|
+        Dir.glob(File.join(repo.raw_dir(id), kind, '**', '*')).filter_map do |path|
+          next unless File.file?(path)
+          relative = path.delete_prefix(repo.raw_dir(id) + '/')
+          next if rec.history_data && File.basename(path).start_with?('bbb-editor-')
+          source = repo.raw_file(id, relative)
+          stat = File.stat(source)
+          backup = File.join(root, 'original-media', relative)
+          FileUtils.mkdir_p(File.dirname(backup))
+          FileUtils.copy_file(source, backup) unless File.file?(backup)
+          { 'relative' => relative, 'sha256' => Digest::SHA256.file(backup).hexdigest,
+            'mode' => stat.mode & 0o777, 'uid' => stat.uid, 'gid' => stat.gid }
+        end
+      end
+      # Include originals already removed from raw but backed up by a legacy save.
+      Dir.glob(File.join(root, 'original-media', '**', '*')).each do |backup|
+        next unless File.file?(backup)
+        relative = backup.delete_prefix(File.join(root, 'original-media') + '/')
+        next if originals.any? { |item| item['relative'] == relative }
+        originals << { 'relative' => relative, 'sha256' => Digest::SHA256.file(backup).hexdigest, 'mode' => 0o644 }
+      end
+      RecordingEditor.atomic_write(File.join(root, 'original-events.xml'), bytes)
+      data = { 'revision' => Digest::SHA256.hexdigest(bytes), 'media' => originals,
+               'captured_at' => Time.now.utc.iso8601, 'legacy' => !!rec.history_data }
+      RecordingEditor.atomic_write(File.join(root, 'original.json'), JSON.pretty_generate(data))
+      data
+    end
+
+    def verified
+      data = manifest
+      raise Error, '初期状態のバックアップがありません。' unless data
+      bytes = File.binread(File.join(root, 'original-events.xml'))
+      raise Error, '初期XMLのバックアップが破損しています。' unless Digest::SHA256.hexdigest(bytes) == data['revision']
+      RecordingEditor.xml(bytes)
+      data['media'].each do |item|
+        path = backup_path(item['relative'])
+        raise Error, '元素材のバックアップが欠落または破損しています。' unless File.file?(path) && Digest::SHA256.file(path).hexdigest == item['sha256']
+        raw_target(item['relative'])
+      end
+      [data, bytes]
+    end
+
+    def backup_path(relative)
+      validate_relative(relative)
+      path = File.join(root, 'original-media', relative)
+      if File.exist?(path) && !File.realpath(path).start_with?(File.realpath(File.join(root, 'original-media')) + '/')
+        raise Error, '元素材のバックアップの参照先が不正です。'
+      end
+      path
+    end
+
+    def raw_target(relative)
+      validate_relative(relative)
+      path = File.join(repo.raw_dir(id), relative)
+      parent = File.dirname(path)
+      parent = File.dirname(parent) until File.exist?(parent)
+      raw = File.realpath(repo.raw_dir(id))
+      raise Error, '元素材の復元先が不正です。' unless File.realpath(parent) == raw || File.realpath(parent).start_with?(raw + '/')
+      repo.raw_file(id, relative) if File.exist?(path)
+      raise Error, '元素材の復元先が不正です。' if File.symlink?(path)
+      path
+    end
+
+    def validate_relative(relative)
+      raise Error, '素材のパスが不正です。' unless relative.is_a?(String) && relative.match?(%r{\A(?:audio|video|deskshare)/}) && !relative.split('/').any? { |part| ['', '.', '..'].include?(part) }
+    end
+  end
+
   class Editor
     attr_reader :repo
     def initialize(repo)
@@ -746,8 +862,13 @@ module RecordingEditor
       beeps = RecordingEditor.ranges(payload['beep_ranges'] || [], rec.duration)
       root = repo.state_dir(id)
       FileUtils.mkdir_p(root)
+      original = Original.new(repo, id)
+      initial = original.manifest
+      raise Error.new('外部のXML変更と編集履歴が一致しません。編集履歴を退避してから読み直してください。', 409) if !history && initial && initial['revision'] != rec.revision
+      original.capture(rec, progress: progress)
+      # Keep legacy editing operational even if its exact pre-save .bak is gone.
       baseline = File.join(root, 'original-events.xml')
-      RecordingEditor.atomic_write(baseline, rec.doc.to_xml) unless history
+      RecordingEditor.atomic_write(baseline, rec.doc.to_xml) unless File.file?(baseline)
       staging = File.join(root, "staging-#{SecureRandom.hex(6)}")
       FileUtils.mkdir_p(staging)
       replacements, outputs = Media.new(rec).redact(beeps, staging, progress: progress)
@@ -776,6 +897,100 @@ module RecordingEditor
       result
     ensure
       FileUtils.rm_rf(staging) if staging
+    end
+
+    def reset(id, payload, progress: ->(_) {})
+      raise Error, '初期化の影響を確認してください。' unless payload['confirmed'] == true
+      repo.ensure_not_rebuilding(id)
+      rec = repo.recording(id)
+      raise Error.new('events.xmlが変更されています。会議を読み直してください。', 409) unless payload['revision'] == rec.revision
+      original = Original.new(repo, id)
+      original.capture(rec, progress: progress) if rec.history_data
+      data, bytes = original.verified
+      root = repo.state_dir(id)
+      current = repo.raw_file(id, 'events.xml')
+      stat = File.stat(current)
+      # Only editor-created outputs recorded in our journals are archived.
+      outputs = Dir.glob(File.join(root, 'edit-*.json')).flat_map do |path|
+        JSON.parse(File.read(path)).fetch('outputs', []).map { |item| item.fetch('relative') }
+      end.uniq.reject { |relative| data['media'].any? { |item| item['relative'] == relative } }
+      outputs.each do |relative|
+        raise Error, '加工素材の履歴が不正です。' unless File.basename(relative).start_with?('bbb-editor-')
+        original.raw_target(relative)
+      end
+      token = "reset-#{Time.now.utc.strftime('%Y%m%dT%H%M%S')}-#{SecureRandom.hex(6)}"
+      archive = File.join(root, token)
+      FileUtils.mkdir_p(archive)
+      FileUtils.copy_file(current, File.join(archive, 'events.xml'))
+      saved_path, draft_path = %w[saved.json draft.json].map { |name| File.join(root, name) }
+      previous_saved = File.file?(saved_path) ? File.binread(saved_path) : nil
+      previous_draft = File.file?(draft_path) ? File.binread(draft_path) : nil
+      RecordingEditor.atomic_write(File.join(archive, 'saved.json'), previous_saved) if previous_saved
+      RecordingEditor.atomic_write(File.join(archive, 'draft.json'), previous_draft) if previous_draft
+      result = { 'operation' => 'reset', 'revision' => data['revision'], 'beep_ranges' => [],
+                 'xml_backup' => File.join(archive, 'events.xml'), 'archive' => archive,
+                 'archived_media' => outputs, 'saved_at' => Time.now.utc.iso8601, 'status' => 'prepared' }
+      journal = File.join(root, "#{token}.json")
+      RecordingEditor.atomic_write(journal, JSON.pretty_generate(result))
+      restored, moved = [], []
+      switched = false
+      progress.call('初期状態へ復元し、現在の編集結果を履歴へ退避しています。')
+      begin
+        raise Error.new('処理中にevents.xmlが変更されました。初期化していません。', 409) unless Digest::SHA256.file(current).hexdigest == rec.revision
+        data['media'].each do |item|
+          target = original.raw_target(item['relative'])
+          next if File.file?(target) && Digest::SHA256.file(target).hexdigest == item['sha256']
+          FileUtils.mkdir_p(File.dirname(target))
+          temporary = "#{target}.#{token}.tmp"
+          begin
+            FileUtils.copy_file(original.backup_path(item['relative']), temporary)
+            File.chmod(item['mode'], temporary)
+            File.chown(item['uid'], item['gid'], temporary) if Process.uid.zero? && item['uid']
+            old = File.file?(target) ? File.join(archive, 'replaced-originals', item['relative']) : nil
+            if old
+              FileUtils.mkdir_p(File.dirname(old))
+              FileUtils.mv(target, old)
+            end
+            restored << [target, old]
+            File.rename(temporary, target)
+          ensure
+            FileUtils.rm_f(temporary)
+          end
+        end
+        raise Error.new('処理中にevents.xmlが変更されました。初期化していません。', 409) unless Digest::SHA256.file(current).hexdigest == rec.revision
+        RecordingEditor.atomic_write(current, bytes, mode: stat.mode & 0o777)
+        switched = true
+        File.chown(stat.uid, stat.gid, current) if Process.uid.zero?
+        outputs.each do |relative|
+          source = original.raw_target(relative)
+          next unless File.file?(source)
+          destination = File.join(archive, 'media', relative)
+          FileUtils.mkdir_p(File.dirname(destination))
+          FileUtils.mv(source, destination)
+          moved << [source, destination]
+        end
+        result['status'] = 'completed'
+        RecordingEditor.atomic_write(saved_path, JSON.pretty_generate(result))
+        FileUtils.rm_f(draft_path)
+        RecordingEditor.atomic_write(journal, JSON.pretty_generate(result))
+      rescue StandardError
+        moved.reverse_each { |source, destination| FileUtils.mv(destination, source) }
+        restored.reverse_each do |target, old|
+          FileUtils.rm_f(target)
+          FileUtils.mv(old, target) if old
+        end
+        if switched
+          RecordingEditor.atomic_write(current, File.binread(result['xml_backup']), mode: stat.mode & 0o777)
+          File.chown(stat.uid, stat.gid, current) if Process.uid.zero?
+          previous_saved ? RecordingEditor.atomic_write(saved_path, previous_saved) : FileUtils.rm_f(saved_path)
+          RecordingEditor.atomic_write(draft_path, previous_draft) if previous_draft
+        end
+        result['status'] = 'rolled_back'
+        RecordingEditor.atomic_write(journal, JSON.pretty_generate(result))
+        raise
+      end
+      progress.call('初期状態に戻しました。録画への反映には別途再構築が必要です。')
+      result
     end
 
     def draft(id, payload)

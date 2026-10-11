@@ -69,5 +69,18 @@
   "再構築用の補助プログラムが未設置です。READMEの設置手順を確認してください。": "The rebuild helper is not installed. Follow the README installation instructions.",
   "BBBに録画の再構築を依頼しています。": "Requesting a recording rebuild from BigBlueButton.",
   "再構築の依頼に失敗しました: ": "Failed to request recording rebuild: ",
-  "この会議には保存・再構築の処理が既にあります。完了を待ってください。": "A save or rebuild job already exists for this meeting. Wait for it to finish."
+  "この会議には保存・再構築の処理が既にあります。完了を待ってください。": "A save or rebuild job already exists for this meeting. Wait for it to finish.",
+  "初回のXMLとraw音声・動画をバックアップしています。": "Backing up the initial XML and raw audio/video.",
+  "初期化の影響を確認してください。": "Confirm the effects of restoring the original state.",
+  "初期状態のバックアップがありません。": "No original-state backup is available.",
+  "初期XMLのバックアップが破損しています。": "The original XML backup is corrupt.",
+  "元素材のバックアップが欠落または破損しています。": "An original media backup is missing or corrupt.",
+  "元素材のバックアップの参照先が不正です。": "Invalid original media backup path.",
+  "元素材の復元先が不正です。": "Invalid original media restore path.",
+  "素材のパスが不正です。": "Invalid media path.",
+  "加工素材の履歴が不正です。": "Invalid generated media history.",
+  "処理中にevents.xmlが変更されました。初期化していません。": "events.xml changed during processing. Original state was not restored.",
+  "初期状態へ復元し、現在の編集結果を履歴へ退避しています。": "Restoring original state and archiving the current edits.",
+  "初期状態に戻しました。録画への反映には別途再構築が必要です。": "Original state restored. Rebuild separately to update playback.",
+  "録画の再構築・処理中はraw保存・初期化・再構築を実行できません。完了後に一覧を更新してください。": "Cannot save raw data, restore original state, or request another rebuild while recording processing is in progress. Refresh the list after it finishes."
 }

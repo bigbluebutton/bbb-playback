@@ -149,6 +149,134 @@ class RecordingEditorTest < Minitest::Test
     assert_equal result, RecordingEditor::Media.new(rec).preview(key)
   end
 
+  def test_reopening_restores_beeps_and_resaving_uses_original_sources
+    sources
+    editor = RecordingEditor::Editor.new(@repo)
+    first = [{ 'start_ms' => 2000, 'end_ms' => 3000 }]
+    editor.save(@id, payload(@repo.recording(@id), first))
+    reopened = @repo.recording(@id)
+    assert_equal first, reopened.to_h[:beep_ranges]
+    assert_equal 'audio/microphone.wav', reopened.assets.first['relative']
+    combined = first + [{ 'start_ms' => 4000, 'end_ms' => 5000 }]
+    result = editor.save(@id, payload(reopened, combined))
+    mic = result['outputs'].find { |item| item[:source] == 'audio/microphone.wav' }
+    assert_in_delta 0.085, rms(samples(File.join(@raw, mic[:relative]), 2.5)), 0.015
+    assert_in_delta 0.085, rms(samples(File.join(@raw, mic[:relative]), 4.5)), 0.015
+    # Removing the old interval must recover speech there, without retaining its beep.
+    result = editor.save(@id, payload(@repo.recording(@id), combined.last(1)))
+    mic = result['outputs'].find { |item| item[:source] == 'audio/microphone.wav' }
+    assert_in_delta rms(samples(File.join(@raw, 'audio/microphone.wav'), 2.5)), rms(samples(File.join(@raw, mic[:relative]), 2.5)), 0.001
+  end
+
+  def test_reset_restores_exact_xml_and_media_and_archives_edits
+    sources
+    editor = RecordingEditor::Editor.new(@repo)
+    original_mic = File.binread(File.join(@raw, 'audio/microphone.wav'))
+    original_screen = File.binread(File.join(@raw, 'deskshare/screen.mp4'))
+    saved = editor.save(@id, payload(@repo.recording(@id), [{ 'start_ms' => 2000, 'end_ms' => 4000 }]))
+    assert_equal @events.b, File.binread(File.join(@repo.state_dir(@id), 'original-events.xml'))
+    editor.draft(@id, payload(@repo.recording(@id)))
+    before = File.binread(File.join(@raw, 'events.xml'))
+    # Missing/externally altered originals are recoverable from the snapshot.
+    File.binwrite(File.join(@raw, 'audio/microphone.wav'), 'damaged original')
+    FileUtils.rm_f(File.join(@raw, 'deskshare/screen.mp4'))
+    result = editor.reset(@id, { 'revision' => saved['revision'], 'confirmed' => true })
+    assert_equal @events.b, File.binread(File.join(@raw, 'events.xml'))
+    assert_equal original_mic, File.binread(File.join(@raw, 'audio/microphone.wav'))
+    assert_equal original_screen, File.binread(File.join(@raw, 'deskshare/screen.mp4'))
+    assert_equal before, File.binread(result['xml_backup'])
+    assert File.file?(File.join(result['archive'], 'draft.json'))
+    refute File.exist?(File.join(@repo.state_dir(@id), 'draft.json'))
+    saved['outputs'].each do |item|
+      refute File.exist?(File.join(@raw, item[:relative]))
+      assert File.file?(File.join(result['archive'], 'media', item[:relative]))
+    end
+    reopened = @repo.recording(@id)
+    assert_equal [], reopened.to_h[:beep_ranges]
+    assert_equal [{ 'start_ms' => 1000, 'end_ms' => 5000 }], reopened.record_ranges
+    editor.save(@id, payload(reopened))
+    editor.reset(@id, { 'revision' => @repo.recording(@id).revision, 'confirmed' => true })
+    assert_equal @events.b, File.binread(File.join(@raw, 'events.xml'))
+  end
+
+  def test_reset_can_restore_original_xml_without_recording_marks
+    xml = RecordingEditor.xml(@events)
+    xml.xpath('/recording/event[@eventname="RecordStatusEvent"]').each(&:remove)
+    original = xml.to_xml
+    File.binwrite(File.join(@raw, 'events.xml'), original)
+    editor = RecordingEditor::Editor.new(@repo)
+    saved = editor.save(@id, payload)
+    editor.reset(@id, { 'revision' => saved['revision'], 'confirmed' => true })
+    assert_equal original.b, File.binread(File.join(@raw, 'events.xml'))
+    assert_empty @repo.recording(@id).current_doc.xpath('/recording/event[@eventname="RecordStatusEvent"]')
+    assert_raises(RecordingEditor::Error) { editor.rebuild(@id, { 'revision' => @repo.recording(@id).revision, 'confirmed' => true }) }
+  end
+
+  def test_reset_preflight_rejects_corrupt_backups_and_unconfirmed_or_stale_requests
+    sources
+    editor = RecordingEditor::Editor.new(@repo)
+    saved = editor.save(@id, payload)
+    before = File.binread(File.join(@raw, 'events.xml'))
+    assert_raises(RecordingEditor::Error) { editor.reset(@id, { 'revision' => saved['revision'] }) }
+    assert_raises(RecordingEditor::Error) { editor.reset(@id, { 'revision' => 'stale', 'confirmed' => true }) }
+    File.binwrite(File.join(@repo.state_dir(@id), 'original-media/audio/microphone.wav'), 'corrupt')
+    assert_raises(RecordingEditor::Error) { editor.reset(@id, { 'revision' => saved['revision'], 'confirmed' => true }) }
+    assert_equal before, File.binread(File.join(@raw, 'events.xml'))
+    assert_equal saved['revision'], @repo.recording(@id).history_data['revision']
+  end
+
+  def test_reset_rolls_back_xml_settings_draft_and_media_on_commit_failure
+    sources
+    editor = RecordingEditor::Editor.new(@repo)
+    saved = editor.save(@id, payload(@repo.recording(@id), [{ 'start_ms' => 2000, 'end_ms' => 4000 }]))
+    editor.draft(@id, payload(@repo.recording(@id)))
+    before = File.binread(File.join(@raw, 'events.xml'))
+    saved_path = File.join(@repo.state_dir(@id), 'saved.json')
+    altered = File.join(@raw, 'audio/microphone.wav')
+    File.binwrite(altered, 'external alteration before reset')
+    write = RecordingEditor.method(:atomic_write)
+    fail_once = true
+    RecordingEditor.stub(:atomic_write, lambda { |path, data, **opts|
+      if path == saved_path && fail_once
+        fail_once = false
+        raise IOError, 'simulated state write failure'
+      end
+      write.call(path, data, **opts)
+    }) do
+      assert_raises(IOError) { editor.reset(@id, { 'revision' => saved['revision'], 'confirmed' => true }) }
+    end
+    assert_equal before, File.binread(File.join(@raw, 'events.xml'))
+    assert_equal saved['revision'], @repo.recording(@id).history_data['revision']
+    assert File.file?(File.join(@repo.state_dir(@id), 'draft.json'))
+    assert_equal 'external alteration before reset', File.binread(altered)
+    saved['outputs'].each { |item| assert File.file?(File.join(@raw, item[:relative])) }
+  end
+
+  def test_legacy_reset_recovers_exact_xml_from_matching_backup
+    editor = RecordingEditor::Editor.new(@repo)
+    saved = editor.save(@id, payload)
+    root = @repo.state_dir(@id)
+    FileUtils.rm_f(File.join(root, 'original.json'))
+    File.binwrite(File.join(root, 'original-events.xml'), RecordingEditor.xml(@events).to_xml)
+    assert @repo.recording(@id).to_h[:reset][:available]
+    editor.reset(@id, { 'revision' => saved['revision'], 'confirmed' => true })
+    assert_equal @events.b, File.binread(File.join(@raw, 'events.xml'))
+  end
+
+  def test_legacy_without_original_xml_backup_remains_editable_but_cannot_reset
+    editor = RecordingEditor::Editor.new(@repo)
+    editor.save(@id, payload)
+    root = @repo.state_dir(@id)
+    FileUtils.rm_f(File.join(root, 'original.json'))
+    File.binwrite(File.join(root, 'original-events.xml'), RecordingEditor.xml(@events).to_xml)
+    Dir.glob(File.join(@raw, 'events.xml.bak.*')).each { |path| FileUtils.rm_f(path) }
+    refute @repo.recording(@id).to_h[:reset][:available]
+    saved = editor.save(@id, payload)
+    assert_raises(RecordingEditor::Error) { editor.reset(@id, { 'revision' => saved['revision'], 'confirmed' => true }) }
+    refute File.exist?(File.join(root, 'original.json'))
+    assert_equal saved['revision'], @repo.recording(@id).revision
+  end
+
   def test_preview_with_silent_meeting_tail_finishes_and_preserves_timing
     skip 'GNU timeout is required for this termination regression test' unless system('timeout', '--version', out: File::NULL, err: File::NULL)
     # Cover ordinary Opus and the legacy WAV time-stretch path separately.
