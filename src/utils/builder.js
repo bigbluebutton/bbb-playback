@@ -227,6 +227,12 @@ const buildThumbnails = slides => {
         src: ID.SCREENSHARE,
         timestamp,
       });
+    } else if (src.includes(ID.EXTERNAL_VIDEOS)) {
+        result.push({
+          id,
+          src: ID.EXTERNAL_VIDEOS,
+          timestamp,
+        });
     } else {
       result.push({
         id,
@@ -519,6 +525,36 @@ const buildScreenshare = result => {
   return data;
 };
 
+const buildExternalVideos = (result, slides = [], duration = Infinity) => {
+  if (!result) return [];
+
+  const videos = result.map(video => {
+    const legacy = !Object.hasOwn(video, 'start_timestamp')
+      && !Object.hasOwn(video, 'stop_timestamp');
+    const timestamp = legacy ? video.timestamp : video.start_timestamp;
+    const clear = legacy ? Infinity : video.stop_timestamp;
+    if (!Number.isFinite(timestamp) || timestamp < 0
+      || (!legacy && !Number.isFinite(clear)) || timestamp >= clear) return null;
+    return {
+      timestamp, clear, legacy,
+      url: video.external_video_url,
+      events: (Array.isArray(video.events) ? video.events : [])
+        .filter(event => Number.isFinite(event.timestamp))
+        .sort((a, b) => a.timestamp - b.timestamp),
+    };
+  }).filter(Boolean).sort((a, b) => a.timestamp - b.timestamp);
+  const slideTimes = slides.filter(slide => !slide.src.includes(ID.EXTERNAL_VIDEOS)
+    && !slide.src.includes(ID.DESKSHARE) && Number.isFinite(slide.timestamp))
+    .map(slide => slide.timestamp).sort((a, b) => a - b);
+  const end = Number.isFinite(duration) ? duration : Infinity;
+  return videos.map(({ legacy, ...video }) => {
+    if (!legacy) return video;
+    const nextSlide = slideTimes.find(time => time > video.timestamp) ?? Infinity;
+    const nextVideo = videos.find(item => item.timestamp > video.timestamp)?.timestamp ?? Infinity;
+    return { ...video, clear: Math.min(nextSlide, nextVideo, end) };
+  }).filter(video => video.timestamp < video.clear);
+};
+
 const build = (filename, value) => {
   return new Promise((resolve, reject) => {
     let data;
@@ -536,7 +572,10 @@ const build = (filename, value) => {
           data = buildPolls(value);
           break;
         case config.videos:
-          data = buildVideos(value);
+          data = {
+            videos: buildVideos(value),
+            externalVideos: buildExternalVideos(value),
+          };
           break;
         case config.tldraw:
           data = buildTldraw(value);
@@ -616,6 +655,25 @@ const addAlternatesToThumbnails = (thumbnails, alternates) => {
   });
 };
 
+const addExternalVideoThumbnails = (thumbnails, videos = []) => {
+  if (isEmpty(videos)) return thumbnails;
+  const slides = thumbnails.filter(item => item.src !== ID.EXTERNAL_VIDEOS)
+    .sort((a, b) => a.timestamp - b.timestamp);
+  const videoActive = time => videos.some(video => video.timestamp <= time && time < video.clear);
+  const visibleSlides = slides.filter(item => !videoActive(item.timestamp));
+  const videoThumbnails = videos.flatMap(video => {
+    const items = [{ src: ID.EXTERNAL_VIDEOS, timestamp: video.timestamp }];
+    const restoredSlide = slides.filter(item => item.timestamp <= video.clear).pop();
+    if (Number.isFinite(video.clear) && restoredSlide && !videoActive(video.clear)
+      && !slides.some(item => item.timestamp === video.clear)) {
+      items.push({ ...restoredSlide, timestamp: video.clear });
+    }
+    return items;
+  });
+
+  return [...visibleSlides, ...videoThumbnails].sort((a, b) => a.timestamp - b.timestamp);
+};
+
 const mergeMessages = (chat = [], polls = [], videos = []) => {
   return [
     ...chat,
@@ -626,8 +684,10 @@ const mergeMessages = (chat = [], polls = [], videos = []) => {
 
 export {
   addAlternatesToThumbnails,
+  addExternalVideoThumbnails,
   build,
   buildStyle,
+  buildExternalVideos,
   getAttr,
   getId,
   getNumbers,

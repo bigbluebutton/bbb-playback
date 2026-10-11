@@ -41,7 +41,7 @@ const getLocale = () => {
 const getMessages = (locale) => {
   const file = localeToFile(locale);
   if (file !== FALLBACK_LOCALE) {
-    return Object.assign(messages[FALLBACK_LOCALE], messages[file]);
+    return Object.assign({}, messages[FALLBACK_LOCALE], messages[file]);
   }
 
   return messages[file];

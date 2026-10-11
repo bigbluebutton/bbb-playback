@@ -1,0 +1,18 @@
+[Unit]
+Description=BigBlueButton raw recording editor
+After=network.target
+
+[Service]
+Type=simple
+User=bigbluebutton
+Group=bigbluebutton
+WorkingDirectory=/opt/bbb-recording-editor
+EnvironmentFile=/etc/bbb-recording-editor.env
+ExecStart=/usr/bin/ruby /opt/bbb-recording-editor/editor/server.rb
+Restart=on-failure
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
