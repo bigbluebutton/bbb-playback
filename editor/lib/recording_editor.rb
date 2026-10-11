@@ -158,11 +158,13 @@ module RecordingEditor
                          end
         RecordingEditor.atomic_write(path, JSON.pretty_generate(info)) if %w[completed failed].include?(info['status'])
       end
-      info.merge('available' => File.executable?(REBUILD_HELPER))
+      info.merge('available' => File.executable?(REBUILD_HELPER),
+                 'processing' => publication_info(id)[:publication_status] == 'processing')
     end
 
     def ensure_not_rebuilding(id)
-      if %w[requesting requested].include?(rebuild_info(id)['status']) || publication_info(id)[:publication_status] == 'processing'
+      info = rebuild_info(id)
+      if %w[requesting requested].include?(info['status']) || info['processing']
         raise Error.new('録画の再構築・処理中はraw保存・初期化・再構築を実行できません。完了後に一覧を更新してください。', 409)
       end
     end
@@ -493,9 +495,20 @@ module RecordingEditor
       media = assets
       events = visual_events
       history = history_data
+      rebuild = repo.rebuild_info(id)
+      sync = if !history || history['revision'] != revision
+               'unknown'
+             elsif rebuild['status'] == 'completed' && rebuild['revision'] == revision &&
+                   Time.iso8601(rebuild.fetch('requested_at')) >= Time.iso8601(history.fetch('saved_at'))
+               'reflected'
+             else
+               'needs_rebuild'
+             end
       { id: id, name: name, start_utc: start_utc, origin_timestamp: origin, duration_ms: duration,
         revision: revision, record_ranges: record_ranges, original_record_ranges: record_ranges(doc),
-        rebuild: repo.rebuild_info(id), reset: Original.new(repo, id).info,
+        record_ranges_persisted: !record_ranges(current_doc, full_when_empty: false).empty?,
+        playback_sync: sync, last_operation: history && history['operation'],
+        rebuild: rebuild, reset: Original.new(repo, id).info,
         beep_ranges: history && history['revision'] == revision ? history.fetch('beep_ranges', []) : [],
         assets: media, slides: slides, events: events, warnings: warnings.uniq,
         published_url: "/playback/presentation/2.3/#{id}",
@@ -887,7 +900,7 @@ module RecordingEditor
       # Write-ahead information is kept even if the XML replacement fails.
       result = { 'record_ranges' => records, 'beep_ranges' => beeps,
                  'xml_backup' => backup, 'outputs' => outputs.map { |o| o.reject { |k, _v| k == :staged } },
-                 'revision' => Digest::SHA256.hexdigest(xml), 'saved_at' => Time.now.utc.iso8601 }
+                 'revision' => Digest::SHA256.hexdigest(xml), 'saved_at' => Time.now.utc.iso8601(6) }
       revision_file = File.join(root, "edit-#{Time.now.utc.strftime('%Y%m%dT%H%M%S')}-#{SecureRandom.hex(3)}.json")
       RecordingEditor.atomic_write(revision_file, JSON.pretty_generate(result))
       RecordingEditor.atomic_write(current, xml, mode: stat.mode & 0o777)
@@ -929,7 +942,7 @@ module RecordingEditor
       RecordingEditor.atomic_write(File.join(archive, 'draft.json'), previous_draft) if previous_draft
       result = { 'operation' => 'reset', 'revision' => data['revision'], 'beep_ranges' => [],
                  'xml_backup' => File.join(archive, 'events.xml'), 'archive' => archive,
-                 'archived_media' => outputs, 'saved_at' => Time.now.utc.iso8601, 'status' => 'prepared' }
+                 'archived_media' => outputs, 'saved_at' => Time.now.utc.iso8601(6), 'status' => 'prepared' }
       journal = File.join(root, "#{token}.json")
       RecordingEditor.atomic_write(journal, JSON.pretty_generate(result))
       restored, moved = [], []

@@ -47,6 +47,41 @@ class RebuildTest < Minitest::Test
     assert_equal 'requested', @repo.rebuild_info(@id)['status']
   end
 
+  def test_manifest_distinguishes_raw_save_reset_and_matching_completed_rebuild
+    assert_equal 'unknown', @repo.recording(@id).to_h[:playback_sync]
+    rec = @repo.recording(@id)
+    @editor.save(@id, { 'revision' => rec.revision, 'record_ranges' => [{ 'start_ms' => 500, 'end_ms' => 3500 }], 'beep_ranges' => [] })
+    assert_equal 'needs_rebuild', @repo.recording(@id).to_h[:playback_sync]
+    @payload['revision'] = @repo.recording(@id).revision
+    rebuild
+    marker('published', 'done')
+    assert_equal 'reflected', @repo.recording(@id).to_h[:playback_sync]
+    @editor.reset(@id, @payload)
+    data = @repo.recording(@id).to_h
+    assert_equal 'needs_rebuild', data[:playback_sync]
+    assert_equal 'reset', data[:last_operation]
+    assert data[:record_ranges_persisted]
+    @payload['revision'] = @repo.recording(@id).revision
+    # A stale completion for the same revision must not clear a newer reset.
+    @repo.write_rebuild_info(@id, { 'status' => 'completed', 'revision' => @payload['revision'], 'requested_at' => (Time.now - 5).utc.iso8601(6) })
+    assert_equal 'needs_rebuild', @repo.recording(@id).to_h[:playback_sync]
+    rebuild
+    marker('published', 'done')
+    assert_equal 'reflected', @repo.recording(@id).to_h[:playback_sync]
+  end
+
+  def test_manifest_reports_candidate_ranges_and_processing_separately
+    xml = '<recording><event timestamp="1000" eventname="ParticipantJoinEvent"/><event timestamp="5000" eventname="EndAndKickAllEvent"/></recording>'
+    File.write(File.join(@repo.raw_root, @id, 'events.xml'), xml)
+    data = @repo.recording(@id).to_h
+    refute data[:record_ranges_persisted]
+    assert_equal [{ 'start_ms' => 0, 'end_ms' => 4000 }], data[:record_ranges]
+    dir = File.join(@repo.process_root, @id)
+    FileUtils.mkdir_p(dir)
+    File.write(File.join(dir, 'metadata.xml'), '<recording><state>processing</state></recording>')
+    assert @repo.rebuild_info(@id)['processing']
+  end
+
   def test_confirmation_and_current_revision_are_required_before_execution
     @payload['confirmed'] = false
     assert_raises(RecordingEditor::Error) { @editor.rebuild(@id, @payload) }

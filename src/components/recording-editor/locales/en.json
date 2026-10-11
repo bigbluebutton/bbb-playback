@@ -4,7 +4,7 @@
   "language": "Language",
   "loadingApp": "Loading recording editor…",
   "unsaved": "Unsaved changes",
-  "saved": "Saved",
+  "saved": "Raw saved",
   "saveDraft": "Save draft",
   "saveRaw": "Save to raw…",
   "welcomeTitle": "Edit recording intervals and audio",
@@ -103,7 +103,7 @@
   "reviewAudioRestore": "Removing all beep intervals restores the original audio references in XML. Previously generated redacted files are retained.",
   "rebuildRecording": "Rebuild recording…",
   "saveBeforeRebuild": "Save changes to raw before rebuilding. Saving a draft does not apply the changes.",
-  "rebuildSetup": "To enable the rebuild button, install the rebuild helper as described in the README.",
+  "rebuildSetup": "Rebuild is unavailable. The server rebuild helper is missing or is not executable by the service. This is separate from raw saving and resetting.",
   "rebuildReviewTitle": "Confirm recording rebuild",
   "rebuildReviewDetails": "Ask BigBlueButton to rebuild this meeting using the saved raw events.xml and media. Unsaved edits and drafts are not included.",
   "rebuildWarning": "Existing published and unpublished playback files for all installed recording formats will be removed and regenerated. They will be unavailable until processing completes. Original raw files and editor backups are retained.",
@@ -122,5 +122,14 @@
   "resetPublished": "Published and unpublished playback recordings stay as they are until a separate rebuild. If the original XML has no recording intervals, specify and save intervals to raw before rebuilding.",
   "confirmReset": "Confirm and restore original state",
   "resetting": "Restoring the original state…",
-  "resetCompleted": "Original state restored. Previous edits were archived. Rebuild to apply this state to playback."
+  "resetCompleted": "Original state restored to raw. No additional raw save is needed. Previous edits were archived. Rebuild to apply this state to playback.",
+  "rawAlreadySaved": "Current edits are already saved to raw. Save to raw is unnecessary until you make changes. Use Rebuild recording to apply raw data to playback.",
+  "resetNeedsRebuild": "Original state is restored to raw. Its application to playback has not been confirmed. Rebuild recording to apply it; no additional raw save is needed.",
+  "rawNeedsRebuild": "Raw changes need to be applied to playback. Rebuild recording to apply them.",
+  "rawReflected": "A rebuild for the current raw data has completed.",
+  "candidateRanges": "Recording intervals need saving",
+  "saveCandidateRanges": "The raw XML has no valid recording intervals. On-screen intervals are editing candidates. Check the intervals and save to raw before rebuilding.",
+  "rebuildBlockedProcessing": "Another rebuild cannot be requested while recording processing is in progress. Wait for it to finish.",
+  "rebuildInstallHint": "In the editor installation directory on the BBB server (default: /opt/bbb-recording-editor), run the command below and reload the browser. It installs the helper and permissions; it does not rebuild recordings.",
+  "resetUnmarkedCompleted": "Original state restored to raw, but its XML has no valid recording intervals. Current intervals are editing candidates. To rebuild, save the intervals you want to keep to raw, adding them to the XML."
 }
