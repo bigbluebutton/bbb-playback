@@ -71,6 +71,7 @@ module RecordingEditor
   end
 
   class Repository
+    REBUILD_HELPER = '/usr/local/sbin/bbb-recording-editor-rebuild'
     attr_reader :raw_root, :state_root, :published_root, :unpublished_root, :process_root, :status_root, :prefix, :ffmpeg, :ffprobe
     def initialize(raw_root:, state_root:, published_root: '/var/bigbluebutton/published/presentation',
                    unpublished_root: '/var/bigbluebutton/unpublished/presentation', process_root: nil, status_root: nil,
@@ -84,6 +85,7 @@ module RecordingEditor
       @prefix = prefix.delete_suffix('/')
       @ffmpeg, @ffprobe = ffmpeg, ffprobe
       @probes = {}
+      @rebuild_mutex = Mutex.new
       FileUtils.mkdir_p(@state_root, mode: 0o700)
     end
 
@@ -126,6 +128,43 @@ module RecordingEditor
 
     def recording(id)
       Recording.new(self, id)
+    end
+
+    def rebuild_info(id)
+      check_id(id)
+      @rebuild_mutex.synchronize { read_rebuild_info(id) }
+    end
+
+    def write_rebuild_info(id, info)
+      check_id(id)
+      @rebuild_mutex.synchronize do
+        RecordingEditor.atomic_write(File.join(state_dir(id), 'rebuild-request.json'), JSON.pretty_generate(info))
+      end
+    end
+
+    def read_rebuild_info(id)
+      path = File.join(state_dir(id), 'rebuild-request.json')
+      info = File.file?(path) ? JSON.parse(File.read(path)) : { 'status' => 'not_requested' }
+      if %w[requesting requested].include?(info['status'])
+        since = Time.iso8601(info.fetch('requested_at'))
+        fresh = ->(step, suffix) { marker_path = File.join(status_root, step, "#{id}-presentation.#{suffix}"); File.file?(marker_path) && File.mtime(marker_path) >= since }
+        info['status'] = if %w[sanity processed published].any? { |step| fresh.call(step, 'fail') } ||
+                           (File.file?(File.join(status_root, 'sanity', "#{id}.fail")) && File.mtime(File.join(status_root, 'sanity', "#{id}.fail")) >= since)
+                           'failed'
+                         elsif fresh.call('published', 'done')
+                           'completed'
+                         else
+                           info['status']
+                         end
+        RecordingEditor.atomic_write(path, JSON.pretty_generate(info)) if %w[completed failed].include?(info['status'])
+      end
+      info.merge('available' => File.executable?(REBUILD_HELPER))
+    end
+
+    def ensure_not_rebuilding(id)
+      if %w[requesting requested].include?(rebuild_info(id)['status']) || publication_info(id)[:publication_status] == 'processing'
+        raise Error.new('録画の再構築・処理中はraw保存や再構築を実行できません。完了後に一覧を更新してください。', 409)
+      end
     end
 
     def metadata_info(root, id, warnings)
@@ -194,6 +233,12 @@ module RecordingEditor
         time = Time.at(id.split('-').last.to_i / 1000.0)
         next if time < now - 14 * 86_400 || time > now
         publication = publication_info(id)
+        rebuild = rebuild_info(id)
+        publication[:publication_status] = 'processing' if %w[requesting requested].include?(rebuild['status'])
+        if %w[failed command_failed].include?(rebuild['status'])
+          publication[:publication_status] = 'unknown'
+          publication[:warnings] << '録画の再構築に失敗しました。BBBの処理ログを確認してください。'
+        end
         item = { id: id, name: publication[:metadata_name] || id, date: time.iso8601,
                  duration_ms: publication[:metadata_duration_ms], raw_available: false,
                  recording_status: 'unknown', recorded_duration_ms: nil,
@@ -450,6 +495,7 @@ module RecordingEditor
       history = history_data
       { id: id, name: name, start_utc: start_utc, origin_timestamp: origin, duration_ms: duration,
         revision: revision, record_ranges: record_ranges, original_record_ranges: record_ranges(doc),
+        rebuild: repo.rebuild_info(id),
         beep_ranges: history && history['revision'] == revision ? history.fetch('beep_ranges', []) : [],
         assets: media, slides: slides, events: events, warnings: warnings.uniq,
         published_url: "/playback/presentation/2.3/#{id}",
@@ -690,6 +736,7 @@ module RecordingEditor
     end
 
     def save(id, payload, progress: ->(_) {})
+      repo.ensure_not_rebuilding(id)
       rec = repo.recording(id)
       raise Error.new('events.xmlが変更されています。会議を読み直してください。', 409) unless payload['revision'] == rec.revision
       history = rec.history_data
@@ -725,7 +772,7 @@ module RecordingEditor
       RecordingEditor.atomic_write(current, xml, mode: stat.mode & 0o777)
       File.chown(stat.uid, stat.gid, current) if Process.uid.zero?
       RecordingEditor.atomic_write(File.join(root, 'saved.json'), JSON.pretty_generate(result))
-      progress.call('XMLとraw音声を保存しました。録画の再構築は管理者が手動で実行してください。')
+      progress.call('XMLとraw音声を保存しました。録画の再構築は別操作です。')
       result
     ensure
       FileUtils.rm_rf(staging) if staging
@@ -739,6 +786,33 @@ module RecordingEditor
       data = { revision: rec.revision, record_ranges: records, beep_ranges: beeps }
       RecordingEditor.atomic_write(File.join(repo.state_dir(id), 'draft.json'), JSON.pretty_generate(data))
       data
+    end
+
+    def rebuild(id, payload, progress: ->(_) {})
+      raise Error, '再構築の影響を確認してください。' unless payload['confirmed'] == true
+      rec = repo.recording(id)
+      raise Error.new('events.xmlが変更されています。会議を読み直してください。', 409) unless payload['revision'] == rec.revision
+      raise Error, '録画に残す区間を1つ以上rawへ保存してから再構築してください。' if rec.record_ranges(rec.current_doc, full_when_empty: false).empty?
+      repo.ensure_not_rebuilding(id)
+      raise Error.new('再構築用の補助プログラムが未設置です。READMEの設置手順を確認してください。', 503) unless repo.rebuild_info(id)['available']
+      info = { 'status' => 'requesting', 'requested_at' => Time.now.utc.iso8601(6), 'revision' => rec.revision }
+      repo.write_rebuild_info(id, info)
+      begin
+        progress.call('BBBに録画の再構築を依頼しています。')
+        # Array arguments: neither a shell command nor user-selected options.
+        out, err, status = Open3.capture3('/usr/bin/sudo', '-n', Repository::REBUILD_HELPER, id, rec.revision)
+        unless status.success?
+          detail = [err, out].join("\n").strip
+          raise Error.new("再構築の依頼に失敗しました: #{detail.length > 4000 ? detail[-4000..] : detail}", 422)
+        end
+        info['status'] = 'requested'
+        repo.write_rebuild_info(id, info)
+        repo.rebuild_info(id)
+      rescue StandardError
+        info['status'] = 'command_failed'
+        repo.write_rebuild_info(id, info)
+        raise
+      end
     end
   end
 end

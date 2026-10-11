@@ -13,9 +13,10 @@ class ServerTest < Minitest::Test
     @xml = '<recording><metadata meetingName="HTTP test"/><event timestamp="1000" module="PARTICIPANT" eventname="ParticipantJoinEvent"><timestampUTC>100000</timestampUTC></event><event timestamp="5000" module="MEETING" eventname="EndAndKickAllEvent"/></recording>'
     File.write(File.join(@raw, 'events.xml'), @xml)
     File.binwrite(File.join(@raw, 'audio', 'test.wav'), '0123456789')
-    repo = RecordingEditor::Repository.new(raw_root: File.join(@dir, 'raw'), state_root: File.join(@dir, 'state'), published_root: File.join(@dir, 'published'))
+    @repo = RecordingEditor::Repository.new(raw_root: File.join(@dir, 'raw'), state_root: File.join(@dir, 'state'), published_root: File.join(@dir, 'published'))
     @server = WEBrick::HTTPServer.new(BindAddress: '127.0.0.1', Port: 0, Logger: WEBrick::Log.new(File::NULL), AccessLog: [])
-    @server.mount('/recording-editor', RecordingEditor::Application, repo, RecordingEditor::Jobs.new, File.join(@dir, 'build'), 'admin', 'test-password')
+    @jobs = RecordingEditor::Jobs.new
+    @server.mount('/recording-editor', RecordingEditor::Application, @repo, @jobs, File.join(@dir, 'build'), 'admin', 'test-password')
     @port = @server.listeners.first.addr[1]
     @thread = Thread.new { @server.start }
   end
@@ -23,6 +24,7 @@ class ServerTest < Minitest::Test
   def teardown
     @server.shutdown
     @thread.join
+    @jobs.instance_variable_get(:@worker).kill
     FileUtils.remove_entry(@dir)
   end
 
@@ -59,6 +61,11 @@ class ServerTest < Minitest::Test
     assert_equal '403', request(path, method: Net::HTTP::Post, body: '{}').code
     assert_equal '403', request(path, method: Net::HTTP::Post, headers: { 'X-BBB-Editor' => '1', 'Origin' => 'https://elsewhere.invalid' }, body: '{}').code
     assert_equal @xml, File.read(File.join(@raw, 'events.xml'))
+    path = "recordings/#{@id}/rebuild"
+    assert_equal '401', request(path, method: Net::HTTP::Post, auth: false, body: '{}').code
+    assert_equal '403', request(path, method: Net::HTTP::Post, body: '{}').code
+    assert_equal '403', request(path, method: Net::HTTP::Post, headers: { 'X-BBB-Editor' => '1', 'Origin' => 'https://elsewhere.invalid' }, body: '{}').code
+    assert_equal '400', request(path, method: Net::HTTP::Post, headers: { 'X-BBB-Editor' => '1' }, body: '{}').code
   end
 
   def test_save_job_updates_xml_without_running_rebuild
@@ -75,5 +82,26 @@ class ServerTest < Minitest::Test
     assert_equal 'done', job['status'], job['message']
     assert File.file?(job.dig('result', 'xml_backup'))
     assert_equal [1500, 4000], RecordingEditor.xml(File.read(File.join(@raw, 'events.xml'))).xpath('/recording/event[@eventname="RecordStatusEvent"]').map { |e| e['timestamp'].to_i }
+  end
+
+  def test_rebuild_route_reports_requested_and_never_marks_command_success_as_completion
+    xml = @xml.sub('</recording>', '<event timestamp="2000" eventname="RecordStatusEvent"><status>true</status></event><event timestamp="4000" eventname="RecordStatusEvent"><status>false</status></event></recording>')
+    File.write(File.join(@raw, 'events.xml'), xml)
+    @repo.define_singleton_method(:rebuild_info) { |id| super(id).merge('available' => true) }
+    Open3.stub(:capture3, ['', '', Struct.new(:success?).new(true)]) do
+      body = JSON.generate(confirmed: true, revision: Digest::SHA256.hexdigest(xml))
+      response = request("recordings/#{@id}/rebuild", method: Net::HTTP::Post, headers: { 'X-BBB-Editor' => '1' }, body: body)
+      assert_equal '202', response.code
+      job = JSON.parse(response.body)
+      100.times do
+        job = JSON.parse(request("jobs/#{job['id']}").body)
+        break if %w[done failed].include?(job['status'])
+        sleep 0.01
+      end
+      assert_equal 'done', job['status'], job['message']
+      assert_equal 'requested', job.dig('result', 'status')
+      assert_equal 'requested', JSON.parse(request("recordings/#{@id}/rebuild").body)['status']
+      assert_equal xml, File.read(File.join(@raw, 'events.xml'))
+    end
   end
 end

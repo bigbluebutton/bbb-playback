@@ -162,4 +162,4 @@ sudo systemctl reload nginx
 
 An optional raw recording editor for BBB 3.0/4.0 is available in this branch.
 See [editor/README.md](editor/README.md) for installation, backups, supported formats and testing.
-Build separately with `npm run build:editor`; BBB rebuild/publish remains a manual administrator operation.
+Build separately with `npm run build:editor`. Saving raw edits and requesting a recording rebuild are separate administrator actions; the rebuild button requires the restricted helper documented in the editor README.

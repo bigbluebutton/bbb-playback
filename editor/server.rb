@@ -9,10 +9,10 @@ module RecordingEditor
   # A single queue serializes media processing; this is not a retention lock.
   class Jobs
     def initialize
-      @jobs, @queue, @mutex = {}, Queue.new, Mutex.new
+      @jobs, @queue, @mutex, @active = {}, Queue.new, Mutex.new, {}
       @worker = Thread.new do
         loop do
-          id, block = @queue.pop
+          id, key, block = @queue.pop
           update(id, status: 'running')
           begin
             result = block.call(->(message) { update(id, message: message) })
@@ -20,15 +20,21 @@ module RecordingEditor
           rescue Error, StandardError => e
             warn "Recording editor: #{e.class}: #{e.message}"
             update(id, status: 'failed', message: e.message, error_status: e.respond_to?(:status) ? e.status : 500)
+          ensure
+            @mutex.synchronize { @active.delete(key) } if key
           end
         end
       end
     end
 
-    def add(kind, &block)
+    def add(kind, key: nil, &block)
       id = SecureRandom.hex(12)
-      @mutex.synchronize { @jobs[id] = { id: id, kind: kind, status: 'queued', message: '処理待ちです。' } }
-      @queue << [id, block]
+      @mutex.synchronize do
+        raise Error.new('この会議には保存・再構築の処理が既にあります。完了を待ってください。', 409) if key && @active[key]
+        @active[key] = id if key
+        @jobs[id] = { id: id, kind: kind, status: 'queued', message: '処理待ちです。' }
+      end
+      @queue << [id, key, block]
       get(id)
     end
 
@@ -125,7 +131,16 @@ module RecordingEditor
       when '/save'
         require_method(req, 'POST')
         data = payload(req)
-        json(res, @jobs.add('save') { |progress| @editor.save(id, data, progress: progress) }, 202)
+        json(res, @jobs.add('save', key: id) { |progress| @editor.save(id, data, progress: progress) }, 202)
+      when '/rebuild'
+        require_method(req, 'GET', 'POST')
+        if req.request_method == 'GET'
+          json(res, @repo.rebuild_info(id))
+        else
+          data = payload(req)
+          raise Error, '再構築の影響を確認してください。' unless data['confirmed'] == true
+          json(res, @jobs.add('rebuild', key: id) { |progress| @editor.rebuild(id, data, progress: progress) }, 202)
+        end
       when '/preview'
         require_method(req, 'POST')
         rec = @repo.recording(id)

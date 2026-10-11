@@ -15,6 +15,7 @@ const manifest = {
   id, name: '編集テスト', revision: 'revision-one', duration_ms: 60000,
   record_ranges: [{ start_ms: 1000, end_ms: 59000 }], beep_ranges: [],
   events: [], assets: [], slides: [], warnings: [], published_url: '/playback/test',
+  rebuild: { available: true, status: 'not_requested' },
 };
 let container;
 let root;
@@ -43,6 +44,7 @@ beforeEach(async () => {
       recorded_duration_ms: 58000, recording_status: 'marked', publication_status: 'unpublished', raw_available: true, warnings: [] }];
     else if (url.endsWith('/preview')) result = { status: 'done', result: { audio_url: '/demo.webm', peaks: [0.1, 0.5] } };
     else if (url.endsWith('/draft')) result = payload;
+    else if (url.endsWith('/rebuild')) result = { status: 'done', result: { available: true, status: 'requested' } };
     else if (url.endsWith('/save')) result = { status: 'done', result: { xml_backup: '/backup/events.xml' } };
     else result = manifest;
     return { ok: true, json: async () => result };
@@ -138,4 +140,63 @@ test('warnings, save review, errors and completed messages follow the selected l
   expect(container.querySelector('[role="alert"]').textContent).toBe('events.xml has changed. Reload the meeting.');
   await language('ja');
   expect(container.querySelector('[role="alert"]').textContent).toBe('events.xmlが変更されています。会議を読み直してください。');
+});
+
+
+test('raw review explains audio file changes before sending a save request', async () => {
+  await click('ピー音を追加');
+  await click('rawへ保存…');
+  const review = container.querySelector('.re-review');
+  expect(review.textContent).toContain('raw内に別名ファイルを追加してXMLの参照先を切り替えます');
+  expect(review.textContent).toContain('元ファイルとバックアップは保持します');
+  expect(calls.some(call => call.url.endsWith('/save'))).toBe(false);
+  await language('en');
+  expect(review.textContent).toContain('All microphone audio and screen-sharing audio');
+  expect(review.textContent).toContain('Original files and backups are retained');
+});
+
+test('rebuild requires saved edits and a separate confirmation, then reports a request not completion', async () => {
+  await click('ピー音を追加');
+  expect(button('録画を再構築…').disabled).toBe(true);
+  await click('↶ 元に戻す');
+  await click('録画を再構築…');
+  expect(calls.some(call => call.url.endsWith('/rebuild'))).toBe(false);
+  const review = container.querySelector('.re-rebuild-review');
+  expect(review.textContent).toContain('削除され、作り直されます');
+  expect(review.textContent).toContain('非公開状態の維持は保証されません');
+  await language('en');
+  expect(review.textContent).toContain('Unsaved edits and drafts are not included');
+  await click('Confirm and request rebuild');
+  const rebuild = calls.find(call => call.url.endsWith('/rebuild'));
+  expect(rebuild.payload).toEqual({ revision: 'revision-one', confirmed: true });
+  expect(rebuild.headers['X-BBB-Editor']).toBe('1');
+  expect(container.textContent).toContain('It is not complete yet');
+  expect(button('Rebuild recording…').disabled).toBe(true);
+  expect(button('Save to raw…').disabled).toBe(true);
+  expect(calls.some(call => call.url.endsWith('/save'))).toBe(false);
+});
+
+test('rebuild helper absence is visible and prevents submitting a request', async () => {
+  global.fetch.mockImplementation(async url => ({ ok: true, json: async () => url.endsWith('/preview')
+    ? { status: 'done', result: { audio_url: '/demo.webm', peaks: [] } }
+    : { ...manifest, rebuild: { available: false, status: 'not_requested' } } }));
+  await act(async () => { Simulate.click(container.querySelector('.re-meeting')); });
+  expect(button('録画を再構築…').disabled).toBe(true);
+  expect(container.textContent).toContain('再構築用補助プログラムの設置手順');
+});
+
+test('polling a completed rebuild updates the message and unlocks raw saving', async () => {
+  jest.useFakeTimers();
+  try {
+    await click('録画を再構築…');
+    await click('確認して再構築を依頼');
+    const originalMock = global.fetch.getMockImplementation();
+    global.fetch.mockImplementation(async (url, options) => !options?.method && url.endsWith('/rebuild')
+      ? { ok: true, json: async () => ({ available: true, status: 'completed' }) }
+      : originalMock(url, options));
+    await act(async () => { jest.advanceTimersByTime(5000); });
+    expect(container.querySelector('.re-success').textContent).toContain('録画の再構築が完了しました');
+    expect(button('rawへ保存…').disabled).toBe(false);
+    expect(button('録画を再構築…').disabled).toBe(false);
+  } finally { jest.useRealTimers(); }
 });

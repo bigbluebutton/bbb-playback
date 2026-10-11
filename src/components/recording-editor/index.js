@@ -134,8 +134,10 @@ function Editor() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [review, setReview] = useState(false);
+  const [rebuildReview, setRebuildReview] = useState(false);
   const duration = recording?.duration_ms || 0;
   const dirty = recording && JSON.stringify(edit) !== JSON.stringify({ record_ranges: recording.record_ranges, beep_ranges: recording.beep_ranges });
+  const rebuilding = ['requesting', 'requested'].includes(recording?.rebuild?.status);
   const videos = useMemo(() => recording ? externalVideos(recording.events, duration) : [], [recording, duration]);
   const primary = useMemo(() => audio ? audioAdapter(audio, duration) : null, [audio, duration]);
   const getPrimary = useCallback(() => primary, [primary]);
@@ -145,6 +147,21 @@ function Editor() {
     try { setMeetings(await request('/recordings')); } catch (e) { setError(e.message); }
   }, []);
   useEffect(() => { refreshList(); }, [refreshList]);
+  useEffect(() => {
+    if (!rebuilding) return undefined;
+    let cancelled = false;
+    const timer = setInterval(async () => {
+      try {
+        const result = await request(`/recordings/${recording.id}/rebuild`);
+        if (cancelled) return;
+        setRecording(current => ({ ...current, rebuild: result }));
+        if (result.status === 'completed') setMessage({ id: 'rebuildCompleted' });
+        if (['failed', 'command_failed'].includes(result.status)) setError({ id: 'rebuildFailed' });
+        await refreshList();
+      } catch (e) { if (!cancelled) setError(e.message); }
+    }, 5000);
+    return () => { cancelled = true; clearInterval(timer); };
+  }, [rebuilding, recording?.id, refreshList]);
   useEffect(() => {
     if (!audio) return undefined;
     const tick = () => { setTime(Math.min(duration, audio.currentTime * 1000)); setPlaying(!audio.paused && !audio.ended); };
@@ -161,17 +178,17 @@ function Editor() {
   const replaceEdit = useCallback(next => {
     if (busy) return;
     setHistory(h => ({ past: [...h.past, edit].slice(-100), future: [] }));
-    setEdit(next); setReview(false); setMessage('');
+    setEdit(next); setReview(false); setRebuildReview(false); setMessage('');
   }, [edit, busy]);
   const change = (kind, ranges) => replaceEdit({ ...edit, [kind]: normalizeRanges(ranges, duration) });
   const undo = useCallback(() => {
     if (!history.past.length) return;
     setEdit(history.past[history.past.length - 1]);
-    setHistory({ past: history.past.slice(0, -1), future: [edit, ...history.future] }); setReview(false);
+    setHistory({ past: history.past.slice(0, -1), future: [edit, ...history.future] }); setReview(false); setRebuildReview(false);
   }, [edit, history]);
   const redo = () => {
     if (!history.future.length) return;
-    setEdit(history.future[0]); setHistory({ past: [...history.past, edit], future: history.future.slice(1) }); setReview(false);
+    setEdit(history.future[0]); setHistory({ past: [...history.past, edit], future: history.future.slice(1) }); setReview(false); setRebuildReview(false);
   };
   useEffect(() => {
     const key = e => {
@@ -191,7 +208,7 @@ function Editor() {
     return job.result;
   };
   const open = async id => {
-    setBusy({ id: 'loadingMedia' }); setError(''); setMessage(''); setReview(false);
+    setBusy({ id: 'loadingMedia' }); setError(''); setMessage(''); setReview(false); setRebuildReview(false);
     audio?.pause(); setRecording(null); setPreview(null); setTime(0); setPlaying(false);
     try {
       const data = await request(`/recordings/${id}`);
@@ -208,6 +225,7 @@ function Editor() {
     catch (e) { setError(e.message); } finally { setBusy(''); }
   };
   const save = async () => {
+    if (rebuilding || busy) return;
     setBusy({ id: 'savingRaw' }); setError(''); audio?.pause();
     try {
       const result = await runJob(`/recordings/${recording.id}/save`, { ...edit, revision: recording.revision });
@@ -218,6 +236,16 @@ function Editor() {
       await refreshList();
     } catch (e) { setError(e.message); } finally { setBusy(''); }
   };
+  const rebuild = async () => {
+    if (dirty || rebuilding || busy || !recording.rebuild?.available) return;
+    setBusy({ id: 'requestingRebuild' }); setError(''); audio?.pause();
+    try {
+      const result = await runJob(`/recordings/${recording.id}/rebuild`, { revision: recording.revision, confirmed: true });
+      setRecording(current => ({ ...current, rebuild: result })); setRebuildReview(false);
+      setMessage({ id: result.status === 'completed' ? 'rebuildCompleted' : 'rebuildRequested' });
+      await refreshList();
+    } catch (e) { setError(e.message); } finally { setBusy(''); }
+  };
   const activeAssets = recording?.assets.filter(a => a.has_video && !a.error && a.start_ms <= time && time < a.end_ms) || [];
   const screen = activeAssets.find(a => a.kind === 'deskshare');
   const external = videos.find(v => v.timestamp * 1000 <= time && time < v.clear * 1000);
@@ -225,7 +253,7 @@ function Editor() {
 
   return <div className="recording-editor">
     <header className="re-header"><div><span className="re-brand">BigBlueButton</span><strong>{t('title')}</strong><span className="re-badge">{t('admin')}</span></div>
-      <div className="re-header-actions"><label className="re-language">{t('language')} <select aria-label={t('language')} value={locale} onChange={e => setLocale(e.target.value)}>{languages.map(language => <option key={language.code} value={language.code}>{language.label}</option>)}</select></label>{recording && <><span className="re-dirty">{dirty ? t('unsaved') : t('saved')}</span><button disabled={!!busy} onClick={draft}>{t('saveDraft')}</button><button className="re-primary" disabled={!!busy} onClick={() => setReview(!review)}>{t('saveRaw')}</button></>}</div>
+      <div className="re-header-actions"><label className="re-language">{t('language')} <select aria-label={t('language')} value={locale} onChange={e => setLocale(e.target.value)}>{languages.map(language => <option key={language.code} value={language.code}>{language.label}</option>)}</select></label>{recording && <><span className="re-dirty">{dirty ? t('unsaved') : t('saved')}</span><button disabled={!!busy} onClick={draft}>{t('saveDraft')}</button><button className="re-primary" disabled={!!busy || rebuilding} onClick={() => { setReview(!review); setRebuildReview(false); }}>{t('saveRaw')}</button><button disabled={!!busy || dirty || rebuilding || !recording.rebuild?.available} title={dirty ? t('saveBeforeRebuild') : !recording.rebuild?.available ? t('rebuildSetup') : ''} onClick={() => { setRebuildReview(!rebuildReview); setReview(false); }}>{t('rebuildRecording')}</button></>}</div>
     </header>
     <div className="re-shell"><MeetingList meetings={meetings} selectedId={recording?.id} busy={busy} dirty={dirty} onRefresh={refreshList} onOpen={open} /><main className="re-main">
       {busy && <div className="re-notice" role="status">◌ {displayMessage(busy)}</div>}{error && <div className="re-error" role="alert">{displayMessage(error)}</div>}{message && <div className="re-success" role="status">{displayMessage(message)}</div>}
@@ -233,9 +261,17 @@ function Editor() {
         <div className="re-title"><div><h1>{recording.name || recording.id}</h1><small>{recording.id} · {t('wholeMeeting', { time: formatTime(duration) })}</small></div><a href={recording.published_url} target="_blank" rel="noreferrer">{t('publishedLink')}</a></div>
         {recording.warnings.length > 0 && <details className="re-warnings" open><summary>{t('warnings', { count: recording.warnings.length })}</summary>{recording.warnings.map((w, i) => <p key={i}>{diagnostic(w)}</p>)}</details>}
         {recording.draft?.revision === recording.revision && <div className="re-draft">{t('draftAvailable')} <button disabled={!!busy} onClick={() => replaceEdit({ record_ranges: recording.draft.record_ranges, beep_ranges: recording.draft.beep_ranges })}>{t('loadDraft')}</button></div>}
+        {!recording.rebuild?.available && <p className="re-muted">{t('rebuildSetup')}</p>}
+        {rebuilding && <div className="re-notice" role="status">{t('rebuildRequested')}</div>}
+        {['failed', 'command_failed'].includes(recording.rebuild?.status) && <div className="re-error" role="alert">{t('rebuildFailed')}</div>}
+        {rebuildReview && <div className="re-review re-rebuild-review"><h3>{t('rebuildReviewTitle')}</h3><p>{t('rebuildReviewDetails')}</p><p className="re-warnings">{t('rebuildWarning')}</p><p>{t('rebuildPublishedWarning')}</p>
+          <button className="re-primary" disabled={!!busy || dirty || rebuilding} onClick={rebuild}>{t('confirmRebuild')}</button><button disabled={!!busy} onClick={() => setRebuildReview(false)}>{t('close')}</button>
+        </div>}
         {review && <div className="re-review"><h3>{t('reviewTitle')}</h3><p>{t('reviewCounts', { record: edit.record_ranges.length, beep: edit.beep_ranges.length })}</p><p>{t('reviewDetails')}</p>
+          {edit.beep_ranges.length > 0 && <p className="re-warnings">{t('reviewAudioWarning')}</p>}
+          {recording.beep_ranges.length > 0 && !edit.beep_ranges.length && <p>{t('reviewAudioRestore')}</p>}
           {!edit.record_ranges.length && <p className="re-warnings">{t('needRange')}</p>}
-          <button className="re-primary" disabled={!!busy || !edit.record_ranges.length} onClick={save}>{t('confirmSave')}</button><button onClick={() => setReview(false)}>{t('close')}</button><small>{t('noRebuild')}</small>
+          <button className="re-primary" disabled={!!busy || rebuilding || !edit.record_ranges.length} onClick={save}>{t('confirmSave')}</button><button onClick={() => setReview(false)}>{t('close')}</button><small>{t('noRebuild')}</small>
         </div>}
         <div className="re-preview"><div className="re-content-preview">
           {external && primary ? <ExternalVideoPlayer videos={videos} intl={intl} getPrimary={getPrimary} /> : screen ? <VideoPreview clip={screen} time={time} playing={playing} rate={rate} /> : <SlidePreview recording={recording} time={time} />}

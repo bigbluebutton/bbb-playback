@@ -61,5 +61,13 @@
   "events.xmlが変更されています。会議を読み直してください。": "events.xml has changed. Reload the meeting.",
   "外部のXML変更と編集履歴が一致しません。編集履歴を退避してから読み直してください。": "External XML changes conflict with the edit history. Move the history aside and reload the meeting.",
   "処理中にevents.xmlが変更されました。保存していません。": "events.xml changed during processing. Nothing was saved.",
-  "XMLとraw音声を保存しました。録画の再構築は管理者が手動で実行してください。": "XML and raw audio saved. Administrators must rebuild the recording manually."
+  "XMLとraw音声を保存しました。録画の再構築は別操作です。": "XML and raw audio saved. Rebuilding the recording is a separate action.",
+  "録画の再構築・処理中はraw保存や再構築を実行できません。完了後に一覧を更新してください。": "Cannot save raw data or request another rebuild while recording processing is in progress. Refresh the list after it finishes.",
+  "録画の再構築に失敗しました。BBBの処理ログを確認してください。": "Recording rebuild failed. Check the BigBlueButton processing logs.",
+  "再構築の影響を確認してください。": "Confirm the effects of rebuilding.",
+  "録画に残す区間を1つ以上rawへ保存してから再構築してください。": "Save at least one recording interval to raw before rebuilding.",
+  "再構築用の補助プログラムが未設置です。READMEの設置手順を確認してください。": "The rebuild helper is not installed. Follow the README installation instructions.",
+  "BBBに録画の再構築を依頼しています。": "Requesting a recording rebuild from BigBlueButton.",
+  "再構築の依頼に失敗しました: ": "Failed to request recording rebuild: ",
+  "この会議には保存・再構築の処理が既にあります。完了を待ってください。": "A save or rebuild job already exists for this meeting. Wait for it to finish."
 }
