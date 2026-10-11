@@ -16,6 +16,7 @@
     "react-intl": "^6.2.5",
     "react-router-dom": "^7.18.4",
     "react-sizeme": "^3.0.2",
+    "react-player": "^2.16.0",
     "recharts": "^2.12.7",
     "sass": "^1.52.1",
     "semver": "^7.5.2",
@@ -41,7 +42,8 @@
     "start": "react-scripts start",
     "start:proxy": "bash start-proxy.sh",
     "build": "react-scripts build",
-    "test": "react-scripts test"
+    "test": "react-scripts test",
+    "build:editor": "BUILD_PATH=build-editor PUBLIC_URL=/recording-editor REACT_APP_RECORDING_EDITOR=1 react-scripts build"
   },
   "eslintConfig": {
     "extends": "react-app"

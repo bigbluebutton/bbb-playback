@@ -1,0 +1,47 @@
+#!/usr/bin/python3 -I
+"""Root-owned, argument-restricted bridge to bbb-record --rebuild.
+
+Install a copy in /usr/local/sbin, never sudo a script in the app checkout.
+"""
+import hashlib
+import os
+from pathlib import Path
+import re
+import subprocess
+import sys
+
+RAW_ROOT = Path('/var/bigbluebutton/recording/raw')
+BBB_RECORD = '/usr/bin/bbb-record'
+
+
+def validate_arguments(args):
+    if (len(args) != 2 or not re.fullmatch(r'[0-9a-f]{40}-[0-9]{13}', args[0])
+            or not re.fullmatch(r'[0-9a-f]{64}', args[1])):
+        raise ValueError('Expected one internal meeting ID and its events.xml SHA-256.')
+    return args
+
+
+def rebuild(args):
+    meeting_id, revision = validate_arguments(args)
+    if os.geteuid() != 0:
+        raise ValueError('This helper must run as root.')
+    root = RAW_ROOT.resolve(strict=True)
+    meeting = RAW_ROOT / meeting_id
+    events = meeting / 'events.xml'
+    if meeting.is_symlink() or events.is_symlink() or events.resolve(strict=True).parent != root / meeting_id:
+        raise ValueError('Raw recording path is invalid.')
+    if hashlib.sha256(events.read_bytes()).hexdigest() != revision:
+        raise ValueError('events.xml has changed. Reload the meeting before rebuilding.')
+    # Discard inherited Python, Ruby and shell environment settings. bbb-record
+    # and its yq/Ruby commands use only this administrator-controlled PATH.
+    return subprocess.run([BBB_RECORD, '--rebuild', meeting_id], cwd='/',
+                          env={'PATH': '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+                               'LANG': 'C.UTF-8'}, check=False).returncode
+
+
+if __name__ == '__main__':
+    try:
+        sys.exit(rebuild(sys.argv[1:]))
+    except (ValueError, OSError) as error:
+        print(str(error), file=sys.stderr)
+        sys.exit(1)

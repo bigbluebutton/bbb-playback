@@ -87,10 +87,17 @@ const getPads = (n) => {
 const getCurrentContent = (time) => {
   const {
     SCREENSHARE,
+    EXTERNAL_VIDEOS,
     PRESENTATION,
   } = ID;
 
-  const content = isEnabled(storage.screenshare, time) ? SCREENSHARE : PRESENTATION;
+  let content = PRESENTATION;
+
+  if (isEnabled(storage.screenshare, time)) {
+    content = SCREENSHARE;
+  } else if (isEnabled(storage.external_videos, time)) {
+    content = EXTERNAL_VIDEOS;
+  }
 
   return content;
 };

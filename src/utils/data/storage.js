@@ -4,7 +4,9 @@ import {
 } from 'config';
 import {
   addAlternatesToThumbnails,
+  addExternalVideoThumbnails,
   build,
+  buildExternalVideos,
   mergeMessages,
 } from 'utils/builder';
 import {
@@ -31,6 +33,7 @@ const STATE = {
 let STATUS = STATE.WAITING;
 
 const DATA = {};
+let EXTERNAL_VIDEO_JSON = null;
 
 let FALLBACK = false;
 
@@ -44,10 +47,11 @@ const hasFetched = () => {
 }
 
 const hasLoaded = () => {
-  const stored = Object.keys(DATA).length;
-  const data = Object.keys(files).length;
-
-  if (stored >= data) {
+  // Derived datasets (such as externalVideos) are not separate file loads.
+  if (Object.keys(files).every(data => Object.hasOwn(DATA, data))
+    && Object.hasOwn(DATA, ID.MEDIA)) {
+    // Resolve legacy intervals only after JSON and SVG have both loaded.
+    DATA[ID.EXTERNAL_VIDEOS] = buildExternalVideos(EXTERNAL_VIDEO_JSON, DATA[ID.SHAPES]?.slides);
     logger.debug(ID.STORAGE, STATE.LOADED);
     STATUS = STATE.LOADED;
 
@@ -84,7 +88,14 @@ const fetchFile = (data, recordId, onUpdate, onLoaded, onError) => {
   }).then(value => {
     build(file, value).then(content => {
       if (content) logger.debug(ID.STORAGE, 'built', file);
-      DATA[data] = content;
+      if (data === ID.VIDEOS) {
+        EXTERNAL_VIDEO_JSON = value;
+        DATA[data] = content.videos;
+        DATA[ID.EXTERNAL_VIDEOS] = content.externalVideos;
+        onUpdate(ID.EXTERNAL_VIDEOS);
+      } else {
+        DATA[data] = content;
+      }
       onUpdate(data);
       if (hasLoaded()) onLoaded();
     }).catch(error => onError(ERROR.BAD_REQUEST));
@@ -165,6 +176,7 @@ const storage = {
       videos: hasProperty(DATA, ID.VIDEOS),
       presentation: hasProperty(DATA, ID.SHAPES),
       screenshare: hasProperty(DATA, ID.SCREENSHARE),
+      externalVideos: hasProperty(DATA, ID.EXTERNAL_VIDEOS),
       layoutSwap: hasProperty(DATA, ID.LAYOUT),
     };
   },
@@ -177,6 +189,7 @@ const storage = {
       videos: !isEmpty(this.videos),
       presentation: hasPresentation(this.slides),
       screenshare: !isEmpty(this.screenshare),
+      externalVideos: !isEmpty(this.external_videos),
       layoutSwap: !isEmpty(this.layoutSwap),
     };
   },
@@ -226,6 +239,9 @@ const storage = {
   get screenshare() {
     return DATA[ID.SCREENSHARE];
   },
+  get external_videos() {
+    return DATA[ID.EXTERNAL_VIDEOS];
+  },
   get shapes() {
     return DATA[ID.SHAPES];
   },
@@ -237,7 +253,8 @@ const storage = {
   },
   get thumbnails() {
     if (!hasProperty(DATA, ID.THUMBNAILS)) {
-      DATA[ID.THUMBNAILS] = addAlternatesToThumbnails(this.shapes[ID.THUMBNAILS], this.alternates);
+      const thumbnails = addExternalVideoThumbnails(this.shapes[ID.THUMBNAILS], this.external_videos);
+      DATA[ID.THUMBNAILS] = addAlternatesToThumbnails(thumbnails, this.alternates);
     }
 
     return DATA[ID.THUMBNAILS];

@@ -1,5 +1,19 @@
 # bbb-playback
 
+The commands below deploy the Playback player. To install the recording editor,
+download or clone this repository anywhere on an existing Ubuntu BBB server,
+then run (Node.js 20+ and npm must already be available):
+
+```bash
+sudo bash /absolute/path/to/bbb-playback/deploy.sh --editor
+```
+
+This builds and installs the editor in `/opt/bbb-recording-editor`, sets up its
+service, administrator authentication, Nginx route and recording rebuild helper.
+The first install prompts for an administrator password; subsequent installs
+preserve existing settings and credentials. See [editor/README.md](editor/README.md)
+for prerequisites, updates and custom server configurations.
+
 Clone this repository, install the dependencies and deploy
 ```
 git clone https://github.com/bigbluebutton/bbb-playback.git
@@ -157,3 +171,9 @@ Reload nginx service
 ```
 sudo systemctl reload nginx
 ```
+
+## Administrator recording editor
+
+An optional raw recording editor for BBB 3.0/4.0 is available in this branch.
+See [editor/README.md](editor/README.md) for installation, backups, supported formats and testing.
+Build separately with `npm run build:editor`. Saving raw edits and requesting a recording rebuild are separate administrator actions; the rebuild button requires the restricted helper documented in the editor README.

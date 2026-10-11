@@ -17,7 +17,7 @@ const Proxy = ({
     src,
   } = thumbnail;
 
-  if (src === ID.SCREENSHARE) return null;
+  if (src === ID.SCREENSHARE || src === ID.EXTERNAL_VIDEOS) return null;
 
   return (
     <foreignObject

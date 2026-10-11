@@ -1,0 +1,4 @@
+# This root-owned helper accepts only an exact meeting ID and XML checksum.
+# It cannot delete recordings or rebuild all meetings. Do not grant sudo on
+# the app's writable checkout, or on bbb-record with unrestricted arguments.
+bigbluebutton ALL=(root) NOPASSWD: /usr/local/sbin/bbb-recording-editor-rebuild
