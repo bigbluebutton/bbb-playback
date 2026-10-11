@@ -355,4 +355,13 @@ $big-play-button-size: 2em;
   .video-js .vjs-big-play-button {
     position: absolute;
   }
+
+  // Phones stack the video above the panels, so captions go on the video
+  // instead of floating over the chat
+  .player-wrapper:not(.single-content):not(.hidden-section):not(.fullscreen-content) .video-js .vjs-text-track-display {
+    bottom: 0;
+    height: auto;
+    position: absolute;
+    top: 0;
+  }
 }

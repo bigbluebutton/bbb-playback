@@ -123,6 +123,12 @@ const buildOptions = (sources, tracks) => {
     },
     controls: true,
     fill: true,
+    html5: {
+      // Safari's native text tracks ignore the `tracks` option (no CC
+      // button) and skip the player's caption styling, so video.js renders
+      // captions itself in every browser
+      nativeTextTracks: false,
+    },
     inactivityTimeout: 0,
     playbackRates: config.rates,
     sources: sources.current,
