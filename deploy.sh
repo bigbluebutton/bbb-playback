@@ -2,6 +2,17 @@
 
 set -e
 
+source_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+if [[ ${1:-} == --editor ]]; then
+  shift
+  exec bash "$source_dir/deploy-editor.sh" "$@"
+fi
+if [[ $# -gt 0 ]]; then
+  echo 'Usage: deploy.sh [--editor [installer options]]' >&2
+  exit 2
+fi
+cd -- "$source_dir"
+
 BBB_PLAYBACK_HOMEPAGE=playback/presentation/2.3
 BBB_PLAYBACK=/var/bigbluebutton/$BBB_PLAYBACK_HOMEPAGE
 

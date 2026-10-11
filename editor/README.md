@@ -200,6 +200,39 @@ XMLバックアップ、加工素材、元素材のバックアップ、編集JS
 
 ## BBBサーバへの設置
 
+### 一括導入・更新（推奨）
+
+既存のUbuntu BBBサーバに、ZIPで展開したソースまたはGitのチェックアウトから導入できます。取得先や実行時のカレントディレクトリに依存せず、スクリプト自身の場所からソースを読み取り、最終的に `/opt/bbb-recording-editor` へ配置します。
+
+```bash
+sudo bash "/ダウンロード先/bbb-playback/deploy.sh" --editor
+```
+
+`deploy-editor.sh` を同じように直接実行しても構いません。引数なしの `deploy.sh` は従来のPlayback用です。エディターを設置する場合は `--editor` を付けてください。
+
+前提はNode.js 20以上とnpm、Python 3.8以上、systemd、稼働中のBBB・Nginx、`bigbluebutton` ユーザー、Ubuntu標準のNginxグループ `www-data`、`/usr/bin/bbb-record` です。Node.jsやBBB本体はこのスクリプトでは導入しません。Ruby 3.0以上・Nokogiri・WEBrick、FFmpeg、sudo、`htpasswd` の不足分は `apt-get install` で補います。既存パッケージの依存関係を修復する処理は実行しません。
+
+スクリプトは次の処理をまとめて行います。
+
+- ソースを `/opt` 内の一時ディレクトリへコピーし、sudo実行元の一般ユーザー（rootから実行した場合は `bigbluebutton`）で `npm ci` と編集画面のビルドを実行。
+- アプリをroot所有で配置し、状態ディレクトリを `bigbluebutton` 所有・0700で準備。
+- `/etc/bbb-recording-editor.env`、systemdサービス、管理者認証、BBBのNginx設定、再構築ヘルパー・sudoers・drop-inを設置。
+- sudoersとNginx設定を検証し、サービスを有効化・再起動。アプリのHTTP応答を確認してNginxをreload。
+
+初回はブラウザ用管理者 `admin` のパスワードをプロンプトで設定します。LinuxやGreenlightの認証とは別です。ユーザー名は `--admin-user 名前` で変更できます。非対話実行では `--password-file /安全な場所/パスワードファイル` を指定してください。パスワードはコマンド引数へ展開せず、`htpasswd` の標準入力へ渡します。ファイルは他ユーザーに読めない権限で用意し、導入後に管理者が削除してください。
+
+導入後は `https://<BBB-host>/recording-editor/` を開きます。再構築ボタン用ヘルパーも導入済みです。未認証のHTTPSアクセスが401、認証後が200になることを、以下の手動手順の接続確認で確かめてください。
+
+更新も、新しいソースを任意の場所へ取得して同じコマンドを実行します。既存の環境設定・認証ファイル・Nginxスニペットを保持し、サービスと再構築ヘルパーは更新します。`BBB_EDITOR_BUILD_ROOT` だけは固定配置先 `/opt/bbb-recording-editor/build-editor` に揃えます。raw・編集履歴・元素材のバックアップは削除しません。保存や再構築の処理が完了してから実行してください。更新時のサービス再起動で、実行中のアプリ内ジョブは中断されます。
+
+既存設定のポート・URLプレフィックスを使ってビルドし、カスタムrawパスは再構築ヘルパーにも反映します。Nginxスニペットが既存設定と一致しない場合は上書きせず中止します。標準の `/etc/bigbluebutton/nginx/*.nginx`（または同じ設置ファイルへのinclude）が公開BBBのHTTPS `server` 内に必要です。独自構成では先にそのincludeを管理者が設定するか、以下の手動手順を使ってください。
+
+更新前のアプリは `/opt/bbb-recording-editor.previous-*`、設定は `/var/backups/bbb-recording-editor/日時-識別子/` に退避します。後者の `installation.json` に結果と退避先を記録します。ビルド失敗時は既存アプリを切り替えません。設定検証・起動・reloadに失敗した場合は、退避したアプリと設定、サービスの有効化・起動状態へ戻す処理を行います。aptで導入したパッケージは戻しません。電源断などで処理そのものが中断した場合や復旧処理も失敗した場合は、退避先とログを使った管理者による復旧が必要です。退避ファイルは自動削除しません。
+
+オプションは `sudo bash /取得先/deploy.sh --editor --help` で確認できます。`--skip-dependencies` はapt導入を省いて依存関係の検査だけ行います。`--skip-build` は取得したソース内の `build-editor/` を利用しますが、設定とURLプレフィックスが一致するビルドが必要です。一括導入後の `/opt` 内はroot所有のため、更新は新しく取得したソースから再実行してください。
+
+### 手動導入
+
 例はUbuntu、配置先 `/opt/bbb-recording-editor`、サービス実行ユーザー `bigbluebutton`、既存BBBのNginxを前提にしています。公開URLはHTTPSです。以下の相対パスを使うコマンドは、リポジトリのルート `/opt/bbb-recording-editor` で実行してください。既存Playbackの配信先には上書きしません。
 
 1. コード一式ZIPを `/opt` に展開するか、公開済みの作業ブランチを専用ディレクトリに取得する。
@@ -324,7 +357,7 @@ XMLバックアップ、加工素材、元素材のバックアップ、編集JS
 
 ### 既存インストールの更新
 
-画面とRuby APIの両方を変更した更新では、ビルドとサービス再起動の両方が必要です。作業ブランチをGitで取得した標準構成なら、次の手順を使います。
+一括導入した環境では、上記の一括導入コマンドを新しいソースから再実行してください。以下は手動導入したGitチェックアウト用です。画面とRuby APIの両方を変更した更新では、ビルドとサービス再起動の両方が必要です。
 
 ```bash
 cd /opt/bbb-recording-editor
@@ -338,7 +371,7 @@ sudo systemctl restart bbb-recording-editor
 
 ### 再構築ボタンの有効化（初回のみ）
 
-通常の更新手順でコードと画面を更新した後、次を実行してください。**既存の `/etc/bbb-recording-editor.env` や認証ファイルを置き換える必要はありません。**
+一括導入ではこの設定も設置・更新済みです。手動導入の場合は、コードと画面を更新した後、次を実行してください。**既存の `/etc/bbb-recording-editor.env` や認証ファイルを置き換える必要はありません。**
 
 ```bash
 cd /opt/bbb-recording-editor
@@ -553,12 +586,14 @@ ruby editor/test/recording_editor_test.rb
 ruby editor/test/meeting_list_test.rb
 ruby editor/test/server_test.rb
 ruby editor/test/rebuild_test.rb
-python3 -B editor/test/rebuild_helper_test.py
+python3 -B -m unittest discover -s editor/test -p '*_test.py'
 CI=true npm test -- --watchAll=false --runInBand
 npm run build:editor
 ```
 
 音声テストは合成したWAV、映像＋AAC、OpusをFFmpegで生成します。元素材の保持、全音声の置換、映像パケットの保持、XMLイベントと時計、空区間、競合、危険な参照、認証、Range、保存ジョブを検証します。会議リストのテストでは、公開・非公開・処理中・rawなし・不明の判定、録画区間の合計、絞り込みと保存後の更新も確認します。
+
+Pythonの導入テストは隔離した一時ファイルシステムと模擬OSコマンドを使い、取得場所に依存しない導入、設定・認証・履歴の保持、カスタムパス、ビルド・Nginx・起動・切替失敗時の復旧を検証します。実サーバの `/opt`、Nginx、systemdには変更を加えません。
 
 実録画を使わずに動かす例:
 
