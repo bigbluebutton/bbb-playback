@@ -7,7 +7,13 @@ const Toast = () => {
   const timeout = useRef();
 
   useEffect(() => {
-    const handleToast = (event) => setToast(event.detail);
+    const handleToast = ({ detail }) => {
+      if (detail.dismiss) {
+        setToast(current => (current && current.key === detail.dismiss ? null : current));
+      } else {
+        setToast(detail);
+      }
+    };
 
     document.addEventListener(EVENTS.TOAST, handleToast);
 

@@ -64,6 +64,7 @@
   "player.captions.translating": "字幕を{language}に翻訳しています…",
   "player.captions.failed": "字幕を{language}に翻訳できませんでした",
   "player.captions.downloading": "字幕用の{language}データをダウンロードしています… {percent}%",
+  "player.captions.preparing": "{language}の字幕を準備しています…1分ほどかかる場合があります",
   "player.captions.ready": "{language}の字幕を表示できます",
   "player.search.modal.placeholder": "スライドのテキストを検索…",
   "player.search.modal.hint": "スライドを検索するには {min} 文字以上入力してください",

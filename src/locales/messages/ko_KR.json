@@ -64,6 +64,7 @@
   "player.captions.translating": "자막을 {language}(으)로 번역하는 중…",
   "player.captions.failed": "자막을 {language}(으)로 번역할 수 없습니다",
   "player.captions.downloading": "자막용 {language} 다운로드 중… {percent}%",
+  "player.captions.preparing": "{language} 자막을 준비하는 중… 1분 정도 걸릴 수 있습니다",
   "player.captions.ready": "{language} 자막이 준비되었습니다",
   "player.search.modal.placeholder": "슬라이드 텍스트 검색…",
   "player.search.modal.hint": "슬라이드를 검색하려면 {min}자 이상 입력하세요",

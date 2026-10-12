@@ -64,6 +64,7 @@
   "player.captions.translating": "Menerjemahkan subtitel ke {language}…",
   "player.captions.failed": "Tidak dapat menerjemahkan subtitel ke {language}",
   "player.captions.downloading": "Mengunduh paket bahasa {language} untuk subtitel… {percent}%",
+  "player.captions.preparing": "Menyiapkan subtitel {language}… ini bisa memakan waktu satu menit",
   "player.captions.ready": "Subtitel {language} sudah siap",
   "player.search.modal.placeholder": "Cari teks salindia…",
   "player.search.modal.hint": "Ketik minimal {min} karakter untuk mencari di salindia",

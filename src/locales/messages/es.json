@@ -64,6 +64,7 @@
   "player.captions.translating": "Traduciendo los subtítulos a {language}…",
   "player.captions.failed": "No se pudieron traducir los subtítulos a {language}",
   "player.captions.downloading": "Descargando {language} para los subtítulos… {percent}%",
+  "player.captions.preparing": "Preparando los subtítulos en {language}… puede tardar un minuto",
   "player.captions.ready": "Los subtítulos en {language} están listos",
   "player.search.modal.placeholder": "Buscar texto en las diapositivas…",
   "player.search.modal.hint": "Escribe al menos {min} caracteres para buscar en las diapositivas",

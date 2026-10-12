@@ -64,6 +64,7 @@
   "player.captions.translating": "正在将字幕翻译为{language}…",
   "player.captions.failed": "无法将字幕翻译为{language}",
   "player.captions.downloading": "正在下载{language}字幕语言包… {percent}%",
+  "player.captions.preparing": "正在准备{language}字幕…可能需要一分钟",
   "player.captions.ready": "{language}字幕已就绪",
   "player.search.modal.placeholder": "搜索幻灯片文字…",
   "player.search.modal.hint": "请至少输入 {min} 个字符以搜索幻灯片",

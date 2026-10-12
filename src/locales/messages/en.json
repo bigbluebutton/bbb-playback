@@ -64,6 +64,7 @@
   "player.captions.translating": "Translating captions into {language}…",
   "player.captions.failed": "Couldn't translate captions into {language}",
   "player.captions.downloading": "Downloading {language} for captions… {percent}%",
+  "player.captions.preparing": "Getting {language} captions ready… this can take a minute",
   "player.captions.ready": "{language} captions are ready",
   "player.search.modal.placeholder": "Search slide text…",
   "player.search.modal.hint": "Type at least {min} characters to search the slides",

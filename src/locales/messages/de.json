@@ -64,6 +64,7 @@
   "player.captions.translating": "Untertitel werden in {language} übersetzt…",
   "player.captions.failed": "Untertitel konnten nicht in {language} übersetzt werden",
   "player.captions.downloading": "{language} für Untertitel wird heruntergeladen… {percent} %",
+  "player.captions.preparing": "Untertitel in {language} werden vorbereitet… das kann eine Minute dauern",
   "player.captions.ready": "Untertitel in {language} sind bereit",
   "player.search.modal.placeholder": "Folientext durchsuchen…",
   "player.search.modal.hint": "Geben Sie mindestens {min} Zeichen ein, um die Folien zu durchsuchen",

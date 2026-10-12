@@ -64,6 +64,7 @@
   "player.captions.translating": "Traduzione dei sottotitoli in {language}…",
   "player.captions.failed": "Impossibile tradurre i sottotitoli in {language}",
   "player.captions.downloading": "Download di {language} per i sottotitoli… {percent}%",
+  "player.captions.preparing": "Preparazione dei sottotitoli in {language}… potrebbe volerci un minuto",
   "player.captions.ready": "Sottotitoli in {language} pronti",
   "player.search.modal.placeholder": "Cerca nel testo delle slide…",
   "player.search.modal.hint": "Digita almeno {min} caratteri per cercare nelle slide",

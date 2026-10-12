@@ -18,33 +18,24 @@ Indonesian, Italian, Portuguese, Russian, Spanish and Ukrainian).
 
 ## Install on the BigBlueButton server
 
+It matters most for Safari (Mac, iPhone, iPad): Safari's engine needs a
+minute or two to prepare the in-browser models on every visit, while with
+this server the first translated line shows in about a second.
+
 Requirements: Docker with the Compose plugin, about 4 GB of free RAM and
-10 GB of disk for the language models.
+10 GB of disk for the language models. On the BigBlueButton server, from the
+repository:
 
 ```sh
-cd bbb-playback/translate
-sudo docker compose up -d
+sudo ./translate/install.sh
 ```
 
-The first start downloads the language models, which takes a few minutes.
-Follow it with `sudo docker compose logs -f` and wait for the health check:
+It starts the server, waits for the language models to download (a few
+minutes the first time), adds the `/playback/translate` route to nginx and
+checks it from outside. No player setting needs to change:
+`captions.translate.url` in `src/config.js` already points there.
 
-```sh
-sudo docker compose ps        # STATUS shows "healthy"
-curl -s http://127.0.0.1:5000/languages | head -c 200
-```
-
-Then run `./deploy.sh` from the repository root. It installs
-`translate.nginx`, which serves the two endpoints the player needs at
-`https://<your server>/playback/translate/`, and reloads nginx. Check it from
-outside:
-
-```sh
-curl -s https://<your server>/playback/translate/languages | head -c 200
-```
-
-No player setting needs to change: `captions.translate.url` in `src/config.js`
-already points at `/playback/translate`.
+To see what it is doing: `cd translate && sudo docker compose logs -f`.
 
 ## Languages
 

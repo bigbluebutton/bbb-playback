@@ -64,6 +64,7 @@
   "player.captions.translating": "Altyazılar {language} diline çevriliyor…",
   "player.captions.failed": "Altyazılar {language} diline çevrilemedi",
   "player.captions.downloading": "Altyazılar için {language} indiriliyor… %{percent}",
+  "player.captions.preparing": "{language} altyazılar hazırlanıyor… bu bir dakika sürebilir",
   "player.captions.ready": "{language} altyazılar hazır",
   "player.search.modal.placeholder": "Slayt metninde ara…",
   "player.search.modal.hint": "Slaytlarda arama yapmak için en az {min} karakter yazın",

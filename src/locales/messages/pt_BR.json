@@ -64,6 +64,7 @@
   "player.captions.translating": "Traduzindo as legendas para {language}…",
   "player.captions.failed": "Não foi possível traduzir as legendas para {language}",
   "player.captions.downloading": "Baixando {language} para as legendas… {percent}%",
+  "player.captions.preparing": "Preparando as legendas em {language}… isso pode levar um minuto",
   "player.captions.ready": "Legendas em {language} prontas",
   "player.search.modal.placeholder": "Pesquisar no texto dos slides…",
   "player.search.modal.hint": "Digite pelo menos {min} caracteres para pesquisar nos slides",

@@ -50,9 +50,10 @@ const MULTILINGUAL_LANGUAGES = [
   'ar', 'de', 'en', 'es', 'fa', 'fr', 'hi', 'id', 'it', 'ja', 'ko', 'nl', 'pt', 'ru', 'tr', 'uk', 'ur', 'zh',
 ];
 
-// Without download progress for this long, loading gives up
-const LOAD_TIMEOUT = 120000;
-const LINE_TIMEOUT = 60000;
+// Safari prepares a downloaded model for minutes without a word, and its
+// first lines are slow while its engine warms up, so the limits are generous
+const LOAD_TIMEOUT = 900000;
+const LINE_TIMEOUT = 180000;
 
 const toStep = (entry) => {
   const [name, prefix] = Array.isArray(entry) ? entry : [entry];
@@ -99,46 +100,47 @@ const isSupported = () => {
     && typeof window.WebAssembly === 'object';
 };
 
+// One worker for every model: Safari stalls with two models getting ready
+// at once, so they load one after the other and lines run one at a time
 let worker = null;
+let queue = Promise.resolve();
 let lastId = 0;
 const requests = new Map();
 
-const failAll = (error) => {
-  requests.forEach(({ reject }) => reject(error));
-  requests.clear();
-  worker = null;
-};
-
 const getWorker = () => {
-  if (!worker) {
-    worker = new Worker(`${process.env.PUBLIC_URL}/translation-worker.js`, { type: 'module' });
-    worker.addEventListener('message', ({ data }) => {
-      const request = requests.get(data.id);
-      if (!request) return;
+  if (worker) return worker;
 
-      if (data.type === 'progress') {
-        request.onProgress(data.loaded);
-      } else if (data.type === 'done') {
-        requests.delete(data.id);
-        request.resolve(data.text);
-      } else if (data.type === 'error') {
-        requests.delete(data.id);
-        request.reject(new Error(data.message));
-      }
-    });
-    // Browsers without module workers, or a broken library download
-    worker.addEventListener('error', (event) => {
-      event.preventDefault();
-      worker.terminate();
-      failAll(new Error(event.message || 'translation worker'));
-    });
-  }
+  worker = new Worker(`${process.env.PUBLIC_URL}/translation-worker.js`, { type: 'module' });
+  worker.addEventListener('message', ({ data }) => {
+    const request = requests.get(data.id);
+    if (!request) return;
+
+    if (data.type === 'progress') {
+      request.onProgress(data.loaded);
+    } else if (data.type === 'downloaded') {
+      request.onProgress(1);
+    } else if (data.type === 'done') {
+      requests.delete(data.id);
+      request.resolve(data.text);
+    } else if (data.type === 'error') {
+      requests.delete(data.id);
+      request.reject(new Error(data.message));
+    }
+  });
+  // Browsers without module workers, or a broken library download
+  worker.addEventListener('error', (event) => {
+    event.preventDefault();
+    worker.terminate();
+    worker = null;
+    requests.forEach(({ reject }) => reject(new Error(event.message || 'translation worker')));
+    requests.clear();
+  });
 
   return worker;
 };
 
 // Rejects after `timeout` without an answer; progress restarts the wait
-const send = (message, timeout, onProgress = () => {}) => new Promise((resolve, reject) => {
+const post = (message, timeout, onProgress) => new Promise((resolve, reject) => {
   const id = ++lastId;
   let timer = null;
   const restart = () => {
@@ -171,22 +173,40 @@ const send = (message, timeout, onProgress = () => {}) => new Promise((resolve, 
   }
 });
 
+// One request at a time; the rest wait their turn
+const send = (message, timeout, onProgress = () => {}) => {
+  const result = queue.then(() => post(message, timeout, onProgress));
+  queue = result.catch(() => {});
+
+  return result;
+};
+
 const localProvider = {
   name: 'local',
-  // One line at a time, one model run at a time
   batchSize: 1,
   concurrency: 1,
   // Too large to download before the viewer asks for it
   preload: false,
   isAvailable: (source, target) => Promise.resolve(isSupported() && getSteps(source, target) !== null),
-  create: (source, target, onProgress) => {
+  // The first model's download is the one the viewer waits on; once it is
+  // in, the page says the captions are getting ready until the first line
+  create: (source, target, onProgress = () => {}) => {
     const steps = getSteps(source, target);
+    const loads = steps.map((step, index) => send(
+      { step, type: 'load' },
+      LOAD_TIMEOUT,
+      index === 0 ? onProgress : () => {},
+    ));
 
-    return send({ steps, type: 'load' }, LOAD_TIMEOUT, onProgress).then(() => ({
+    return Promise.all(loads).then(() => ({
       translate: async (texts) => {
         const result = [];
         for (const text of texts) {
-          result.push(await send({ steps, text, type: 'translate' }, LINE_TIMEOUT));
+          let value = text;
+          for (const step of steps) {
+            value = await send({ step, text: value, type: 'translate' }, LINE_TIMEOUT);
+          }
+          result.push(value);
         }
 
         return result;

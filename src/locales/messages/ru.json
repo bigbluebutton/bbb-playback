@@ -64,6 +64,7 @@
   "player.captions.translating": "Перевод субтитров на {language}…",
   "player.captions.failed": "Не удалось перевести субтитры на {language}",
   "player.captions.downloading": "Загрузка языкового пакета для субтитров ({language})… {percent}%",
+  "player.captions.preparing": "Подготовка субтитров: {language}… это может занять минуту",
   "player.captions.ready": "Субтитры готовы: {language}",
   "player.search.modal.placeholder": "Поиск по тексту слайдов…",
   "player.search.modal.hint": "Для поиска по слайдам введите не менее {min} симв.",

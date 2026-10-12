@@ -23,7 +23,7 @@ import {
   saveMediaPreferences,
 } from 'utils/preferences';
 import progress from 'utils/progress';
-import notify from 'utils/toast';
+import notify, { dismiss } from 'utils/toast';
 import watched from 'utils/watched';
 import storage from 'utils/data/storage';
 import player from 'utils/player';
@@ -67,6 +67,10 @@ const intlMessages = defineMessages({
   downloading: {
     id: 'player.captions.downloading',
     description: 'Message shown while the browser downloads a translation language pack',
+  },
+  preparing: {
+    id: 'player.captions.preparing',
+    description: 'Message shown while a downloaded translation model gets ready',
   },
   ready: {
     id: 'player.captions.ready',
@@ -265,19 +269,19 @@ const Webcams = () => {
           slideLabel: (number) => intl.formatMessage(intlMessages.previewSlide, { number }),
         });
 
+        // Caption notices share a key, so turning translated captions off
+        // takes down a notice still waiting on the model
+        const captionNotice = (message, duration) => notify({ duration, key: 'captions', message });
         setupCaptionTranslation(player.webcams, {
           label: intl.formatMessage(intlMessages.autoTranslated),
           locale: intl.locale,
-          onFailed: (language) => notify({ message: intl.formatMessage(intlMessages.translateFailed, { language }) }),
-          onProgress: (language, percent) => notify({
-            duration: 15000,
-            message: intl.formatMessage(intlMessages.downloading, { language, percent }),
-          }),
-          onReady: (language) => notify({
-            duration: 2500,
-            message: intl.formatMessage(intlMessages.ready, { language }),
-          }),
-          onStart: (language) => notify({ message: intl.formatMessage(intlMessages.translating, { language }) }),
+          onFailed: (language) => captionNotice(intl.formatMessage(intlMessages.translateFailed, { language })),
+          onHidden: () => dismiss('captions'),
+          // The download notice stays until the next one replaces it
+          onPreparing: (language) => captionNotice(intl.formatMessage(intlMessages.preparing, { language }), 900000),
+          onProgress: (language, percent) => captionNotice(intl.formatMessage(intlMessages.downloading, { language, percent }), 60000),
+          onReady: (language) => captionNotice(intl.formatMessage(intlMessages.ready, { language }), 2500),
+          onStart: (language) => captionNotice(intl.formatMessage(intlMessages.translating, { language }), 60000),
         });
       });
       logger.debug(ID.WEBCAMS, 'mounted');

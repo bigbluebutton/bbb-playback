@@ -64,6 +64,7 @@
   "player.captions.translating": "正在將字幕翻譯為{language}…",
   "player.captions.failed": "無法將字幕翻譯為{language}",
   "player.captions.downloading": "正在下載{language}字幕語言套件… {percent}%",
+  "player.captions.preparing": "正在準備{language}字幕…可能需要一分鐘",
   "player.captions.ready": "{language}字幕已準備就緒",
   "player.search.modal.placeholder": "搜尋投影片文字…",
   "player.search.modal.hint": "請至少輸入 {min} 個字元以搜尋投影片",

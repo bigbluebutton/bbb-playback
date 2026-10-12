@@ -64,6 +64,7 @@
   "player.captions.translating": "جارٍ ترجمة التعليقات إلى {language}…",
   "player.captions.failed": "تعذّرت ترجمة التعليقات إلى {language}",
   "player.captions.downloading": "جارٍ تنزيل اللغة {language} للتعليقات… {percent}%",
+  "player.captions.preparing": "جارٍ تجهيز التعليقات باللغة {language}… قد يستغرق ذلك دقيقة",
   "player.captions.ready": "أصبحت التعليقات باللغة {language} جاهزة",
   "player.search.modal.placeholder": "ابحث في نص الشرائح…",
   "player.search.modal.hint": "اكتب {min} أحرف على الأقل للبحث في الشرائح",

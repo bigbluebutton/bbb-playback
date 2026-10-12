@@ -64,6 +64,7 @@
   "player.captions.translating": "कैप्शन का {language} में अनुवाद किया जा रहा है…",
   "player.captions.failed": "कैप्शन का {language} में अनुवाद नहीं हो सका",
   "player.captions.downloading": "कैप्शन के लिए {language} भाषा डाउनलोड हो रही है… {percent}%",
+  "player.captions.preparing": "{language} कैप्शन तैयार किए जा रहे हैं… इसमें एक मिनट लग सकता है",
   "player.captions.ready": "{language} कैप्शन तैयार हैं",
   "player.search.modal.placeholder": "स्लाइड का टेक्स्ट खोजें…",
   "player.search.modal.hint": "स्लाइड खोजने के लिए कम से कम {min} अक्षर टाइप करें",

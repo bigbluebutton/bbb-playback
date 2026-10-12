@@ -64,6 +64,7 @@
   "player.captions.translating": "در حال ترجمه زیرنویس‌ها به {language}…",
   "player.captions.failed": "ترجمه زیرنویس‌ها به {language} ممکن نشد",
   "player.captions.downloading": "در حال بارگیری {language} برای زیرنویس‌ها… {percent}%",
+  "player.captions.preparing": "در حال آماده‌سازی زیرنویس‌های {language}… ممکن است یک دقیقه طول بکشد",
   "player.captions.ready": "زیرنویس‌های {language} آماده است",
   "player.search.modal.placeholder": "جستجو در متن اسلایدها…",
   "player.search.modal.hint": "برای جستجو در اسلایدها دست‌کم {min} نویسه وارد کنید",

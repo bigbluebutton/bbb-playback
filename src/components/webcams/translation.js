@@ -64,6 +64,8 @@ const setupCaptionTranslation = (videojsPlayer, {
   label,
   locale,
   onFailed,
+  onHidden,
+  onPreparing,
   onProgress,
   onReady,
   onStart,
@@ -119,14 +121,30 @@ const setupCaptionTranslation = (videojsPlayer, {
     let results = null;
     let count = 0;
 
+    // Notices only while the viewer still has this language on
+    const tell = (notice) => {
+      if (track.mode === 'showing') notice(name);
+    };
+
+    // Download progress, then a notice while the model gets ready, which
+    // can take a minute or two in Safari
     let lastPercent = -1;
+    let preparing = false;
     const handleProgress = (loaded) => {
+      if (loaded >= 1) {
+        if (!preparing) tell(onPreparing);
+        preparing = true;
+        return;
+      }
+
       const percent = Math.floor((loaded || 0) * 10) * 10;
-      if (percent === lastPercent || percent >= 100) return;
+      if (percent === lastPercent || preparing) return;
 
       lastPercent = percent;
-      onProgress(name, percent);
+      tell((language) => onProgress(language, percent));
     };
+    // Told once, when the first translated line is on screen
+    let announced = false;
 
     const save = () => writeTranslation(cacheKey, { count, texts: results });
 
@@ -150,14 +168,12 @@ const setupCaptionTranslation = (videojsPlayer, {
 
       if (pending.length === 0) return;
 
-      onStart(name);
+      tell(onStart);
 
       const translateWith = async (provider) => {
         // Set when this run fails so every worker stops at once
         const run = { failed: false };
         const translator = await getTranslator(provider, sourceLanguage, language, handleProgress);
-        // Only worth telling when the viewer waited for a download
-        if (lastPercent >= 0) onReady(name);
 
         // Batches start with the line on screen and grow (1, 2, 4… up to the
         // provider's size), so it shows translated in about a second; seeking
@@ -195,6 +211,10 @@ const setupCaptionTranslation = (videojsPlayer, {
               results[item.index] = texts[index];
             });
             refreshDisplay();
+            if (!announced) {
+              announced = true;
+              tell(onReady);
+            }
 
             sinceSave += batch.length;
             if (sinceSave >= 40) {
@@ -292,6 +312,7 @@ const setupCaptionTranslation = (videojsPlayer, {
       tracks.forEach((option, track) => {
         if (track.mode === 'showing' && !started.has(option.language)) translateTrack(track, option);
       });
+      if (![...tracks.keys()].some(track => track.mode === 'showing')) onHidden();
     });
 
     warmUp([...tracks.values()]);

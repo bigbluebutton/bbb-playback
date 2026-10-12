@@ -64,6 +64,7 @@
   "player.captions.translating": "Ondertiteling vertalen naar {language}…",
   "player.captions.failed": "Kan ondertiteling niet vertalen naar {language}",
   "player.captions.downloading": "{language} downloaden voor ondertiteling… {percent}%",
+  "player.captions.preparing": "Ondertiteling in {language} wordt voorbereid… dit kan een minuut duren",
   "player.captions.ready": "Ondertiteling in {language} is klaar",
   "player.search.modal.placeholder": "Zoeken in diatekst…",
   "player.search.modal.hint": "Typ minstens {min} tekens om in de dia's te zoeken",

@@ -3,10 +3,12 @@ import { EVENTS } from 'utils/constants';
 const DURATION = 4000;
 
 // Shows a short, non-blocking message. `action` is an optional
-// { label, onClick } rendered as a button inside the toast
+// { label, onClick } rendered as a button inside the toast; `key` lets the
+// message be taken down early with dismiss()
 const notify = ({
   action = null,
   duration = DURATION,
+  key = null,
   message,
 }) => {
   if (!message) return;
@@ -16,10 +18,17 @@ const notify = ({
       action,
       duration,
       id: Date.now(),
+      key,
       message,
     },
   });
   document.dispatchEvent(event);
 };
 
+// Takes down the message shown with `key`, if it is still showing
+const dismiss = (key) => {
+  document.dispatchEvent(new CustomEvent(EVENTS.TOAST, { detail: { dismiss: key } }));
+};
+
+export { dismiss };
 export default notify;
