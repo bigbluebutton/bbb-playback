@@ -1,0 +1,16 @@
+# Caption translation for the presentation player. Only the two endpoints
+# the player uses are exposed, on the same origin as the recordings
+location = /playback/translate/languages {
+  proxy_pass http://127.0.0.1:5000/languages;
+  proxy_set_header Host $host;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+}
+
+location = /playback/translate/translate {
+  limit_except POST { deny all; }
+  proxy_pass http://127.0.0.1:5000/translate;
+  proxy_set_header Host $host;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_read_timeout 120s;
+  client_max_body_size 256k;
+}

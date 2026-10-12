@@ -1,14 +1,15 @@
 const captions = {
   // Offer the recording captions in other languages, translated on demand.
-  // Without a url, Chrome's built-in on-device translator is used when the
-  // browser has one. With a url, any LibreTranslate compatible service
+  // Chrome's built-in on-device translator is used when the browser has one;
+  // every other browser (Safari, Firefox, phones, tablets) and the languages
+  // Chrome lacks use the LibreTranslate server at `url` (see translate/)
   translate: {
     enabled: true,
     key: null,
     // Start downloading the viewer's language pack on their first click
     preload: true,
     languages: ['ar', 'de', 'en', 'es', 'fa', 'fr', 'hi', 'id', 'it', 'ja', 'ko', 'nl', 'pt', 'ru', 'tr', 'uk', 'ur', 'zh'],
-    url: null,
+    url: '/playback/translate',
   },
 };
 

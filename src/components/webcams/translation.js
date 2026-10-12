@@ -4,8 +4,9 @@ import {
   pickNext,
 } from 'utils/captions/vtt';
 import {
+  findProviders,
   getLanguage,
-  getProvider,
+  getProviders,
   getTranslator,
 } from 'utils/captions/translators';
 import {
@@ -70,8 +71,8 @@ const setupCaptionTranslation = (videojsPlayer, {
   const sources = storage.captions || [];
   if (sources.length === 0) return;
 
-  const provider = getProvider();
-  if (!provider) return;
+  const providers = getProviders();
+  if (providers.length === 0) return;
 
   const source = sources[0];
   const sourceLanguage = getLanguage(source.locale);
@@ -110,11 +111,11 @@ const setupCaptionTranslation = (videojsPlayer, {
     }
   };
 
-  const translateTrack = async (track, language, name) => {
+  // Tries each provider in turn: if Chrome's translator stalls or fails, the
+  // server takes over from the lines still left
+  const translateTrack = async (track, { language, name, providers: candidates }) => {
     started.add(language);
     const cacheKey = `${recordId}|${source.locale}|${language}`;
-    // Set when this run fails so every worker stops at once
-    const run = { failed: false };
     let results = null;
     let count = 0;
 
@@ -126,6 +127,8 @@ const setupCaptionTranslation = (videojsPlayer, {
       lastPercent = percent;
       onProgress(name, percent);
     };
+
+    const save = () => writeTranslation(cacheKey, { count, texts: results });
 
     try {
       const [cues, cached] = await Promise.all([getSourceCues(), readTranslation(cacheKey)]);
@@ -148,55 +151,88 @@ const setupCaptionTranslation = (videojsPlayer, {
       if (pending.length === 0) return;
 
       onStart(name);
-      const translator = await getTranslator(provider, sourceLanguage, language, handleProgress);
-      // Only worth telling when the viewer waited for a download
-      if (lastPercent >= 0) onReady(name);
 
-      const size = provider.batchSize || 1;
-      let sinceSave = 0;
-      const save = () => writeTranslation(cacheKey, { count: cues.length, texts: results });
+      const translateWith = async (provider) => {
+        // Set when this run fails so every worker stops at once
+        const run = { failed: false };
+        const translator = await getTranslator(provider, sourceLanguage, language, handleProgress);
+        // Only worth telling when the viewer waited for a download
+        if (lastPercent >= 0) onReady(name);
 
-      // A few workers, each taking the lines closest to where the viewer is
-      const worker = async () => {
-        while (pending.length > 0 && !run.failed) {
-          if (videojsPlayer.isDisposed()) return;
+        // Batches start with the line on screen and grow (1, 2, 4… up to the
+        // provider's size), so it shows translated in about a second; seeking
+        // starts over from the new position
+        const maxSize = provider.batchSize || 1;
+        let size = 1;
+        const restart = () => {
+          size = 1;
+        };
+        videojsPlayer.on('seeking', restart);
+        let sinceSave = 0;
 
-          const batch = pickNext(pending, videojsPlayer.currentTime(), size);
-          pending = pending.filter(item => !batch.includes(item));
+        // A few workers, each taking the lines closest to where the viewer is
+        const worker = async () => {
+          while (pending.length > 0 && !run.failed) {
+            if (videojsPlayer.isDisposed()) return;
 
-          let texts;
-          try {
-            texts = await translator.translate(batch.map(item => item.cue.text));
-          } catch (error) {
-            run.failed = true;
-            throw error;
+            const batch = pickNext(pending, videojsPlayer.currentTime(), size);
+            pending = pending.filter(item => !batch.includes(item));
+            size = Math.min(size * 2, maxSize);
+
+            let texts;
+            try {
+              texts = await translator.translate(batch.map(item => item.cue.text));
+            } catch (error) {
+              // Left for the next provider
+              pending = pending.concat(batch);
+              run.failed = true;
+              throw error;
+            }
+            if (videojsPlayer.isDisposed()) return;
+
+            batch.forEach((item, index) => {
+              item.vttCue.text = texts[index];
+              results[item.index] = texts[index];
+            });
+            refreshDisplay();
+
+            sinceSave += batch.length;
+            if (sinceSave >= 40) {
+              sinceSave = 0;
+              save();
+            }
           }
-          if (videojsPlayer.isDisposed() || run.failed) return;
+        };
 
-          batch.forEach((item, index) => {
-            item.vttCue.text = texts[index];
-            results[item.index] = texts[index];
-          });
-          refreshDisplay();
-
-          sinceSave += batch.length;
-          if (sinceSave >= 40) {
-            sinceSave = 0;
-            save();
-          }
-        }
+        const workers = Array.from({ length: provider.concurrency || 1 }, worker);
+        // Every worker settles before the next provider starts
+        const outcomes = await Promise.allSettled(workers);
+        if (!videojsPlayer.isDisposed()) videojsPlayer.off('seeking', restart);
+        const failure = outcomes.find(outcome => outcome.status === 'rejected');
+        if (failure) throw failure.reason;
       };
 
-      await Promise.all(Array.from({ length: provider.concurrency || 1 }, worker));
-      if (!videojsPlayer.isDisposed()) save();
+      let lastError = null;
+      for (const provider of candidates) {
+        if (videojsPlayer.isDisposed() || pending.length === 0) break;
+
+        try {
+          await translateWith(provider);
+          lastError = null;
+        } catch (error) {
+          logger.warn('captions', 'translate', language, provider.name, error);
+          lastError = error;
+        }
+      }
+
+      if (videojsPlayer.isDisposed()) return;
+      save();
+      if (lastError) throw lastError;
     } catch (error) {
-      run.failed = true;
       if (videojsPlayer.isDisposed()) return;
 
       // Lines already translated are kept for the next attempt
-      if (results && results.some(text => text !== null)) {
-        writeTranslation(cacheKey, { count, texts: results });
-      }
+      if (results && results.some(text => text !== null)) save();
 
       logger.warn('captions', 'translate', language, error);
       started.delete(language);
@@ -210,12 +246,16 @@ const setupCaptionTranslation = (videojsPlayer, {
   // The language pack for the viewer's own language starts downloading on
   // their first click or key press (browsers require a gesture), so it is
   // usually ready by the time they open the captions menu
-  const warmUp = (languages) => {
-    if (!provider.preload || config.translate.preload === false) return;
+  const warmUp = (options) => {
+    if (config.translate.preload === false) return;
 
+    // Only when the best provider downloads language packs (Chrome's)
+    const languages = options.filter(option => option.providers[0].preload).map(({ language }) => language);
     const preferred = [locale, ...(navigator.languages || [])].map(getLanguage);
     const target = preferred.find(language => languages.includes(language));
     if (!target) return;
+
+    const [provider] = options.find(({ language }) => language === target).providers;
 
     const stop = () => {
       document.removeEventListener('pointerdown', handleGesture, true);
@@ -235,26 +275,26 @@ const setupCaptionTranslation = (videojsPlayer, {
   };
 
   Promise.all(targets.map(language => {
-    return provider.isAvailable(sourceLanguage, language).then(available => available ? language : null);
-  })).then(languages => {
+    return findProviders(providers, sourceLanguage, language).then(found => found.length > 0 ? { language, providers: found } : null);
+  })).then(options => {
     if (videojsPlayer.isDisposed()) return;
 
     const tracks = new Map();
-    languages.filter(Boolean).forEach(language => {
+    options.filter(Boolean).forEach(({ language, providers: found }) => {
       const name = getLanguageName(locale, language);
       const track = videojsPlayer.addTextTrack('subtitles', `${name} · ${label}`, language);
-      tracks.set(track, { language, name });
+      tracks.set(track, { language, name, providers: found });
     });
 
     if (tracks.size === 0) return;
 
     videojsPlayer.textTracks().addEventListener('change', () => {
-      tracks.forEach(({ language, name }, track) => {
-        if (track.mode === 'showing' && !started.has(language)) translateTrack(track, language, name);
+      tracks.forEach((option, track) => {
+        if (track.mode === 'showing' && !started.has(option.language)) translateTrack(track, option);
       });
     });
 
-    warmUp([...tracks.values()].map(({ language }) => language));
+    warmUp([...tracks.values()]);
 
     logger.debug('captions', 'translations', [...tracks.values()].map(({ language }) => language));
   });

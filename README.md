@@ -81,9 +81,11 @@ When no URL is provided, the dev server starts normally without any proxy.
     translated when the viewer selects one
     - `enabled`: [`true`|`false`]
     - `languages`: languages to offer, besides the viewer's own language
-    - `url`: a LibreTranslate compatible `/translate` endpoint. When empty, the
-      browser's built-in on-device translator is used where available (Chrome)
-    - `key`: optional API key sent to `url`
+    - `url`: the LibreTranslate server used by Safari, Firefox, phones,
+      tablets, and for the languages Chrome's built-in on-device translator
+      lacks. Defaults to `/playback/translate`; see [translate/](translate/README.md)
+      to install it
+    - `key`: optional LibreTranslate API key sent to `url`
     - `preload`: with the browser translator, start downloading the viewer's
       language pack on their first click [`true`|`false`]
 

@@ -349,15 +349,31 @@ $big-play-button-size: 2em;
   }
 }
 
+// Tablets and desktops: captions are centred on the slides, clear of the
+// side panel (on the right in right-to-left languages)
+@media (min-width: $media-min-width) {
+  .player-wrapper:not(.single-content):not(.hidden-section):not(.fullscreen-content) .video-js .vjs-text-track-display {
+    inset-inline-start: $section-width;
+  }
+
+  @media (max-height: $media-max-height) {
+    .player-wrapper:not(.single-content):not(.hidden-section):not(.fullscreen-content) .video-js .vjs-text-track-display {
+      inset-inline-start: $section-width-small;
+    }
+  }
+}
+
 // Phones: the play button sits on the video instead of the middle of the
 // screen, where it would cover the panel tabs
 @media (max-width: $media-min-width) {
   .video-js .vjs-big-play-button {
     position: absolute;
   }
+}
 
-  // Phones stack the video above the panels, so captions go on the video
-  // instead of floating over the chat
+// Phones stack the video above the panels, so captions go on the video
+// instead of floating over the chat (the stacked layout ends below 480px)
+@media (max-width: calc(#{$media-min-width} - .02px)) {
   .player-wrapper:not(.single-content):not(.hidden-section):not(.fullscreen-content) .video-js .vjs-text-track-display {
     bottom: 0;
     height: auto;
