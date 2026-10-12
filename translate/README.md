@@ -1,14 +1,20 @@
 # Caption translation server
 
 The player's CC menu offers the recording captions in more languages,
-translated while the viewer watches. Chrome on desktop does this on the
-viewer's own device. Every other browser (Safari, Firefox, Edge, phones and
-tablets) and any language Chrome lacks go through this server instead:
-[LibreTranslate](https://github.com/LibreTranslate/LibreTranslate), free and
-open source, running on your own machine, so captions never leave it.
+translated while the viewer watches. It uses the first of these that handles
+the language:
 
-Without the server, the CC menu still works in every browser with the
-recording's own caption languages; only the translated ones are missing.
+1. Chrome's built-in translator, on the viewer's device (desktop Chrome)
+2. This server: [LibreTranslate](https://github.com/LibreTranslate/LibreTranslate),
+   free and open source, running on your own machine
+3. Open translation models run in the viewer's browser, downloaded once
+   (about 110 MB per language) and kept in the browser cache
+
+Without this server every browser still translates, through option 3. The
+server is still worth installing: viewers do not download any models, the
+first line shows in about a second, and phones and tablets get every language
+(on their own they get Arabic, Chinese, Dutch, English, French, German, Hindi,
+Indonesian, Italian, Portuguese, Russian, Spanish and Ukrainian).
 
 ## Install on the BigBlueButton server
 

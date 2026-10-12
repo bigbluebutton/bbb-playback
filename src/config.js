@@ -1,8 +1,8 @@
 const captions = {
-  // Offer the recording captions in other languages, translated on demand.
-  // Chrome's built-in on-device translator is used when the browser has one;
-  // every other browser (Safari, Firefox, phones, tablets) and the languages
-  // Chrome lacks use the LibreTranslate server at `url` (see translate/)
+  // Offer the recording captions in other languages, translated on demand,
+  // by the first of these that handles the language: Chrome's built-in
+  // on-device translator, the LibreTranslate server at `url` (optional, see
+  // translate/), and open models run in the viewer's browser (`local`)
   translate: {
     enabled: true,
     key: null,
@@ -10,6 +10,13 @@ const captions = {
     preload: true,
     languages: ['ar', 'de', 'en', 'es', 'fa', 'fr', 'hi', 'id', 'it', 'ja', 'ko', 'nl', 'pt', 'ru', 'tr', 'uk', 'ur', 'zh'],
     url: '/playback/translate',
+    // Works in every browser with nothing to install. Models download once
+    // from `models` (about 110 MB per language, cached by the browser)
+    local: {
+      enabled: true,
+      library: 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/dist/transformers.min.js',
+      models: 'https://huggingface.co/',
+    },
   },
 };
 

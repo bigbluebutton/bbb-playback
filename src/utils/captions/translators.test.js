@@ -137,10 +137,10 @@ describe('Chrome translator', () => {
     return getProviders().find(provider => provider.name === 'browser');
   };
 
-  it('comes before the server', () => {
+  it('comes before the server and the in-browser models', () => {
     const { getProviders } = jest.requireActual('./translators');
 
-    expect(getProviders().map(provider => provider.name)).toEqual(['browser', 'http']);
+    expect(getProviders().map(provider => provider.name)).toEqual(['browser', 'http', 'local']);
   });
 
   it('counts as unavailable when it does not answer', async () => {

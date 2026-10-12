@@ -81,10 +81,19 @@ When no URL is provided, the dev server starts normally without any proxy.
     translated when the viewer selects one
     - `enabled`: [`true`|`false`]
     - `languages`: languages to offer, besides the viewer's own language
-    - `url`: the LibreTranslate server used by Safari, Firefox, phones,
-      tablets, and for the languages Chrome's built-in on-device translator
-      lacks. Defaults to `/playback/translate`; see [translate/](translate/README.md)
-      to install it
+    - `url`: an optional LibreTranslate server, the fastest option on every
+      device. Defaults to `/playback/translate`; see
+      [translate/](translate/README.md) to install it
+    - `local`: translation in the viewer's browser with open models, used
+      when neither Chrome's built-in translator nor the server handles a
+      language. Works in every browser with nothing to install; models
+      download once from `models` (about 110 MB per language) and stay in the
+      browser cache. Phones and tablets get the languages with small models
+      (ar, de, en, es, fr, hi, id, it, nl, pt, ru, uk, zh); computers get all
+      of them
+      - `enabled`: [`true`|`false`]
+      - `library`: transformers.js build to load
+      - `models`: where models download from (a mirror can be set here)
     - `key`: optional LibreTranslate API key sent to `url`
     - `preload`: with the browser translator, start downloading the viewer's
       language pack on their first click [`true`|`false`]

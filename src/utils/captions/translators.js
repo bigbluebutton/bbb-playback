@@ -1,4 +1,5 @@
 import { captions as config } from 'config';
+import { localProvider } from './local';
 
 const getLanguage = (code = '') => code.split(/[-_]/)[0].toLowerCase();
 
@@ -152,8 +153,9 @@ const httpProvider = (url, key) => {
   };
 };
 
-// Chrome's on-device translator comes first (private, no server load); the
-// server covers every other browser and the languages Chrome lacks
+// Best first: Chrome's on-device translator (private, no download from us),
+// then the server (fast on any device), then open models run in the
+// viewer's browser, which work everywhere with nothing to install
 const getProviders = () => {
   const { translate } = config;
   if (!translate || !translate.enabled) return [];
@@ -161,6 +163,7 @@ const getProviders = () => {
   const providers = [];
   if (window.Translator && typeof window.Translator.create === 'function') providers.push(browserProvider);
   if (translate.url) providers.push(httpProvider(translate.url, translate.key));
+  if (translate.local && translate.local.enabled) providers.push(localProvider);
 
   return providers;
 };
