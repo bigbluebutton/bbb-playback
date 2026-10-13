@@ -49,6 +49,8 @@ describe('vtt', () => {
     expect(tidyText('&nbsp;\nHi\n\u200f')).toBe('Hi');
     expect(tidyText('One\n \nTwo ')).toBe('One\nTwo');
     expect(tidyText('<i>\nHi</i>')).toBe('<i>\nHi</i>');
+    expect(tidyText('\u202b\nحتى دراسياً\n\u202c')).toBe('حتى دراسياً');
+    expect(tidyText('\u2067\u2069\nحتى')).toBe('حتى');
     expect(parseVTT('WEBVTT\n\n00:00:01.000 --> 00:00:02.000\n \nHi\n')).toEqual([
       { start: 1, end: 2, text: 'Hi' },
     ]);
@@ -58,6 +60,10 @@ describe('vtt', () => {
     expect(isBlank(' \u00a0 ')).toBe(true);
     expect(isBlank('<i> </i>')).toBe(true);
     expect(isBlank(undefined)).toBe(true);
+    // Direction marks and isolates around Arabic and Hebrew text
+    ['\u202b', '\u202c', '\u061c', '\u2067\u2069', '\u200f\u200e', '\u3000', '&#x202b;', '&#8207;']
+      .forEach(text => expect(isBlank(text)).toBe(true));
+    expect(isBlank('&#1605;')).toBe(false);
     expect(isBlank('مرحبا')).toBe(false);
     expect(isBlank('<b>Q3</b>')).toBe(false);
   });

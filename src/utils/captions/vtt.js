@@ -8,6 +8,11 @@ const toSeconds = (value) => {
   return parts.reduce((total, part) => total * 60 + part, 0);
 };
 
+// Characters that show nothing: spaces of every kind, control characters
+// and format marks such as the direction marks in Arabic and Hebrew text
+// (U+200E/F, U+202A-E, U+2066-9, U+061C), plus blank-looking fillers
+const INVISIBLE = /[\s\p{Z}\p{Cc}\p{Cf}\u115f\u1160\u2800\u3164\uffa0]/gu;
+
 // Lines with nothing to read: spaces, &nbsp;, invisible marks or empty tags
 // such as <v Bob></v>. Shown, they would be an empty caption box
 const isBlank = (text) => {
@@ -15,9 +20,14 @@ const isBlank = (text) => {
 
   return text
     .replace(/<[^>]*>/g, '')
-    .replace(/&(nbsp|#160|#xa0|lrm|rlm|zwj|zwnj|#8203|#x200b);/gi, '')
-    .replace(/[\u200b-\u200f\u2060\ufeff]/g, '')
-    .trim() === '';
+    .replace(/&(nbsp|lrm|rlm|zwj|zwnj|#\d+|#x[\da-f]+);/gi, (entity) => {
+      const match = entity.match(/^&#(x?)([\da-f]+);$/i);
+      if (!match) return '';
+
+      const char = String.fromCodePoint(parseInt(match[2], match[1] ? 16 : 10));
+      return char.replace(INVISIBLE, '');
+    })
+    .replace(INVISIBLE, '') === '';
 };
 
 // Drops the empty lines inside a caption (spaces, &nbsp;, invisible marks),

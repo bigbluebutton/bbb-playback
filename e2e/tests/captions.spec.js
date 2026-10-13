@@ -154,7 +154,10 @@ test('blank caption lines show no empty box', async ({ page, hasTouch }) => {
 test('empty lines inside a caption leave no sliver of box', async ({ page, hasTouch }) => {
   await page.route('**/caption_ar.vtt', (route) => route.fulfill({
     contentType: 'text/vtt',
-    body: `WEBVTT\n\n00:00:00.000 --> 00:00:05.000\n \n${FIRST_LINE}\n‏\n`,
+    // Spaces and the invisible direction marks common in Arabic captions,
+    // on lines of their own and as a caption of their own
+    body: `WEBVTT\n\n00:00:00.000 --> 00:00:05.000\n \n\u202b\n${FIRST_LINE}\n\u200f\u202c\n\n`
+      + '00:00:00.000 --> 00:00:05.000\n\u061c\u2067\u2069\n',
   }));
   await open(page);
 
