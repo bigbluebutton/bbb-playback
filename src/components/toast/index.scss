@@ -72,3 +72,39 @@
     transform: none;
   }
 }
+
+// Progress of a longer task, e.g. a translation getting ready
+.toast-progress {
+  background-color: rgba(127, 127, 127, .35);
+  background-color: color-mix(in srgb, var(--toast-color) 20%, transparent);
+  border-radius: 999px;
+  flex: 0 0 4rem;
+  height: 4px;
+  overflow: hidden;
+  position: relative;
+
+  > span {
+    background: var(--accent-gradient);
+    border-radius: inherit;
+    display: block;
+    height: 100%;
+    transition: width .4s ease-out;
+  }
+
+  &.busy > span {
+    animation: toast-busy 1.4s ease-in-out infinite;
+    width: 40%;
+  }
+}
+
+@keyframes toast-busy {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(250%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast-progress.busy > span {
+    animation: none;
+    width: 100%;
+  }
+}

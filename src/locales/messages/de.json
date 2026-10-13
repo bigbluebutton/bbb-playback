@@ -102,5 +102,6 @@
   "player.progress.watched": "{percent} % dieser Aufzeichnung angesehen",
   "player.progress.completed": "🎉 Sie haben die gesamte Aufzeichnung angesehen",
   "player.bookmarks.download": "Lesezeichen und Notizen herunterladen",
-  "player.transcript.download": "Transkript herunterladen"
+  "player.transcript.download": "Transkript herunterladen",
+  "player.media.unsupported": "Das Video dieser Aufzeichnung kann in diesem Browser nicht abgespielt werden. Verwenden Sie einen anderen Browser oder bitten Sie die Website, das Video als MP4 bereitzustellen."
 }

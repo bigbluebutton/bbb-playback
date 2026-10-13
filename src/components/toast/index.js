@@ -37,9 +37,18 @@ const Toast = () => {
       {toast ? (
         <div
           className="toast"
-          key={toast.id}
+          // A message with a key updates in place instead of appearing anew
+          key={toast.key || toast.id}
         >
           <span className="toast-message">{toast.message}</span>
+          {toast.progress !== null && toast.progress !== undefined ? (
+            <span
+              aria-hidden="true"
+              className={toast.progress === 'busy' ? 'toast-progress busy' : 'toast-progress'}
+            >
+              <span style={toast.progress === 'busy' ? null : { width: `${Math.round(toast.progress * 100)}%` }} />
+            </span>
+          ) : null}
           {toast.action ? (
             <button
               className="toast-action"

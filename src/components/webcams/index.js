@@ -18,6 +18,7 @@ import {
 } from 'utils/params';
 import { formatTime } from 'utils/format';
 import { loadVideojsLanguage } from 'utils/videojsLanguage';
+import { playFirstWorking } from 'utils/media/fallback';
 import {
   getMediaPreferences,
   saveMediaPreferences,
@@ -36,6 +37,10 @@ import setupCaptions from './captions';
 import './index.scss';
 
 const intlMessages = defineMessages({
+  unsupported: {
+    id: 'player.media.unsupported',
+    description: 'Message shown when no format of the recording plays in this browser',
+  },
   aria: {
     id: 'player.webcams.wrapper.aria',
     description: 'Aria label for the webcams wrapper',
@@ -135,7 +140,6 @@ const buildOptions = (sources, tracks) => {
     },
     inactivityTimeout: 0,
     playbackRates: config.rates,
-    sources: sources.current,
     tracks: tracks.current,
     plugins: {
       seekButtons: {
@@ -269,20 +273,33 @@ const Webcams = () => {
           slideLabel: (number) => intl.formatMessage(intlMessages.previewSlide, { number }),
         });
 
-        // Caption notices share a key, so turning translated captions off
-        // takes down a notice still waiting on the model
-        const captionNotice = (message, duration) => notify({ duration, key: 'captions', message });
+        // Caption notices share a key: each one updates the last in place,
+        // and turning translated captions off takes down one still waiting
+        const captionNotice = (message, duration, progress = null) => notify({
+          duration,
+          key: 'captions',
+          message,
+          progress,
+        });
         setupCaptions(player.webcams, {
           label: intl.formatMessage(intlMessages.autoTranslated),
           locale: intl.locale,
-          onFailed: (language) => captionNotice(intl.formatMessage(intlMessages.translateFailed, { language })),
+          onFailed: (language) => captionNotice(intl.formatMessage(intlMessages.translateFailed, { language }), 6000),
           onHidden: () => dismiss('captions'),
-          // The download notice stays until the next one replaces it
-          onPreparing: (language) => captionNotice(intl.formatMessage(intlMessages.preparing, { language }), 900000),
-          onProgress: (language, percent) => captionNotice(intl.formatMessage(intlMessages.downloading, { language, percent }), 60000),
+          // Each notice stays until the next one replaces it
+          onPreparing: (language) => captionNotice(intl.formatMessage(intlMessages.preparing, { language }), 900000, 'busy'),
+          onProgress: (language, percent) => captionNotice(
+            intl.formatMessage(intlMessages.downloading, { language, percent }),
+            120000,
+            percent / 100,
+          ),
           onReady: (language) => captionNotice(intl.formatMessage(intlMessages.ready, { language }), 2500),
-          onStart: (language) => captionNotice(intl.formatMessage(intlMessages.translating, { language }), 60000),
+          onStart: (language) => captionNotice(intl.formatMessage(intlMessages.translating, { language }), 120000, 'busy'),
         });
+      });
+      // MP4, then WebM, then WebM decoded in the page (Safari)
+      playFirstWorking(player.webcams, videojs, sources.current, {
+        message: intl.formatMessage(intlMessages.unsupported),
       });
       logger.debug(ID.WEBCAMS, 'mounted');
     });

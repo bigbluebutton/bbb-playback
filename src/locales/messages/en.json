@@ -102,5 +102,6 @@
   "player.progress.watched": "{percent}% of this recording watched",
   "player.progress.completed": "🎉 You've watched the whole recording",
   "player.bookmarks.download": "Download bookmarks and notes",
-  "player.transcript.download": "Download transcript"
+  "player.transcript.download": "Download transcript",
+  "player.media.unsupported": "This recording's video can't play in this browser. Try another browser, or ask the site to provide the video as MP4."
 }

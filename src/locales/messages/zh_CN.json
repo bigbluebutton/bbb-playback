@@ -102,5 +102,6 @@
   "player.progress.watched": "此录制内容已观看 {percent}%",
   "player.progress.completed": "🎉 你已看完整个录制内容",
   "player.bookmarks.download": "下载书签和备注",
-  "player.transcript.download": "下载文字稿"
+  "player.transcript.download": "下载文字稿",
+  "player.media.unsupported": "此录制的视频无法在此浏览器中播放。请尝试其他浏览器，或请网站提供 MP4 格式的视频。"
 }

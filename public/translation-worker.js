@@ -22,12 +22,31 @@ const getLibrary = (settings) => {
   return library;
 };
 
+// Large downloads break now and then; the next try reuses what the browser
+// cache already holds
+const RETRY_DELAYS = [2000, 6000];
+
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+const createPipeline = async (settings, model, onProgress) => {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      const { pipeline } = await getLibrary(settings);
+
+      return await pipeline('translation', model, {
+        dtype: 'q8',
+        progress_callback: onProgress,
+      });
+    } catch (error) {
+      if (attempt >= RETRY_DELAYS.length) throw error;
+      await wait(RETRY_DELAYS[attempt]);
+    }
+  }
+};
+
 const getPipeline = (settings, model, onProgress) => {
   if (!pipelines.has(model)) {
-    const created = getLibrary(settings).then(({ pipeline }) => pipeline('translation', model, {
-      dtype: 'q8',
-      progress_callback: onProgress,
-    }));
+    const created = createPipeline(settings, model, onProgress);
     created.catch(() => pipelines.delete(model));
     pipelines.set(model, created);
   }

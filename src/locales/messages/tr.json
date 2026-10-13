@@ -102,5 +102,6 @@
   "player.progress.watched": "Bu kaydın %{percent} kadarı izlendi",
   "player.progress.completed": "🎉 Kaydın tamamını izlediniz",
   "player.bookmarks.download": "Yer işaretlerini ve notları indir",
-  "player.transcript.download": "Transkripti indir"
+  "player.transcript.download": "Transkripti indir",
+  "player.media.unsupported": "Bu kaydın videosu bu tarayıcıda oynatılamıyor. Başka bir tarayıcı deneyin veya siteden videoyu MP4 olarak sunmasını isteyin."
 }

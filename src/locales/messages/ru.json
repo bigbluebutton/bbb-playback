@@ -102,5 +102,6 @@
   "player.progress.watched": "Просмотрено {percent}% записи",
   "player.progress.completed": "🎉 Вы просмотрели запись полностью",
   "player.bookmarks.download": "Скачать закладки и заметки",
-  "player.transcript.download": "Скачать расшифровку"
+  "player.transcript.download": "Скачать расшифровку",
+  "player.media.unsupported": "Видео этой записи не воспроизводится в этом браузере. Попробуйте другой браузер или попросите сайт предоставить видео в формате MP4."
 }

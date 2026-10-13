@@ -25,3 +25,6 @@ yarn-error.log*
 /e2e/playwright-report
 /playwright-report
 /test-results
+
+# Copied from node_modules/ogv by scripts/copy-ogv.js
+/public/ogv

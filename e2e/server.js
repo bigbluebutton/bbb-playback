@@ -25,6 +25,7 @@ const TYPES = {
   '.png': 'image/png',
   '.svg': 'image/svg+xml',
   '.vtt': 'text/vtt; charset=utf-8',
+  '.wasm': 'application/wasm',
   '.webm': 'video/webm',
   '.xml': 'application/xml',
 };

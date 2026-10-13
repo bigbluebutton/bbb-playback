@@ -24,20 +24,23 @@ It matters most for Safari (Mac, iPhone, iPad): Safari's engine needs a
 minute or two to prepare the in-browser models on every visit, while with
 this server the first translated line shows in about a second.
 
-Requirements: Docker with the Compose plugin, about 4 GB of free RAM and
-10 GB of disk for the language models. On the BigBlueButton server, from the
-repository:
+Requirements: about 4 GB of free RAM and 10 GB of disk for the language
+models. With Docker it runs as a container; without Docker it is installed
+as the `bbb-playback-translate` system service in a Python environment
+(Python 3.8 or later, as on every supported BigBlueButton server). On the
+BigBlueButton server, from the repository:
 
 ```sh
 sudo ./translate/install.sh
 ```
 
 It starts the server, waits for the language models to download (a few
-minutes the first time), adds the `/playback/translate` route to nginx and
+minutes the first time, about 3 GB), adds the `/playback/translate` route to nginx and
 checks it from outside. No player setting needs to change:
 `captions.translate.url` in `src/config.js` already points there.
 
-To see what it is doing: `cd translate && sudo docker compose logs -f`.
+To see what it is doing: `cd translate && sudo docker compose logs -f`
+(Docker) or `sudo journalctl -u bbb-playback-translate -f` (service).
 
 ## Languages
 

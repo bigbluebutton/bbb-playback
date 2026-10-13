@@ -102,5 +102,6 @@
   "player.progress.watched": "{percent}% از این ضبط دیده شده است",
   "player.progress.completed": "🎉 کل ضبط را تماشا کرده‌اید",
   "player.bookmarks.download": "بارگیری نشانک‌ها و یادداشت‌ها",
-  "player.transcript.download": "بارگیری رونوشت"
+  "player.transcript.download": "بارگیری رونوشت",
+  "player.media.unsupported": "ویدیوی این ضبط در این مرورگر پخش نمی‌شود. مرورگر دیگری را امتحان کنید یا از سایت بخواهید ویدیو را با قالب MP4 ارائه دهد."
 }

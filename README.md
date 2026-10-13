@@ -13,6 +13,18 @@ You will be able to play your recordings using the following URL
 https://<domain>/playback/presentation/2.3/<recordId>
 ```
 
+## Video in Safari, iPhone and iPad
+
+BigBlueButton records video as WebM, which Safari often cannot play. The
+player falls back to decoding it in the page, so recordings play in every
+browser. For smooth, battery-friendly playback in Safari, give recordings an
+MP4 copy on the server that stores them:
+```
+sudo ./media/mp4.sh
+```
+
+Details: [media/README.md](media/README.md).
+
 ## Captions and translation
 
 The CC button works the same in Chrome, Edge, Firefox and Safari, on

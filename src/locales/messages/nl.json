@@ -102,5 +102,6 @@
   "player.progress.watched": "{percent}% van deze opname bekeken",
   "player.progress.completed": "🎉 Je hebt de hele opname bekeken",
   "player.bookmarks.download": "Bladwijzers en notities downloaden",
-  "player.transcript.download": "Transcript downloaden"
+  "player.transcript.download": "Transcript downloaden",
+  "player.media.unsupported": "De video van deze opname kan niet worden afgespeeld in deze browser. Probeer een andere browser of vraag de site om de video als MP4 aan te bieden."
 }

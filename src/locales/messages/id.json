@@ -102,5 +102,6 @@
   "player.progress.watched": "{percent}% dari rekaman ini telah ditonton",
   "player.progress.completed": "🎉 Anda telah menonton seluruh rekaman",
   "player.bookmarks.download": "Unduh penanda dan catatan",
-  "player.transcript.download": "Unduh transkrip"
+  "player.transcript.download": "Unduh transkrip",
+  "player.media.unsupported": "Video rekaman ini tidak dapat diputar di browser ini. Coba browser lain, atau minta situs menyediakan video dalam format MP4."
 }

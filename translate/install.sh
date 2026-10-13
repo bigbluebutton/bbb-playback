@@ -1,29 +1,70 @@
 #!/bin/bash
 
 # Installs the caption translation server on this BigBlueButton server:
-# starts LibreTranslate (Docker) and serves it to the player at
-# /playback/translate. Run it from the repository: sudo ./translate/install.sh
+# LibreTranslate, served to the player at /playback/translate. With Docker
+# it runs as a container (docker-compose.yml); without it, as a system
+# service in a Python environment (bbb-playback-translate).
+# Run it from the repository: sudo ./translate/install.sh
 
 set -e
 
 cd "$(dirname "$0")"
+
+VERSION=1.9.6
+LANGUAGES=en,ar,de,es,fa,fr,hi,id,it,ja,ko,nl,pt,ru,tr,uk,ur,zh
+SERVICE=bbb-playback-translate
+HOME_DIR=/opt/$SERVICE
 
 if [ "$(id -u)" -ne 0 ]; then
   echo "Run it as root: sudo $0" >&2
   exit 1
 fi
 
-if ! command -v docker > /dev/null || ! docker compose version > /dev/null 2>&1; then
-  echo "Docker with the Compose plugin is needed: https://docs.docker.com/engine/install/ubuntu/" >&2
-  exit 1
+install_service() {
+  echo "Docker is not installed: installing LibreTranslate as the $SERVICE service."
+  apt-get install -y -qq python3-venv python3-pip > /dev/null
+
+  id -u $SERVICE > /dev/null 2>&1 || useradd --system --home-dir $HOME_DIR --shell /usr/sbin/nologin $SERVICE
+  mkdir -p $HOME_DIR
+  chown $SERVICE: $HOME_DIR
+
+  sudo -H -u $SERVICE python3 -m venv $HOME_DIR/venv
+  sudo -H -u $SERVICE $HOME_DIR/venv/bin/pip install -q --upgrade pip
+  sudo -H -u $SERVICE $HOME_DIR/venv/bin/pip install -q "libretranslate==$VERSION"
+
+  cat > /etc/systemd/system/$SERVICE.service <<UNIT
+[Unit]
+Description=Caption translation for the BigBlueButton presentation player (LibreTranslate)
+After=network-online.target
+
+[Service]
+User=$SERVICE
+WorkingDirectory=$HOME_DIR
+ExecStart=$HOME_DIR/venv/bin/libretranslate --host 127.0.0.1 --port 5000 --load-only $LANGUAGES --update-models --disable-web-ui --batch-limit 32 --char-limit 2000 --threads 4
+Restart=on-failure
+Nice=5
+
+[Install]
+WantedBy=multi-user.target
+UNIT
+
+  systemctl daemon-reload
+  systemctl enable --now $SERVICE
+  LOGS="journalctl -u $SERVICE -f"
+}
+
+if command -v docker > /dev/null && docker compose version > /dev/null 2>&1; then
+  echo "Starting the translation server (Docker)."
+  docker compose up -d
+  LOGS="cd $(pwd) && docker compose logs -f"
+else
+  install_service
 fi
 
-echo "Starting the translation server. The first start downloads the language models (a few minutes)…"
-docker compose up -d
-
+echo "The first start downloads the language models, which takes a few minutes."
 printf "Waiting for it to be ready"
 READY=false
-for _ in $(seq 1 120); do
+for _ in $(seq 1 240); do
   if curl -sf http://127.0.0.1:5000/languages > /dev/null; then
     READY=true
     break
@@ -34,7 +75,7 @@ done
 echo
 
 if [ "$READY" != true ]; then
-  echo "Not ready after 20 minutes. See what it is doing: cd $(pwd) && docker compose logs" >&2
+  echo "Not ready after 40 minutes. See what it is doing: $LOGS" >&2
   exit 1
 fi
 

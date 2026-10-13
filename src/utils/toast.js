@@ -4,12 +4,14 @@ const DURATION = 4000;
 
 // Shows a short, non-blocking message. `action` is an optional
 // { label, onClick } rendered as a button inside the toast; `key` lets the
-// message be taken down early with dismiss()
+// message be updated in place and taken down early with dismiss();
+// `progress` adds a bar, from 0 to 1, or 'busy' while the end is unknown
 const notify = ({
   action = null,
   duration = DURATION,
   key = null,
   message,
+  progress = null,
 }) => {
   if (!message) return;
 
@@ -20,6 +22,7 @@ const notify = ({
       id: Date.now(),
       key,
       message,
+      progress,
     },
   });
   document.dispatchEvent(event);

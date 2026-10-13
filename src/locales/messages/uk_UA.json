@@ -102,5 +102,6 @@
   "player.progress.watched": "Переглянуто {percent}% запису",
   "player.progress.completed": "🎉 Ви переглянули весь запис",
   "player.bookmarks.download": "Завантажити закладки та нотатки",
-  "player.transcript.download": "Завантажити транскрипт"
+  "player.transcript.download": "Завантажити транскрипт",
+  "player.media.unsupported": "Відео цього запису не відтворюється в цьому браузері. Спробуйте інший браузер або попросіть сайт надати відео у форматі MP4."
 }

@@ -381,3 +381,36 @@ $big-play-button-size: 2em;
     top: 0;
   }
 }
+
+// Media errors: hidden while the player tries another format, then a card
+// in the middle of the screen instead of video.js' full-page grey dialog
+.vjs-media-retry .vjs-error-display {
+  display: none;
+}
+
+.video-js .vjs-error-display {
+  align-items: center;
+  background: rgba(15, 23, 42, .55);
+  display: flex;
+  justify-content: center;
+  padding: $margin * 2;
+  z-index: 3;
+
+  &::before {
+    display: none;
+  }
+
+  .vjs-modal-dialog-content {
+    background-color: var(--secondary-background-color);
+    border-radius: $border-radius * 2;
+    box-shadow: 0 12px 40px var(--shadow-color);
+    color: var(--secondary-content-color);
+    font-size: 1rem;
+    height: auto;
+    line-height: 1.5;
+    max-width: 28rem;
+    padding: 1.25rem 1.5rem;
+    position: static;
+    text-align: center;
+  }
+}

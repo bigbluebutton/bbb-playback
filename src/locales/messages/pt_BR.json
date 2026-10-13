@@ -102,5 +102,6 @@
   "player.progress.watched": "Você assistiu a {percent}% desta gravação",
   "player.progress.completed": "🎉 Você assistiu à gravação inteira",
   "player.bookmarks.download": "Baixar marcadores e notas",
-  "player.transcript.download": "Baixar transcrição"
+  "player.transcript.download": "Baixar transcrição",
+  "player.media.unsupported": "O vídeo desta gravação não pode ser reproduzido neste navegador. Tente outro navegador ou peça ao site que disponibilize o vídeo em MP4."
 }

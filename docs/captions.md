@@ -75,9 +75,10 @@ server runs on your own machine.
    sudo ./translate/install.sh
    ```
 
-   It needs Docker with the Compose plugin, about 4 GB of free RAM and 10 GB
-   of disk. It starts LibreTranslate, waits for its language models to
-   download, adds the `/playback/translate` route to nginx and checks it.
+   It needs about 4 GB of free RAM and 10 GB of disk, and uses Docker when
+   it is installed (otherwise a system service). It starts LibreTranslate,
+   waits for its language models to download, adds the `/playback/translate`
+   route to nginx and checks it.
    See [translate/README.md](../translate/README.md) for languages and for
    running it on another machine.
 
@@ -122,7 +123,7 @@ in `src/config.js` to a mirror (see the README's Configuration section).
 | Translation is slow to start in Safari | Safari prepares in-browser models for minutes | Install the server |
 | "Couldn't translate captions into …" | Every translator failed (no network, blocked hosts, server down) | Check `https://<server>/playback/translate/languages`; with `?debug` in the recording URL, the browser console says which translator failed and why |
 | `/playback/translate/languages` shows a web page | The nginx route is not installed | Run `sudo ./translate/install.sh` |
-| `/playback/translate/languages` answers 502 | The server is not running | `cd translate && sudo docker compose up -d`, then `sudo docker compose logs -f` |
+| `/playback/translate/languages` answers 502 | The server is not running | Docker: `cd translate && sudo docker compose up -d`; service: `sudo systemctl restart bbb-playback-translate` |
 | Some languages are missing on phones | Without the server, phones only get languages with small models | Install the server |
 
 Translations are saved per browser. To start one over, clear the site's data
