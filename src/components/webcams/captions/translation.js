@@ -3,6 +3,7 @@ import {
   isBlank,
   parseVTT,
   pickNext,
+  tidyText,
 } from 'utils/captions/vtt';
 import {
   findProviders,
@@ -177,7 +178,9 @@ const setupCaptionTranslation = (videojsPlayer, {
         ? cached.texts
         : [];
       count = cues.length;
-      results = cues.map((cue, index) => (typeof saved[index] === 'string' && !isBlank(saved[index]) ? saved[index] : null));
+      results = cues.map((cue, index) => (typeof saved[index] === 'string' && !isBlank(saved[index])
+        ? tidyText(saved[index])
+        : null));
       memory.set(language, { count, texts: results });
 
       // Saved lines show translated at once, the rest show the original
@@ -235,7 +238,7 @@ const setupCaptionTranslation = (videojsPlayer, {
 
             // A line that comes back empty keeps the original
             batch.forEach((item, index) => {
-              const text = isBlank(texts[index]) ? item.cue.text : texts[index];
+              const text = isBlank(texts[index]) ? item.cue.text : tidyText(texts[index]);
               item.vttCue.text = text;
               results[item.index] = text;
             });

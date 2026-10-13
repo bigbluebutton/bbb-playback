@@ -3,6 +3,7 @@ import {
   orderFrom,
   parseVTT,
   pickNext,
+  tidyText,
   toSeconds,
 } from './vtt';
 
@@ -41,6 +42,16 @@ describe('vtt', () => {
       + '00:00:03.000 --> 00:00:04.000\n\u200b\n\n'
       + '00:00:04.000 --> 00:00:05.000\n<v Bob>Hi</v>\n';
     expect(parseVTT(blank)).toEqual([{ start: 4, end: 5, text: '<v Bob>Hi</v>' }]);
+  });
+
+  it('drops empty lines inside a caption', () => {
+    expect(tidyText(' \nجلسة إرشادية')).toBe('جلسة إرشادية');
+    expect(tidyText('&nbsp;\nHi\n\u200f')).toBe('Hi');
+    expect(tidyText('One\n \nTwo ')).toBe('One\nTwo');
+    expect(tidyText('<i>\nHi</i>')).toBe('<i>\nHi</i>');
+    expect(parseVTT('WEBVTT\n\n00:00:01.000 --> 00:00:02.000\n \nHi\n')).toEqual([
+      { start: 1, end: 2, text: 'Hi' },
+    ]);
   });
 
   it('tells blank lines from lines with text', () => {

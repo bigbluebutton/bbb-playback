@@ -150,3 +150,24 @@ test('blank caption lines show no empty box', async ({ page, hasTouch }) => {
   await page.evaluate(() => { document.querySelector('#webcams video').currentTime = 5; });
   await expect(captions(page)).toContainText(FIRST_LINE);
 });
+
+test('empty lines inside a caption leave no sliver of box', async ({ page, hasTouch }) => {
+  await page.route('**/caption_ar.vtt', (route) => route.fulfill({
+    contentType: 'text/vtt',
+    body: `WEBVTT\n\n00:00:00.000 --> 00:00:05.000\n \n${FIRST_LINE}\n‏\n`,
+  }));
+  await open(page);
+
+  // One box, one line of text: an empty line would add a box fragment
+  const lineBoxes = () => page.locator('.vjs-text-track-cue > div').evaluateAll(
+    boxes => boxes.map(box => box.getClientRects().length),
+  );
+
+  await pick(page, 'العربية', hasTouch);
+  await expect(captions(page)).toContainText(FIRST_LINE);
+  expect(await lineBoxes()).toEqual([1]);
+
+  await pick(page, 'Spanish', hasTouch);
+  await expect(captions(page)).toContainText(`[es] ${FIRST_LINE}`);
+  expect(await lineBoxes()).toEqual([1]);
+});

@@ -1,26 +1,35 @@
-import { isBlank } from 'utils/captions/vtt';
+import {
+  isBlank,
+  tidyText,
+} from 'utils/captions/vtt';
 import setupCaptionTranslation from './translation';
 import {
   restoreCaptionLanguage,
   watchCaptionLanguage,
 } from './preference';
 
-const removeBlankCues = (track) => {
+const tidyCues = (track) => {
   const { cues } = track;
   if (!cues) return;
 
   for (let index = cues.length - 1; index >= 0; index--) {
-    if (isBlank(cues[index].text)) track.removeCue(cues[index]);
+    const cue = cues[index];
+    if (isBlank(cue.text)) {
+      track.removeCue(cue);
+    } else {
+      const text = tidyText(cue.text);
+      if (text !== cue.text) cue.text = text;
+    }
   }
 };
 
 // Recordings' captions can have empty lines, which would show as an empty
-// caption box; they go as soon as each track loads. Tracks come with the
-// video source, after the player is ready
+// caption box or a sliver of one next to the text; they go as soon as each
+// track loads. Tracks come with the video source, after the player is ready
 const cleanCaptionTracks = (videojsPlayer) => {
   const clean = (track) => {
-    removeBlankCues(track);
-    track.addEventListener('loadeddata', () => removeBlankCues(track));
+    tidyCues(track);
+    track.addEventListener('loadeddata', () => tidyCues(track));
   };
 
   const tracks = videojsPlayer.textTracks();

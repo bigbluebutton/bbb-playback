@@ -20,6 +20,19 @@ const isBlank = (text) => {
     .trim() === '';
 };
 
+// Drops the empty lines inside a caption (spaces, &nbsp;, invisible marks),
+// which would show as a sliver of caption box above or below the text.
+// Lines with tags stay, so formatting that spans lines is not broken
+const tidyText = (text) => {
+  if (typeof text !== 'string') return '';
+
+  return text
+    .split('\n')
+    .filter(line => line.includes('<') || !isBlank(line))
+    .map(line => line.trim())
+    .join('\n');
+};
+
 const parseVTT = (text = '') => {
   const cues = [];
   const blocks = text.replace(/\r\n?/g, '\n').split(/\n{2,}/);
@@ -34,7 +47,7 @@ const parseVTT = (text = '') => {
 
     const start = toSeconds(match[1]);
     const end = toSeconds(match[2]);
-    const content = lines.slice(index + 1).join('\n').trim();
+    const content = tidyText(lines.slice(index + 1).join('\n'));
     if (isBlank(content) || !Number.isFinite(start) || !Number.isFinite(end)) return;
 
     cues.push({ end, start, text: content });
@@ -63,5 +76,6 @@ export {
   orderFrom,
   pickNext,
   parseVTT,
+  tidyText,
   toSeconds,
 };
