@@ -1,5 +1,7 @@
 import {
+  getCaptionPreference,
   getMediaPreferences,
+  saveCaptionPreference,
   saveMediaPreferences,
 } from './preferences';
 
@@ -26,5 +28,30 @@ describe('media preferences', () => {
   it('survives corrupted storage', () => {
     localStorage.setItem('bbb-playback-preferences', '{nope');
     expect(getMediaPreferences(RATES).rate).toBe(null);
+  });
+});
+
+describe('caption preference', () => {
+  beforeEach(() => localStorage.clear());
+
+  it('remembers the caption language or off', () => {
+    expect(getCaptionPreference()).toBe(null);
+    saveCaptionPreference('es');
+    expect(getCaptionPreference()).toBe('es');
+    saveCaptionPreference('off');
+    expect(getCaptionPreference()).toBe('off');
+  });
+
+  it('keeps the media preferences alongside', () => {
+    saveMediaPreferences({ volume: 0.4 });
+    saveCaptionPreference('ar');
+    expect(getMediaPreferences(RATES).volume).toBe(0.4);
+  });
+
+  it('ignores values that are not a language', () => {
+    saveCaptionPreference('<script>');
+    expect(getCaptionPreference()).toBe(null);
+    localStorage.setItem('bbb-playback-preferences', JSON.stringify({ captions: 42 }));
+    expect(getCaptionPreference()).toBe(null);
   });
 });

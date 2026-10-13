@@ -59,7 +59,8 @@ const clearCues = (track) => {
 
 // Adds machine translated caption languages to the CC menu. A selected
 // language shows the original lines right away and swaps each one for its
-// translation as soon as it is ready, starting from where the viewer is
+// translation as soon as it is ready, starting from where the viewer is.
+// Resolves once the languages are in the menu
 const setupCaptionTranslation = (videojsPlayer, {
   label,
   locale,
@@ -71,10 +72,10 @@ const setupCaptionTranslation = (videojsPlayer, {
   onStart,
 }) => {
   const sources = storage.captions || [];
-  if (sources.length === 0) return;
+  if (sources.length === 0) return Promise.resolve();
 
   const providers = getProviders();
-  if (providers.length === 0) return;
+  if (providers.length === 0) return Promise.resolve();
 
   const source = sources[0];
   const sourceLanguage = getLanguage(source.locale);
@@ -113,9 +114,11 @@ const setupCaptionTranslation = (videojsPlayer, {
     }
   };
 
-  // Tries each provider in turn: if Chrome's translator stalls or fails, the
-  // server takes over from the lines still left
-  const translateTrack = async (track, { language, name, providers: candidates }) => {
+  // Tries each provider in turn (see getProviders): if one stalls or fails,
+  // the next takes over from the lines still left. Switching to another
+  // language pauses this one; picking it again resumes where it stopped
+  const translateTrack = async (track, option) => {
+    const { language, name, providers: candidates } = option;
     started.add(language);
     const cacheKey = `${recordId}|${source.locale}|${language}`;
     let results = null;
@@ -188,7 +191,7 @@ const setupCaptionTranslation = (videojsPlayer, {
 
         // A few workers, each taking the lines closest to where the viewer is
         const worker = async () => {
-          while (pending.length > 0 && !run.failed) {
+          while (pending.length > 0 && !run.failed && track.mode === 'showing') {
             if (videojsPlayer.isDisposed()) return;
 
             const batch = pickNext(pending, videojsPlayer.currentTime(), size);
@@ -234,7 +237,7 @@ const setupCaptionTranslation = (videojsPlayer, {
 
       let lastError = null;
       for (const provider of candidates) {
-        if (videojsPlayer.isDisposed() || pending.length === 0) break;
+        if (videojsPlayer.isDisposed() || pending.length === 0 || track.mode !== 'showing') break;
 
         try {
           await translateWith(provider);
@@ -248,6 +251,12 @@ const setupCaptionTranslation = (videojsPlayer, {
       if (videojsPlayer.isDisposed()) return;
       save();
       if (lastError) throw lastError;
+      // Paused: the lines done so far are saved for when it comes back,
+      // which may already be now
+      if (pending.length > 0) {
+        started.delete(language);
+        if (track.mode === 'showing') translateTrack(track, option);
+      }
     } catch (error) {
       if (videojsPlayer.isDisposed()) return;
 
@@ -294,7 +303,7 @@ const setupCaptionTranslation = (videojsPlayer, {
     videojsPlayer.on('dispose', stop);
   };
 
-  Promise.all(targets.map(language => {
+  return Promise.all(targets.map(language => {
     return findProviders(providers, sourceLanguage, language).then(found => found.length > 0 ? { language, providers: found } : null);
   })).then(options => {
     if (videojsPlayer.isDisposed()) return;

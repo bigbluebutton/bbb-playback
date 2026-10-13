@@ -84,6 +84,16 @@ describe('translators', () => {
     expect(global.fetch).toHaveBeenCalledTimes(1);
   });
 
+  it('offers nothing when the address answers with a web page', async () => {
+    // A server without the route sends its home page instead
+    global.fetch = jest.fn(() => Promise.resolve({
+      ok: true,
+      json: () => Promise.reject(new SyntaxError('Unexpected token <')),
+    }));
+
+    await expect(httpProvider('/playback/translate').isAvailable('en', 'es')).resolves.toBe(false);
+  });
+
   it('rejects failed or incomplete answers', async () => {
     global.fetch = mockServer(() => ({ ok: false, status: 503 }));
     const translator = await httpProvider('https://mt.example.com').create('en', 'es');

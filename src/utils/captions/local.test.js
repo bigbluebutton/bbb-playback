@@ -53,3 +53,96 @@ describe('local translation models', () => {
     expect(getSteps('en', 'xx')).toBeNull();
   });
 });
+
+describe('local translation worker', () => {
+  const flush = () => new Promise(resolve => setTimeout(resolve, 0));
+
+  // Answers like public/translation-worker.js, a moment later
+  class FakeWorker {
+    constructor(url, options) {
+      FakeWorker.instances.push(this);
+      Object.assign(this, { listeners: { error: [], message: [] }, options, posted: [], url });
+    }
+
+    addEventListener(type, listener) {
+      this.listeners[type].push(listener);
+    }
+
+    postMessage(message) {
+      this.posted.push(message);
+      const reply = (data) => setTimeout(() => this.listeners.message.forEach(listener => {
+        listener({ data: { id: message.id, ...data } });
+      }), 0);
+      if (message.type === 'load') {
+        reply({ loaded: 0.5, type: 'progress' });
+        reply({ type: 'downloaded' });
+        reply({ type: 'done' });
+      } else {
+        reply({ text: `${message.step.model.split('-').pop()}:${message.text}`, type: 'done' });
+      }
+    }
+
+    fail(message) {
+      this.listeners.error.forEach(listener => listener({ message, preventDefault: () => {} }));
+    }
+
+    terminate() {}
+  }
+
+  let localProvider;
+
+  beforeEach(() => {
+    FakeWorker.instances = [];
+    window.Worker = FakeWorker;
+    jest.isolateModules(() => {
+      ({ localProvider } = require('./local'));
+    });
+  });
+
+  afterEach(() => {
+    delete window.Worker;
+  });
+
+  it('is offered when the browser can run it', async () => {
+    await expect(localProvider.isAvailable('ar', 'fr')).resolves.toBe(true);
+    delete window.Worker;
+    await expect(localProvider.isAvailable('ar', 'fr')).resolves.toBe(false);
+  });
+
+  it('loads the models of a pair one after the other in one worker', async () => {
+    const progress = [];
+    await localProvider.create('ar', 'fr', (loaded) => progress.push(loaded));
+
+    expect(FakeWorker.instances).toHaveLength(1);
+    expect(FakeWorker.instances[0].options).toEqual({ type: 'module' });
+    const [worker] = FakeWorker.instances;
+    expect(worker.posted.map(message => `${message.type}:${message.step.model}`)).toEqual([
+      'load:Xenova/opus-mt-ar-en',
+      'load:Xenova/opus-mt-en-fr',
+    ]);
+    // The first model's download, then getting ready
+    expect(progress).toEqual([0.5, 1]);
+  });
+
+  it('runs each line through every model of the pair', async () => {
+    const translator = await localProvider.create('ar', 'fr');
+
+    await expect(translator.translate(['مرحبا', 'شكرا'])).resolves.toEqual(['fr:en:مرحبا', 'fr:en:شكرا']);
+  });
+
+  it('fails what is waiting when the worker breaks, then starts a new one', async () => {
+    const translator = await localProvider.create('ar', 'en');
+    const [worker] = FakeWorker.instances;
+    worker.postMessage = function (message) {
+      this.posted.push(message);
+    };
+
+    const line = translator.translate(['مرحبا']);
+    await flush();
+    worker.fail('out of memory');
+    await expect(line).rejects.toThrow('out of memory');
+
+    await localProvider.create('ar', 'en');
+    expect(FakeWorker.instances).toHaveLength(2);
+  });
+});

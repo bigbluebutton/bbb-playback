@@ -42,7 +42,21 @@ const saveMediaPreferences = ({ muted, rate, volume }) => {
   save(changes);
 };
 
+// The caption language last picked in the CC menu (a language code such as
+// 'es', original or translated), or 'off'
+const getCaptionPreference = () => {
+  const { captions } = load();
+
+  return typeof captions === 'string' && /^(off|[a-z]{2,3})$/.test(captions) ? captions : null;
+};
+
+const saveCaptionPreference = (captions) => {
+  if (typeof captions === 'string' && /^(off|[a-z]{2,3})$/.test(captions)) save({ captions });
+};
+
 export {
+  getCaptionPreference,
   getMediaPreferences,
+  saveCaptionPreference,
   saveMediaPreferences,
 };

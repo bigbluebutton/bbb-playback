@@ -1,0 +1,5 @@
+<?xml version="1.0"?><popcorn>
+<chattimeline in="0" direction="down" name="Alice Moderator" message="Welcome everyone! Today we review Q3." target="chat" senderRole="MODERATOR"/>
+<chattimeline in="0" direction="down" name="Bob" message="Thanks, glad to be here." target="chat" senderRole="VIEWER"/>
+<chattimeline in="35" direction="down" name="Carol" message="Can you share the slides afterwards?" target="chat" senderRole="VIEWER"/>
+</popcorn>

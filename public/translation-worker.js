@@ -1,7 +1,7 @@
 // Translates caption lines on the viewer's device with an open translation
 // model (transformers.js), away from the page so playback stays smooth.
-// Started by src/utils/captions/local.js, one worker per model. Models are
-// downloaded once and kept in the browser cache.
+// Started by src/utils/captions/local.js, which sends one request at a
+// time. Models are downloaded once and kept in the browser cache.
 
 let library = null;
 const pipelines = new Map();
@@ -73,9 +73,9 @@ const createProgress = (post, expected) => {
   };
 };
 
-// A language pair without a direct model goes through English with one
-// model, and one worker, per step. Lines are translated one at a time:
-// these models lose track of where a sentence ends when lines are batched
+// One step of a translation (a pair without a direct model goes through
+// English in two). Lines are translated one at a time: these models lose
+// track of where a sentence ends when lines are batched
 const translate = async (settings, step, text) => {
   const pipe = await getPipeline(settings, step.model);
   const input = step.prefix ? `${step.prefix} ${text}` : text;

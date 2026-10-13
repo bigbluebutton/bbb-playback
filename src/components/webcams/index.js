@@ -32,7 +32,7 @@ import {
   renderSlideMarkers,
 } from './markers';
 import { attachTimelinePreview } from './preview';
-import setupCaptionTranslation from './translation';
+import setupCaptions from './captions';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -272,7 +272,7 @@ const Webcams = () => {
         // Caption notices share a key, so turning translated captions off
         // takes down a notice still waiting on the model
         const captionNotice = (message, duration) => notify({ duration, key: 'captions', message });
-        setupCaptionTranslation(player.webcams, {
+        setupCaptions(player.webcams, {
           label: intl.formatMessage(intlMessages.autoTranslated),
           locale: intl.locale,
           onFailed: (language) => captionNotice(intl.formatMessage(intlMessages.translateFailed, { language })),
