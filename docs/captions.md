@@ -57,6 +57,16 @@ Languages offered (set in `captions.translate.languages`):
 Captions never leave the viewer's device unless the server is used, and the
 server runs on your own machine.
 
+### Switching languages
+
+Picking another language in the CC menu shows it at once: its lines
+translated so far, the original for the rest, and only its own notice. The
+language left behind pauses after the line it is on and keeps what it has
+translated, so picking it again carries on from there. It never changes what
+is on screen: if it fails meanwhile, it simply tries again when picked
+again. One limit: with the in-browser models a language pack that is already
+downloading finishes first, since the browser loads one at a time.
+
 ## Setting it up
 
 1. **Deploy the player** on the BigBlueButton server, from the repository:

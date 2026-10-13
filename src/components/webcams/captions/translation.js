@@ -83,6 +83,15 @@ const setupCaptionTranslation = (videojsPlayer, {
   const existing = new Set(sources.map(caption => getLanguage(caption.locale)));
   const targets = getTargets(locale, existing);
   const started = new Set();
+  // Lines translated so far, by language, so coming back to a language
+  // picks up at once without waiting for the browser cache
+  const memory = new Map();
+  // The notice each language would show now (downloading, getting ready,
+  // translating), shown again when the viewer comes back to it
+  const status = new Map();
+  // The language whose failure just turned captions back to the original,
+  // so the notice saying so stays
+  let failed = null;
   const recordId = storage.metadata ? storage.metadata.id : '';
 
   // Fetched right away so it is ready when a language is picked
@@ -125,8 +134,14 @@ const setupCaptionTranslation = (videojsPlayer, {
     let results = null;
     let count = 0;
 
-    // Notices only while the viewer still has this language on
-    const tell = (notice) => {
+    // Notices only while the viewer still has this language on. Lasting
+    // ones are kept to show again when the viewer comes back to it
+    const tell = (notice, lasting = false) => {
+      if (lasting) {
+        status.set(language, notice);
+      } else {
+        status.delete(language);
+      }
       if (track.mode === 'showing') notice(name);
     };
 
@@ -136,7 +151,7 @@ const setupCaptionTranslation = (videojsPlayer, {
     let preparing = false;
     const handleProgress = (loaded) => {
       if (loaded >= 1) {
-        if (!preparing) tell(onPreparing);
+        if (!preparing) tell(onPreparing, true);
         preparing = true;
         return;
       }
@@ -145,7 +160,7 @@ const setupCaptionTranslation = (videojsPlayer, {
       if (percent === lastPercent || preparing) return;
 
       lastPercent = percent;
-      tell((language) => onProgress(language, percent));
+      tell((language) => onProgress(language, percent), true);
     };
     // Told once, when the first translated line is on screen
     let announced = false;
@@ -153,12 +168,17 @@ const setupCaptionTranslation = (videojsPlayer, {
     const save = () => writeTranslation(cacheKey, { count, texts: results });
 
     try {
-      const [cues, cached] = await Promise.all([getSourceCues(), readTranslation(cacheKey)]);
+      const remembered = memory.get(language);
+      const [cues, cached] = await Promise.all([
+        getSourceCues(),
+        remembered ? Promise.resolve(remembered) : readTranslation(cacheKey),
+      ]);
       const saved = cached && cached.count === cues.length && Array.isArray(cached.texts)
         ? cached.texts
         : [];
       count = cues.length;
       results = cues.map((cue, index) => (typeof saved[index] === 'string' && !isBlank(saved[index]) ? saved[index] : null));
+      memory.set(language, { count, texts: results });
 
       // Saved lines show translated at once, the rest show the original
       clearCues(track);
@@ -170,9 +190,12 @@ const setupCaptionTranslation = (videojsPlayer, {
       });
       refreshDisplay();
 
-      if (pending.length === 0) return;
+      if (pending.length === 0) {
+        status.delete(language);
+        return;
+      }
 
-      tell(onStart);
+      tell(onStart, true);
 
       const translateWith = async (provider) => {
         // Set when this run fails so every worker stops at once
@@ -254,6 +277,7 @@ const setupCaptionTranslation = (videojsPlayer, {
       if (videojsPlayer.isDisposed()) return;
       save();
       if (lastError) throw lastError;
+      if (pending.length === 0) status.delete(language);
       // Paused: the lines done so far are saved for when it comes back,
       // which may already be now
       if (pending.length > 0) {
@@ -268,6 +292,14 @@ const setupCaptionTranslation = (videojsPlayer, {
 
       logger.warn('captions', 'translate', language, error);
       started.delete(language);
+      status.delete(language);
+
+      // The viewer has moved on to another language: this one tries again
+      // when picked again, without disturbing the one on screen
+      if (track.mode !== 'showing') return;
+
+      memory.delete(language);
+      failed = track;
       clearCues(track);
       track.mode = 'disabled';
       showSourceTrack();
@@ -320,11 +352,29 @@ const setupCaptionTranslation = (videojsPlayer, {
 
     if (tracks.size === 0) return;
 
+    // Each switch shows only the picked language's own notice: the one
+    // left behind keeps working quietly
+    let current = null;
     videojsPlayer.textTracks().addEventListener('change', () => {
-      tracks.forEach((option, track) => {
-        if (track.mode === 'showing' && !started.has(option.language)) translateTrack(track, option);
-      });
-      if (![...tracks.keys()].some(track => track.mode === 'showing')) onHidden();
+      const showing = [...tracks.keys()].find(track => track.mode === 'showing') || null;
+      if (showing === current) return;
+
+      const previous = current;
+      current = showing;
+      if (!showing) {
+        if (previous !== failed) onHidden();
+        failed = null;
+        return;
+      }
+
+      const option = tracks.get(showing);
+      const notice = status.get(option.language);
+      if (started.has(option.language) && notice) {
+        notice(option.name);
+      } else {
+        onHidden();
+      }
+      if (!started.has(option.language)) translateTrack(showing, option);
     });
 
     warmUp([...tracks.values()]);

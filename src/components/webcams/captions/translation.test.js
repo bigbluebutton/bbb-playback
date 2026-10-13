@@ -197,6 +197,55 @@ describe('caption translation', () => {
     expect(player.track('es').cues.every(cue => cue.text.trim() !== '')).toBe(true);
   });
 
+  it('leaves the language on screen alone when one left behind fails', async () => {
+    let reject;
+    const translate = jest.fn((texts) => (texts.length && !reject
+      ? new Promise((resolve, fail) => { reject = fail; })
+      : Promise.resolve(texts.map(text => `fr:${text}`))));
+    getProviders.mockReturnValue([createProvider(['es', 'fr'], translate)]);
+    const player = createPlayer();
+    const callbacks = createCallbacks();
+    await setupCaptionTranslation(player, callbacks);
+
+    player.select('es');
+    await flush();
+    await flush();
+    player.select('fr');
+    await flush();
+    reject(new Error('down'));
+    await flush();
+    await flush();
+
+    expect(player.track('fr').mode).toBe('showing');
+    expect(player.track('ar').mode).toBe('disabled');
+    expect(callbacks.onFailed).not.toHaveBeenCalled();
+  });
+
+  it('shows only the picked language’s notice when switching', async () => {
+    const translate = jest.fn(() => new Promise(() => {}));
+    getProviders.mockReturnValue([createProvider(['es', 'fr'], translate)]);
+    const player = createPlayer();
+    const callbacks = createCallbacks();
+    await setupCaptionTranslation(player, callbacks);
+
+    player.select('es');
+    await flush();
+    await flush();
+    expect(callbacks.onStart).toHaveBeenLastCalledWith('Spanish');
+
+    // Away: the Spanish notice goes
+    callbacks.onHidden.mockClear();
+    player.select('fr');
+    expect(callbacks.onHidden).toHaveBeenCalledTimes(1);
+    await flush();
+    await flush();
+    expect(callbacks.onStart).toHaveBeenLastCalledWith('French');
+
+    // Back while still translating: its notice comes back
+    player.select('es');
+    expect(callbacks.onStart).toHaveBeenLastCalledWith('Spanish');
+  });
+
   it('carries on with the next provider when one fails', async () => {
     const broken = createProvider(['es'], jest.fn(() => Promise.reject(new Error('stalled'))));
     const server = createProvider(['es'], async (texts) => texts.map(text => `server:${text}`));
