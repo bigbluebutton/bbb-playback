@@ -200,6 +200,7 @@ When no URL is provided, the dev server starts normally without any proxy.
   visits (kept in the viewer's browser), with a message once it is complete
 - Downloads: bookmarks and notes as Markdown with links to each moment, and
   the transcript as text
+- Tap or click the slides (or tap the video) to play or pause
 - Touch: double-tap the left or right side of the slide or video to seek
 - Captions: the CC menu offers the recording's captions and translations into
   18 languages, and remembers the viewer's language (see
