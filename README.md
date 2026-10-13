@@ -13,6 +13,30 @@ You will be able to play your recordings using the following URL
 https://<domain>/playback/presentation/2.3/<recordId>
 ```
 
+## Captions and translation
+
+The CC button works the same in Chrome, Edge, Firefox and Safari, on
+computers, phones and tablets. Besides the recording's own captions it
+offers them translated into 18 languages, remembers the viewer's choice and
+explains what it is doing while a translation starts.
+
+Translation works without any setup, in the viewer's browser. For a fast
+start in every browser, and in Safari especially, install the translation
+server on the BigBlueButton server:
+```
+sudo ./translate/install.sh
+```
+
+How it works, setup, troubleshooting and tests: [docs/captions.md](docs/captions.md).
+
+## Tests
+
+```
+npm test                 # unit tests
+npm run build
+npm run test:e2e         # browser tests (npx playwright install chromium, once)
+```
+
 ## Development proxy
 
 The development proxy allows you to test the playback player locally against
@@ -99,7 +123,8 @@ When no URL is provided, the dev server starts normally without any proxy.
       language pack on their first click [`true`|`false`]
 
     Translations are saved in the viewer's browser (Cache API), so switching
-    back to a language or coming back to the recording is instant.
+    back to a language or coming back to the recording is instant. See
+    [docs/captions.md](docs/captions.md) for how the translators are chosen.
 
 - chat:
   - `scroll`: automatic scroll [`true`|`false`]
@@ -164,6 +189,9 @@ When no URL is provided, the dev server starts normally without any proxy.
 - Downloads: bookmarks and notes as Markdown with links to each moment, and
   the transcript as text
 - Touch: double-tap the left or right side of the slide or video to seek
+- Captions: the CC menu offers the recording's captions and translations into
+  18 languages, and remembers the viewer's language (see
+  [docs/captions.md](docs/captions.md))
 
 ## Standalone recordings
 

@@ -16,6 +16,8 @@ first line shows in about a second, and phones and tablets get every language
 (on their own they get Arabic, Chinese, Dutch, English, French, German, Hindi,
 Indonesian, Italian, Portuguese, Russian, Spanish and Ukrainian).
 
+How the player uses it, and troubleshooting: [docs/captions.md](../docs/captions.md).
+
 ## Install on the BigBlueButton server
 
 It matters most for Safari (Mac, iPhone, iPad): Safari's engine needs a
