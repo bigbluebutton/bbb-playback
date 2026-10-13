@@ -104,5 +104,16 @@
   "player.bookmarks.download": "تنزيل الإشارات المرجعية والملاحظات",
   "player.transcript.download": "تنزيل النص المكتوب",
   "player.media.unsupported": "لا يمكن تشغيل فيديو هذا التسجيل في هذا المتصفح. جرّب متصفحًا آخر، أو اطلب من الموقع توفير الفيديو بصيغة MP4.",
-  "player.captions.settings": "إعدادات التعليقات"
+  "player.captions.settings": "إعدادات التعليقات",
+  "player.about.modal.content.title": "محتوى التسجيل",
+  "player.about.modal.content.available": "متوفر",
+  "player.about.modal.content.unavailable": "غير متوفر",
+  "player.about.modal.content.users": "المشاركون",
+  "player.about.modal.content.presentation": "الشرائح",
+  "player.about.modal.content.chat": "الدردشة",
+  "player.about.modal.content.polls": "الاستطلاعات",
+  "player.about.modal.content.videos": "الفيديوهات المشتركة",
+  "player.about.modal.content.notes": "الملاحظات المشتركة",
+  "player.about.modal.content.screenshare": "مشاركة الشاشة",
+  "player.about.modal.content.captions": "التعليقات"
 }

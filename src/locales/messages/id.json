@@ -104,5 +104,16 @@
   "player.bookmarks.download": "Unduh penanda dan catatan",
   "player.transcript.download": "Unduh transkrip",
   "player.media.unsupported": "Video rekaman ini tidak dapat diputar di browser ini. Coba browser lain, atau minta situs menyediakan video dalam format MP4.",
-  "player.captions.settings": "Pengaturan subtitel"
+  "player.captions.settings": "Pengaturan subtitel",
+  "player.about.modal.content.title": "Dalam rekaman ini",
+  "player.about.modal.content.available": "Tersedia",
+  "player.about.modal.content.unavailable": "Tidak tersedia",
+  "player.about.modal.content.users": "Peserta",
+  "player.about.modal.content.presentation": "Slide",
+  "player.about.modal.content.chat": "Obrolan",
+  "player.about.modal.content.polls": "Jajak pendapat",
+  "player.about.modal.content.videos": "Video bersama",
+  "player.about.modal.content.notes": "Catatan bersama",
+  "player.about.modal.content.screenshare": "Berbagi layar",
+  "player.about.modal.content.captions": "Teks"
 }

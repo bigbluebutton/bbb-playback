@@ -31,12 +31,19 @@ const Header = () => {
 
   return (
     <div className="about-header">
-      <div className="title">
+      <h2 className="title">
         {name}
-      </div>
-      <div className="subtitle">
-        {subtitle.map(s => <div className="item">{s}</div>)}
-      </div>
+      </h2>
+      {subtitle.length > 0 ? (
+        <div className="subtitle">
+          <span className="item">{subtitle[0]}</span>
+          <span className="item">
+            {subtitle[1]}
+            <span aria-hidden="true"> – </span>
+            {subtitle[2]}
+          </span>
+        </div>
+      ) : null}
     </div>
   );
 };

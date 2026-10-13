@@ -104,5 +104,16 @@
   "player.bookmarks.download": "بارگیری نشانک‌ها و یادداشت‌ها",
   "player.transcript.download": "بارگیری رونوشت",
   "player.media.unsupported": "ویدیوی این ضبط در این مرورگر پخش نمی‌شود. مرورگر دیگری را امتحان کنید یا از سایت بخواهید ویدیو را با قالب MP4 ارائه دهد.",
-  "player.captions.settings": "تنظیمات زیرنویس"
+  "player.captions.settings": "تنظیمات زیرنویس",
+  "player.about.modal.content.title": "در این ضبط",
+  "player.about.modal.content.available": "موجود",
+  "player.about.modal.content.unavailable": "ناموجود",
+  "player.about.modal.content.users": "شرکت‌کنندگان",
+  "player.about.modal.content.presentation": "اسلایدها",
+  "player.about.modal.content.chat": "گفتگو",
+  "player.about.modal.content.polls": "نظرسنجی‌ها",
+  "player.about.modal.content.videos": "ویدیوهای اشتراکی",
+  "player.about.modal.content.notes": "یادداشت‌های اشتراکی",
+  "player.about.modal.content.screenshare": "اشتراک صفحه",
+  "player.about.modal.content.captions": "زیرنویس‌ها"
 }

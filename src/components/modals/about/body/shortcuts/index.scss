@@ -3,81 +3,88 @@
 .body-shortcuts {
   display: flex;
   flex-direction: column;
+  gap: .9rem;
+  width: 100%;
 
-  .title {
-    background-color: var(--secondary-highlight-color);
-    box-sizing: border-box;
-    display: flex;
-    font-size: smaller;
+  .about-section-title {
+    margin-bottom: 0;
+  }
+
+  .group-title {
+    color: var(--muted-content-color);
+    font-size: .7rem;
     font-weight: var(--font-weight-semi-bold);
-    justify-content: center;
-    padding: $padding-extra-small;
+    letter-spacing: .04em;
+    margin: 0 0 .35rem;
     text-transform: uppercase;
-    width: 100%;
   }
 
   .list {
-    height: $shortcuts-list-height;
-    position: relative;
-    width: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: .8rem;
+    list-style: none;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
   }
 
-  .content {
-    bottom: 0;
-    box-sizing: border-box;
+  .shortcut {
+    align-items: center;
     display: flex;
-    flex-direction: column;
-    font-size: small;
-    overflow-x: hidden;
-    overflow-y: auto;
-    padding: $padding-extra-small;
-    position: absolute;
-    scroll-behavior: smooth;
-    top: 0;
-    width: 100%;
+    font-size: .85rem;
+    gap: .75rem;
+    justify-content: space-between;
+    min-height: 2.4rem;
+    padding: .35rem .75rem;
+    transition: background-color var(--transition-duration) ease;
 
-    .group {
-      color: var(--muted-content-color);
-      font-size: x-small;
-      font-weight: var(--font-weight-semi-bold);
-      padding: $padding-small 0 $padding-extra-small 0;
-      text-transform: uppercase;
-
-      &:first-child {
-        padding-top: 0;
-      }
+    & + .shortcut {
+      border-top: 1px solid var(--border-color);
     }
 
-    .or {
-      color: var(--muted-content-color);
-      font-size: xx-small;
-      padding: 0 $padding-extra-small;
+    &:hover {
+      background-color: var(--accent-soft);
     }
+  }
 
-    .shortcut {
-      box-sizing: border-box;
-      display: flex;
-      justify-content: space-between;
-      padding: $margin-extra-small 0;
+  .label {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
 
-      .label {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
+  // Keys read Alt + Shift + K in every language
+  .keys {
+    align-items: center;
+    direction: ltr;
+    display: flex;
+    flex-shrink: 0;
+    gap: .25rem;
+  }
 
-      .keys {
-        display: flex;
+  .plus,
+  .or {
+    color: var(--muted-content-color);
+    font-size: .7rem;
+  }
 
-        .key {
-          background-color: var(--secondary-content-color);
-          color: var(--secondary-background-color);
-          font-size: xx-small;
-          margin: 0 $margin-extra-small;
-          padding: $border-width-extra-small $border-width;
-          text-transform: uppercase;
-        }
-      }
-    }
+  .or {
+    padding: 0 .15rem;
+  }
+
+  .key {
+    background-color: var(--secondary-background-color);
+    border: 1px solid rgba(252, 37, 198, .35);
+    border-bottom-width: 2px;
+    border-radius: .4rem;
+    box-sizing: border-box;
+    color: var(--accent-text-color);
+    font-family: inherit;
+    font-size: .7rem;
+    font-weight: var(--font-weight-bold);
+    line-height: 1;
+    min-width: 1.6rem;
+    padding: .3rem .45rem;
+    text-align: center;
+    text-transform: uppercase;
   }
 }

@@ -112,61 +112,72 @@ const intlMessages = defineMessages({
   },
 });
 
+// Keys pressed together, joined by "+"
+const Combo = ({ keys }) => (
+  <span className="keys">
+    {keys.map((key, index) => (
+      <React.Fragment key={key}>
+        {index > 0 ? <span className="plus" aria-hidden="true">+</span> : null}
+        <Key code={key} />
+      </React.Fragment>
+    ))}
+  </span>
+);
+
 const Shortcuts = () => {
   const intl = useIntl();
+  const alt = intl.formatMessage(intlMessages.alt);
+  const shift = intl.formatMessage(intlMessages.shift);
 
   return (
-    <div className="body-shortcuts">
-      <div className="title">
+    <section className="body-shortcuts" aria-labelledby="about-shortcuts-title">
+      <h3 className="about-section-title" id="about-shortcuts-title">
         {intl.formatMessage(intlMessages.title)}
-      </div>
-      <div className="list">
-        <div className="content">
-          {config.plain !== false ? (
-            <>
-              <div className="group">
-                {intl.formatMessage(intlMessages.quick)}
-              </div>
-              {PLAIN_SHORTCUTS.map(({ label, keys }) => (
-                <div className="shortcut" key={`plain-${label}`}>
-                  <div className="label">
-                    {intl.formatMessage(intlMessages[label])}
-                  </div>
-                  <div className="keys">
-                    {keys.map((key, index) => (
-                      <React.Fragment key={key}>
-                        {index > 0 ? (
-                          <span className="or">{intl.formatMessage(intlMessages.or)}</span>
-                        ) : null}
-                        <Key code={key} />
-                      </React.Fragment>
-                    ))}
-                  </div>
-                </div>
-              ))}
-              <div className="group">
-                {intl.formatMessage(intlMessages.alt)} + {intl.formatMessage(intlMessages.shift)}
-              </div>
-            </>
-          ) : null}
-          {SHORTCUTS.map(shortcut => {
-
-            return (
-              <div className="shortcut" key={shortcut}>
-                <div className="label">
-                  {intl.formatMessage(intlMessages[shortcut])}
-                </div>
-                <div className="keys">
-                  <Key code={intl.formatMessage(intlMessages.alt)} />
-                  <Key code={intl.formatMessage(intlMessages.shift)} />
-                  <Key code={getCode(shortcut)} />
-                </div>
-              </div>
-            );
-          })}
+      </h3>
+      {config.plain !== false ? (
+        <div className="group">
+          <h4 className="group-title">
+            {intl.formatMessage(intlMessages.quick)}
+          </h4>
+          <ul className="list">
+            {PLAIN_SHORTCUTS.map(({ label, keys }) => (
+              <li className="shortcut" key={`plain-${label}`}>
+                <span className="label">
+                  {intl.formatMessage(intlMessages[label])}
+                </span>
+                <span className="keys">
+                  {keys.map((key, index) => (
+                    <React.Fragment key={key}>
+                      {index > 0 ? (
+                        <span className="or">{intl.formatMessage(intlMessages.or)}</span>
+                      ) : null}
+                      <Key code={key} />
+                    </React.Fragment>
+                  ))}
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
+      ) : null}
+      <div className="group">
+        {config.plain !== false ? (
+          <h4 className="group-title">
+            {alt} + {shift}
+          </h4>
+        ) : null}
+        <ul className="list">
+          {SHORTCUTS.map(shortcut => (
+            <li className="shortcut" key={shortcut}>
+              <span className="label">
+                {intl.formatMessage(intlMessages[shortcut])}
+              </span>
+              <Combo keys={[alt, shift, getCode(shortcut)]} />
+            </li>
+          ))}
+        </ul>
       </div>
-    </div>
+    </section>
   );
 };
 

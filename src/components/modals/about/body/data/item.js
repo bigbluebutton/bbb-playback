@@ -1,36 +1,53 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
 import Icon from 'components/utils/icon';
 
 const propTypes = {
   icon: PropTypes.string,
+  label: PropTypes.string,
+  state: PropTypes.string,
   value: PropTypes.oneOfType([
     PropTypes.bool,
+    PropTypes.number,
     PropTypes.string,
   ]),
 };
 
 const defaultProps = {
   icon: '',
+  label: '',
+  state: '',
   value: false,
 };
 
+// A tile per kind of content: on when the recording has it, or a count
 const Item = ({
   icon,
+  label,
+  state,
   value,
 }) => {
-  let element;
-  if (typeof value === 'boolean') {
-    element = <Icon name={value ? 'check' : 'close'} />;
-  } else {
-    element = value;
-  }
+  const isCount = typeof value !== 'boolean';
+  const available = isCount || value;
 
   return (
-    <div className="item">
-      <Icon name={icon} />
-      {element}
-    </div>
+    <li className={cx('item', { unavailable: !available })}>
+      <span className="item-icon" aria-hidden="true">
+        <Icon name={icon} />
+      </span>
+      <span className="item-label">{label}</span>
+      {isCount ? (
+        <span className="item-count">{value}</span>
+      ) : (
+        <span className="item-state">
+          <span aria-hidden="true">
+            <Icon name={value ? 'check' : 'close'} />
+          </span>
+          <span className="visually-hidden">{state}</span>
+        </span>
+      )}
+    </li>
   );
 };
 

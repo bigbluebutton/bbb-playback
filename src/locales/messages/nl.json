@@ -104,5 +104,16 @@
   "player.bookmarks.download": "Bladwijzers en notities downloaden",
   "player.transcript.download": "Transcript downloaden",
   "player.media.unsupported": "De video van deze opname kan niet worden afgespeeld in deze browser. Probeer een andere browser of vraag de site om de video als MP4 aan te bieden.",
-  "player.captions.settings": "Instellingen ondertiteling"
+  "player.captions.settings": "Instellingen ondertiteling",
+  "player.about.modal.content.title": "In deze opname",
+  "player.about.modal.content.available": "Inbegrepen",
+  "player.about.modal.content.unavailable": "Niet inbegrepen",
+  "player.about.modal.content.users": "Deelnemers",
+  "player.about.modal.content.presentation": "Dia’s",
+  "player.about.modal.content.chat": "Chat",
+  "player.about.modal.content.polls": "Peilingen",
+  "player.about.modal.content.videos": "Gedeelde video’s",
+  "player.about.modal.content.notes": "Gedeelde notities",
+  "player.about.modal.content.screenshare": "Scherm delen",
+  "player.about.modal.content.captions": "Ondertiteling"
 }

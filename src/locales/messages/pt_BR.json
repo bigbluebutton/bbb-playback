@@ -104,5 +104,16 @@
   "player.bookmarks.download": "Baixar marcadores e notas",
   "player.transcript.download": "Baixar transcrição",
   "player.media.unsupported": "O vídeo desta gravação não pode ser reproduzido neste navegador. Tente outro navegador ou peça ao site que disponibilize o vídeo em MP4.",
-  "player.captions.settings": "Configurações de legendas"
+  "player.captions.settings": "Configurações de legendas",
+  "player.about.modal.content.title": "Nesta gravação",
+  "player.about.modal.content.available": "Incluído",
+  "player.about.modal.content.unavailable": "Não incluído",
+  "player.about.modal.content.users": "Participantes",
+  "player.about.modal.content.presentation": "Slides",
+  "player.about.modal.content.chat": "Bate-papo",
+  "player.about.modal.content.polls": "Enquetes",
+  "player.about.modal.content.videos": "Vídeos compartilhados",
+  "player.about.modal.content.notes": "Notas compartilhadas",
+  "player.about.modal.content.screenshare": "Compartilhamento de tela",
+  "player.about.modal.content.captions": "Legendas"
 }

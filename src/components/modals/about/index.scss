@@ -1,5 +1,58 @@
 @import 'src/styles/sizes';
 
+// The about dialog: a brand gradient header with the recording's name and
+// date, then what the recording contains and the keyboard shortcuts
+.modal.about-modal {
+  border-radius: 1.1rem;
+  box-shadow: 0 24px 64px -16px rgba(15, 23, 42, .45);
+  max-width: 30rem;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+  width: calc(100% - 2rem);
+
+  // The close button sits on the gradient
+  .modal-control {
+    height: auto;
+    inset-inline-end: .6rem;
+    padding: 0;
+    position: absolute;
+    top: .6rem;
+    width: auto;
+    z-index: 1;
+
+    .button {
+      background-color: rgba(255, 255, 255, .16);
+      border-radius: 50%;
+      color: var(--white);
+
+      &:hover {
+        background-color: rgba(255, 255, 255, .28);
+      }
+
+      &:focus-visible {
+        box-shadow: 0 0 0 2px var(--white);
+      }
+    }
+  }
+
+  // The header stays; the contents scroll below it
+  .modal-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .about-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
+
 .about-header,
 .about-footer {
   box-sizing: border-box;
@@ -8,45 +61,85 @@
 }
 
 .about-header {
+  align-items: center;
+  background: var(--accent-color);
+  background: var(--accent-gradient);
+  color: var(--white);
   flex-direction: column;
-  font-weight: var(--font-weight-regular);
-  padding: 0 0 $padding 0;
-
-  .title,
-  .subtitle {
-    box-sizing: border-box;
-    display: flex;
-    justify-content: center;
-  }
+  flex-shrink: 0;
+  gap: .65rem;
+  padding: 1.6rem 3.6rem 1.4rem;
+  text-align: center;
 
   .title {
-    font-size: larger;
-    overflow: hidden;
-    padding: 0 0 $padding-extra-small 0;
-    text-overflow: ellipsis;
+    font-size: 1.15rem;
+    font-weight: var(--font-weight-bold);
+    letter-spacing: -.01em;
+    line-height: 1.35;
+    margin: 0;
+    overflow-wrap: anywhere;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .12);
   }
 
   .subtitle {
-    font-size: small;
-    padding: 0 $padding-small;
-    opacity: .75;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+    justify-content: center;
 
     .item {
-      box-sizing: border-box;
-      padding: 0 $padding-extra-small;
+      background-color: rgba(255, 255, 255, .2);
+      border-radius: 999px;
+      font-size: .78rem;
+      font-weight: var(--font-weight-semi-bold);
+      padding: .25rem .7rem;
+      unicode-bidi: isolate;
+      white-space: nowrap;
     }
   }
 }
 
+.about-section-title {
+  color: var(--accent-text-color);
+  font-size: .72rem;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: .06em;
+  margin: 0 0 .6rem;
+  text-transform: uppercase;
+}
+
 .about-footer {
-  align-items: center;
-  justify-content: flex-end;
-  padding: $padding;
+  justify-content: center;
+  padding: 0 1.25rem 1rem;
 
   .revision {
-    box-sizing: border-box;
-    font-size: small;
-    opacity: .75;
-    padding: $padding 0 0 0;
+    color: var(--muted-content-color);
+    font-size: .7rem;
+  }
+
+  &:empty {
+    padding-bottom: .5rem;
+  }
+}
+
+.visually-hidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+@media (max-width: 480px) {
+  .about-header {
+    padding: 1.3rem 3.4rem 1.1rem;
+
+    .title {
+      font-size: 1rem;
+    }
   }
 }

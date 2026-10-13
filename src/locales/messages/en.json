@@ -104,5 +104,16 @@
   "player.bookmarks.download": "Download bookmarks and notes",
   "player.transcript.download": "Download transcript",
   "player.media.unsupported": "This recording's video can't play in this browser. Try another browser, or ask the site to provide the video as MP4.",
-  "player.captions.settings": "Caption settings"
+  "player.captions.settings": "Caption settings",
+  "player.about.modal.content.title": "In this recording",
+  "player.about.modal.content.available": "Included",
+  "player.about.modal.content.unavailable": "Not included",
+  "player.about.modal.content.users": "Participants",
+  "player.about.modal.content.presentation": "Slides",
+  "player.about.modal.content.chat": "Chat",
+  "player.about.modal.content.polls": "Polls",
+  "player.about.modal.content.videos": "Shared videos",
+  "player.about.modal.content.notes": "Shared notes",
+  "player.about.modal.content.screenshare": "Screen sharing",
+  "player.about.modal.content.captions": "Captions"
 }

@@ -104,5 +104,16 @@
   "player.bookmarks.download": "ブックマークとメモをダウンロード",
   "player.transcript.download": "文字起こしをダウンロード",
   "player.media.unsupported": "この録画の動画はこのブラウザでは再生できません。別のブラウザをお試しいただくか、MP4 形式の動画を提供するようサイトに依頼してください。",
-  "player.captions.settings": "字幕の設定"
+  "player.captions.settings": "字幕の設定",
+  "player.about.modal.content.title": "この録画の内容",
+  "player.about.modal.content.available": "あり",
+  "player.about.modal.content.unavailable": "なし",
+  "player.about.modal.content.users": "参加者",
+  "player.about.modal.content.presentation": "スライド",
+  "player.about.modal.content.chat": "チャット",
+  "player.about.modal.content.polls": "投票",
+  "player.about.modal.content.videos": "共有動画",
+  "player.about.modal.content.notes": "共有メモ",
+  "player.about.modal.content.screenshare": "画面共有",
+  "player.about.modal.content.captions": "字幕"
 }

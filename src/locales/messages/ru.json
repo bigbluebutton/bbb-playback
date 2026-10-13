@@ -104,5 +104,16 @@
   "player.bookmarks.download": "Скачать закладки и заметки",
   "player.transcript.download": "Скачать расшифровку",
   "player.media.unsupported": "Видео этой записи не воспроизводится в этом браузере. Попробуйте другой браузер или попросите сайт предоставить видео в формате MP4.",
-  "player.captions.settings": "Настройки субтитров"
+  "player.captions.settings": "Настройки субтитров",
+  "player.about.modal.content.title": "В этой записи",
+  "player.about.modal.content.available": "Есть",
+  "player.about.modal.content.unavailable": "Нет",
+  "player.about.modal.content.users": "Участники",
+  "player.about.modal.content.presentation": "Слайды",
+  "player.about.modal.content.chat": "Чат",
+  "player.about.modal.content.polls": "Опросы",
+  "player.about.modal.content.videos": "Общие видео",
+  "player.about.modal.content.notes": "Общие заметки",
+  "player.about.modal.content.screenshare": "Демонстрация экрана",
+  "player.about.modal.content.captions": "Субтитры"
 }

@@ -104,5 +104,16 @@
   "player.bookmarks.download": "बुकमार्क और नोट्स डाउनलोड करें",
   "player.transcript.download": "ट्रांसक्रिप्ट डाउनलोड करें",
   "player.media.unsupported": "इस रिकॉर्डिंग का वीडियो इस ब्राउज़र में नहीं चल सकता। कोई दूसरा ब्राउज़र आज़माएँ, या साइट से वीडियो MP4 में उपलब्ध कराने के लिए कहें।",
-  "player.captions.settings": "कैप्शन सेटिंग"
+  "player.captions.settings": "कैप्शन सेटिंग",
+  "player.about.modal.content.title": "इस रिकॉर्डिंग में",
+  "player.about.modal.content.available": "शामिल",
+  "player.about.modal.content.unavailable": "शामिल नहीं",
+  "player.about.modal.content.users": "प्रतिभागी",
+  "player.about.modal.content.presentation": "स्लाइड",
+  "player.about.modal.content.chat": "चैट",
+  "player.about.modal.content.polls": "पोल",
+  "player.about.modal.content.videos": "साझा वीडियो",
+  "player.about.modal.content.notes": "साझा नोट्स",
+  "player.about.modal.content.screenshare": "स्क्रीन शेयरिंग",
+  "player.about.modal.content.captions": "कैप्शन"
 }

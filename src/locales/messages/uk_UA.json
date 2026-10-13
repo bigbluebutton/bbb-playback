@@ -104,5 +104,16 @@
   "player.bookmarks.download": "Завантажити закладки та нотатки",
   "player.transcript.download": "Завантажити транскрипт",
   "player.media.unsupported": "Відео цього запису не відтворюється в цьому браузері. Спробуйте інший браузер або попросіть сайт надати відео у форматі MP4.",
-  "player.captions.settings": "Налаштування субтитрів"
+  "player.captions.settings": "Налаштування субтитрів",
+  "player.about.modal.content.title": "У цьому записі",
+  "player.about.modal.content.available": "Є",
+  "player.about.modal.content.unavailable": "Немає",
+  "player.about.modal.content.users": "Учасники",
+  "player.about.modal.content.presentation": "Слайди",
+  "player.about.modal.content.chat": "Чат",
+  "player.about.modal.content.polls": "Опитування",
+  "player.about.modal.content.videos": "Спільні відео",
+  "player.about.modal.content.notes": "Спільні нотатки",
+  "player.about.modal.content.screenshare": "Демонстрація екрана",
+  "player.about.modal.content.captions": "Субтитри"
 }

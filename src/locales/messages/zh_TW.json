@@ -104,5 +104,16 @@
   "player.bookmarks.download": "下載書籤和備註",
   "player.transcript.download": "下載逐字稿",
   "player.media.unsupported": "此錄影的影片無法在此瀏覽器中播放。請改用其他瀏覽器，或請網站提供 MP4 格式的影片。",
-  "player.captions.settings": "字幕設定"
+  "player.captions.settings": "字幕設定",
+  "player.about.modal.content.title": "錄製內容",
+  "player.about.modal.content.available": "包含",
+  "player.about.modal.content.unavailable": "不包含",
+  "player.about.modal.content.users": "參與者",
+  "player.about.modal.content.presentation": "投影片",
+  "player.about.modal.content.chat": "聊天",
+  "player.about.modal.content.polls": "投票",
+  "player.about.modal.content.videos": "共享影片",
+  "player.about.modal.content.notes": "共享筆記",
+  "player.about.modal.content.screenshare": "螢幕分享",
+  "player.about.modal.content.captions": "字幕"
 }

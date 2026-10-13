@@ -104,5 +104,16 @@
   "player.bookmarks.download": "북마크 및 메모 다운로드",
   "player.transcript.download": "스크립트 다운로드",
   "player.media.unsupported": "이 녹화의 동영상은 이 브라우저에서 재생할 수 없습니다. 다른 브라우저를 사용하거나 사이트에 MP4 형식의 동영상을 요청하세요.",
-  "player.captions.settings": "자막 설정"
+  "player.captions.settings": "자막 설정",
+  "player.about.modal.content.title": "이 녹화에 포함된 항목",
+  "player.about.modal.content.available": "포함",
+  "player.about.modal.content.unavailable": "포함 안 됨",
+  "player.about.modal.content.users": "참가자",
+  "player.about.modal.content.presentation": "슬라이드",
+  "player.about.modal.content.chat": "채팅",
+  "player.about.modal.content.polls": "투표",
+  "player.about.modal.content.videos": "공유 동영상",
+  "player.about.modal.content.notes": "공유 노트",
+  "player.about.modal.content.screenshare": "화면 공유",
+  "player.about.modal.content.captions": "자막"
 }

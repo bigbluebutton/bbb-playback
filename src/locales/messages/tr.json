@@ -104,5 +104,16 @@
   "player.bookmarks.download": "Yer işaretlerini ve notları indir",
   "player.transcript.download": "Transkripti indir",
   "player.media.unsupported": "Bu kaydın videosu bu tarayıcıda oynatılamıyor. Başka bir tarayıcı deneyin veya siteden videoyu MP4 olarak sunmasını isteyin.",
-  "player.captions.settings": "Altyazı ayarları"
+  "player.captions.settings": "Altyazı ayarları",
+  "player.about.modal.content.title": "Bu kayıtta",
+  "player.about.modal.content.available": "Var",
+  "player.about.modal.content.unavailable": "Yok",
+  "player.about.modal.content.users": "Katılımcılar",
+  "player.about.modal.content.presentation": "Slaytlar",
+  "player.about.modal.content.chat": "Sohbet",
+  "player.about.modal.content.polls": "Anketler",
+  "player.about.modal.content.videos": "Paylaşılan videolar",
+  "player.about.modal.content.notes": "Paylaşılan notlar",
+  "player.about.modal.content.screenshare": "Ekran paylaşımı",
+  "player.about.modal.content.captions": "Altyazılar"
 }
