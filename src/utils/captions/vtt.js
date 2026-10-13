@@ -8,6 +8,18 @@ const toSeconds = (value) => {
   return parts.reduce((total, part) => total * 60 + part, 0);
 };
 
+// Lines with nothing to read: spaces, &nbsp;, invisible marks or empty tags
+// such as <v Bob></v>. Shown, they would be an empty caption box
+const isBlank = (text) => {
+  if (typeof text !== 'string') return true;
+
+  return text
+    .replace(/<[^>]*>/g, '')
+    .replace(/&(nbsp|#160|#xa0|lrm|rlm|zwj|zwnj|#8203|#x200b);/gi, '')
+    .replace(/[\u200b-\u200f\u2060\ufeff]/g, '')
+    .trim() === '';
+};
+
 const parseVTT = (text = '') => {
   const cues = [];
   const blocks = text.replace(/\r\n?/g, '\n').split(/\n{2,}/);
@@ -23,7 +35,7 @@ const parseVTT = (text = '') => {
     const start = toSeconds(match[1]);
     const end = toSeconds(match[2]);
     const content = lines.slice(index + 1).join('\n').trim();
-    if (!content || !Number.isFinite(start) || !Number.isFinite(end)) return;
+    if (isBlank(content) || !Number.isFinite(start) || !Number.isFinite(end)) return;
 
     cues.push({ end, start, text: content });
   });
@@ -47,6 +59,7 @@ const pickNext = (pending, time = 0, size = 1) => {
 };
 
 export {
+  isBlank,
   orderFrom,
   pickNext,
   parseVTT,

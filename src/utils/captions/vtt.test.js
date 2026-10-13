@@ -1,4 +1,5 @@
 import {
+  isBlank,
   orderFrom,
   parseVTT,
   pickNext,
@@ -32,6 +33,22 @@ describe('vtt', () => {
       { start: 0.5, end: 5, text: 'Welcome everyone,\ntoday we review Q3.' },
       { start: 62.25, end: 64, text: 'Questions?' },
     ]);
+  });
+
+  it('skips lines with nothing to read', () => {
+    const blank = 'WEBVTT\n\n00:00:01.000 --> 00:00:02.000\n&nbsp;\n\n'
+      + '00:00:02.000 --> 00:00:03.000\n<v Bob></v>\n\n'
+      + '00:00:03.000 --> 00:00:04.000\n\u200b\n\n'
+      + '00:00:04.000 --> 00:00:05.000\n<v Bob>Hi</v>\n';
+    expect(parseVTT(blank)).toEqual([{ start: 4, end: 5, text: '<v Bob>Hi</v>' }]);
+  });
+
+  it('tells blank lines from lines with text', () => {
+    expect(isBlank(' \u00a0 ')).toBe(true);
+    expect(isBlank('<i> </i>')).toBe(true);
+    expect(isBlank(undefined)).toBe(true);
+    expect(isBlank('مرحبا')).toBe(false);
+    expect(isBlank('<b>Q3</b>')).toBe(false);
   });
 
   it('handles windows line endings', () => {

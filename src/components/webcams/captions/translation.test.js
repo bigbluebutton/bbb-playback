@@ -184,6 +184,19 @@ describe('caption translation', () => {
     expect(callbacks.onPreparing).toHaveBeenCalledWith('Spanish');
   });
 
+  it('keeps the original line when a translation comes back empty', async () => {
+    getProviders.mockReturnValue([createProvider(['es'], async (texts) => texts.map(() => ' '))]);
+    const player = createPlayer();
+    const callbacks = createCallbacks();
+    await setupCaptionTranslation(player, callbacks);
+
+    player.select('es');
+    await flush();
+    await flush();
+
+    expect(player.track('es').cues.every(cue => cue.text.trim() !== '')).toBe(true);
+  });
+
   it('carries on with the next provider when one fails', async () => {
     const broken = createProvider(['es'], jest.fn(() => Promise.reject(new Error('stalled'))));
     const server = createProvider(['es'], async (texts) => texts.map(text => `server:${text}`));

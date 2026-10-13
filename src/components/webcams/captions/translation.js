@@ -1,5 +1,6 @@
 import { captions as config } from 'config';
 import {
+  isBlank,
   parseVTT,
   pickNext,
 } from 'utils/captions/vtt';
@@ -157,7 +158,7 @@ const setupCaptionTranslation = (videojsPlayer, {
         ? cached.texts
         : [];
       count = cues.length;
-      results = cues.map((cue, index) => (typeof saved[index] === 'string' ? saved[index] : null));
+      results = cues.map((cue, index) => (typeof saved[index] === 'string' && !isBlank(saved[index]) ? saved[index] : null));
 
       // Saved lines show translated at once, the rest show the original
       clearCues(track);
@@ -209,9 +210,11 @@ const setupCaptionTranslation = (videojsPlayer, {
             }
             if (videojsPlayer.isDisposed()) return;
 
+            // A line that comes back empty keeps the original
             batch.forEach((item, index) => {
-              item.vttCue.text = texts[index];
-              results[item.index] = texts[index];
+              const text = isBlank(texts[index]) ? item.cue.text : texts[index];
+              item.vttCue.text = text;
+              results[item.index] = text;
             });
             refreshDisplay();
             if (!announced) {

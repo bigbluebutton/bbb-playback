@@ -130,3 +130,23 @@ test('caption settings open as a titled card and close with Done', async ({ page
   await press(dialog.locator('.vjs-done-button'), hasTouch);
   await expect(dialog).toBeHidden();
 });
+
+test('blank caption lines show no empty box', async ({ page, hasTouch }) => {
+  await page.route('**/caption_ar.vtt', (route) => route.fulfill({
+    contentType: 'text/vtt',
+    body: 'WEBVTT\n\n00:00:00.000 --> 00:00:02.000\n&nbsp;\n\n'
+      + '00:00:02.000 --> 00:00:04.000\n<v Bob></v>\n\n'
+      + `00:00:04.000 --> 00:00:06.000\n${FIRST_LINE}\n`,
+  }));
+  await open(page);
+  await pick(page, 'العربية', hasTouch);
+
+  const boxes = page.locator('.vjs-text-track-cue > div');
+  for (const time of [1, 3]) {
+    await page.evaluate((t) => { document.querySelector('#webcams video').currentTime = t; }, time);
+    await page.waitForTimeout(500);
+    await expect(boxes).toHaveCount(0);
+  }
+  await page.evaluate(() => { document.querySelector('#webcams video').currentTime = 5; });
+  await expect(captions(page)).toContainText(FIRST_LINE);
+});
