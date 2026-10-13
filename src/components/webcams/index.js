@@ -37,6 +37,10 @@ import setupCaptions from './captions';
 import './index.scss';
 
 const intlMessages = defineMessages({
+  captionSettings: {
+    id: 'player.captions.settings',
+    description: 'Title of the caption settings dialog',
+  },
   unsupported: {
     id: 'player.media.unsupported',
     description: 'Message shown when no format of the recording plays in this browser',
@@ -272,6 +276,12 @@ const Webcams = () => {
         attachTimelinePreview(player.webcams, {
           slideLabel: (number) => intl.formatMessage(intlMessages.previewSlide, { number }),
         });
+
+        // Title shown in the caption settings dialog's header
+        const captionSettings = player.webcams.getChild('textTrackSettings');
+        if (captionSettings) {
+          captionSettings.el().setAttribute('data-title', intl.formatMessage(intlMessages.captionSettings));
+        }
 
         // Caption notices share a key: each one updates the last in place,
         // and turning translated captions off takes down one still waiting

@@ -103,5 +103,6 @@
   "player.progress.completed": "🎉 Você assistiu à gravação inteira",
   "player.bookmarks.download": "Baixar marcadores e notas",
   "player.transcript.download": "Baixar transcrição",
-  "player.media.unsupported": "O vídeo desta gravação não pode ser reproduzido neste navegador. Tente outro navegador ou peça ao site que disponibilize o vídeo em MP4."
+  "player.media.unsupported": "O vídeo desta gravação não pode ser reproduzido neste navegador. Tente outro navegador ou peça ao site que disponibilize o vídeo em MP4.",
+  "player.captions.settings": "Configurações de legendas"
 }

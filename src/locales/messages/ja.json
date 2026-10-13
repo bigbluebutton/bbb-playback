@@ -103,5 +103,6 @@
   "player.progress.completed": "🎉 録画を最後まで視聴しました",
   "player.bookmarks.download": "ブックマークとメモをダウンロード",
   "player.transcript.download": "文字起こしをダウンロード",
-  "player.media.unsupported": "この録画の動画はこのブラウザでは再生できません。別のブラウザをお試しいただくか、MP4 形式の動画を提供するようサイトに依頼してください。"
+  "player.media.unsupported": "この録画の動画はこのブラウザでは再生できません。別のブラウザをお試しいただくか、MP4 形式の動画を提供するようサイトに依頼してください。",
+  "player.captions.settings": "字幕の設定"
 }

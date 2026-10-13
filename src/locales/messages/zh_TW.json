@@ -103,5 +103,6 @@
   "player.progress.completed": "🎉 你已看完整個錄製內容",
   "player.bookmarks.download": "下載書籤和備註",
   "player.transcript.download": "下載逐字稿",
-  "player.media.unsupported": "此錄影的影片無法在此瀏覽器中播放。請改用其他瀏覽器，或請網站提供 MP4 格式的影片。"
+  "player.media.unsupported": "此錄影的影片無法在此瀏覽器中播放。請改用其他瀏覽器，或請網站提供 MP4 格式的影片。",
+  "player.captions.settings": "字幕設定"
 }

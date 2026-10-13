@@ -103,5 +103,6 @@
   "player.progress.completed": "🎉 녹화를 끝까지 시청했습니다",
   "player.bookmarks.download": "북마크 및 메모 다운로드",
   "player.transcript.download": "스크립트 다운로드",
-  "player.media.unsupported": "이 녹화의 동영상은 이 브라우저에서 재생할 수 없습니다. 다른 브라우저를 사용하거나 사이트에 MP4 형식의 동영상을 요청하세요."
+  "player.media.unsupported": "이 녹화의 동영상은 이 브라우저에서 재생할 수 없습니다. 다른 브라우저를 사용하거나 사이트에 MP4 형식의 동영상을 요청하세요.",
+  "player.captions.settings": "자막 설정"
 }

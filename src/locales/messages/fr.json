@@ -103,5 +103,6 @@
   "player.progress.completed": "🎉 Vous avez regardé l'intégralité de l'enregistrement",
   "player.bookmarks.download": "Télécharger les signets et les notes",
   "player.transcript.download": "Télécharger la transcription",
-  "player.media.unsupported": "La vidéo de cet enregistrement ne peut pas être lue dans ce navigateur. Essayez un autre navigateur, ou demandez au site de fournir la vidéo au format MP4."
+  "player.media.unsupported": "La vidéo de cet enregistrement ne peut pas être lue dans ce navigateur. Essayez un autre navigateur, ou demandez au site de fournir la vidéo au format MP4.",
+  "player.captions.settings": "Paramètres des sous-titres"
 }

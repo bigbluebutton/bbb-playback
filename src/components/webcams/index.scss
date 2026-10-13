@@ -414,3 +414,177 @@ $big-play-button-size: 2em;
     text-align: center;
   }
 }
+
+// Caption settings: a card with a header in the brand gradient instead of
+// video.js' grey full-page panel. The title comes from data-title, set by
+// the player in the viewer's language
+.video-js .vjs-text-track-settings {
+  background: var(--secondary-background-color);
+  border-radius: $border-radius * 3;
+  box-shadow: 0 0 0 100vmax rgba(15, 23, 42, .55), 0 24px 60px rgba(0, 0, 0, .35);
+  color: var(--secondary-content-color);
+  font-size: .875rem;
+  height: auto;
+  inset: 50% auto auto 50%;
+  max-height: calc(100% - 2rem);
+  max-width: calc(100vw - 2rem);
+  overflow: auto;
+  padding-top: 3.5rem;
+  transform: translate(-50%, -50%);
+  width: 40rem;
+  z-index: 5;
+
+  // The dialog takes focus when it opens; its controls show the focus
+  &:focus {
+    outline: none;
+  }
+
+  &::before {
+    align-items: center;
+    background: var(--accent-gradient);
+    color: #fff;
+    content: attr(data-title);
+    display: flex;
+    font-size: 1.05rem;
+    font-weight: var(--font-weight-bold, 700);
+    height: 3.5rem;
+    inset: 0 0 auto 0;
+    padding-inline: 1.25rem 3.5rem;
+    position: absolute;
+  }
+
+  .vjs-modal-dialog-content {
+    display: grid;
+    gap: .25rem 1.5rem;
+    grid-template-columns: 3fr 2fr;
+    height: auto;
+    padding: 1rem 1.25rem 1.25rem;
+    position: static;
+  }
+
+  .vjs-track-settings-colors,
+  .vjs-track-settings-font {
+    display: block;
+  }
+
+  // Each setting: its name, then its pickers side by side
+  fieldset {
+    align-items: center;
+    border: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin: 0;
+    padding: .5rem 0;
+
+    span {
+      display: contents;
+    }
+  }
+
+  legend {
+    width: 100%;
+  }
+
+  legend {
+    color: var(--secondary-content-color);
+    font-size: .8rem;
+    font-weight: var(--font-weight-bold, 700);
+    letter-spacing: .02em;
+    margin-bottom: .35rem;
+    padding: 0;
+    text-transform: uppercase;
+  }
+
+  select,
+  fieldset span > select {
+    appearance: none;
+    background-color: var(--secondary-highlight-color);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23c21391' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-position: right .6rem center;
+    background-repeat: no-repeat;
+    border: 1px solid var(--border-color);
+    border-radius: $border-radius * 2;
+    color: var(--secondary-content-color);
+    cursor: pointer;
+    flex: 1 1 0;
+    font: inherit;
+    margin: 0;
+    max-width: none;
+    min-height: 2.25rem;
+    min-width: 0;
+    padding-block: .35rem;
+    padding-inline: .7rem 2rem;
+
+    &:hover {
+      border-color: var(--accent-color);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--accent-color);
+      outline-offset: 1px;
+    }
+  }
+
+  .vjs-track-settings-controls {
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: .75rem;
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+    margin-top: .5rem;
+    padding-top: 1rem;
+
+    button {
+      background: none;
+      border: 1px solid var(--accent-text-color);
+      border-radius: 999px;
+      color: var(--accent-text-color);
+      cursor: pointer;
+      font: inherit;
+      font-weight: var(--font-weight-bold, 700);
+      margin: 0;
+      min-height: 2.5rem;
+      padding: 0 1.25rem;
+
+      &:focus-visible {
+        outline: 2px solid var(--accent-color);
+        outline-offset: 2px;
+      }
+    }
+
+    .vjs-done-button {
+      background: var(--accent-gradient);
+      border-color: transparent;
+      box-shadow: 0 6px 16px var(--accent-glow);
+      color: #fff;
+    }
+  }
+
+  .vjs-close-button {
+    color: #fff;
+    height: 2.5rem;
+    inset: .5rem .5rem auto auto;
+    position: absolute;
+    width: 2.5rem;
+    z-index: 2;
+  }
+}
+
+[dir="rtl"] .video-js .vjs-text-track-settings {
+  select,
+  fieldset span > select {
+    background-position: left .6rem center;
+  }
+
+  .vjs-close-button {
+    inset: .5rem auto auto .5rem;
+  }
+}
+
+// Phones: one column
+@media (max-width: $media-min-width) {
+  .video-js .vjs-text-track-settings .vjs-modal-dialog-content {
+    grid-template-columns: 1fr;
+  }
+}

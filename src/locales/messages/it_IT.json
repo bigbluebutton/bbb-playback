@@ -103,5 +103,6 @@
   "player.progress.completed": "🎉 Hai guardato l'intera registrazione",
   "player.bookmarks.download": "Scarica segnalibri e note",
   "player.transcript.download": "Scarica trascrizione",
-  "player.media.unsupported": "Il video di questa registrazione non può essere riprodotto in questo browser. Prova un altro browser o chiedi al sito di fornire il video in formato MP4."
+  "player.media.unsupported": "Il video di questa registrazione non può essere riprodotto in questo browser. Prova un altro browser o chiedi al sito di fornire il video in formato MP4.",
+  "player.captions.settings": "Impostazioni sottotitoli"
 }

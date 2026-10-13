@@ -115,3 +115,18 @@ test('the CC menu and captions work in a right-to-left interface', async ({ page
   await pick(page, 'الإسبانية', hasTouch);
   await expect(captions(page)).toContainText(`[es] ${FIRST_LINE}`);
 });
+
+test('caption settings open as a titled card and close with Done', async ({ page, hasTouch }) => {
+  await open(page, '?locale=ar');
+  await pick(page, 'إعدادات', hasTouch);
+
+  const dialog = page.locator('.vjs-text-track-settings');
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toHaveAttribute('data-title', 'إعدادات التعليقات');
+  const card = await dialog.boundingBox();
+  const viewport = page.viewportSize();
+  expect(card.width).toBeLessThan(viewport.width);
+
+  await press(dialog.locator('.vjs-done-button'), hasTouch);
+  await expect(dialog).toBeHidden();
+});
