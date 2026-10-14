@@ -150,9 +150,13 @@ $player-wrapper-padding: $control-bar-height;
   clip-path: polygon(20% 0, 100% 50%, 20% 100%);
 }
 
+// Two bars with a narrow gap between them, like a media player's pause
 .tap-toggle-pause .tap-toggle-icon {
-  border-inline: .5rem solid var(--white);
-  width: 1.5rem;
+  border-inline: .45rem solid var(--white);
+  border-radius: 1px;
+  box-sizing: border-box;
+  height: 1.5rem;
+  width: 1.25rem;
 }
 
 @keyframes tap-toggle {
