@@ -42,10 +42,11 @@ $big-play-button-size: 2em;
   box-shadow: 0 10px 30px -6px var(--accent-glow);
   color: var(--big-play-button-color);
   height: $big-play-button-size;
-  left: 50%;
+  // The middle of the slides, set by the content area, or of the screen
+  left: var(--stage-center-x, 50%);
   line-height: $big-play-button-size;
   margin: 0;
-  top: 50%;
+  top: var(--stage-center-y, 50%);
   transform: translate(-50%, -50%);
   transition: transform var(--transition-duration) ease, filter var(--transition-duration) ease;
   width: $big-play-button-size;
@@ -367,7 +368,9 @@ $big-play-button-size: 2em;
 // screen, where it would cover the panel tabs
 @media (max-width: $media-min-width) {
   .video-js .vjs-big-play-button {
+    left: 50%;
     position: absolute;
+    top: 50%;
   }
 }
 

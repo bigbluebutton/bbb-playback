@@ -25,7 +25,8 @@ const touch = async (page, x, y) => {
 const tapAt = async (page, locator, ratio, hasTouch) => {
   const box = await locator.boundingBox();
   const x = box.x + box.width * ratio;
-  const y = box.y + box.height / 2;
+  // Above the middle, where the video's play button sits before playback
+  const y = box.y + box.height / 3;
   if (hasTouch) {
     await touch(page, x, y);
   } else {

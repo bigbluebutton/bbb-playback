@@ -112,3 +112,11 @@ $stage-radius: .9rem;
     background-color: var(--media-background-color);
   }
 }
+
+// Before playback starts the video's play button sits in the middle of the
+// slides (see useStageCenter), where it takes the logo's place
+@media (min-width: $media-min-width) {
+  .player-wrapper:has(#webcams .video-js:not(.vjs-has-started)) .top-content .presentation.logo {
+    background-image: none;
+  }
+}
