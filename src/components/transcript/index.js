@@ -5,7 +5,11 @@ import {
 } from 'react-intl';
 import cx from 'classnames';
 import Icon from 'components/utils/icon';
-import { parseVTT } from 'utils/captions/vtt';
+import {
+  isBlank,
+  parseVTT,
+  toPlainText,
+} from 'utils/captions/vtt';
 import { EVENTS, ID } from 'utils/constants';
 import { buildFileURL } from 'utils/data';
 import storage from 'utils/data/storage';
@@ -58,6 +62,10 @@ const getInitialLocale = (captions, locale) => {
   return (match || captions[0]).locale;
 };
 
+// After the viewer scrolls the list, it waits this long before following
+// playback again
+const FOLLOW_PAUSE = 5000;
+
 const findActive = (cues, time) => {
   for (let index = cues.length - 1; index >= 0; index--) {
     if (cues[index].start <= time) return time <= cues[index].end + 1 ? index : -1;
@@ -90,7 +98,10 @@ const Transcript = () => {
   const [active, setActive] = useState(-1);
   const [query, setQuery] = useState('');
   const list = useRef();
-  const interaction = useRef(false);
+  // The viewer reading: pointer over the list, or a scroll, swipe or key
+  // press in it in the last few seconds (touch screens have no hover)
+  const hovering = useRef(false);
+  const lastTouched = useRef(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -104,7 +115,12 @@ const Transcript = () => {
         return response.text();
       })
       .then(text => {
-        if (!cancelled) setCues(parseVTT(text));
+        // Words only: captions can carry word timings and styles
+        if (!cancelled) {
+          setCues(parseVTT(text)
+            .map(cue => ({ ...cue, text: toPlainText(cue.text) }))
+            .filter(cue => !isBlank(cue.text)));
+        }
       })
       .catch(error => {
         logger.warn('transcript', error);
@@ -130,7 +146,8 @@ const Transcript = () => {
 
   // Follows playback unless the viewer is reading elsewhere in the list
   useEffect(() => {
-    if (query || interaction.current || active === -1 || !list.current) return;
+    const reading = hovering.current || Date.now() - lastTouched.current < FOLLOW_PAUSE;
+    if (query || reading || active === -1 || !list.current) return;
 
     // Scrolls the list only, never the page around it
     const node = list.current.querySelector(`[data-index="${active}"]`);
@@ -148,6 +165,10 @@ const Transcript = () => {
 
     return trimmed ? all.filter(cue => cue.text.toLowerCase().includes(trimmed)) : all;
   }, [cues, query]);
+
+  const touched = () => {
+    lastTouched.current = Date.now();
+  };
 
   const jump = (time) => {
     if (player.primary) player.primary.currentTime(time);
@@ -174,8 +195,11 @@ const Transcript = () => {
     body = (
       <ol
         className="transcript-lines"
-        onMouseEnter={() => { interaction.current = true; }}
-        onMouseLeave={() => { interaction.current = false; }}
+        onKeyDown={touched}
+        onMouseEnter={() => { hovering.current = true; }}
+        onMouseLeave={() => { hovering.current = false; }}
+        onTouchStart={touched}
+        onWheel={touched}
         ref={list}
       >
         {lines.map(cue => (

@@ -4,6 +4,7 @@ import {
   parseVTT,
   pickNext,
   tidyText,
+  toPlainText,
   toSeconds,
 } from './vtt';
 
@@ -54,6 +55,17 @@ describe('vtt', () => {
     expect(parseVTT('WEBVTT\n\n00:00:01.000 --> 00:00:02.000\n \nHi\n')).toEqual([
       { start: 1, end: 2, text: 'Hi' },
     ]);
+  });
+
+  it('keeps the words of a caption without its markup', () => {
+    // Word timings, as live captions write them
+    expect(toPlainText('<00:00:14.080><c>السلام</c><00:00:15.480><c> عليكم</c>')).toBe('السلام عليكم');
+    expect(toPlainText('<i>Hello</i> <b>there</b>')).toBe('Hello there');
+    expect(toPlainText('<v Bob>Hi</v>')).toBe('Bob: Hi');
+    expect(toPlainText('<v.loud Alice Smith>Hey')).toBe('Alice Smith: Hey');
+    expect(toPlainText('Q&amp;A &lt;3 &#1605;')).toBe('Q&A <3 م');
+    expect(toPlainText('<00:00:01.000>\n<c>Two</c>  lines')).toBe('Two lines');
+    expect(toPlainText(undefined)).toBe('');
   });
 
   it('tells blank lines from lines with text', () => {

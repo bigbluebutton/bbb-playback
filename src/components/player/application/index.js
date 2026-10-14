@@ -52,10 +52,12 @@ const Application = () => {
         current={current}
         toggleApplication={toggleApplication}
       />
-      <Content
-        current={current}
-        focus={focus}
-      />
+      <div className="application-panel">
+        <Content
+          current={current}
+          focus={focus}
+        />
+      </div>
     </div>
   );
 };

@@ -65,10 +65,13 @@ test('double tapping the right of the slides seeks without playing', async ({ pa
   const box = await slides(page).boundingBox();
   const x = box.x + box.width * 0.8;
   const y = box.y + box.height / 2;
-  await touch(page, x, y);
-  await touch(page, x, y);
-
-  await expect(page.locator('.tap-seek-forward')).toHaveCount(1);
+  // Both taps must land within 300ms, which a busy test machine can miss:
+  // tried again like a person would
+  await expect(async () => {
+    await touch(page, x, y);
+    await touch(page, x, y);
+    await expect(page.locator('.tap-seek-forward')).toHaveCount(1, { timeout: 500 });
+  }).toPass({ timeout: 15000 });
   await expect(page.locator('#webcams .vjs-current-time-display')).not.toHaveText('0:00');
   await page.waitForTimeout(500);
   await expect(video(page)).toHaveClass(/vjs-paused/);

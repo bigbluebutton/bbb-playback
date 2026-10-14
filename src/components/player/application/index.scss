@@ -16,6 +16,19 @@
   height: 100%;
   width: 100%;
 
+  // The open panel fills what is left under the tabs; its lists scroll
+  // inside it instead of making the page taller
+  .application-panel {
+    flex: 1 1 auto;
+    min-height: 0;
+    position: relative;
+
+    > * {
+      inset: 0;
+      position: absolute;
+    }
+  }
+
   .application-control {
     background-color: var(--application-control-background-color);
     border-bottom: 1px solid var(--border-color);

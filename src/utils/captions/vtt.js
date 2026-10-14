@@ -43,6 +43,40 @@ const tidyText = (text) => {
     .join('\n');
 };
 
+const ENTITIES = {
+  amp: '&',
+  gt: '>',
+  lrm: '\u200e',
+  lt: '<',
+  nbsp: '\u00a0',
+  quot: '"',
+  rlm: '\u200f',
+};
+
+// A caption's words without its markup, for reading and translating: word
+// timings (<00:00:14.080>), classes and styles (<c>, <i>, <b>, <u>) go,
+// a speaker (<v Bob>) becomes "Bob: ", and entities become characters
+const toPlainText = (text) => {
+  if (typeof text !== 'string') return '';
+
+  const plain = text
+    .replace(/<v(?:\.[^\s>]*)?\s+([^>]+)>/g, (match, speaker) => `${speaker.trim()}: `)
+    .replace(/<[^>]*>/g, '')
+    .replace(/&(#x[\da-f]+|#\d+|[a-z]+);/gi, (entity, name) => {
+      if (name[0] === '#') {
+        const code = name[1] === 'x' || name[1] === 'X' ? parseInt(name.slice(2), 16) : parseInt(name.slice(1), 10);
+        return Number.isFinite(code) ? String.fromCodePoint(code) : entity;
+      }
+
+      return ENTITIES[name.toLowerCase()] ?? entity;
+    });
+
+  return tidyText(plain)
+    .split('\n')
+    .map(line => line.replace(/[ \t]{2,}/g, ' '))
+    .join('\n');
+};
+
 const parseVTT = (text = '') => {
   const cues = [];
   const blocks = text.replace(/\r\n?/g, '\n').split(/\n{2,}/);
@@ -87,5 +121,6 @@ export {
   pickNext,
   parseVTT,
   tidyText,
+  toPlainText,
   toSeconds,
 };

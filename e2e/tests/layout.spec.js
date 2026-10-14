@@ -52,3 +52,46 @@ test('each side panel tab is a button named by its label', async ({ page }) => {
     await expect(page.getByRole('button', { name, exact: true })).toBeVisible();
   }
 });
+
+// Word-timed captions, as live captions write them, long enough to scroll
+const timed = (seconds) => {
+  const clock = (value) => `00:${String(Math.floor(value / 60)).padStart(2, '0')}:${String(value % 60).padStart(2, '0')}.080`;
+  const lines = [];
+  for (let index = 0; index < 120; index++) {
+    const start = index * 2;
+    lines.push(`${clock(start)} --> ${clock(start + seconds)}\n<${clock(start)}><c>السلام</c><${clock(start + 1)}><c> عليكم</c> ${index}`);
+  }
+
+  return `WEBVTT\n\n${lines.join('\n\n')}\n`;
+};
+
+test('the transcript scrolls and shows the words without their timings', async ({ page, hasTouch }) => {
+  await page.route('**/caption_ar.vtt', route => route.fulfill({ body: timed(2), contentType: 'text/vtt' }));
+  await page.goto(`${RECORDING}?locale=en`);
+  const tab = page.getByRole('button', { name: 'Transcript', exact: true });
+  await (hasTouch ? tab.tap() : tab.click());
+
+  const list = page.locator('.transcript-lines');
+  await expect(list).toBeVisible();
+  await expect(page.locator('.transcript-text').first()).toHaveText('السلام عليكم 0');
+  await expect(page.locator('.transcript-lines')).not.toContainText('<');
+
+  // A box of its own, inside the screen, that scrolls
+  const size = await list.evaluate(element => ({
+    bottom: element.getBoundingClientRect().bottom,
+    client: element.clientHeight,
+    scroll: element.scrollHeight,
+  }));
+  expect(size.scroll).toBeGreaterThan(size.client);
+  expect(size.bottom).toBeLessThanOrEqual(page.viewportSize().height + 1);
+
+  if (hasTouch) {
+    await list.evaluate(element => { element.scrollTop = 500; });
+  } else {
+    const box = await list.boundingBox();
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.wheel(0, 500);
+  }
+  await expect.poll(() => list.evaluate(element => element.scrollTop)).toBeGreaterThan(100);
+  await expect(page.locator('.transcript-text', { hasText: 'السلام عليكم 40' })).toBeVisible();
+});

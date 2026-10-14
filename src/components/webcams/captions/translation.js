@@ -4,6 +4,7 @@ import {
   parseVTT,
   pickNext,
   tidyText,
+  toPlainText,
 } from 'utils/captions/vtt';
 import {
   findProviders,
@@ -41,7 +42,10 @@ const loadSourceCues = (source) => {
     if (!response.ok) throw new Error(`captions ${response.status}`);
 
     return response.text();
-  }).then(parseVTT);
+    // Translators get the words only, without word timings or styles
+  }).then(text => parseVTT(text)
+    .map(cue => ({ ...cue, text: toPlainText(cue.text) }))
+    .filter(cue => !isBlank(cue.text)));
 };
 
 // video.js tracks copy cues that are not its own VTTCue type, which would
@@ -174,7 +178,8 @@ const setupCaptionTranslation = (videojsPlayer, {
   const translateTrack = async (track, option) => {
     const { language, name, providers: candidates } = option;
     started.add(language);
-    const cacheKey = `${recordId}|${source.locale}|${language}`;
+    // v2: lines are translated without their markup since then
+    const cacheKey = `${recordId}|${source.locale}|${language}|v2`;
     let results = null;
     let count = 0;
 
