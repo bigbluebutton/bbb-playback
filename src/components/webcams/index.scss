@@ -442,6 +442,13 @@ $big-play-button-size: 2em;
     outline: none;
   }
 
+  // The screen reader's "end of dialog" text sat below the card and made
+  // it scroll by a few pixels, showing a scroll bar
+  > .vjs-control-text {
+    inset: 0 auto auto 0;
+    margin: 0;
+  }
+
   &::before {
     align-items: center;
     background: var(--accent-gradient);
@@ -588,6 +595,8 @@ $big-play-button-size: 2em;
 // Phones: one column
 @media (max-width: $media-min-width) {
   .video-js .vjs-text-track-settings .vjs-modal-dialog-content {
+    gap: .15rem;
     grid-template-columns: 1fr;
+    padding: .75rem 1rem 1rem;
   }
 }

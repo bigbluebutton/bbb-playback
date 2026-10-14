@@ -174,3 +174,32 @@ test('empty lines inside a caption leave no sliver of box', async ({ page, hasTo
   await expect(captions(page)).toContainText(`[es] ${FIRST_LINE}`);
   expect(await lineBoxes()).toEqual([1]);
 });
+
+test('caption settings close with a click outside, which does nothing else', async ({ page, hasTouch }) => {
+  await open(page, '?locale=ar');
+  await pick(page, 'إعدادات', hasTouch);
+
+  const dialog = page.locator('.vjs-text-track-settings');
+  await expect(dialog).toBeVisible();
+  // Fits without a scroll bar (small phones may scroll the one column)
+  if (page.viewportSize().width >= 480) {
+    expect(await dialog.evaluate(element => element.scrollHeight <= element.clientHeight + 1)).toBe(true);
+  }
+
+  // Inside: stays open
+  await press(dialog.locator('.vjs-modal-dialog-content'), hasTouch);
+  await expect(dialog).toBeVisible();
+
+  // Outside, on the page's top corner: closes, and the video does not start
+  const viewport = page.viewportSize();
+  const x = 8;
+  const y = Math.round(viewport.height / 2);
+  if (hasTouch) {
+    await page.touchscreen.tap(x, y);
+  } else {
+    await page.mouse.click(x, y);
+  }
+  await expect(dialog).toBeHidden();
+  await page.waitForTimeout(500);
+  await expect(page.locator('#webcams .video-js')).toHaveClass(/vjs-paused/);
+});

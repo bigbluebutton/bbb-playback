@@ -154,6 +154,43 @@ const buildOptions = (sources, tracks) => {
   };
 };
 
+// A click or tap outside the caption settings dialog closes it, like the
+// player's other dialogs. That click does nothing else: it does not reach
+// the slides (which would play or pause) or the controls underneath
+const closeOnClickOutside = (videojsPlayer, dialog) => {
+  let closing = false;
+
+  const handleDown = (event) => {
+    closing = false;
+    if (!dialog.opened() || dialog.el().contains(event.target)) return;
+
+    closing = true;
+    event.stopPropagation();
+    dialog.close();
+  };
+
+  // The rest of the same click
+  const swallow = (event) => {
+    if (!closing) return;
+
+    event.stopPropagation();
+    if (event.type === 'click') {
+      event.preventDefault();
+      closing = false;
+    }
+  };
+
+  // Window capture runs before the page's own document listeners
+  window.addEventListener('pointerdown', handleDown, true);
+  window.addEventListener('pointerup', swallow, true);
+  window.addEventListener('click', swallow, true);
+  videojsPlayer.on('dispose', () => {
+    window.removeEventListener('pointerdown', handleDown, true);
+    window.removeEventListener('pointerup', swallow, true);
+    window.removeEventListener('click', swallow, true);
+  });
+};
+
 // `seek` marks updates caused by jumping, not by playing
 const dispatchTimeUpdate = (time, seek = false) => {
   const event = new CustomEvent(EVENTS.TIME_UPDATE, { detail: { seek, time } });
@@ -281,6 +318,7 @@ const Webcams = () => {
         const captionSettings = player.webcams.getChild('textTrackSettings');
         if (captionSettings) {
           captionSettings.el().setAttribute('data-title', intl.formatMessage(intlMessages.captionSettings));
+          closeOnClickOutside(player.webcams, captionSettings);
         }
 
         // Caption notices share a key: each one updates the last in place,
