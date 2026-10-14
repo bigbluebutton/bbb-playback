@@ -67,6 +67,15 @@ $big-play-button-size: 2em;
   background: var(--progress-background);
 }
 
+// The loading spinner sits where the play button does: the middle of the
+// slides (set by the content area), or of the screen
+.video-js .vjs-loading-spinner {
+  left: var(--stage-center-x, 50%);
+  margin: 0;
+  top: var(--stage-center-y, 50%);
+  transform: translate(-50%, -50%);
+}
+
 // Inviting pulse around the play button before playback starts
 @keyframes play-pulse {
   0% {
@@ -364,10 +373,11 @@ $big-play-button-size: 2em;
   }
 }
 
-// Phones: the play button sits on the video instead of the middle of the
-// screen, where it would cover the panel tabs
+// Phones: the play button and the spinner sit on the video instead of the
+// middle of the screen, where they would cover the panel tabs
 @media (max-width: $media-min-width) {
-  .video-js .vjs-big-play-button {
+  .video-js .vjs-big-play-button,
+  .video-js .vjs-loading-spinner {
     left: 50%;
     position: absolute;
     top: 50%;
