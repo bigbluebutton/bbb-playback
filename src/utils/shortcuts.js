@@ -87,9 +87,9 @@ export default class Shortcuts {
   }
 }
 
-// Single key controls, like most video sites. They only apply when nothing
-// else would use the key: text fields, buttons and the video.js controls
-// keep their own keyboard behavior
+// Single key controls, like most video sites. Letters are matched by the
+// character typed or, on other keyboard layouts (Arabic, Russian…), by the
+// key's place on the keyboard, so K is K whatever the layout
 const PLAIN_KEYS = {
   ' ': 'play',
   k: 'play',
@@ -104,29 +104,75 @@ const PLAIN_KEYS = {
   '<': 'slower',
   '>': 'faster',
   '?': 'help',
+  '؟': 'help',
 };
 
-const SHIFTED_KEYS = ['<', '>', '?'];
+const PLAIN_CODES = {
+  Space: 'play',
+  KeyK: 'play',
+  KeyJ: 'backward',
+  ArrowLeft: 'backward',
+  KeyL: 'forward',
+  ArrowRight: 'forward',
+  KeyF: 'fullscreen',
+  KeyM: 'mute',
+  KeyB: 'bookmark',
+};
 
-const INTERACTIVE = 'a, button, [role="button"], [role="slider"], .vjs-control-bar';
+const SHIFTED_KEYS = ['<', '>', '?', '؟'];
 
-const isFreeTarget = (target) => {
-  if (!target || target === document.body || target === document.documentElement) return true;
-  if (isEditable(target)) return false;
-  if (typeof target.closest !== 'function') return true;
-  if (target.closest(INTERACTIVE)) return false;
+const SHIFTED_CODES = {
+  Comma: 'slower',
+  Period: 'faster',
+  Slash: 'help',
+};
 
-  // Lists keep their own scrolling with the arrow keys
-  return !target.closest('[tabindex]') || !!target.closest('.video-js');
+// What a focused element does with a key itself, so the shortcut keeps out:
+// buttons and links take Space; sliders, menus, tabs and scrolling lists
+// take the arrows (and Space scrolls a list). Any other key works anywhere
+// but in text fields
+const ACTIVATES = 'a, button, [role="button"], [role^="menuitem"], [role="tab"], [role="option"], summary';
+const ARROWS = '[role="slider"], [role="menu"], [role^="menuitem"], [role="tablist"], [role="tab"], [role="listbox"], [role="radiogroup"], .vjs-menu';
+
+const isScrollingList = (target) => {
+  const list = target.closest('[tabindex]');
+
+  return !!list && !list.closest('.video-js') && list !== document.body;
+};
+
+const keepsKey = (target, key) => {
+  if (!target || target === document.body || target === document.documentElement) return false;
+  if (isEditable(target)) return true;
+  if (typeof target.closest !== 'function') return false;
+
+  if (key === ' ') return !!target.closest(ACTIVATES) || isScrollingList(target);
+  if (key === 'ArrowLeft' || key === 'ArrowRight') return !!target.closest(ARROWS) || isScrollingList(target);
+
+  return false;
+};
+
+const findPlainAction = (event) => {
+  const key = event.key.toLowerCase();
+  if (event.shiftKey) {
+    return (SHIFTED_KEYS.includes(event.key) && PLAIN_KEYS[event.key]) || SHIFTED_CODES[event.code] || null;
+  }
+
+  return PLAIN_KEYS[key] || PLAIN_CODES[event.code] || null;
 };
 
 const getPlainAction = (event) => {
-  if (event.altKey || event.ctrlKey || event.metaKey) return null;
+  if (event.altKey || event.ctrlKey || event.metaKey || event.isComposing) return null;
   if (typeof event.key !== 'string') return null;
-  if (event.shiftKey && !SHIFTED_KEYS.includes(event.key)) return null;
-  if (!isFreeTarget(event.target)) return null;
 
-  return PLAIN_KEYS[event.key.toLowerCase()] || null;
+  const name = findPlainAction(event);
+  if (!name) return null;
+
+  // The key the element itself would see: Space or an arrow, by key or place
+  const physical = event.code === 'Space' ? ' ' : event.code;
+  const key = [' ', 'ArrowLeft', 'ArrowRight'].includes(event.key) ? event.key : physical;
+  if (keepsKey(event.target, key)) return null;
+
+  return name;
 };
 
 const addPlainShortcuts = (actions) => {

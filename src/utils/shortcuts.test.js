@@ -122,6 +122,41 @@ describe('plain shortcuts', () => {
     expect(getPlainAction(event('ArrowLeft', list))).toBe(null);
   });
 
+  it('lets letters work on buttons and lists, where only Space and arrows are taken', () => {
+    const button = document.createElement('button');
+    const list = document.createElement('div');
+    list.setAttribute('tabindex', '0');
+    const slider = document.createElement('div');
+    slider.setAttribute('role', 'slider');
+
+    expect(getPlainAction(event('k', button))).toBe('play');
+    expect(getPlainAction(event('m', button))).toBe('mute');
+    expect(getPlainAction(event('ArrowLeft', button))).toBe('backward');
+    expect(getPlainAction(event('j', list))).toBe('backward');
+    expect(getPlainAction(event(' ', list))).toBe(null);
+    expect(getPlainAction(event('ArrowRight', slider))).toBe(null);
+    expect(getPlainAction(event('l', slider))).toBe('forward');
+  });
+
+  it('finds the keys on other keyboard layouts by their place', () => {
+    // Arabic layout: K, J, L, F, M, B type these letters
+    expect(getPlainAction(event('ن', document.body, { code: 'KeyK' }))).toBe('play');
+    expect(getPlainAction(event('ت', document.body, { code: 'KeyJ' }))).toBe('backward');
+    expect(getPlainAction(event('م', document.body, { code: 'KeyL' }))).toBe('forward');
+    expect(getPlainAction(event('ب', document.body, { code: 'KeyF' }))).toBe('fullscreen');
+    expect(getPlainAction(event('ة', document.body, { code: 'KeyM' }))).toBe('mute');
+    expect(getPlainAction(event('لا', document.body, { code: 'KeyB' }))).toBe('bookmark');
+    expect(getPlainAction(event('؟', document.body, { code: 'Slash', shiftKey: true }))).toBe('help');
+    expect(getPlainAction(event(',', document.body, { code: 'Comma', shiftKey: true }))).toBe('slower');
+    expect(getPlainAction(event('.', document.body, { code: 'Period', shiftKey: true }))).toBe('faster');
+    // Shift with a letter stays free
+    expect(getPlainAction(event('ن', document.body, { code: 'KeyK', shiftKey: true }))).toBe(null);
+  });
+
+  it('ignores keys while an input method composes text', () => {
+    expect(getPlainAction(event('k', document.body, { isComposing: true }))).toBe(null);
+  });
+
   it('works on the video element', () => {
     const player = document.createElement('div');
     player.className = 'video-js';
