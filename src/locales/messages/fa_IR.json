@@ -122,5 +122,6 @@
   "player.tab.transcript": "متن",
   "player.tab.bookmarks": "نشانک‌ها",
   "button.more.aria": "گزینه‌های بیشتر",
-  "player.bookmark.action": "نشانک"
+  "player.bookmark.action": "نشانک",
+  "player.captions.wait": "پس از آماده شدن زیرنویس {language} در دسترس است"
 }

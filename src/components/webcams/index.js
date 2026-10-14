@@ -85,6 +85,10 @@ const intlMessages = defineMessages({
     id: 'player.captions.ready',
     description: 'Message shown when translated captions start showing',
   },
+  wait: {
+    id: 'player.captions.wait',
+    description: 'Tooltip on caption languages that wait while another one gets ready',
+  },
 });
 
 const buildSources = () => {
@@ -332,7 +336,8 @@ const Webcams = () => {
         setupCaptions(player.webcams, {
           label: intl.formatMessage(intlMessages.autoTranslated),
           locale: intl.locale,
-          onFailed: (language) => captionNotice(intl.formatMessage(intlMessages.translateFailed, { language }), 6000),
+          // Long enough to read why the captions went back to the original
+          onFailed: (language) => captionNotice(intl.formatMessage(intlMessages.translateFailed, { language }), 10000),
           onHidden: () => dismiss('captions'),
           // Each notice stays until the next one replaces it
           onPreparing: (language) => captionNotice(intl.formatMessage(intlMessages.preparing, { language }), 900000, 'busy'),
@@ -343,6 +348,7 @@ const Webcams = () => {
           ),
           onReady: (language) => captionNotice(intl.formatMessage(intlMessages.ready, { language }), 2500),
           onStart: (language) => captionNotice(intl.formatMessage(intlMessages.translating, { language }), 120000, 'busy'),
+          waitLabel: (language) => intl.formatMessage(intlMessages.wait, { language }),
         });
       });
       // MP4, then WebM, then WebM decoded in the page (Safari)

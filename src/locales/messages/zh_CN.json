@@ -122,5 +122,6 @@
   "player.tab.transcript": "文字稿",
   "player.tab.bookmarks": "书签",
   "button.more.aria": "更多选项",
-  "player.bookmark.action": "添加书签"
+  "player.bookmark.action": "添加书签",
+  "player.captions.wait": "{language}字幕准备好后即可选择"
 }

@@ -122,5 +122,6 @@
   "player.tab.transcript": "Transcript",
   "player.tab.bookmarks": "Bookmarks",
   "button.more.aria": "More options",
-  "player.bookmark.action": "Bookmark"
+  "player.bookmark.action": "Bookmark",
+  "player.captions.wait": "Available once {language} captions are ready"
 }

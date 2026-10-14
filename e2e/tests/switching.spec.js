@@ -67,20 +67,67 @@ test('a language that is ready replaces the notice of the one left behind', asyn
   await noNoticeAbout(page, 'Spanish');
 });
 
-test('a language left behind that fails does not take over', async ({ page, hasTouch }) => {
-  await holdLanguage(page, 'es', { delay: 2500, fail: true });
+const menuItem = (page, text) => page.locator('.vjs-subs-caps-button .vjs-menu-item', { hasText: text }).first();
+
+test('while a language gets ready the other translations wait', async ({ page, hasTouch }) => {
+  await holdLanguage(page, 'es', { delay: 3000 });
   await open(page);
   await pick(page, 'Spanish', hasTouch);
   await expect(notice(page)).toHaveText('Translating captions into Spanish…');
 
+  // Lines on their way show "…", never the original Arabic
+  await expect(captions(page)).toContainText('…');
+  await expect(captions(page)).not.toContainText(FIRST_LINE);
+
+  if (!(await menuItem(page, 'French').isVisible())) await press(page.locator(CC), hasTouch);
+  await expect(menuItem(page, 'Spanish')).toHaveClass(/vjs-caption-preparing/);
+  for (const other of ['French', 'English']) {
+    await expect(menuItem(page, other)).toHaveAttribute('aria-disabled', 'true');
+    await expect(menuItem(page, other)).toHaveAttribute('title', 'Available once Spanish captions are ready');
+  }
+  // Off and the recording's own captions stay available
+  await expect(menuItem(page, 'captions off')).not.toHaveAttribute('aria-disabled', 'true');
+  await expect(menuItem(page, 'العربية')).not.toHaveAttribute('aria-disabled', 'true');
+
+  // A click on a waiting language changes nothing
+  await menuItem(page, 'French').click({ force: true });
+  await expect(menuItem(page, 'Spanish')).toHaveClass(/vjs-selected/);
+
+  // Ready: the others can be picked again
+  await expect(captions(page)).toContainText(`[es] ${FIRST_LINE}`);
+  await expect(menuItem(page, 'French')).not.toHaveAttribute('aria-disabled', 'true');
+  await expect(menuItem(page, 'Spanish')).not.toHaveClass(/vjs-caption-preparing/);
+});
+
+test('turning captions off while a language gets ready frees the menu', async ({ page, hasTouch }) => {
+  await holdLanguage(page, 'es', { delay: 4000 });
+  await open(page);
+  await pick(page, 'Spanish', hasTouch);
+  await expect(notice(page)).toHaveText('Translating captions into Spanish…');
+
+  await pick(page, 'captions off', hasTouch);
+  await expect(notice(page)).toHaveCount(0);
   await pick(page, 'French', hasTouch);
   await expect(captions(page)).toContainText(`[fr] ${FIRST_LINE}`);
-
-  // The Spanish request fails meanwhile
-  await page.waitForTimeout(3500);
-  await expect(captions(page)).toContainText(`[fr] ${FIRST_LINE}`);
   await noNoticeAbout(page, 'Spanish');
-  await expect(page.locator('.vjs-subs-caps-button .vjs-menu-item.vjs-selected', { hasText: 'French' })).toHaveCount(1);
+});
+
+test('a language left behind that fails does not take over', async ({ page, hasTouch }) => {
+  await holdLanguage(page, 'es', { delay: 2500, fail: true });
+  await page.route(/cdn\.jsdelivr\.net|huggingface\.co/, route => route.abort());
+  await open(page);
+  await pick(page, 'Spanish', hasTouch);
+  await expect(notice(page)).toHaveText('Translating captions into Spanish…');
+
+  // Back to the recording's own captions, then the Spanish request fails
+  await pick(page, 'العربية', hasTouch);
+  await page.waitForTimeout(4000);
+  await expect(captions(page)).toContainText(FIRST_LINE);
+  await noNoticeAbout(page, 'Spanish');
+
+  // French still works
+  await pick(page, 'French', hasTouch);
+  await expect(captions(page)).toContainText(`[fr] ${FIRST_LINE}`);
 });
 
 test('going back to a language mid-translation picks up where it was', async ({ page, hasTouch }) => {

@@ -59,13 +59,19 @@ const clearCues = (track) => {
   while (track.cues.length > 0) track.removeCue(track.cues[0]);
 };
 
+// Shown for a line still being translated: never the original language,
+// which would look like the captions switched back on their own
+const PLACEHOLDER = '…';
+
 // Adds machine translated caption languages to the CC menu. A selected
-// language shows the original lines right away and swaps each one for its
-// translation as soon as it is ready, starting from where the viewer is.
+// language shows each line as soon as its translation is ready, starting
+// from where the viewer is, and "…" for the lines still on their way.
+// While it gets ready the other translations wait in the menu.
 // Resolves once the languages are in the menu
 const setupCaptionTranslation = (videojsPlayer, {
   label,
   locale,
+  waitLabel = () => '',
   onFailed,
   onHidden,
   onPreparing,
@@ -93,6 +99,13 @@ const setupCaptionTranslation = (videojsPlayer, {
   // The language whose failure just turned captions back to the original,
   // so the notice saying so stays
   let failed = null;
+  // Translated tracks and their languages, once in the menu
+  const tracks = new Map();
+  // The language being prepared: until its first lines are ready the other
+  // translations cannot be picked, since switching meanwhile starts and
+  // stops work in the background and slows everything down. Captions off
+  // and the recording's own captions stay available
+  let preparing = null;
   const recordId = storage.metadata ? storage.metadata.id : '';
 
   // Fetched right away so it is ready when a language is picked
@@ -113,6 +126,36 @@ const setupCaptionTranslation = (videojsPlayer, {
   const refreshDisplay = () => {
     const display = videojsPlayer.getChild('textTrackDisplay');
     if (display && typeof display.updateDisplay === 'function') display.updateDisplay();
+  };
+
+  const lockMenu = () => {
+    const button = videojsPlayer.controlBar && videojsPlayer.controlBar.getChild('subsCapsButton');
+    if (!button || !Array.isArray(button.items)) return;
+
+    button.items.forEach(item => {
+      if (!item.track || !tracks.has(item.track)) return;
+
+      const element = item.el();
+      if (preparing && item.track !== preparing) {
+        item.disable();
+        element.setAttribute('title', waitLabel(tracks.get(preparing).name));
+      } else {
+        item.enable();
+        element.removeAttribute('title');
+      }
+      item.toggleClass('vjs-caption-preparing', item.track === preparing);
+    });
+  };
+
+  const setPreparing = (track) => {
+    if (preparing === track) return;
+
+    preparing = track;
+    lockMenu();
+  };
+
+  const doneWith = (track) => {
+    if (preparing === track) setPreparing(null);
   };
 
   const showSourceTrack = () => {
@@ -183,11 +226,11 @@ const setupCaptionTranslation = (videojsPlayer, {
         : null));
       memory.set(language, { count, texts: results });
 
-      // Saved lines show translated at once, the rest show the original
+      // Saved lines show translated at once, the rest as "…"
       clearCues(track);
       let pending = [];
       cues.forEach((cue, index) => {
-        const vttCue = createCue(track, { ...cue, text: results[index] ?? cue.text });
+        const vttCue = createCue(track, { ...cue, text: results[index] ?? PLACEHOLDER });
         track.addCue(vttCue);
         if (results[index] === null) pending.push({ cue, index, vttCue });
       });
@@ -195,9 +238,11 @@ const setupCaptionTranslation = (videojsPlayer, {
 
       if (pending.length === 0) {
         status.delete(language);
+        doneWith(track);
         return;
       }
 
+      if (track.mode === 'showing') setPreparing(track);
       tell(onStart, true);
 
       const translateWith = async (provider) => {
@@ -245,6 +290,7 @@ const setupCaptionTranslation = (videojsPlayer, {
             refreshDisplay();
             if (!announced) {
               announced = true;
+              doneWith(track);
               tell(onReady);
             }
 
@@ -280,6 +326,7 @@ const setupCaptionTranslation = (videojsPlayer, {
       if (videojsPlayer.isDisposed()) return;
       save();
       if (lastError) throw lastError;
+      doneWith(track);
       if (pending.length === 0) status.delete(language);
       // Paused: the lines done so far are saved for when it comes back,
       // which may already be now
@@ -296,6 +343,7 @@ const setupCaptionTranslation = (videojsPlayer, {
       logger.warn('captions', 'translate', language, error);
       started.delete(language);
       status.delete(language);
+      doneWith(track);
 
       // The viewer has moved on to another language: this one tries again
       // when picked again, without disturbing the one on screen
@@ -346,7 +394,6 @@ const setupCaptionTranslation = (videojsPlayer, {
   })).then(options => {
     if (videojsPlayer.isDisposed()) return;
 
-    const tracks = new Map();
     options.filter(Boolean).forEach(({ language, providers: found }) => {
       const name = getLanguageName(locale, language);
       const track = videojsPlayer.addTextTrack('subtitles', `${name} · ${label}`, language);
@@ -355,11 +402,24 @@ const setupCaptionTranslation = (videojsPlayer, {
 
     if (tracks.size === 0) return;
 
+    // The menu is rebuilt whenever tracks change; the lock goes on again
+    const button = videojsPlayer.controlBar && videojsPlayer.controlBar.getChild('subsCapsButton');
+    if (button && typeof button.update === 'function') {
+      const update = button.update.bind(button);
+      button.update = (...args) => {
+        const result = update(...args);
+        lockMenu();
+        return result;
+      };
+    }
+
     // Each switch shows only the picked language's own notice: the one
     // left behind keeps working quietly
     let current = null;
     videojsPlayer.textTracks().addEventListener('change', () => {
       const showing = [...tracks.keys()].find(track => track.mode === 'showing') || null;
+      // Off or the original captions: the language being prepared pauses
+      if (preparing && preparing !== showing) setPreparing(null);
       if (showing === current) return;
 
       const previous = current;

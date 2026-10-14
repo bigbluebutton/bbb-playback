@@ -122,5 +122,6 @@
   "player.tab.transcript": "Texto",
   "player.tab.bookmarks": "Marcadores",
   "button.more.aria": "Más opciones",
-  "player.bookmark.action": "Marcar"
+  "player.bookmark.action": "Marcar",
+  "player.captions.wait": "Disponible cuando los subtítulos en {language} estén listos"
 }

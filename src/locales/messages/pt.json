@@ -122,5 +122,6 @@
   "player.tab.transcript": "Transcrição",
   "player.tab.bookmarks": "Marcadores",
   "button.more.aria": "Mais opções",
-  "player.bookmark.action": "Marcar"
+  "player.bookmark.action": "Marcar",
+  "player.captions.wait": "Disponível quando as legendas em {language} estiverem prontas"
 }

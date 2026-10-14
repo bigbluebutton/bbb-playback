@@ -122,5 +122,6 @@
   "player.tab.transcript": "Transkript",
   "player.tab.bookmarks": "Lesezeichen",
   "button.more.aria": "Weitere Optionen",
-  "player.bookmark.action": "Merken"
+  "player.bookmark.action": "Merken",
+  "player.captions.wait": "Verfügbar, sobald die Untertitel auf {language} bereit sind"
 }

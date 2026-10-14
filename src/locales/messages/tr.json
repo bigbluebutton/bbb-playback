@@ -122,5 +122,6 @@
   "player.tab.transcript": "Metin",
   "player.tab.bookmarks": "Yer imleri",
   "button.more.aria": "Diğer seçenekler",
-  "player.bookmark.action": "Yer imi ekle"
+  "player.bookmark.action": "Yer imi ekle",
+  "player.captions.wait": "{language} altyazılar hazır olunca kullanılabilir"
 }

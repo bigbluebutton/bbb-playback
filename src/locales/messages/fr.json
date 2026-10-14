@@ -122,5 +122,6 @@
   "player.tab.transcript": "Texte",
   "player.tab.bookmarks": "Signets",
   "button.more.aria": "Plus d’options",
-  "player.bookmark.action": "Marquer"
+  "player.bookmark.action": "Marquer",
+  "player.captions.wait": "Disponible dès que les sous-titres en {language} sont prêts"
 }

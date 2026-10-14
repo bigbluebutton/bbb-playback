@@ -122,5 +122,6 @@
   "player.tab.transcript": "Trascrizione",
   "player.tab.bookmarks": "Segnalibri",
   "button.more.aria": "Altre opzioni",
-  "player.bookmark.action": "Segnalibro"
+  "player.bookmark.action": "Segnalibro",
+  "player.captions.wait": "Disponibile quando i sottotitoli in {language} sono pronti"
 }

@@ -122,5 +122,6 @@
   "player.tab.transcript": "Текст",
   "player.tab.bookmarks": "Закладки",
   "button.more.aria": "Інші дії",
-  "player.bookmark.action": "У закладки"
+  "player.bookmark.action": "У закладки",
+  "player.captions.wait": "Буде доступно, коли субтитри ({language}) будуть готові"
 }

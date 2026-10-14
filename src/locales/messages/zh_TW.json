@@ -122,5 +122,6 @@
   "player.tab.transcript": "逐字稿",
   "player.tab.bookmarks": "書籤",
   "button.more.aria": "更多選項",
-  "player.bookmark.action": "加入書籤"
+  "player.bookmark.action": "加入書籤",
+  "player.captions.wait": "{language}字幕準備好後即可選擇"
 }

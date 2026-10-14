@@ -122,5 +122,6 @@
   "player.tab.transcript": "스크립트",
   "player.tab.bookmarks": "북마크",
   "button.more.aria": "추가 옵션",
-  "player.bookmark.action": "북마크"
+  "player.bookmark.action": "북마크",
+  "player.captions.wait": "{language} 자막이 준비되면 선택할 수 있습니다"
 }

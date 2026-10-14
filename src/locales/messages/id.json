@@ -122,5 +122,6 @@
   "player.tab.transcript": "Transkrip",
   "player.tab.bookmarks": "Penanda",
   "button.more.aria": "Opsi lainnya",
-  "player.bookmark.action": "Tandai"
+  "player.bookmark.action": "Tandai",
+  "player.captions.wait": "Tersedia setelah teks {language} siap"
 }

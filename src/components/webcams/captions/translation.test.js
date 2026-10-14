@@ -246,6 +246,89 @@ describe('caption translation', () => {
     expect(callbacks.onStart).toHaveBeenLastCalledWith('Spanish');
   });
 
+  it('shows "…" for lines still on their way, never the original language', async () => {
+    getProviders.mockReturnValue([createProvider(['es'], () => new Promise(() => {}))]);
+    const player = createPlayer();
+    await setupCaptionTranslation(player, createCallbacks());
+
+    player.select('es');
+    await flush();
+    await flush();
+
+    const texts = player.track('es').cues.map(cue => cue.text);
+    expect(texts.length).toBeGreaterThan(0);
+    expect(texts.every(text => text === '…')).toBe(true);
+  });
+
+  it('keeps the other translations waiting in the menu until one is ready', async () => {
+    let finish;
+    const translate = jest.fn((texts) => new Promise((resolve) => {
+      finish = () => resolve(texts.map(text => `es:${text}`));
+    }));
+    getProviders.mockReturnValue([createProvider(['es', 'fr'], translate)]);
+    const player = createPlayer();
+    const items = [];
+    const button = { items, update: () => {} };
+    player.controlBar = { getChild: (name) => (name === 'subsCapsButton' ? button : null) };
+    await setupCaptionTranslation(player, { ...createCallbacks(), waitLabel: (language) => `wait ${language}` });
+
+    // A menu item per track, as video.js builds them
+    player.textTracks().forEach(track => {
+      const element = document.createElement('li');
+      items.push({
+        disabled: false,
+        el: () => element,
+        enable() { this.disabled = false; },
+        disable() { this.disabled = true; },
+        toggleClass: (name, on) => element.classList.toggle(name, on),
+        track,
+      });
+    });
+    const item = (language) => items.find(entry => entry.track.language === language);
+
+    player.select('es');
+    await flush();
+    await flush();
+    expect(item('fr').disabled).toBe(true);
+    expect(item('fr').el().getAttribute('title')).toBe('wait Spanish');
+    expect(item('ar').disabled).toBe(false);
+    expect(item('es').el().classList.contains('vjs-caption-preparing')).toBe(true);
+
+    finish();
+    await flush();
+    await flush();
+    expect(item('fr').disabled).toBe(false);
+    expect(item('fr').el().hasAttribute('title')).toBe(false);
+    expect(item('es').el().classList.contains('vjs-caption-preparing')).toBe(false);
+  });
+
+  it('frees the menu when captions are turned off while a language gets ready', async () => {
+    getProviders.mockReturnValue([createProvider(['es', 'fr'], () => new Promise(() => {}))]);
+    const player = createPlayer();
+    const items = [];
+    player.controlBar = { getChild: () => ({ items, update: () => {} }) };
+    await setupCaptionTranslation(player, createCallbacks());
+    player.textTracks().forEach(track => {
+      const element = document.createElement('li');
+      items.push({
+        disabled: false,
+        el: () => element,
+        enable() { this.disabled = false; },
+        disable() { this.disabled = true; },
+        toggleClass: () => {},
+        track,
+      });
+    });
+
+    player.select('es');
+    await flush();
+    await flush();
+    expect(items.find(entry => entry.track.language === 'fr').disabled).toBe(true);
+
+    player.select(null);
+    expect(items.find(entry => entry.track.language === 'fr').disabled).toBe(false);
+  });
+
   it('carries on with the next provider when one fails', async () => {
     const broken = createProvider(['es'], jest.fn(() => Promise.reject(new Error('stalled'))));
     const server = createProvider(['es'], async (texts) => texts.map(text => `server:${text}`));

@@ -418,6 +418,42 @@ $big-play-button-size: 2em;
   }
 }
 
+// CC menu while a translation gets ready: the other translations wait
+// (greyed out) and the language being prepared shows a spinner
+.video-js .vjs-subs-caps-button .vjs-menu-item.vjs-disabled {
+  cursor: not-allowed;
+  opacity: .45;
+
+  &:hover {
+    background-color: transparent;
+  }
+}
+
+.video-js .vjs-subs-caps-button .vjs-caption-preparing .vjs-menu-item-text::after {
+  animation: vjs-caption-spin .8s linear infinite;
+  border: 2px solid currentColor;
+  border-inline-end-color: transparent;
+  border-radius: 50%;
+  content: '';
+  display: inline-block;
+  height: .65em;
+  margin-inline-start: .5em;
+  vertical-align: -.05em;
+  width: .65em;
+}
+
+@keyframes vjs-caption-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .video-js .vjs-subs-caps-button .vjs-caption-preparing .vjs-menu-item-text::after {
+    animation-duration: 2.4s;
+  }
+}
+
 // Caption settings: a card with a header in the brand gradient instead of
 // video.js' grey full-page panel. The title comes from data-title, set by
 // the player in the viewer's language

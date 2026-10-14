@@ -122,5 +122,6 @@
   "player.tab.transcript": "النص",
   "player.tab.bookmarks": "الإشارات",
   "button.more.aria": "مزيد من الخيارات",
-  "player.bookmark.action": "حفظ اللحظة"
+  "player.bookmark.action": "حفظ اللحظة",
+  "player.captions.wait": "متاح بعد أن تصبح التعليقات باللغة {language} جاهزة"
 }

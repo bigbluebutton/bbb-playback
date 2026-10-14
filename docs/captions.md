@@ -59,13 +59,22 @@ server runs on your own machine.
 
 ### Switching languages
 
-Picking another language in the CC menu shows it at once: its lines
-translated so far, the original for the rest, and only its own notice. The
-language left behind pauses after the line it is on and keeps what it has
-translated, so picking it again carries on from there. It never changes what
-is on screen: if it fails meanwhile, it simply tries again when picked
-again. One limit: with the in-browser models a language pack that is already
-downloading finishes first, since the browser loads one at a time.
+A picked language shows each line as soon as its translation is ready,
+starting from where the viewer is, and "…" for lines still on their way. It
+never shows the original language in their place.
+
+While a language gets ready (until its first lines are translated), the
+other translations wait, greyed out in the CC menu with a spinner on the
+language being prepared. Switching meanwhile would start and stop work in
+the background and slow everything down. Captions off and the recording's
+own captions stay available, and turning captions off frees the menu at
+once.
+
+Once a language is ready, switching is free: the language left behind
+pauses after the line it is on and keeps what it has translated, so
+picking it again carries on from there. It never changes what is on
+screen. If the language on screen cannot be translated, the captions go
+back to the original with a notice saying so.
 
 ## Setting it up
 

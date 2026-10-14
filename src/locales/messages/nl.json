@@ -122,5 +122,6 @@
   "player.tab.transcript": "Transcript",
   "player.tab.bookmarks": "Bladwijzers",
   "button.more.aria": "Meer opties",
-  "player.bookmark.action": "Bladwijzer"
+  "player.bookmark.action": "Bladwijzer",
+  "player.captions.wait": "Beschikbaar zodra de ondertiteling in het {language} klaar is"
 }
