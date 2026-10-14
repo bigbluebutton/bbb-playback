@@ -115,5 +115,10 @@
   "player.about.modal.content.videos": "Vídeos compartidos",
   "player.about.modal.content.notes": "Notas compartidas",
   "player.about.modal.content.screenshare": "Pantalla compartida",
-  "player.about.modal.content.captions": "Subtítulos"
+  "player.about.modal.content.captions": "Subtítulos",
+  "player.tab.chat": "Chat",
+  "player.tab.notes": "Notas",
+  "player.tab.chapters": "Capítulos",
+  "player.tab.transcript": "Texto",
+  "player.tab.bookmarks": "Marcadores"
 }

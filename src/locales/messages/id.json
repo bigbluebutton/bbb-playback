@@ -115,5 +115,10 @@
   "player.about.modal.content.videos": "Video bersama",
   "player.about.modal.content.notes": "Catatan bersama",
   "player.about.modal.content.screenshare": "Berbagi layar",
-  "player.about.modal.content.captions": "Teks"
+  "player.about.modal.content.captions": "Teks",
+  "player.tab.chat": "Obrolan",
+  "player.tab.notes": "Catatan",
+  "player.tab.chapters": "Bab",
+  "player.tab.transcript": "Transkrip",
+  "player.tab.bookmarks": "Penanda"
 }

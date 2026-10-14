@@ -32,3 +32,23 @@ for (const locale of ['en', 'ar']) {
     await expectCentered(button, slides);
   });
 }
+
+for (const locale of ['en', 'ar', 'de']) {
+  test(`the side panel tabs show their names in full (${locale})`, async ({ page }) => {
+    await page.goto(`${RECORDING}?locale=${locale}`);
+    const labels = page.locator('.application-icon-label');
+    await expect(labels.first()).toBeVisible();
+
+    const cut = await labels.evaluateAll(spans => spans
+      .filter(span => span.scrollWidth > span.clientWidth + 1 || span.textContent.trim() === '')
+      .map(span => span.textContent));
+    expect(cut).toEqual([]);
+  });
+}
+
+test('each side panel tab is a button named by its label', async ({ page }) => {
+  await page.goto(`${RECORDING}?locale=en`);
+  for (const name of ['Chat', 'Notes', 'Transcript', 'Bookmarks']) {
+    await expect(page.getByRole('button', { name, exact: true })).toBeVisible();
+  }
+});

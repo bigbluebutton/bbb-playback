@@ -115,5 +115,10 @@
   "player.about.modal.content.videos": "Gedeelde video’s",
   "player.about.modal.content.notes": "Gedeelde notities",
   "player.about.modal.content.screenshare": "Scherm delen",
-  "player.about.modal.content.captions": "Ondertiteling"
+  "player.about.modal.content.captions": "Ondertiteling",
+  "player.tab.chat": "Chat",
+  "player.tab.notes": "Notities",
+  "player.tab.chapters": "Hoofdstukken",
+  "player.tab.transcript": "Transcript",
+  "player.tab.bookmarks": "Bladwijzers"
 }

@@ -9,6 +9,7 @@ import { ID } from 'utils/constants';
 import layout from 'utils/layout';
 import './index.scss';
 
+// Full names, shown as tooltips
 const intlMessages = defineMessages({
   [ID.CHAT]: {
     id: 'button.chat.aria',
@@ -32,6 +33,30 @@ const intlMessages = defineMessages({
   },
 });
 
+// Short names shown under each icon
+const tabMessages = defineMessages({
+  [ID.CHAT]: {
+    id: 'player.tab.chat',
+    description: 'Short name under the chat tab icon',
+  },
+  [ID.NOTES]: {
+    id: 'player.tab.notes',
+    description: 'Short name under the shared notes tab icon',
+  },
+  [ID.CHAPTERS]: {
+    id: 'player.tab.chapters',
+    description: 'Short name under the chapters tab icon',
+  },
+  [ID.TRANSCRIPT]: {
+    id: 'player.tab.transcript',
+    description: 'Short name under the transcript tab icon',
+  },
+  [ID.BOOKMARKS]: {
+    id: 'player.tab.bookmarks',
+    description: 'Short name under the bookmarks tab icon',
+  },
+});
+
 const ICONS = {
   [ID.BOOKMARKS]: 'bookmark',
   [ID.CHAPTERS]: 'chapters',
@@ -51,19 +76,23 @@ const Control = ({
     <div className="application-control">
       {applications.map(application => {
         const active = current === application;
-        const label = intl.formatMessage(intlMessages[application]);
+        const name = intl.formatMessage(intlMessages[application]);
+        const label = intl.formatMessage(tabMessages[application]);
 
+        // The visible name is the button's name; the full one is a tooltip
         return (
           <button
-            aria-label={label}
             aria-pressed={active}
             className={cx('application-icon', { inactive: !active })}
             key={application}
             onClick={() => active ? null : toggleApplication(application)}
-            title={label}
+            title={name}
             type="button"
           >
-            <Icon name={ICONS[application] || application} />
+            <span className="application-icon-glyph" aria-hidden="true">
+              <Icon name={ICONS[application] || application} />
+            </span>
+            <span className="application-icon-label">{label}</span>
           </button>
         );
       })}

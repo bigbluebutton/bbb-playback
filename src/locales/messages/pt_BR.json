@@ -115,5 +115,10 @@
   "player.about.modal.content.videos": "Vídeos compartilhados",
   "player.about.modal.content.notes": "Notas compartilhadas",
   "player.about.modal.content.screenshare": "Compartilhamento de tela",
-  "player.about.modal.content.captions": "Legendas"
+  "player.about.modal.content.captions": "Legendas",
+  "player.tab.chat": "Bate-papo",
+  "player.tab.notes": "Notas",
+  "player.tab.chapters": "Capítulos",
+  "player.tab.transcript": "Transcrição",
+  "player.tab.bookmarks": "Favoritos"
 }

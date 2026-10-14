@@ -115,5 +115,10 @@
   "player.about.modal.content.videos": "ویدیوهای اشتراکی",
   "player.about.modal.content.notes": "یادداشت‌های اشتراکی",
   "player.about.modal.content.screenshare": "اشتراک صفحه",
-  "player.about.modal.content.captions": "زیرنویس‌ها"
+  "player.about.modal.content.captions": "زیرنویس‌ها",
+  "player.tab.chat": "گفتگو",
+  "player.tab.notes": "یادداشت‌ها",
+  "player.tab.chapters": "فصل‌ها",
+  "player.tab.transcript": "متن",
+  "player.tab.bookmarks": "نشانک‌ها"
 }

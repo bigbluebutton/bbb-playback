@@ -115,5 +115,10 @@
   "player.about.modal.content.videos": "Общие видео",
   "player.about.modal.content.notes": "Общие заметки",
   "player.about.modal.content.screenshare": "Демонстрация экрана",
-  "player.about.modal.content.captions": "Субтитры"
+  "player.about.modal.content.captions": "Субтитры",
+  "player.tab.chat": "Чат",
+  "player.tab.notes": "Заметки",
+  "player.tab.chapters": "Главы",
+  "player.tab.transcript": "Текст",
+  "player.tab.bookmarks": "Закладки"
 }

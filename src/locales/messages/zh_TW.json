@@ -115,5 +115,10 @@
   "player.about.modal.content.videos": "共享影片",
   "player.about.modal.content.notes": "共享筆記",
   "player.about.modal.content.screenshare": "螢幕分享",
-  "player.about.modal.content.captions": "字幕"
+  "player.about.modal.content.captions": "字幕",
+  "player.tab.chat": "聊天",
+  "player.tab.notes": "筆記",
+  "player.tab.chapters": "章節",
+  "player.tab.transcript": "逐字稿",
+  "player.tab.bookmarks": "書籤"
 }

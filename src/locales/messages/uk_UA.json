@@ -115,5 +115,10 @@
   "player.about.modal.content.videos": "Спільні відео",
   "player.about.modal.content.notes": "Спільні нотатки",
   "player.about.modal.content.screenshare": "Демонстрація екрана",
-  "player.about.modal.content.captions": "Субтитри"
+  "player.about.modal.content.captions": "Субтитри",
+  "player.tab.chat": "Чат",
+  "player.tab.notes": "Нотатки",
+  "player.tab.chapters": "Розділи",
+  "player.tab.transcript": "Текст",
+  "player.tab.bookmarks": "Закладки"
 }

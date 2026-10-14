@@ -22,24 +22,26 @@
     box-sizing: border-box;
     display: flex;
     flex-direction: row-reverse;
-    gap: $margin-small;
-    padding: $padding-small;
+    gap: .15rem;
+    padding: .4rem .3rem;
 
+    // Icon with its name below; each tab takes the room its name needs
     .application-icon {
       align-items: center;
       background: none;
       border: none;
-      border-radius: 999px;
+      border-radius: .8rem;
       box-sizing: border-box;
       color: var(--application-control-color);
       display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
       font-family: inherit;
-      font-size: large;
-      font-weight: var(--font-weight-semi-bold);
+      gap: .2rem;
       justify-content: center;
+      min-width: 0;
       outline: none;
-      overflow: hidden;
-      padding: $padding-small $padding;
+      padding: .4rem .3rem .35rem;
       transition:
         background-color var(--transition-duration) ease,
         box-shadow var(--transition-duration) ease,
@@ -50,6 +52,23 @@
       }
     }
 
+    .application-icon-glyph {
+      display: flex;
+      font-size: large;
+      line-height: 1;
+    }
+
+    .application-icon-label {
+      font-size: .68rem;
+      letter-spacing: -.01em;
+      font-weight: var(--font-weight-semi-bold);
+      line-height: 1.2;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
     // Selected panel: gradient pill
     .application-icon:not(.inactive) {
       background: var(--accent-gradient);
@@ -57,14 +76,22 @@
       color: var(--white);
     }
 
+    // Muted rather than faded, so the names keep enough contrast
     .inactive {
+      color: var(--muted-content-color);
       cursor: pointer;
-      opacity: .7;
 
       &:hover {
         background-color: var(--accent-soft);
-        opacity: 1;
+        color: var(--accent-text-color);
       }
     }
+  }
+}
+
+// Short screens narrow the side section
+@media (min-width: $media-min-width) and (max-height: $media-max-height) {
+  .application .application-control .application-icon-label {
+    font-size: .6rem;
   }
 }

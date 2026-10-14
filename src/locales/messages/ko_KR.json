@@ -115,5 +115,10 @@
   "player.about.modal.content.videos": "공유 동영상",
   "player.about.modal.content.notes": "공유 노트",
   "player.about.modal.content.screenshare": "화면 공유",
-  "player.about.modal.content.captions": "자막"
+  "player.about.modal.content.captions": "자막",
+  "player.tab.chat": "채팅",
+  "player.tab.notes": "노트",
+  "player.tab.chapters": "챕터",
+  "player.tab.transcript": "스크립트",
+  "player.tab.bookmarks": "북마크"
 }

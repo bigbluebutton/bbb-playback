@@ -115,5 +115,10 @@
   "player.about.modal.content.videos": "Shared videos",
   "player.about.modal.content.notes": "Shared notes",
   "player.about.modal.content.screenshare": "Screen sharing",
-  "player.about.modal.content.captions": "Captions"
+  "player.about.modal.content.captions": "Captions",
+  "player.tab.chat": "Chat",
+  "player.tab.notes": "Notes",
+  "player.tab.chapters": "Chapters",
+  "player.tab.transcript": "Transcript",
+  "player.tab.bookmarks": "Bookmarks"
 }

@@ -115,5 +115,10 @@
   "player.about.modal.content.videos": "共有動画",
   "player.about.modal.content.notes": "共有メモ",
   "player.about.modal.content.screenshare": "画面共有",
-  "player.about.modal.content.captions": "字幕"
+  "player.about.modal.content.captions": "字幕",
+  "player.tab.chat": "チャット",
+  "player.tab.notes": "メモ",
+  "player.tab.chapters": "チャプター",
+  "player.tab.transcript": "文字起こし",
+  "player.tab.bookmarks": "ブックマーク"
 }

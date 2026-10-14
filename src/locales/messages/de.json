@@ -115,5 +115,10 @@
   "player.about.modal.content.videos": "Geteilte Videos",
   "player.about.modal.content.notes": "Geteilte Notizen",
   "player.about.modal.content.screenshare": "Bildschirmfreigabe",
-  "player.about.modal.content.captions": "Untertitel"
+  "player.about.modal.content.captions": "Untertitel",
+  "player.tab.chat": "Chat",
+  "player.tab.notes": "Notizen",
+  "player.tab.chapters": "Kapitel",
+  "player.tab.transcript": "Transkript",
+  "player.tab.bookmarks": "Lesezeichen"
 }

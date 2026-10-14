@@ -115,5 +115,10 @@
   "player.about.modal.content.videos": "साझा वीडियो",
   "player.about.modal.content.notes": "साझा नोट्स",
   "player.about.modal.content.screenshare": "स्क्रीन शेयरिंग",
-  "player.about.modal.content.captions": "कैप्शन"
+  "player.about.modal.content.captions": "कैप्शन",
+  "player.tab.chat": "चैट",
+  "player.tab.notes": "नोट्स",
+  "player.tab.chapters": "अध्याय",
+  "player.tab.transcript": "ट्रांसक्रिप्ट",
+  "player.tab.bookmarks": "बुकमार्क"
 }

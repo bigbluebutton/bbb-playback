@@ -115,5 +115,10 @@
   "player.about.modal.content.videos": "الفيديوهات المشتركة",
   "player.about.modal.content.notes": "الملاحظات المشتركة",
   "player.about.modal.content.screenshare": "مشاركة الشاشة",
-  "player.about.modal.content.captions": "التعليقات"
+  "player.about.modal.content.captions": "التعليقات",
+  "player.tab.chat": "الدردشة",
+  "player.tab.notes": "الملاحظات",
+  "player.tab.chapters": "الفصول",
+  "player.tab.transcript": "النص",
+  "player.tab.bookmarks": "الإشارات"
 }
