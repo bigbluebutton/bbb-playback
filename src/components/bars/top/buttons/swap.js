@@ -1,10 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
 import {
   defineMessages,
   useIntl,
 } from 'react-intl';
-import Button from 'components/utils/button';
 import { controls as config } from 'config';
 import { ID } from 'utils/constants';
 import layout from 'utils/layout';
@@ -16,26 +13,18 @@ const intlMessages = defineMessages({
   },
 });
 
-const propTypes = { toggleSwap: PropTypes.func, hidePresentation: PropTypes.bool };
-
-const defaultProps = { toggleSwap: () => { }, hidePresentation: false };
-
-const Swap = ({ toggleSwap, hidePresentation }) => {
+// "Swap content", for the top bar's More menu
+const useSwapItem = ({ toggleSwap, hidePresentation }) => {
   const intl = useIntl();
 
   if (!layout.control || !config.swap || layout.single || hidePresentation) return null;
 
-  return (
-    <Button
-      aria={intl.formatMessage(intlMessages.swap)}
-      circle
-      handleOnClick={toggleSwap}
-      icon={ID.SWAP}
-    />
-  );
+  return {
+    icon: ID.SWAP,
+    key: 'swap',
+    label: intl.formatMessage(intlMessages.swap),
+    onSelect: toggleSwap,
+  };
 };
 
-Swap.propTypes = propTypes;
-Swap.defaultProps = defaultProps;
-
-export default Swap;
+export default useSwapItem;

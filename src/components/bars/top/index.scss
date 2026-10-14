@@ -196,6 +196,135 @@
   }
 }
 
+// The top bar's action (bookmark this moment): a white pill with its name,
+// standing out from the icon buttons on the gradient
+.top-bar .action-button {
+  align-items: center;
+  background-color: var(--white);
+  border: none;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px -4px rgba(60, 0, 50, .45);
+  // Brand pink dark enough to read on white, in both themes
+  color: rgb(194, 19, 145);
+  cursor: pointer;
+  display: inline-flex;
+  flex-shrink: 0;
+  font-family: inherit;
+  font-size: .82rem;
+  font-weight: var(--font-weight-bold);
+  gap: .4rem;
+  height: 2.15rem;
+  margin-inline: $margin-small;
+  outline: none;
+  padding-block: 0;
+  padding-inline: .7rem .95rem;
+  transition:
+    background-color var(--transition-duration) ease,
+    box-shadow var(--transition-duration) ease,
+    transform var(--transition-duration) ease;
+  white-space: nowrap;
+
+  &:hover {
+    background-color: rgb(255, 240, 251);
+    box-shadow: 0 6px 16px -4px rgba(60, 0, 50, .5);
+  }
+
+  &:active {
+    transform: scale(.97);
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 2px var(--accent-color), 0 0 0 4px var(--white);
+  }
+}
+
+.top-bar .action-button-icon {
+  display: flex;
+  font-size: 1rem;
+}
+
+// More menu button, highlighted while its menu is open
+.top-bar .more-wrapper .button.active {
+  background-color: var(--top-bar-active-background-color);
+}
+
+// The More menu, drawn on the page under the top bar
+.top-bar-menu {
+  animation: top-bar-menu-enter var(--transition-duration) ease-out;
+  background-color: var(--secondary-background-color);
+  border: 1px solid var(--border-color);
+  border-radius: .9rem;
+  box-shadow: 0 16px 40px -12px rgba(15, 23, 42, .45);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+  max-width: calc(100vw - 1rem);
+  min-width: 15rem;
+  padding: .35rem;
+  position: fixed;
+  z-index: 10;
+}
+
+.top-bar-menu-item {
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: .6rem;
+  color: var(--secondary-content-color);
+  cursor: pointer;
+  display: flex;
+  font-family: inherit;
+  font-size: .9rem;
+  font-weight: var(--font-weight-semi-bold);
+  gap: .7rem;
+  outline: none;
+  padding: .6rem .75rem;
+  text-align: start;
+  width: 100%;
+
+  &:hover,
+  &:focus-visible {
+    background-color: var(--accent-soft);
+    color: var(--accent-text-color);
+  }
+
+  &:focus-visible {
+    box-shadow: inset 0 0 0 $focus-ring-width var(--focus-ring-color);
+  }
+}
+
+.top-bar-menu-icon {
+  align-items: center;
+  background-color: var(--accent-soft);
+  border-radius: 50%;
+  color: var(--accent-text-color);
+  display: flex;
+  flex-shrink: 0;
+  font-size: 1rem;
+  height: 2rem;
+  justify-content: center;
+  width: 2rem;
+}
+
+@keyframes top-bar-menu-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-.35rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .top-bar-menu {
+    animation: none;
+  }
+}
+
 // Watched share of the recording: conic ring and percentage
 .top-bar .watch-progress {
   align-items: center;
@@ -241,5 +370,24 @@
 @media (max-width: $media-min-width) {
   .top-bar .meta {
     display: none;
+  }
+
+  // Phones: the action keeps its white circle, without the name
+  .top-bar .action-button {
+    justify-content: center;
+    margin-inline: $margin-extra-small;
+    padding: 0;
+    width: 2.15rem;
+  }
+
+  .top-bar .action-button-label {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
   }
 }

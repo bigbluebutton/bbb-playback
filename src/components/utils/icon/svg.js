@@ -45,6 +45,13 @@ const PATHS = {
       <path d="M5 21h14" />
     </>
   ),
+  more: (
+    <>
+      <circle cx="5" cy="12" r="1" fill="currentColor" />
+      <circle cx="12" cy="12" r="1" fill="currentColor" />
+      <circle cx="19" cy="12" r="1" fill="currentColor" />
+    </>
+  ),
   keyboard: (
     <>
       <rect x="2" y="5" width="20" height="14" rx="2" />

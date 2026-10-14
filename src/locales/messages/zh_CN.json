@@ -120,5 +120,7 @@
   "player.tab.notes": "笔记",
   "player.tab.chapters": "章节",
   "player.tab.transcript": "文字稿",
-  "player.tab.bookmarks": "书签"
+  "player.tab.bookmarks": "书签",
+  "button.more.aria": "更多选项",
+  "player.bookmark.action": "添加书签"
 }

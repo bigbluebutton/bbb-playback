@@ -120,5 +120,7 @@
   "player.tab.notes": "Notlar",
   "player.tab.chapters": "Bölümler",
   "player.tab.transcript": "Metin",
-  "player.tab.bookmarks": "Yer imleri"
+  "player.tab.bookmarks": "Yer imleri",
+  "button.more.aria": "Diğer seçenekler",
+  "player.bookmark.action": "Yer imi ekle"
 }

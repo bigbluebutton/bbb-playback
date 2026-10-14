@@ -120,5 +120,7 @@
   "player.tab.notes": "नोट्स",
   "player.tab.chapters": "अध्याय",
   "player.tab.transcript": "ट्रांसक्रिप्ट",
-  "player.tab.bookmarks": "बुकमार्क"
+  "player.tab.bookmarks": "बुकमार्क",
+  "button.more.aria": "और विकल्प",
+  "player.bookmark.action": "बुकमार्क"
 }

@@ -120,5 +120,7 @@
   "player.tab.notes": "الملاحظات",
   "player.tab.chapters": "الفصول",
   "player.tab.transcript": "النص",
-  "player.tab.bookmarks": "الإشارات"
+  "player.tab.bookmarks": "الإشارات",
+  "button.more.aria": "مزيد من الخيارات",
+  "player.bookmark.action": "حفظ اللحظة"
 }

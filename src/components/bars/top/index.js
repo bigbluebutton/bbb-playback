@@ -4,10 +4,11 @@ import Progress from './progress';
 import Status from './status';
 import Title from './title';
 import BookmarkButton from './buttons/bookmark';
+import MoreButton from './buttons/more';
 import SearchButton from './buttons/search';
 import SectionButton from './buttons/section';
-import ShareButton from './buttons/share';
-import SwapButton from './buttons/swap';
+import useShareItem from './buttons/share';
+import useSwapItem from './buttons/swap';
 import ThemeButton from './buttons/theme';
 import { ID } from 'utils/constants';
 import './index.scss';
@@ -34,6 +35,10 @@ const Top = ({
   toggleSwap,
   hidePresentation,
 }) => {
+  // Less used actions, named, in the More menu
+  const shareItem = useShareItem();
+  const swapItem = useSwapItem({ toggleSwap, hidePresentation });
+  const moreItems = [shareItem, swapItem].filter(Boolean);
 
   return (
     <header className="top-bar">
@@ -48,10 +53,9 @@ const Top = ({
         <Status />
         <Progress />
         <BookmarkButton />
-        <ShareButton />
         <SearchButton openSearch={() => openModal(ID.SEARCH)} />
-        <SwapButton toggleSwap={toggleSwap} hidePresentation={hidePresentation} />
         <ThemeButton />
+        <MoreButton items={moreItems} />
       </div>
     </header>
   );

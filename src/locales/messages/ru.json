@@ -120,5 +120,7 @@
   "player.tab.notes": "Заметки",
   "player.tab.chapters": "Главы",
   "player.tab.transcript": "Текст",
-  "player.tab.bookmarks": "Закладки"
+  "player.tab.bookmarks": "Закладки",
+  "button.more.aria": "Другие действия",
+  "player.bookmark.action": "В закладки"
 }

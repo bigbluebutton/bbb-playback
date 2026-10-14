@@ -120,5 +120,7 @@
   "player.tab.notes": "Notities",
   "player.tab.chapters": "Hoofdstukken",
   "player.tab.transcript": "Transcript",
-  "player.tab.bookmarks": "Bladwijzers"
+  "player.tab.bookmarks": "Bladwijzers",
+  "button.more.aria": "Meer opties",
+  "player.bookmark.action": "Bladwijzer"
 }

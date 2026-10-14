@@ -120,5 +120,7 @@
   "player.tab.notes": "یادداشت‌ها",
   "player.tab.chapters": "فصل‌ها",
   "player.tab.transcript": "متن",
-  "player.tab.bookmarks": "نشانک‌ها"
+  "player.tab.bookmarks": "نشانک‌ها",
+  "button.more.aria": "گزینه‌های بیشتر",
+  "player.bookmark.action": "نشانک"
 }

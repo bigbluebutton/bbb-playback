@@ -120,5 +120,7 @@
   "player.tab.notes": "Notas",
   "player.tab.chapters": "Capítulos",
   "player.tab.transcript": "Texto",
-  "player.tab.bookmarks": "Marcadores"
+  "player.tab.bookmarks": "Marcadores",
+  "button.more.aria": "Más opciones",
+  "player.bookmark.action": "Marcar"
 }

@@ -120,5 +120,7 @@
   "player.tab.notes": "Notizen",
   "player.tab.chapters": "Kapitel",
   "player.tab.transcript": "Transkript",
-  "player.tab.bookmarks": "Lesezeichen"
+  "player.tab.bookmarks": "Lesezeichen",
+  "button.more.aria": "Weitere Optionen",
+  "player.bookmark.action": "Merken"
 }

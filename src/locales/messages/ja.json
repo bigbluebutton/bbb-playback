@@ -120,5 +120,7 @@
   "player.tab.notes": "メモ",
   "player.tab.chapters": "チャプター",
   "player.tab.transcript": "文字起こし",
-  "player.tab.bookmarks": "ブックマーク"
+  "player.tab.bookmarks": "ブックマーク",
+  "button.more.aria": "その他のオプション",
+  "player.bookmark.action": "ブックマーク"
 }

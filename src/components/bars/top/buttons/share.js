@@ -1,9 +1,7 @@
-import React from 'react';
 import {
   defineMessages,
   useIntl,
 } from 'react-intl';
-import Button from 'components/utils/button';
 import { controls as config } from 'config';
 import {
   buildTimeURL,
@@ -51,7 +49,8 @@ const copy = (text) => {
   return copyWithFallback(text);
 };
 
-const Share = () => {
+// "Copy link at current time", for the top bar's More menu
+const useShareItem = () => {
   const intl = useIntl();
 
   if (!layout.control || config.share === false) return null;
@@ -68,14 +67,12 @@ const Share = () => {
     });
   };
 
-  return (
-    <Button
-      aria={intl.formatMessage(intlMessages.share)}
-      circle
-      handleOnClick={handleShare}
-      icon="link"
-    />
-  );
+  return {
+    icon: 'link',
+    key: 'share',
+    label: intl.formatMessage(intlMessages.share),
+    onSelect: handleShare,
+  };
 };
 
-export default Share;
+export default useShareItem;

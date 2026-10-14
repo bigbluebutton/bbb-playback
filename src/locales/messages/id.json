@@ -120,5 +120,7 @@
   "player.tab.notes": "Catatan",
   "player.tab.chapters": "Bab",
   "player.tab.transcript": "Transkrip",
-  "player.tab.bookmarks": "Penanda"
+  "player.tab.bookmarks": "Penanda",
+  "button.more.aria": "Opsi lainnya",
+  "player.bookmark.action": "Tandai"
 }

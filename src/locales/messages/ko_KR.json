@@ -120,5 +120,7 @@
   "player.tab.notes": "노트",
   "player.tab.chapters": "챕터",
   "player.tab.transcript": "스크립트",
-  "player.tab.bookmarks": "북마크"
+  "player.tab.bookmarks": "북마크",
+  "button.more.aria": "추가 옵션",
+  "player.bookmark.action": "북마크"
 }
