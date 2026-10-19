@@ -29,7 +29,7 @@ const Content = ({
 
   const { showScreenshare } = useLayoutSwap();
 
-  if (layout.single || hidePresentation) return null;
+  if (layout.single) return null;
 
   const isTldrawWhiteboard = isTldraw();
 
@@ -49,8 +49,10 @@ const Content = ({
     presentation = <Presentation />;
   }
 
+  // Hidden rather than unmounted while the presentation is minimized:
+  // remounting would start a new screenshare player out of sync
   return (
-    <div className={cx('content', { 'swapped-content': swap })}>
+    <div className={cx('content', { 'swapped-content': swap, 'hidden-content': hidePresentation })}>
       <FullscreenButton
         content={LAYOUT.CONTENT}
         fullscreen={fullscreen}
