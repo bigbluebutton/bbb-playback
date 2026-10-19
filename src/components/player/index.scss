@@ -17,12 +17,14 @@ $player-wrapper-padding: $control-bar-height;
   width: 100%;
 }
 
+// Narrow screens only show the first column, and single content places the
+// media in the content area: move that area into the first column
 .single-content {
   grid-template-areas:
-    "top-bar content"
-    "application content"
-    "application content"
-    "bottom-bar content";
+    "top-bar media"
+    "content media"
+    "application media"
+    "bottom-bar media";
 }
 
 .hidden-section {
@@ -35,6 +37,12 @@ $player-wrapper-padding: $control-bar-height;
 }
 
 .fullscreen-content {
+  // Explicit, so fullscreen still shows the content area in single content
+  grid-template-areas:
+    "top-bar content"
+    "media content"
+    "application content"
+    "bottom-bar content";
   grid-template-columns: 0% auto;
   grid-template-rows: 0% auto auto 0%;
 }
