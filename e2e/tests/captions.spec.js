@@ -160,9 +160,11 @@ test('empty lines inside a caption leave no sliver of box', async ({ page, hasTo
   }));
   await open(page);
 
-  // One box, one line of text: an empty line would add a box fragment
+  // One box, one line of text: an empty line would add a line of box.
+  // Lines are counted by their position, since text in two directions on
+  // one line comes as several pieces in Firefox
   const lineBoxes = () => page.locator('.vjs-text-track-cue > div').evaluateAll(
-    boxes => boxes.map(box => box.getClientRects().length),
+    boxes => boxes.map(box => new Set([...box.getClientRects()].map(rect => Math.round(rect.top))).size),
   );
 
   await pick(page, 'العربية', hasTouch);

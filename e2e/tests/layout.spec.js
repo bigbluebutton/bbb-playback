@@ -35,9 +35,13 @@ for (const locale of ['en', 'ar']) {
   test(`the loading spinner is in the middle of the slides (${locale})`, async ({ page }) => {
     await page.goto(`${RECORDING}?locale=${locale}`);
     await expect(page.locator('#webcams .vjs-big-play-button')).toBeVisible();
-    // Shown the way video.js does while it waits for data
-    await page.locator('#webcams .video-js').evaluate(element => element.classList.add('vjs-waiting'));
+    // Shown directly: whether video.js shows it depends on the video's state,
+    // and some test browsers cannot play the test video
     const spinner = page.locator('#webcams .vjs-loading-spinner');
+    await spinner.evaluate((element) => {
+      element.style.display = 'block';
+      element.style.visibility = 'visible';
+    });
     await expect(spinner).toBeVisible();
 
     const slides = page.locator('.top-content');
