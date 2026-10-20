@@ -331,8 +331,8 @@ describe('caption translation', () => {
 
   it('carries on with the next provider when one fails', async () => {
     const broken = createProvider(['es'], jest.fn(() => Promise.reject(new Error('stalled'))));
-    const server = createProvider(['es'], async (texts) => texts.map(text => `server:${text}`));
-    getProviders.mockReturnValue([broken, server]);
+    const next = createProvider(['es'], async (texts) => texts.map(text => `next:${text}`));
+    getProviders.mockReturnValue([broken, next]);
     const player = createPlayer();
     const callbacks = createCallbacks();
     await setupCaptionTranslation(player, callbacks);
@@ -341,7 +341,7 @@ describe('caption translation', () => {
     await flush();
     await flush();
 
-    expect(player.track('es').cues.every(cue => cue.text.startsWith('server:'))).toBe(true);
+    expect(player.track('es').cues.every(cue => cue.text.startsWith('next:'))).toBe(true);
     expect(callbacks.onFailed).not.toHaveBeenCalled();
   });
 

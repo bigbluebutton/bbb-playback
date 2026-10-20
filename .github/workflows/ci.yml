@@ -35,9 +35,6 @@ jobs:
         env:
           CI: true
 
-      - name: Test the translation gateway
-        run: python3 -m unittest discover -s translate -v
-
       - name: Build
         run: npm run build
         env:

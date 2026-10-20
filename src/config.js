@@ -1,15 +1,13 @@
 const captions = {
-  // Offer the recording captions in other languages, translated on demand,
-  // by the first of these that handles the language: Chrome's built-in
-  // on-device translator, the LibreTranslate server at `url` (optional, see
-  // translate/), and open models run in the viewer's browser (`local`)
+  // Offer the recording captions in other languages, translated on demand
+  // in the viewer's browser, by the first of these that handles the
+  // language: Chrome's built-in on-device translator, then open models run
+  // in the browser (`local`)
   translate: {
     enabled: true,
-    key: null,
     // Start downloading the viewer's language pack on their first click
     preload: true,
     languages: ['ar', 'de', 'en', 'es', 'fa', 'fr', 'hi', 'id', 'it', 'ja', 'ko', 'nl', 'pt', 'ru', 'tr', 'uk', 'ur', 'zh'],
-    url: '/playback/translate',
     // Works in every browser with nothing to install. Models download once
     // from `models` (about 110 MB per language, cached by the browser)
     local: {

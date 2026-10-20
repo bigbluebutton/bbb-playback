@@ -32,12 +32,9 @@ computers, phones and tablets. Besides the recording's own captions it
 offers them translated into 18 languages, remembers the viewer's choice and
 explains what it is doing while a translation starts.
 
-Translation works without any setup, in the viewer's browser. For a fast
-start in every browser, and in Safari especially, install the translation
-server on the BigBlueButton server:
-```
-sudo ./translate/install.sh
-```
+Translation happens in the viewer's browser (Chrome's built-in translator,
+or open models in every other browser), with nothing to install on the
+server.
 
 How it works, setup, troubleshooting and tests: [docs/captions.md](docs/captions.md).
 
@@ -117,12 +114,8 @@ When no URL is provided, the dev server starts normally without any proxy.
     translated when the viewer selects one
     - `enabled`: [`true`|`false`]
     - `languages`: languages to offer, besides the viewer's own language
-    - `url`: an optional LibreTranslate server, the fastest option on every
-      device. Defaults to `/playback/translate`; see
-      [translate/](translate/README.md) to install it
     - `local`: translation in the viewer's browser with open models, used
-      when neither Chrome's built-in translator nor the server handles a
-      language. Works in every browser with nothing to install; models
+      when Chrome's built-in translator does not handle a language. Works in every browser with nothing to install; models
       download once from `models` (about 110 MB per language) and stay in the
       browser cache. Phones and tablets get the languages with small models
       (ar, de, en, es, fr, hi, id, it, nl, pt, ru, uk, zh); computers get all
@@ -130,7 +123,6 @@ When no URL is provided, the dev server starts normally without any proxy.
       - `enabled`: [`true`|`false`]
       - `library`: transformers.js build to load
       - `models`: where models download from (a mirror can be set here)
-    - `key`: optional LibreTranslate API key sent to `url`
     - `preload`: with the browser translator, start downloading the viewer's
       language pack on their first click [`true`|`false`]
 

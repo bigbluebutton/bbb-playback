@@ -12,9 +12,10 @@ how to check and troubleshoot it.
   same everywhere, including right-to-left languages.
 - **The recording's captions** in every language they were recorded in.
 - **Translated captions**: the CC menu also lists other languages, marked
-  "auto-translated". Picking one shows the original lines at once and swaps
-  each line for its translation as it arrives, starting from where the viewer
-  is watching.
+  "auto-translated". Picking one shows each line as soon as its translation
+  arrives, starting from where the viewer is watching. Translation happens
+  in the viewer's browser: nothing to install on the server, and captions
+  never leave the viewer's device.
 - **Clear notices** while a translation starts: "Translating captions into
   Spanish…", the download progress when the browser needs a translation
   model, "Getting Spanish captions ready…" while it prepares, and "Spanish
@@ -32,30 +33,25 @@ the slides, clear of the side panel.
 
 The player uses the first of these translators that handles the language,
 and moves on to the next one if a translator stalls or fails, keeping the
-lines already translated:
+lines already translated. Both run on the viewer's device:
 
-| Translator | Where it runs | Browsers | Speed to the first line |
-|---|---|---|---|
-| Chrome's built-in translator | The viewer's device | Desktop Chrome | About a second (a short language download the first time) |
-| LibreTranslate server (optional) | Your server | All | About a second |
-| Open translation models | The viewer's device | All | Chrome, Edge, Firefox: a few seconds, plus the model download the first time (about a minute on a typical connection); Safari: 2 to 4 minutes |
+| Translator | Browsers | Speed to the first line |
+|---|---|---|
+| Chrome's built-in translator | Desktop Chrome | About a second (a short language download the first time) |
+| Open translation models | All | Chrome, Edge, Firefox: a few seconds, plus the model download the first time (about a minute on a typical connection); Safari: 2 to 4 minutes |
 
 The open models are downloaded once (about 110 MB per language, 230 MB when
-a pair goes through English) and kept in the browser cache. Safari is slow
-with them because its engine needs minutes to prepare a model on every
-visit. **For Safari, iPhone and iPad viewers, install the server.**
+a pair goes through English) and kept in the browser cache. Safari is slower
+with them because its engine needs a minute or two to prepare a model on
+every visit; the player says so while it waits.
 
 Languages offered (set in `captions.translate.languages`):
 
-- With the server: all 18 configured languages, on every device.
-- Without it, on phones and tablets: Arabic, Chinese, Dutch, English,
-  French, German, Hindi, Indonesian, Italian, Portuguese, Russian, Spanish
-  and Ukrainian.
-- Without it, on computers: all of them (Persian, Japanese, Korean, Turkish
-  and Urdu use a larger, 630 MB model).
-
-Captions never leave the viewer's device unless the server is used, and the
-server runs on your own machine.
+- On phones and tablets: Arabic, Chinese, Dutch, English, French, German,
+  Hindi, Indonesian, Italian, Portuguese, Russian, Spanish and Ukrainian.
+- On computers: all 18 configured languages (Persian, Japanese, Korean,
+  Turkish and Urdu use a larger, 630 MB model).
+- In desktop Chrome, also whatever its built-in translator offers.
 
 ### Switching languages
 
@@ -70,11 +66,6 @@ the background and slow everything down. Captions off and the recording's
 own captions stay available, and turning captions off frees the menu at
 once.
 
-The translation server holds viewers to the same rule
-(`translate/gateway.py`, see [translate/README.md](../translate/README.md)),
-so a viewer, or a script, cannot keep it busy with several languages at
-once; the player waits and tries again when it says so.
-
 Once a language is ready, switching is free: the language left behind
 pauses after the line it is on and keeps what it has translated, so
 picking it again carries on from there. It never changes what is on
@@ -83,43 +74,27 @@ back to the original with a notice saying so.
 
 ## Setting it up
 
-1. **Deploy the player** on the BigBlueButton server, from the repository:
+Deploy the player on the BigBlueButton server, from the repository:
 
-   ```sh
-   ./deploy.sh
-   ```
+```sh
+./deploy.sh
+```
 
-   It builds the player, copies it to `/var/bigbluebutton/playback/presentation/2.3`
-   and installs the nginx routes.
-
-2. **Install the translation server** (recommended; needed for a fast
-   experience in Safari):
-
-   ```sh
-   sudo ./translate/install.sh
-   ```
-
-   It needs about 4 GB of free RAM and 10 GB of disk, and uses Docker when
-   it is installed (otherwise a system service). It starts LibreTranslate,
-   waits for its language models to download, adds the `/playback/translate`
-   route to nginx and checks it.
-   See [translate/README.md](../translate/README.md) for languages and for
-   running it on another machine.
-
-3. **Check it** from any computer:
-
-   ```sh
-   curl -s https://<your server>/playback/translate/languages
-   ```
-
-   It should print a list of languages. Then open a recording with captions
-   in Safari and pick a translated language: the first line should change
-   within a second or two.
+It builds the player, copies it to `/var/bigbluebutton/playback/presentation/2.3`
+and installs the nginx routes. Translation needs nothing else on the server.
 
 Viewers' browsers download the in-browser models from `cdn.jsdelivr.net`
 (the translation library) and `huggingface.co` (the models). If those are
-blocked for your viewers, install the server, or set `captions.translate.local`
-in `src/config.js` to a mirror (see the README's Configuration section).
+blocked for your viewers, set `captions.translate.local` in `src/config.js`
+to a mirror (see the README's Configuration section).
+
+Servers where an earlier version of this player installed its translation
+server (LibreTranslate) can remove it, freeing about 4 GB of memory and
+3 GB of disk:
+
+```sh
+sudo ./scripts/remove-translation-server.sh
+```
 
 ## Files
 
@@ -129,26 +104,24 @@ in `src/config.js` to a mirror (see the README's Configuration section).
 | `src/components/webcams/captions/index.js` | Sets up the CC menu: translation, then the remembered language |
 | `src/components/webcams/captions/translation.js` | Adds the translated languages and translates the picked one, line by line, with fallback between translators |
 | `src/components/webcams/captions/preference.js` | Remembers and restores the caption language |
-| `src/utils/captions/translators.js` | The translators (Chrome's, the server) and their order |
+| `src/utils/captions/translators.js` | The translators (Chrome's, the in-browser models) and their order |
 | `src/utils/captions/local.js` | The in-browser translator: which models for which languages and devices, and the background worker |
 | `public/translation-worker.js` | The background worker that runs the open models |
 | `src/utils/captions/cache.js` | Saved translations (Cache API) |
 | `src/utils/captions/vtt.js` | Reads caption files and orders lines from where the viewer is |
 | `src/components/webcams/index.scss` | Caption placement and style |
 | `src/locales/messages/*.json` | Notices and labels in 19 languages (`player.captions.*`) |
-| `translate/` | The LibreTranslate server: `install.sh`, `docker-compose.yml`, `translate.nginx`, and the gateway in front of it (`gateway.py`, `install-gateway.sh`, tests in `test_gateway.py`) |
+| `scripts/remove-translation-server.sh` | Removes the translation server earlier versions installed |
 
 ## Troubleshooting
 
 | What you see | Why | What to do |
 |---|---|---|
 | No CC button | The recording has no captions, or the server still runs an old player | Check the recording has `captions.json` and `caption_*.vtt`; deploy the player again |
-| The CC menu lists only the recording's languages | Old player, or the browser blocks the model hosts and the server is missing | Deploy the player; install the server |
-| Translation is slow to start in Safari | Safari prepares in-browser models for minutes | Install the server |
-| "Couldn't translate captions into …" | Every translator failed (no network, blocked hosts, server down) | Check `https://<server>/playback/translate/languages`; with `?debug` in the recording URL, the browser console says which translator failed and why |
-| `/playback/translate/languages` shows a web page | The nginx route is not installed | Run `sudo ./translate/install.sh` |
-| `/playback/translate/languages` answers 502 | The server is not running | Docker: `cd translate && sudo docker compose up -d`; service: `sudo systemctl restart bbb-playback-translate` |
-| Some languages are missing on phones | Without the server, phones only get languages with small models | Install the server |
+| The CC menu lists only the recording's languages | Old player, or the browser blocks the model hosts | Deploy the player; check that viewers reach `cdn.jsdelivr.net` and `huggingface.co`, or set a mirror |
+| Translation is slow to start in Safari | Safari prepares in-browser models for a minute or two on each visit | Expected; the notice says so. Chrome, Edge and Firefox start in seconds |
+| "Couldn't translate captions into …" | Every translator failed (no network, blocked hosts, not enough memory) | With `?debug` in the recording URL, the browser console says which translator failed and why |
+| Some languages are missing on phones | Phones only get languages with small models | Expected; computers get all of them |
 
 Translations are saved per browser. To start one over, clear the site's data
 in the browser, or open the recording in a private window.
@@ -157,15 +130,16 @@ in the browser, or open the recording in a private window.
 
 Unit tests cover the translation flow (translator order and fallback,
 notices, pausing and resuming a language), the in-browser translator and its
-worker, the server client, the remembered language and the caption files:
+worker, the remembered language and the caption files:
 
 ```sh
 npm test
 ```
 
 Browser tests open a small Arabic-captioned recording
-(`e2e/fixtures`) through a local server (`e2e/server.js`) with a stand-in
-translation server, and check the CC button, recording and translated
+(`e2e/fixtures`) through a local server (`e2e/server.js`), with a stand-in
+for Chrome's translator (`e2e/fake-translator.js`), and check the CC button,
+recording and translated
 captions, switching languages, the remembered language, caption placement
 and a right-to-left interface:
 

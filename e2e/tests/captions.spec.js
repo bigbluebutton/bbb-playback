@@ -1,18 +1,18 @@
 // The CC button and caption translation, on every device project. The
-// fixture recording has Arabic captions; the test server translates into
-// English, Spanish and French by marking each line, e.g. "[es] مرحبا"
+// fixture recording has Arabic captions; a stand-in for Chrome's translator
+// translates into English, Spanish and French by marking each line, e.g.
+// "[es] مرحبا" (fake-translator.js)
 const { expect, test } = require('@playwright/test');
+const { useFakeTranslator } = require('../fake-translator');
 
 const RECORDING = '/playback/presentation/2.3/e2e0000000000000000000000000000000000000-1700000000000';
 const FIRST_LINE = 'مرحبا بكم جميعا في درس اليوم.';
 const CC = 'button.vjs-subs-caps-button';
 
-// Chrome's built-in translator differs between builds and machines; the
-// tests use the translation server, as every other browser does
+// Chrome's built-in translator differs between builds and machines, and
+// the in-browser models download hundreds of MB: the tests use a stand-in
 test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    delete window.Translator;
-  });
+  await useFakeTranslator(page);
 });
 
 const press = async (locator, isMobile) => (isMobile ? locator.tap() : locator.click());
@@ -77,10 +77,9 @@ test('the caption language is remembered for the next visit', async ({ page, has
 });
 
 test('turning captions off closes a translation notice', async ({ page, hasTouch }) => {
-  // A slow server keeps the notice up
-  await page.route('**/playback/translate/translate', async (route) => {
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    await route.continue().catch(() => {});
+  // A slow translation keeps the notice up
+  await page.addInitScript(() => {
+    window.fakeTranslator.delay.es = 3000;
   });
   await open(page);
   await pick(page, 'Spanish', hasTouch);

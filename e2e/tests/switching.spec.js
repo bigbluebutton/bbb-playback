@@ -2,16 +2,14 @@
 // behind is still doing (translating, failing, its notice) must not disturb
 // the language just picked
 const { expect, test } = require('@playwright/test');
+const { IN_BROWSER_MODELS, useFakeTranslator } = require('../fake-translator');
 
 const RECORDING = '/playback/presentation/2.3/e2e0000000000000000000000000000000000000-1700000000000';
 const FIRST_LINE = 'مرحبا بكم جميعا في درس اليوم.';
 const CC = 'button.vjs-subs-caps-button';
-const TRANSLATE = '**/playback/translate/translate';
 
 test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    delete window.Translator;
-  });
+  await useFakeTranslator(page);
 });
 
 const press = async (locator, hasTouch) => (hasTouch ? locator.tap() : locator.click());
@@ -32,24 +30,18 @@ const notice = (page) => page.locator('.toast-message');
 // No notice about these languages, whether another one shows or none
 const noNoticeAbout = (page, text) => expect(page.locator('.toast-message', { hasText: text })).toHaveCount(0);
 
-const target = (route) => {
-  try {
-    return JSON.parse(route.request().postData() || '{}').target;
-  } catch (error) {
-    return null;
-  }
-};
-
-// Delays (or fails) the server's answers for one language only
+// Slows down (or fails) the translation of one language only, before the
+// page loads or while it runs
 const holdLanguage = async (page, language, { delay = 4000, fail = false } = {}) => {
-  await page.route(TRANSLATE, async (route) => {
-    if (target(route) !== language) return route.fallback();
-
-    await new Promise(resolve => setTimeout(resolve, delay));
-    if (fail) return route.fulfill({ status: 500, body: '{"error":"down"}' }).catch(() => {});
-
-    return route.fallback().catch(() => {});
-  });
+  const hold = ([code, wait, broken]) => {
+    window.fakeTranslator.delay[code] = wait;
+    if (broken) window.fakeTranslator.fail[code] = true;
+  };
+  if (page.url() === 'about:blank') {
+    await page.addInitScript(hold, [language, delay, fail]);
+  } else {
+    await page.evaluate(hold, [language, delay, fail]);
+  }
 };
 
 test('a language that is ready replaces the notice of the one left behind', async ({ page, hasTouch }) => {
@@ -114,7 +106,7 @@ test('turning captions off while a language gets ready frees the menu', async ({
 
 test('a language left behind that fails does not take over', async ({ page, hasTouch }) => {
   await holdLanguage(page, 'es', { delay: 2500, fail: true });
-  await page.route(/cdn\.jsdelivr\.net|huggingface\.co/, route => route.abort());
+  await page.route(IN_BROWSER_MODELS, route => route.abort());
   await open(page);
   await pick(page, 'Spanish', hasTouch);
   await expect(notice(page)).toHaveText('Translating captions into Spanish…');
@@ -158,7 +150,7 @@ test('switching quickly back and forth ends on the last language picked', async 
 test('a language that fails on screen says so and goes back to the original', async ({ page, hasTouch }) => {
   await holdLanguage(page, 'es', { delay: 500, fail: true });
   // And the in-browser models, tried after the server
-  await page.route(/cdn\.jsdelivr\.net|huggingface\.co/, route => route.abort());
+  await page.route(IN_BROWSER_MODELS, route => route.abort());
   await open(page);
   await pick(page, 'Spanish', hasTouch);
 
@@ -166,31 +158,4 @@ test('a language that fails on screen says so and goes back to the original', as
   await expect(notice(page)).toContainText("Couldn't translate", { timeout: 15000 });
   await expect(captions(page)).toContainText(FIRST_LINE);
   await expect(captions(page)).not.toContainText('[es]');
-});
-
-test('the player waits when the server holds the language, then translates', async ({ page, hasTouch }) => {
-  // The server's gateway answers "wait" to the first requests
-  let held = 0;
-  let viewer = null;
-  await page.route(TRANSLATE, async (route) => {
-    viewer = route.request().headers()['x-playback-viewer'];
-    if (held < 2) {
-      held += 1;
-      return route.fulfill({
-        body: '{"error":"Another language is being prepared"}',
-        contentType: 'application/json',
-        headers: { 'Retry-After': '1' },
-        status: 409,
-      });
-    }
-
-    return route.fallback();
-  });
-  await open(page);
-  await pick(page, 'Spanish', hasTouch);
-
-  await expect(captions(page)).toContainText(`[es] ${FIRST_LINE}`, { timeout: 15000 });
-  expect(held).toBe(2);
-  expect(viewer).toMatch(/^[0-9a-f]{24}$/);
-  await noNoticeAbout(page, "Couldn't translate");
 });

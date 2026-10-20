@@ -1,9 +1,8 @@
 // Serves what the browser tests need, like a BigBlueButton server would:
 //   /playback/presentation/2.3/  the built player (npm run build)
 //   /presentation/<id>/          the fixture recordings in e2e/fixtures
-//   /playback/translate/         a stand-in LibreTranslate server that
-//                                marks each line with its language, e.g.
-//                                "[es] مرحبا"
+// Translation is done by a stand-in for Chrome's translator in the page
+// (fake-translator.js)
 const fs = require('fs');
 const http = require('http');
 const path = require('path');
@@ -13,8 +12,6 @@ const ROOT = path.resolve(__dirname, '..');
 const PLAYER = '/playback/presentation/2.3';
 const BUILD = path.join(ROOT, 'build');
 const FIXTURES = path.join(__dirname, 'fixtures');
-
-const LANGUAGES = ['ar', 'en', 'es', 'fr'];
 
 const TYPES = {
   '.css': 'text/css',
@@ -53,31 +50,6 @@ const sendFile = (request, response, file) => {
   fs.createReadStream(file).pipe(response);
 };
 
-const sendJSON = (response, status, body) => {
-  response.writeHead(status, { 'Content-Type': 'application/json' });
-  response.end(JSON.stringify(body));
-};
-
-const translate = (request, response) => {
-  let body = '';
-  request.on('data', (chunk) => {
-    body += chunk;
-  });
-  request.on('end', () => {
-    try {
-      const { q, source, target } = JSON.parse(body);
-      if (!LANGUAGES.includes(source) || !LANGUAGES.includes(target)) {
-        sendJSON(response, 400, { error: 'unsupported language' });
-        return;
-      }
-      const mark = (text) => `[${target}] ${text}`;
-      sendJSON(response, 200, { translatedText: Array.isArray(q) ? q.map(mark) : mark(q) });
-    } catch (error) {
-      sendJSON(response, 400, { error: error.message });
-    }
-  });
-};
-
 // Resolves a request path inside a folder, refusing anything outside it
 const inside = (folder, relative) => {
   const file = path.join(folder, decodeURIComponent(relative));
@@ -87,20 +59,6 @@ const inside = (folder, relative) => {
 
 const server = http.createServer((request, response) => {
   const { pathname } = new URL(request.url, `http://localhost:${PORT}`);
-
-  if (pathname === '/playback/translate/languages') {
-    sendJSON(response, 200, LANGUAGES.map(code => ({
-      code,
-      name: code,
-      targets: LANGUAGES.filter(other => other !== code),
-    })));
-    return;
-  }
-
-  if (pathname === '/playback/translate/translate' && request.method === 'POST') {
-    translate(request, response);
-    return;
-  }
 
   if (pathname.startsWith('/presentation/')) {
     const file = inside(path.join(FIXTURES, 'presentation'), pathname.slice('/presentation/'.length));
