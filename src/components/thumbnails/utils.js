@@ -18,7 +18,7 @@ const buildSwapThumbnail = (item, index, arr, screenshare) => {
     }
 
     const previousThumbs = arr.slice(0, index);
-    const restoredSlide = previousThumbs.find((t) => t.src && t.src !== ID.SCREENSHARE);
+    const restoredSlide = previousThumbs.findLast((t) => t.src && t.src !== ID.SCREENSHARE);
 
     // Only add if the restored slide is different from the immediate previous item
     if (restoredSlide?.src && restoredSlide?.src !== previousItem?.src) {
