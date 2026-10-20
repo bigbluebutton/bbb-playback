@@ -90,6 +90,24 @@ const createTldrawImageAsset = (assetId, imageUrl, scaledWidth, scaledHeight) =>
   };
 }
 
+// Match the published counterpart of the upload path accepted by the whiteboard client.
+// The file-uploads directory name is part of the recording format.
+// Must match bbb-file-upload, bbb-shared-notes-server, the bbb-file-upload
+// nginx template, the record-and-playback scripts and bbb-presentation-video.
+const UPLOADED_IMAGE_SRC_PATTERN = /^\/presentation\/[A-Za-z0-9-]+\/(file-uploads\/[a-f0-9-]+\.(?:png|jpe?g|gif|webp))$/;
+const TLDRAW_ASSET_ID_PATTERN = /^asset:[A-Za-z0-9_-]+$/;
+
+const getTldrawImageFilePath = (shape) => {
+  const src = shape?.meta?.bbbImageSrc;
+  const assetId = shape?.props?.assetId;
+
+  if (shape?.type !== 'image' || !src || !assetId) return null;
+  if (typeof src !== 'string') return null;
+  if (!TLDRAW_ASSET_ID_PATTERN.test(assetId)) return null;
+
+  return src.match(UPLOADED_IMAGE_SRC_PATTERN)?.[1] || null;
+};
+
 /**
  * Creates a background shape object for a Tldraw presentation page. The function generates a shape object 
  * with predefined properties suitable for a background image. It takes the asset ID of the image, the current page ID, 
@@ -208,6 +226,7 @@ export {
   getTldrawData,
   getViewBox,
   createTldrawImageAsset,
+  getTldrawImageFilePath,
   createTldrawBackgroundShape,
   createTldrawCursorShape,
   isTldrawWhiteboard,
