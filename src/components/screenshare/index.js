@@ -52,6 +52,7 @@ const Screenshare = () => {
       if (!video) return;
 
       player.screenshare = videojs(video, buildOptions(sources), () => {});
+      player.screenshare.pause();
       logger.debug(ID.SCREENSHARE, 'mounted');
     }
   }, []);
@@ -77,6 +78,7 @@ const Screenshare = () => {
           className="video-js"
           playsInline
           preload="auto"
+          autoPlay
           ref={element}
         />
       </div>
