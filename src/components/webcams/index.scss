@@ -1,12 +1,21 @@
 @import 'src/styles/sizes';
 
 :root {
-  --control-bar-background-color: var(--gray-dark);
+  --control-bar-background-color: rgba(13, 17, 28, .92);
+  --big-play-button-background-color: var(--accent-color);
+  --big-play-button-background: var(--accent-gradient);
+  --big-play-button-color: var(--white);
+  --progress-color: var(--accent-color);
+  --progress-background: var(--accent-gradient);
 }
+
+// Relative to the video.js big play button font size
+$big-play-button-size: 2em;
 
 .webcams-wrapper {
   display: flex;
   height: 100%;
+  position: relative;
   width: 100%;
 }
 
@@ -25,12 +34,91 @@
 }
 
 .video-js .vjs-big-play-button {
+  animation: play-pulse 2.4s ease-out infinite;
+  background: var(--big-play-button-background-color);
+  background: var(--big-play-button-background);
   border: none;
-  border-radius: 0;
-  line-height: 1.65em;
-  left: 50%;
-  top: 50%;
+  border-radius: 50%;
+  box-shadow: 0 10px 30px -6px var(--accent-glow);
+  color: var(--big-play-button-color);
+  height: $big-play-button-size;
+  // The middle of the slides, set by the content area, or of the screen
+  left: var(--stage-center-x, 50%);
+  line-height: $big-play-button-size;
+  margin: 0;
+  top: var(--stage-center-y, 50%);
   transform: translate(-50%, -50%);
+  transition: transform var(--transition-duration) ease, filter var(--transition-duration) ease;
+  width: $big-play-button-size;
+}
+
+.video-js:hover .vjs-big-play-button,
+.video-js .vjs-big-play-button:focus {
+  background: var(--big-play-button-background-color);
+  background: var(--big-play-button-background);
+  filter: brightness(1.1);
+  transform: translate(-50%, -50%) scale(1.06);
+  transition: transform var(--transition-duration) ease, filter var(--transition-duration) ease;
+}
+
+.video-js .vjs-play-progress,
+.video-js .vjs-volume-level {
+  background: var(--progress-color);
+  background: var(--progress-background);
+}
+
+// The loading spinner sits where the play button does: the middle of the
+// slides (set by the content area), or of the screen
+.video-js .vjs-loading-spinner {
+  left: var(--stage-center-x, 50%);
+  margin: 0;
+  top: var(--stage-center-y, 50%);
+  transform: translate(-50%, -50%);
+}
+
+// Inviting pulse around the play button before playback starts
+@keyframes play-pulse {
+  0% {
+    box-shadow: 0 10px 30px -6px var(--accent-glow), 0 0 0 0 rgba(252, 37, 198, .45);
+  }
+
+  70% {
+    box-shadow: 0 10px 30px -6px var(--accent-glow), 0 0 0 .6em rgba(252, 37, 198, 0);
+  }
+
+  100% {
+    box-shadow: 0 10px 30px -6px var(--accent-glow), 0 0 0 0 rgba(252, 37, 198, 0);
+  }
+}
+
+// Thicker timeline with a round handle
+.video-js .vjs-progress-control .vjs-progress-holder {
+  border-radius: 999px;
+  height: .45em;
+  overflow: visible;
+}
+
+.video-js .vjs-progress-control:hover .vjs-progress-holder {
+  font-size: 1.3em;
+}
+
+.video-js .vjs-load-progress,
+.video-js .vjs-play-progress {
+  border-radius: 999px;
+}
+
+.video-js .vjs-load-progress div {
+  border-radius: 999px;
+}
+
+.video-js .vjs-play-progress::before {
+  color: var(--white);
+  filter: drop-shadow(0 0 4px var(--accent-glow));
+}
+
+.video-js .vjs-control:focus-visible {
+  outline: $focus-ring-width solid var(--white);
+  outline-offset: -$focus-ring-width;
 }
 
 .vjs-text-track-display,
@@ -40,7 +128,9 @@
 }
 
 .video-js .vjs-control-bar {
+  backdrop-filter: blur(10px);
   background-color: var(--control-bar-background-color);
+  border-top: 1px solid rgba(255, 255, 255, .06);
   display: flex;
   position: fixed;
   z-index: 1;
@@ -53,7 +143,506 @@
   }
 }
 
+// Captions sit above the thumbnails. vtt.js derives the text size from this
+// box, so its height keeps the captions readable instead of huge
+.video-js .vjs-text-track-display {
+  bottom: calc(#{$control-bar-height} + #{$bottom-bar-height} + #{$bottom-content-height} + #{$margin});
+  height: 50vh;
+  left: 0;
+  pointer-events: none;
+  position: fixed;
+  right: 0;
+  top: auto;
+  width: auto;
+}
+
 [class^="vjs-text-track-cue"] {
-  inset: auto 0 calc(#{$control-bar-height} * 2) 0 !important;
+  inset: auto 0 0 0 !important;
   z-index: 2;
+
+  > div {
+    border-radius: $border-radius;
+    line-height: 1.45;
+    padding: .1em .45em;
+  }
+}
+
+// Slide changes on the timeline
+.vjs-slide-markers {
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;
+}
+
+.vjs-slide-marker {
+  background-color: rgba(255, 255, 255, .55);
+  border-radius: 1px;
+  bottom: 0;
+  margin-left: -1px;
+  position: absolute;
+  top: 0;
+  width: 2px;
+}
+
+// Control bar menus (captions, speed). The webcams player is small, so the
+// video.js size based limits would squeeze long lists like caption languages
+.video-js .vjs-control-bar .vjs-menu-button-popup .vjs-menu {
+  margin-bottom: 0;
+  max-width: calc(100vw - 2em);
+  width: 22em;
+
+  .vjs-menu-content {
+    background-color: rgba(22, 27, 34, .96);
+    border-radius: $border-radius * 1.5;
+    bottom: 3.6em;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .35);
+    font-family: var(--font-family);
+    max-height: min(26em, 60vh);
+    overflow-y: auto;
+    padding: .35em 0;
+  }
+
+  li {
+    font-size: 1.25em;
+    line-height: 1.4;
+    overflow: hidden;
+    padding: .45em 1em;
+    text-align: start;
+    text-overflow: ellipsis;
+    text-transform: none;
+    white-space: nowrap;
+  }
+
+  li.vjs-menu-item:hover,
+  li.vjs-menu-item:focus {
+    background-color: rgba(255, 255, 255, .12);
+  }
+
+  li.vjs-selected,
+  li.vjs-selected:hover,
+  li.vjs-selected:focus {
+    background: var(--accent-gradient);
+    color: var(--white);
+  }
+}
+
+// The speed menu stays compact
+.video-js .vjs-control-bar .vjs-playback-rate .vjs-menu {
+  width: 6em;
+
+  li {
+    text-align: center;
+  }
+}
+
+// Viewer bookmarks on the timeline
+.vjs-bookmark-markers {
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 2;
+}
+
+.vjs-bookmark-marker {
+  background-color: var(--white);
+  border: 2px solid var(--accent-color);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--accent-glow);
+  box-sizing: border-box;
+  height: .7em;
+  margin-left: -.35em;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: .7em;
+}
+
+// Native time tooltips are replaced by the slide preview
+.video-js .vjs-progress-control .vjs-mouse-display,
+.video-js .vjs-progress-control:hover .vjs-mouse-display,
+.video-js .vjs-progress-control .vjs-play-progress .vjs-time-tooltip,
+.video-js .vjs-progress-control:hover .vjs-play-progress .vjs-time-tooltip {
+  display: none;
+}
+
+.timeline-preview {
+  background-color: rgba(13, 17, 28, .94);
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: .75rem;
+  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, .55);
+  color: var(--white);
+  font-family: var(--font-family);
+  opacity: 0;
+  padding: .35rem;
+  pointer-events: none;
+  position: fixed;
+  transform: translateY(4px);
+  transition: opacity .12s ease, transform .12s ease;
+  width: 11rem;
+  z-index: 5;
+
+  &.visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.timeline-preview-image {
+  aspect-ratio: 16 / 9;
+  background-color: var(--white);
+  border-radius: .5rem;
+  overflow: hidden;
+
+  img {
+    display: block;
+    height: 100%;
+    object-fit: contain;
+    width: 100%;
+  }
+
+  &.screenshare {
+    background: var(--accent-gradient);
+
+    img {
+      display: none;
+    }
+  }
+
+  &.hidden {
+    display: none;
+  }
+}
+
+.timeline-preview-title {
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  display: -webkit-box;
+  font-size: .75rem;
+  font-weight: var(--font-weight-semi-bold);
+  line-height: 1.35;
+  overflow: hidden;
+  padding: .4rem .25rem 0;
+  unicode-bidi: plaintext;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.timeline-preview-meta {
+  align-items: center;
+  display: flex;
+  font-size: .72rem;
+  justify-content: space-between;
+  padding: .35rem .25rem .1rem;
+}
+
+.timeline-preview-slide {
+  font-weight: var(--font-weight-semi-bold);
+  opacity: .85;
+}
+
+.timeline-preview-time {
+  background: var(--accent-gradient);
+  border-radius: 999px;
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--font-weight-bold);
+  padding: .05rem .5rem;
+}
+
+// Small phones: the control row only fits the essentials (phones offer
+// picture-in-picture natively)
+@media (max-width: 400px) {
+  .video-js .vjs-picture-in-picture-control {
+    display: none;
+  }
+}
+
+// Tablets and desktops: captions are centred on the slides, clear of the
+// side panel (on the right in right-to-left languages)
+@media (min-width: $media-min-width) {
+  .player-wrapper:not(.single-content):not(.hidden-section):not(.fullscreen-content) .video-js .vjs-text-track-display {
+    inset-inline-start: $section-width;
+  }
+
+  @media (max-height: $media-max-height) {
+    .player-wrapper:not(.single-content):not(.hidden-section):not(.fullscreen-content) .video-js .vjs-text-track-display {
+      inset-inline-start: $section-width-small;
+    }
+  }
+}
+
+// Phones: the play button and the spinner sit on the video instead of the
+// middle of the screen, where they would cover the panel tabs
+@media (max-width: $media-min-width) {
+  .video-js .vjs-big-play-button,
+  .video-js .vjs-loading-spinner {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+  }
+}
+
+// Phones stack the video above the panels, so captions go on the video
+// instead of floating over the chat (the stacked layout ends below 480px)
+@media (max-width: calc(#{$media-min-width} - .02px)) {
+  .player-wrapper:not(.single-content):not(.hidden-section):not(.fullscreen-content) .video-js .vjs-text-track-display {
+    bottom: 0;
+    height: auto;
+    position: absolute;
+    top: 0;
+  }
+}
+
+// Media errors: hidden while the player tries another format, then a card
+// in the middle of the screen instead of video.js' full-page grey dialog
+.vjs-media-retry .vjs-error-display {
+  display: none;
+}
+
+.video-js .vjs-error-display {
+  align-items: center;
+  background: rgba(15, 23, 42, .55);
+  display: flex;
+  justify-content: center;
+  padding: $margin * 2;
+  z-index: 3;
+
+  &::before {
+    display: none;
+  }
+
+  .vjs-modal-dialog-content {
+    background-color: var(--secondary-background-color);
+    border-radius: $border-radius * 2;
+    box-shadow: 0 12px 40px var(--shadow-color);
+    color: var(--secondary-content-color);
+    font-size: 1rem;
+    height: auto;
+    line-height: 1.5;
+    max-width: 28rem;
+    padding: 1.25rem 1.5rem;
+    position: static;
+    text-align: center;
+  }
+}
+
+// CC menu while a translation gets ready: the other translations wait
+// (greyed out) and the language being prepared shows a spinner
+.video-js .vjs-subs-caps-button .vjs-menu-item.vjs-disabled {
+  cursor: not-allowed;
+  opacity: .45;
+
+  &:hover {
+    background-color: transparent;
+  }
+}
+
+.video-js .vjs-subs-caps-button .vjs-caption-preparing .vjs-menu-item-text::after {
+  animation: vjs-caption-spin .8s linear infinite;
+  border: 2px solid currentColor;
+  border-inline-end-color: transparent;
+  border-radius: 50%;
+  content: '';
+  display: inline-block;
+  height: .65em;
+  margin-inline-start: .5em;
+  vertical-align: -.05em;
+  width: .65em;
+}
+
+@keyframes vjs-caption-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .video-js .vjs-subs-caps-button .vjs-caption-preparing .vjs-menu-item-text::after {
+    animation-duration: 2.4s;
+  }
+}
+
+// Caption settings: a card with a header in the brand gradient instead of
+// video.js' grey full-page panel. The title comes from data-title, set by
+// the player in the viewer's language
+.video-js .vjs-text-track-settings {
+  background: var(--secondary-background-color);
+  border-radius: $border-radius * 3;
+  box-shadow: 0 0 0 100vmax rgba(15, 23, 42, .55), 0 24px 60px rgba(0, 0, 0, .35);
+  color: var(--secondary-content-color);
+  font-size: .875rem;
+  height: auto;
+  inset: 50% auto auto 50%;
+  max-height: calc(100% - 2rem);
+  max-width: calc(100vw - 2rem);
+  overflow: auto;
+  padding-top: 3.5rem;
+  transform: translate(-50%, -50%);
+  width: 40rem;
+  z-index: 5;
+
+  // The dialog takes focus when it opens; its controls show the focus
+  &:focus {
+    outline: none;
+  }
+
+  // The screen reader's "end of dialog" text sat below the card and made
+  // it scroll by a few pixels, showing a scroll bar
+  > .vjs-control-text {
+    inset: 0 auto auto 0;
+    margin: 0;
+  }
+
+  &::before {
+    align-items: center;
+    background: var(--accent-gradient);
+    color: #fff;
+    content: attr(data-title);
+    display: flex;
+    font-size: 1.05rem;
+    font-weight: var(--font-weight-bold, 700);
+    height: 3.5rem;
+    inset: 0 0 auto 0;
+    padding-inline: 1.25rem 3.5rem;
+    position: absolute;
+  }
+
+  .vjs-modal-dialog-content {
+    display: grid;
+    gap: .25rem 1.5rem;
+    grid-template-columns: 3fr 2fr;
+    height: auto;
+    padding: 1rem 1.25rem 1.25rem;
+    position: static;
+  }
+
+  .vjs-track-settings-colors,
+  .vjs-track-settings-font {
+    display: block;
+  }
+
+  // Each setting: its name, then its pickers side by side
+  fieldset {
+    align-items: center;
+    border: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin: 0;
+    padding: .5rem 0;
+
+    span {
+      display: contents;
+    }
+  }
+
+  legend {
+    width: 100%;
+  }
+
+  legend {
+    color: var(--secondary-content-color);
+    font-size: .8rem;
+    font-weight: var(--font-weight-bold, 700);
+    letter-spacing: .02em;
+    margin-bottom: .35rem;
+    padding: 0;
+    text-transform: uppercase;
+  }
+
+  select,
+  fieldset span > select {
+    appearance: none;
+    background-color: var(--secondary-highlight-color);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23c21391' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-position: right .6rem center;
+    background-repeat: no-repeat;
+    border: 1px solid var(--border-color);
+    border-radius: $border-radius * 2;
+    color: var(--secondary-content-color);
+    cursor: pointer;
+    flex: 1 1 0;
+    font: inherit;
+    margin: 0;
+    max-width: none;
+    min-height: 2.25rem;
+    min-width: 0;
+    padding-block: .35rem;
+    padding-inline: .7rem 2rem;
+
+    &:hover {
+      border-color: var(--accent-color);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--accent-color);
+      outline-offset: 1px;
+    }
+  }
+
+  .vjs-track-settings-controls {
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: .75rem;
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+    margin-top: .5rem;
+    padding-top: 1rem;
+
+    button {
+      background: none;
+      border: 1px solid var(--accent-text-color);
+      border-radius: 999px;
+      color: var(--accent-text-color);
+      cursor: pointer;
+      font: inherit;
+      font-weight: var(--font-weight-bold, 700);
+      margin: 0;
+      min-height: 2.5rem;
+      padding: 0 1.25rem;
+
+      &:focus-visible {
+        outline: 2px solid var(--accent-color);
+        outline-offset: 2px;
+      }
+    }
+
+    .vjs-done-button {
+      background: var(--accent-gradient);
+      border-color: transparent;
+      box-shadow: 0 6px 16px var(--accent-glow);
+      color: #fff;
+    }
+  }
+
+  .vjs-close-button {
+    color: #fff;
+    height: 2.5rem;
+    inset: .5rem .5rem auto auto;
+    position: absolute;
+    width: 2.5rem;
+    z-index: 2;
+  }
+}
+
+[dir="rtl"] .video-js .vjs-text-track-settings {
+  select,
+  fieldset span > select {
+    background-position: left .6rem center;
+  }
+
+  .vjs-close-button {
+    inset: .5rem auto auto .5rem;
+  }
+}
+
+// Phones: one column
+@media (max-width: $media-min-width) {
+  .video-js .vjs-text-track-settings .vjs-modal-dialog-content {
+    gap: .15rem;
+    grid-template-columns: 1fr;
+    padding: .75rem 1rem 1rem;
+  }
 }

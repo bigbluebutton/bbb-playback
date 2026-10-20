@@ -11,6 +11,7 @@ import { buildFileURL } from 'utils/data';
 import logger from 'utils/logger';
 import storage from 'utils/data/storage';
 import player from 'utils/player';
+import { playFirstWorking } from 'utils/media/fallback';
 import './index.scss';
 
 const intlMessages = defineMessages({
@@ -32,11 +33,10 @@ const buildSources = () => {
   ].filter(source => storage.media.find(m => source.type.includes(m)));
 };
 
-const buildOptions = (sources) => {
+const buildOptions = () => {
   return {
     controls: false,
     fill: true,
-    sources: sources.current,
   };
 };
 
@@ -51,7 +51,9 @@ const Screenshare = () => {
       const video = element.current;
       if (!video) return;
 
-      player.screenshare = videojs(video, buildOptions(sources), () => {});
+      player.screenshare = videojs(video, buildOptions(), () => {});
+      // MP4, then WebM, then WebM decoded in the page (Safari)
+      playFirstWorking(player.screenshare, videojs, sources.current);
       logger.debug(ID.SCREENSHARE, 'mounted');
     }
   }, []);
@@ -69,6 +71,7 @@ const Screenshare = () => {
   return (
     <div
       aria-label={intl.formatMessage(intlMessages.aria)}
+      role="region"
       className={cx('screenshare-wrapper', { inactive: currentContent !== ID.SCREENSHARE })}
       id={ID.SCREENSHARE}
     >

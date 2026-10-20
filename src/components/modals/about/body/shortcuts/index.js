@@ -18,6 +18,18 @@ const SHORTCUTS = [
   'swap',
 ];
 
+// Single key controls, see addPlainShortcuts
+const PLAIN_SHORTCUTS = [
+  { label: 'play', keys: ['Space', 'K'] },
+  { label: 'seek.backward', keys: ['←', 'J'] },
+  { label: 'seek.forward', keys: ['→', 'L'] },
+  { label: 'fullscreen', keys: ['F'] },
+  { label: 'mute', keys: ['M'] },
+  { label: 'speed', keys: ['<', '>'] },
+  { label: 'bookmark', keys: ['B'] },
+  { label: 'help', keys: ['?'] },
+];
+
 const getCode = (shortcut) => {
   const path = shortcut.split('.');
 
@@ -74,36 +86,98 @@ const intlMessages = defineMessages({
     id: 'player.about.modal.shortcuts.swap',
     description: 'Label for the about modal swap shortcut',
   },
+  'mute': {
+    id: 'player.about.modal.shortcuts.mute',
+    description: 'Label for the about modal mute shortcut',
+  },
+  'speed': {
+    id: 'player.about.modal.shortcuts.speed',
+    description: 'Label for the about modal speed shortcut',
+  },
+  'bookmark': {
+    id: 'player.about.modal.shortcuts.bookmark',
+    description: 'Label for the about modal bookmark shortcut',
+  },
+  'help': {
+    id: 'player.about.modal.shortcuts.help',
+    description: 'Label for the about modal help shortcut',
+  },
+  quick: {
+    id: 'player.about.modal.shortcuts.quick',
+    description: 'Heading for the single key shortcuts',
+  },
+  or: {
+    id: 'player.about.modal.shortcuts.or',
+    description: 'Separator between alternative keys',
+  },
 });
+
+// Keys pressed together, joined by "+"
+const Combo = ({ keys }) => (
+  <span className="keys">
+    {keys.map((key, index) => (
+      <React.Fragment key={key}>
+        {index > 0 ? <span className="plus" aria-hidden="true">+</span> : null}
+        <Key code={key} />
+      </React.Fragment>
+    ))}
+  </span>
+);
 
 const Shortcuts = () => {
   const intl = useIntl();
+  const alt = intl.formatMessage(intlMessages.alt);
+  const shift = intl.formatMessage(intlMessages.shift);
 
   return (
-    <div className="body-shortcuts">
-      <div className="title">
+    <section className="body-shortcuts" aria-labelledby="about-shortcuts-title">
+      <h3 className="about-section-title" id="about-shortcuts-title">
         {intl.formatMessage(intlMessages.title)}
-      </div>
-      <div className="list">
-        <div className="content">
-          {SHORTCUTS.map(shortcut => {
-
-            return (
-              <div className="shortcut">
-                <div className="label">
-                  {intl.formatMessage(intlMessages[shortcut])}
-                </div>
-                <div className="keys">
-                  <Key code={intl.formatMessage(intlMessages.alt)} />
-                  <Key code={intl.formatMessage(intlMessages.shift)} />
-                  <Key code={getCode(shortcut)} />
-                </div>
-              </div>
-            );
-          })}
+      </h3>
+      {config.plain !== false ? (
+        <div className="group">
+          <h4 className="group-title">
+            {intl.formatMessage(intlMessages.quick)}
+          </h4>
+          <ul className="list">
+            {PLAIN_SHORTCUTS.map(({ label, keys }) => (
+              <li className="shortcut" key={`plain-${label}`}>
+                <span className="label">
+                  {intl.formatMessage(intlMessages[label])}
+                </span>
+                <span className="keys">
+                  {keys.map((key, index) => (
+                    <React.Fragment key={key}>
+                      {index > 0 ? (
+                        <span className="or">{intl.formatMessage(intlMessages.or)}</span>
+                      ) : null}
+                      <Key code={key} />
+                    </React.Fragment>
+                  ))}
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
+      ) : null}
+      <div className="group">
+        {config.plain !== false ? (
+          <h4 className="group-title">
+            {alt} + {shift}
+          </h4>
+        ) : null}
+        <ul className="list">
+          {SHORTCUTS.map(shortcut => (
+            <li className="shortcut" key={shortcut}>
+              <span className="label">
+                {intl.formatMessage(intlMessages[shortcut])}
+              </span>
+              <Combo keys={[alt, shift, getCode(shortcut)]} />
+            </li>
+          ))}
+        </ul>
       </div>
-    </div>
+    </section>
   );
 };
 

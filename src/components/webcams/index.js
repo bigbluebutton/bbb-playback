@@ -16,15 +16,78 @@ import {
   getFrequency,
   getTime,
 } from 'utils/params';
+import { formatTime } from 'utils/format';
+import { loadVideojsLanguage } from 'utils/videojsLanguage';
+import { playFirstWorking } from 'utils/media/fallback';
+import {
+  getMediaPreferences,
+  saveMediaPreferences,
+} from 'utils/preferences';
 import progress from 'utils/progress';
+import notify, { dismiss } from 'utils/toast';
+import watched from 'utils/watched';
 import storage from 'utils/data/storage';
 import player from 'utils/player';
+import {
+  renderBookmarkMarkers,
+  renderSlideMarkers,
+} from './markers';
+import { attachTimelinePreview } from './preview';
+import setupCaptions from './captions';
 import './index.scss';
 
 const intlMessages = defineMessages({
+  captionSettings: {
+    id: 'player.captions.settings',
+    description: 'Title of the caption settings dialog',
+  },
+  unsupported: {
+    id: 'player.media.unsupported',
+    description: 'Message shown when no format of the recording plays in this browser',
+  },
   aria: {
     id: 'player.webcams.wrapper.aria',
     description: 'Aria label for the webcams wrapper',
+  },
+  resumed: {
+    id: 'player.resume.message',
+    description: 'Message shown when playback resumes where the viewer left off',
+  },
+  restart: {
+    id: 'player.resume.restart',
+    description: 'Button to start the recording from the beginning',
+  },
+  previewSlide: {
+    id: 'player.search.modal.slide',
+    description: 'Slide label in the timeline preview',
+  },
+  autoTranslated: {
+    id: 'player.captions.auto',
+    description: 'Suffix for machine translated caption languages',
+  },
+  translating: {
+    id: 'player.captions.translating',
+    description: 'Message shown while captions are being translated',
+  },
+  translateFailed: {
+    id: 'player.captions.failed',
+    description: 'Message shown when captions could not be translated',
+  },
+  downloading: {
+    id: 'player.captions.downloading',
+    description: 'Message shown while the browser downloads a translation language pack',
+  },
+  preparing: {
+    id: 'player.captions.preparing',
+    description: 'Message shown while a downloaded translation model gets ready',
+  },
+  ready: {
+    id: 'player.captions.ready',
+    description: 'Message shown when translated captions start showing',
+  },
+  wait: {
+    id: 'player.captions.wait',
+    description: 'Tooltip on caption languages that wait while another one gets ready',
   },
 });
 
@@ -69,7 +132,7 @@ const buildOptions = (sources, tracks) => {
   return {
     controlBar: {
       fullscreenToggle: false,
-      pictureInPictureToggle: false,
+      pictureInPictureToggle: !storage.fallback && document.pictureInPictureEnabled === true,
       volumePanel: {
         inline: false,
         vertical: true,
@@ -77,9 +140,14 @@ const buildOptions = (sources, tracks) => {
     },
     controls: true,
     fill: true,
+    html5: {
+      // Safari's native text tracks ignore the `tracks` option (no CC
+      // button) and skip the player's caption styling, so video.js renders
+      // captions itself in every browser
+      nativeTextTracks: false,
+    },
     inactivityTimeout: 0,
     playbackRates: config.rates,
-    sources: sources.current,
     tracks: tracks.current,
     plugins: {
       seekButtons: {
@@ -90,8 +158,46 @@ const buildOptions = (sources, tracks) => {
   };
 };
 
-const dispatchTimeUpdate = (time) => {
-  const event = new CustomEvent(EVENTS.TIME_UPDATE, { detail: { time } });
+// A click or tap outside the caption settings dialog closes it, like the
+// player's other dialogs. That click does nothing else: it does not reach
+// the slides (which would play or pause) or the controls underneath
+const closeOnClickOutside = (videojsPlayer, dialog) => {
+  let closing = false;
+
+  const handleDown = (event) => {
+    closing = false;
+    if (!dialog.opened() || dialog.el().contains(event.target)) return;
+
+    closing = true;
+    event.stopPropagation();
+    dialog.close();
+  };
+
+  // The rest of the same click
+  const swallow = (event) => {
+    if (!closing) return;
+
+    event.stopPropagation();
+    if (event.type === 'click') {
+      event.preventDefault();
+      closing = false;
+    }
+  };
+
+  // Window capture runs before the page's own document listeners
+  window.addEventListener('pointerdown', handleDown, true);
+  window.addEventListener('pointerup', swallow, true);
+  window.addEventListener('click', swallow, true);
+  videojsPlayer.on('dispose', () => {
+    window.removeEventListener('pointerdown', handleDown, true);
+    window.removeEventListener('pointerup', swallow, true);
+    window.removeEventListener('click', swallow, true);
+  });
+};
+
+// `seek` marks updates caused by jumping, not by playing
+const dispatchTimeUpdate = (time, seek = false) => {
+  const event = new CustomEvent(EVENTS.TIME_UPDATE, { detail: { seek, time } });
   document.dispatchEvent(event);
 };
 
@@ -104,12 +210,39 @@ const Webcams = () => {
   const lastProgressSave = useRef(0);
 
   useEffect(() => {
-    if (!player.webcams) {
+    let cancelled = false;
+
+    // Controls are labelled when created, so the translation comes first
+    loadVideojsLanguage(intl.locale).then((language) => {
+      if (cancelled || player.webcams) return;
+
       const video = element.current;
       if (!video) return;
 
-      player.webcams = videojs(video, buildOptions(sources, tracks), () => {
+      const options = buildOptions(sources, tracks);
+      if (language) {
+        videojs.addLanguage(language.code, language.translations);
+        options.language = language.code;
+      }
+
+      player.webcams = videojs(video, options, () => {
         const recordId = storage.metadata.id;
+        watched.load(recordId);
+
+        const preferences = getMediaPreferences(config.rates);
+        if (preferences.volume !== null) player.webcams.volume(preferences.volume);
+        if (preferences.muted) player.webcams.muted(true);
+
+        player.webcams.on('volumechange', () => {
+          saveMediaPreferences({
+            muted: player.webcams.muted(),
+            volume: player.webcams.volume(),
+          });
+        });
+
+        player.webcams.on('ratechange', () => {
+          saveMediaPreferences({ rate: player.webcams.playbackRate() });
+        });
 
         player.webcams.on('play', () => {
           if (interval.current) clearInterval(interval.current);
@@ -118,6 +251,7 @@ const Webcams = () => {
             if (player.webcams && !player.webcams.isDisposed()) {
               const currentTime = player.webcams.currentTime();
               dispatchTimeUpdate(currentTime);
+              watched.track(currentTime, player.webcams.playbackRate());
               const now = Date.now();
               if (now - lastProgressSave.current >= progress.SAVE_INTERVAL) {
                 progress.save(recordId, currentTime);
@@ -127,21 +261,27 @@ const Webcams = () => {
           }, 1000 / (frequency ? frequency : config.rps));
         });
 
+        player.webcams.on('seeking', () => watched.interrupt());
+        player.webcams.on('ended', () => watched.interrupt());
+
         player.webcams.on('pause', () => {
+          watched.interrupt();
           clearInterval(interval.current);
           progress.save(recordId, player.webcams.currentTime());
         });
 
         player.webcams.on('seeked', () => {
           const currentTime = player.webcams.currentTime();
-          dispatchTimeUpdate(currentTime);
+          dispatchTimeUpdate(currentTime, player.webcams.paused());
           progress.save(recordId, currentTime);
         });
 
         player.webcams.on('ended', () => progress.clear(recordId));
 
         // Restore position: URL time param takes priority, then localStorage
-        player.webcams.on('loadedmetadata', () => {
+        player.webcams.one('loadedmetadata', () => {
+          if (preferences.rate !== null) player.webcams.playbackRate(preferences.rate);
+
           const duration = player.webcams.duration();
           const urlTime = getTime();
           if (urlTime !== null && urlTime < duration) {
@@ -150,13 +290,79 @@ const Webcams = () => {
             const savedTime = progress.load(recordId);
             if (savedTime && savedTime < duration) {
               player.webcams.currentTime(savedTime);
+              notify({
+                action: {
+                  label: intl.formatMessage(intlMessages.restart),
+                  onClick: () => {
+                    player.webcams.currentTime(0);
+                    progress.clear(recordId);
+                  },
+                },
+                duration: 8000,
+                message: intl.formatMessage(intlMessages.resumed, { time: formatTime(savedTime) }),
+              });
             }
           }
         });
+
+        player.webcams.on('loadedmetadata', () => {
+          renderSlideMarkers(player.webcams);
+          renderBookmarkMarkers(player.webcams);
+        });
+
+        const handleBookmarks = () => renderBookmarkMarkers(player.webcams);
+        document.addEventListener(EVENTS.BOOKMARKS, handleBookmarks);
+        player.webcams.on('dispose', () => document.removeEventListener(EVENTS.BOOKMARKS, handleBookmarks));
+
+        attachTimelinePreview(player.webcams, {
+          slideLabel: (number) => intl.formatMessage(intlMessages.previewSlide, { number }),
+        });
+
+        // Title shown in the caption settings dialog's header
+        const captionSettings = player.webcams.getChild('textTrackSettings');
+        if (captionSettings) {
+          captionSettings.el().setAttribute('data-title', intl.formatMessage(intlMessages.captionSettings));
+          closeOnClickOutside(player.webcams, captionSettings);
+        }
+
+        // Caption notices share a key: each one updates the last in place,
+        // and turning translated captions off takes down one still waiting
+        const captionNotice = (message, duration, progress = null) => notify({
+          duration,
+          key: 'captions',
+          message,
+          progress,
+        });
+        setupCaptions(player.webcams, {
+          label: intl.formatMessage(intlMessages.autoTranslated),
+          locale: intl.locale,
+          // Long enough to read why the captions went back to the original
+          onFailed: (language) => captionNotice(intl.formatMessage(intlMessages.translateFailed, { language }), 10000),
+          onHidden: () => dismiss('captions'),
+          // Each notice stays until the next one replaces it
+          onPreparing: (language) => captionNotice(intl.formatMessage(intlMessages.preparing, { language }), 900000, 'busy'),
+          onProgress: (language, percent) => captionNotice(
+            intl.formatMessage(intlMessages.downloading, { language, percent }),
+            120000,
+            percent / 100,
+          ),
+          onReady: (language) => captionNotice(intl.formatMessage(intlMessages.ready, { language }), 2500),
+          onStart: (language) => captionNotice(intl.formatMessage(intlMessages.translating, { language }), 120000, 'busy'),
+          waitLabel: (language) => intl.formatMessage(intlMessages.wait, { language }),
+        });
+      });
+      // MP4, then WebM, then WebM decoded in the page (Safari)
+      playFirstWorking(player.webcams, videojs, sources.current, {
+        message: intl.formatMessage(intlMessages.unsupported),
       });
       logger.debug(ID.WEBCAMS, 'mounted');
-    }
-  }, []);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+    // The video.js player is created once; the locale cannot change meanwhile
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     return () => {
@@ -173,6 +379,7 @@ const Webcams = () => {
   return (
     <div
       aria-label={intl.formatMessage(intlMessages.aria)}
+      role="region"
       className="webcams-wrapper"
       id={ID.WEBCAMS}
     >

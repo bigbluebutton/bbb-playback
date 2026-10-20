@@ -19,11 +19,11 @@ import './index.scss';
 import {
   getTldrawData, getViewBox, createTldrawImageAsset,
   createTldrawBackgroundShape, createTldrawCursorShape,
-  setupColorThemePaletteOverrides
 } from 'utils/tldraw';
 import { buildFileURL } from 'utils/data';
 import { isEmpty } from 'utils/data/validators';
 import getCursor from './cursor';
+import setupColorThemePaletteOverrides from './palette';
 
 const MAX_IMAGE_WIDTH = 1440;
 const MAX_IMAGE_HEIGHT = 1080;
@@ -160,11 +160,12 @@ const TldrawPresentationV2 = ({ size }) => {
   return (
     <div
       aria-label={intl.formatMessage(intlMessages.aria)}
+      role="region"
       className={cx('presentation-wrapper', { inactive: (currentContent !== ID.PRESENTATION && showScreenshare) })}
       id={ID.PRESENTATION}
     >{!started
       ? <div className={cx('presentation', 'logo')} />
-      : <div className={'presentation'}
+      : <div className="presentation stage"
         style={{
           position: 'absolute',
           width: svgWidth < 0 ? 0 : svgWidth,

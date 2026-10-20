@@ -19,6 +19,8 @@ const Text = ({
   return (
     <div
       className='text-vanilla'
+      // Messages can be in a different language than the page
+      dir="auto"
       dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(text) }}
     />
   );

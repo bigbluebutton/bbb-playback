@@ -11,14 +11,21 @@ import Media from './media';
 import Modal from './modal';
 import BottomBar from 'components/bars/bottom';
 import TopBar from 'components/bars/top';
+import Toast from 'components/toast';
+import useTapGestures from './gestures';
+import { addBookmarkNow } from 'components/bookmarks/actions';
 import {
+  getNextRate,
   play,
   seek,
   skip,
 } from 'utils/actions';
+import { player as playerConfig } from 'config';
 import { ID } from 'utils/constants';
+import notify from 'utils/toast';
 import layout from 'utils/layout';
-import Shortcuts from 'utils/shortcuts';
+import player from 'utils/player';
+import Shortcuts, { addPlainShortcuts } from 'utils/shortcuts';
 import { useLayoutSwap } from 'components/utils/hooks';
 import './index.scss';
 
@@ -27,7 +34,19 @@ const intlMessages = defineMessages({
     id: 'player.wrapper.aria',
     description: 'Aria label for the player wrapper',
   },
+  speed: {
+    id: 'player.speed.changed',
+    description: 'Message shown when the playback speed changes',
+  },
 });
+
+const TAP = {
+  backward: () => seek(-config.seek.seconds),
+  forward: () => seek(+config.seek.seconds),
+  isPaused: () => (player.primary ? player.primary.paused() : null),
+  seconds: config.seek.seconds,
+  toggle: () => play(),
+};
 
 const Player = () => {
   const intl = useIntl();
@@ -39,6 +58,8 @@ const Player = () => {
   const [swap, setSwap] = useState(layout.swap);
 
   const shortcuts = useRef();
+
+  useTapGestures(TAP);
 
   const { showPresentation } = useLayoutSwap();
   const hidePresentation = showPresentation === false;
@@ -71,10 +92,34 @@ const Player = () => {
 
     shortcuts.current = new Shortcuts(actions);
 
+    const changeSpeed = (direction) => {
+      if (!player.primary) return;
+
+      const rate = getNextRate(playerConfig.rates, player.primary.playbackRate(), direction);
+      player.primary.playbackRate(rate);
+      notify({ duration: 1500, message: intl.formatMessage(intlMessages.speed, { rate }) });
+    };
+
+    const removePlainShortcuts = addPlainShortcuts({
+      backward: actions.seek.backward,
+      forward: actions.seek.forward,
+      fullscreen: actions.fullscreen,
+      mute: () => {
+        if (player.primary) player.primary.muted(!player.primary.muted());
+      },
+      play: actions.play,
+      bookmark: () => addBookmarkNow(intl),
+      faster: () => changeSpeed(+1),
+      slower: () => changeSpeed(-1),
+      help: () => setModal(ID.ABOUT),
+    });
+
     return () => {
       if (shortcuts.current) shortcuts.current.destroy();
+      removePlainShortcuts();
     };
-  }, []);
+    // Shortcuts are bound once; intl does not change while playing
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const style = {
     'fullscreen-content': fullscreen,
@@ -83,7 +128,7 @@ const Player = () => {
   };
 
   return (
-    <div
+    <main
       aria-label={intl.formatMessage(intlMessages.aria)}
       className={cx('player-wrapper', style)}
       id={ID.PLAYER}
@@ -116,7 +161,8 @@ const Player = () => {
         handleSearch={(value) => setSearch(value)}
         modal={modal}
       />
-    </div>
+      <Toast />
+    </main>
   );
 };
 

@@ -1,4 +1,7 @@
-import { search } from './actions';
+import {
+  getNextRate,
+  search,
+} from './actions';
 
 it('searches text in data collection', () => {
   const thumbnails = [
@@ -16,4 +19,16 @@ it('searches text in data collection', () => {
 
   // Miss
   expect(search('other', thumbnails)).toEqual([]);
+});
+
+it('steps through the playback rates', () => {
+  const rates = [0.5, 1, 1.25, 1.5, 1.75, 2];
+
+  expect(getNextRate(rates, 1, +1)).toBe(1.25);
+  expect(getNextRate(rates, 1, -1)).toBe(0.5);
+  expect(getNextRate(rates, 2, +1)).toBe(2);
+  expect(getNextRate(rates, 0.5, -1)).toBe(0.5);
+  // A speed set elsewhere snaps to the neighbours
+  expect(getNextRate(rates, 1.1, +1)).toBe(1.25);
+  expect(getNextRate(rates, 1.1, -1)).toBe(1);
 });

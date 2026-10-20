@@ -9,7 +9,11 @@ import {
 } from 'locales';
 import { ROUTER } from 'utils/constants';
 import { getStyle } from 'utils/params';
+import { initTheme } from 'utils/theme';
 import './index.scss';
+
+// Applied before the first render so the page never flashes the wrong theme
+initTheme();
 
 const locale = getLocale();
 const style = getStyle();

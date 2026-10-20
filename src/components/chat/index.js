@@ -52,6 +52,7 @@ const Chat = () => {
   return (
     <div
       aria-label={intl.formatMessage(intlMessages.aria)}
+      role="region"
       aria-live="polite"
       className="chat-wrapper"
       id={ID.CHAT}

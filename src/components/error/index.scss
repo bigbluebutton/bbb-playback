@@ -1,21 +1,76 @@
-$error-font-size: 5rem;
+@import 'src/styles/sizes';
+
+$error-code-font-size: 4.5rem;
+$error-content-max-width: 28rem;
 
 :root {
   --error-background-color: var(--primary-background-color);
   --error-color: var(--primary-content-color);
+  --error-muted-color: var(--muted-content-color);
+  --error-button-background-color: var(--accent-color);
+  --error-button-color: var(--white);
 }
 
 .error-wrapper {
   background-color: var(--error-background-color);
+  box-sizing: border-box;
   display: flex;
   height: 100%;
+  padding: $padding;
   width: 100%;
 }
 
-.error-code {
+.error-content {
   color: var(--error-color);
-  font-size: $error-font-size;
-  font-weight: var(--font-weight-bold);
   margin: auto;
+  max-width: $error-content-max-width;
   text-align: center;
+}
+
+.error-code {
+  -webkit-background-clip: text;
+  background: var(--accent-gradient);
+  background-clip: text;
+  color: transparent;
+  font-size: $error-code-font-size;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -.02em;
+  line-height: 1;
+}
+
+.error-title {
+  font-size: 1.375rem;
+  font-weight: var(--font-weight-semi-bold);
+  margin: $margin * 2 0 $margin 0;
+}
+
+.error-description {
+  color: var(--error-muted-color);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.error-retry {
+  background: var(--error-button-background-color);
+  background: var(--accent-gradient);
+  box-shadow: 0 8px 20px -8px var(--accent-glow);
+  border: none;
+  border-radius: $border-radius;
+  color: var(--error-button-color);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: var(--font-weight-semi-bold);
+  margin-top: $margin * 3;
+  padding: $padding-small $padding * 2;
+  transition: filter var(--transition-duration) ease;
+
+  &:hover {
+    filter: brightness(1.1);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
+  }
 }

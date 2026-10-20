@@ -10,7 +10,7 @@ $webcams-width: 640px;
 $section-width: calc(#{$webcams-width} / 2);
 $section-width-small: calc((#{$webcams-width} / 8) * 3);
 
-$bottom-content-height: 80px;
+$bottom-content-height: 104px;
 
 $bar-height: 60px;
 
@@ -21,7 +21,7 @@ $modal-bar-height: $bar-height;
 $media-fit-height: calc((#{$webcams-height} / 2) - #{$bar-height});
 $media-fit-height-small: calc(((#{$webcams-height} / 8) * 3) - #{$bar-height});
 
-$shortcuts-list-height: 8rem;
+$shortcuts-list-height: 14rem;
 
 $border-radius: .35rem;
 $border-width: .2rem;
@@ -33,3 +33,6 @@ $margin-extra-small: .15rem;
 $padding: .75rem;
 $padding-small: .5rem;
 $padding-extra-small: .25rem;
+
+$focus-ring-width: 2px;
+$transition-duration: .15s;

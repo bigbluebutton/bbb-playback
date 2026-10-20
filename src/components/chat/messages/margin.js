@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import Avatar from 'components/utils/avatar';
-import { handleOnEnterPress } from 'utils/data/handlers';
+import { handleOnKeyActivation } from 'utils/data/handlers';
 import './index.scss';
 
 const propTypes = {
@@ -40,7 +40,8 @@ const Margin = ({
     <div
       className={cx('interactive', style)}
       onClick={onClick}
-      onKeyPress={event => handleOnEnterPress(event, onClick)}
+      onKeyDown={event => handleOnKeyActivation(event, onClick)}
+      role="button"
       tabIndex="0"
     >
       <Avatar

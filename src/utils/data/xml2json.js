@@ -17,7 +17,7 @@ const xml2json = (xml, tab) => {
             o["_" + xml.attributes[i].nodeName] = X.escape((xml.attributes[i].nodeValue || "").toString());
         if (xml.firstChild) { // element has child nodes ..
           var textChild = 0, cdataChild = 0, hasElementChild = false;
-          for (var n = xml.firstChild; n; n = n.nextSibling) {
+          for (let n = xml.firstChild; n; n = n.nextSibling) {
             if (n.nodeType === 1) hasElementChild = true;
             else if (n.nodeType === 3 && n.nodeValue.match(/[^ \f\n\r\t\v]/)) textChild++; // non-whitespace text
             else if (n.nodeType === 4) cdataChild++; // cdata section node
@@ -25,7 +25,7 @@ const xml2json = (xml, tab) => {
           if (hasElementChild) {
             if (textChild < 2 && cdataChild < 2) { // structured element with evtl. a single text or/and cdata node ..
               X.removeWhite(xml);
-              for (var n = xml.firstChild; n; n = n.nextSibling) {
+              for (let n = xml.firstChild; n; n = n.nextSibling) {
                 if (n.nodeType === 3)  // text node
                   o["#text"] = X.escape(n.nodeValue);
                 else if (n.nodeType === 4)  // cdata node
@@ -57,7 +57,7 @@ const xml2json = (xml, tab) => {
             if (cdataChild > 1)
               o = X.escape(X.innerXml(xml));
             else
-              for (var n = xml.firstChild; n; n = n.nextSibling)
+              for (let n = xml.firstChild; n; n = n.nextSibling)
                 o["#cdata"] = X.escape(n.nodeValue);
           }
         }
@@ -130,7 +130,7 @@ const xml2json = (xml, tab) => {
     },
     removeWhite: function (e) {
       e.normalize();
-      for (var n = e.firstChild; n;) {
+      for (let n = e.firstChild; n;) {
         if (n.nodeType === 3) {  // text node
           if (!n.nodeValue.match(/[^ \f\n\r\t\v]/)) { // pure whitespace text node
             var nxt = n.nextSibling;

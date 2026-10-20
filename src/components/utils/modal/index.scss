@@ -4,7 +4,7 @@
   --modal-active-background-color: var(--secondary-highlight-color);
   --modal-background-color: var(--secondary-background-color);
   --modal-color: var(--secondary-content-color);
-  --modal-wrapper-background-color: rgba(6, 23, 42, .25);
+  --modal-wrapper-background-color: rgba(6, 23, 42, .4);
 }
 
 .modal-wrapper {
@@ -17,12 +17,18 @@
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 2;
+  z-index: 3;
+
+  @supports (backdrop-filter: blur(1px)) {
+    backdrop-filter: blur(2px);
+  }
 }
 
 .modal {
+  animation: modal-enter var(--transition-duration) ease-out;
   background-color: var(--modal-background-color);
-  border-radius: $border-radius;
+  border-radius: calc(#{$border-radius} * 2);
+  box-shadow: 0 12px 32px var(--shadow-color);
   color: var(--modal-color);
   display: flex;
   flex-direction: column;
@@ -56,5 +62,45 @@
 
   .active {
     background-color: var(--modal-active-background-color);
+  }
+}
+
+// Dialogs with a title: title at the start, close button at the end
+.modal.with-title {
+  border-radius: 1.1rem;
+  box-shadow: 0 24px 64px -16px rgba(15, 23, 42, .45);
+
+  .modal-control {
+    flex-direction: row;
+    gap: $margin;
+    height: auto;
+    justify-content: space-between;
+    padding: 1.25rem 1.25rem .5rem 1.5rem;
+
+    [dir="rtl"] & {
+      padding: 1.25rem 1.5rem .5rem 1.25rem;
+    }
+  }
+
+  .modal-title {
+    align-items: center;
+    display: flex;
+    font-size: 1.2rem;
+    font-weight: var(--font-weight-bold);
+    gap: .7rem;
+    letter-spacing: -.01em;
+    margin: 0;
+  }
+}
+
+@keyframes modal-enter {
+  from {
+    opacity: 0;
+    transform: translateY(.5rem) scale(.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
   }
 }

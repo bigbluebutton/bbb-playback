@@ -3,7 +3,7 @@
 :root {
   --application-background-color: var(--secondary-background-color);
   --application-color: var(--secondary-content-color);
-  --application-control-background-color: var(--tertiary-background-color);
+  --application-control-background-color: var(--secondary-background-color);
   --application-control-color: var(--tertiary-content-color);
 }
 
@@ -16,35 +16,95 @@
   height: 100%;
   width: 100%;
 
+  // The open panel fills what is left under the tabs; its lists scroll
+  // inside it instead of making the page taller
+  .application-panel {
+    flex: 1 1 auto;
+    min-height: 0;
+    position: relative;
+
+    > * {
+      inset: 0;
+      position: absolute;
+    }
+  }
+
   .application-control {
     background-color: var(--application-control-background-color);
+    border-bottom: 1px solid var(--border-color);
     box-sizing: border-box;
     display: flex;
     flex-direction: row-reverse;
-    padding: $padding;
+    gap: .15rem;
+    padding: .4rem .3rem;
 
+    // Icon with its name below; each tab takes the room its name needs
     .application-icon {
+      align-items: center;
+      background: none;
+      border: none;
+      border-radius: .8rem;
       box-sizing: border-box;
       color: var(--application-control-color);
       display: flex;
-      font-size: large;
-      font-weight: var(--font-weight-semi-bold);
-      opacity: .75;
+      flex: 1 1 auto;
+      flex-direction: column;
+      font-family: inherit;
+      gap: .2rem;
+      justify-content: center;
+      min-width: 0;
       outline: none;
+      padding: .4rem .3rem .35rem;
+      transition:
+        background-color var(--transition-duration) ease,
+        box-shadow var(--transition-duration) ease,
+        color var(--transition-duration) ease;
+
+      &:focus-visible {
+        box-shadow: 0 0 0 $focus-ring-width var(--focus-ring-color);
+      }
+    }
+
+    .application-icon-glyph {
+      display: flex;
+      font-size: large;
+      line-height: 1;
+    }
+
+    .application-icon-label {
+      font-size: .68rem;
+      letter-spacing: -.01em;
+      font-weight: var(--font-weight-semi-bold);
+      line-height: 1.2;
+      max-width: 100%;
       overflow: hidden;
-
-      [dir="ltr"] & {
-        padding-left: $padding;
-      }
-
-      [dir="rtl"] & {
-        padding-right: $padding;
-      }
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
+    // Selected panel: gradient pill
+    .application-icon:not(.inactive) {
+      background: var(--accent-gradient);
+      box-shadow: 0 6px 16px -8px var(--accent-glow);
+      color: var(--white);
+    }
+
+    // Muted rather than faded, so the names keep enough contrast
     .inactive {
+      color: var(--muted-content-color);
       cursor: pointer;
-      opacity: .5;
+
+      &:hover {
+        background-color: var(--accent-soft);
+        color: var(--accent-text-color);
+      }
     }
+  }
+}
+
+// Short screens narrow the side section
+@media (min-width: $media-min-width) and (max-height: $media-max-height) {
+  .application .application-control .application-icon-label {
+    font-size: .6rem;
   }
 }

@@ -1,5 +1,17 @@
 @import 'src/styles/icons';
 
+// Inline SVG icons are not font glyphs
+.icon-svg {
+  font-family: inherit !important;
+
+  // Beats the global svg sizing used by the slides
+  svg {
+    display: block;
+    height: 1.1em;
+    width: 1.1em;
+  }
+}
+
 [class^="icon-"],
 [class*=" icon-"] {
   align-items: center;

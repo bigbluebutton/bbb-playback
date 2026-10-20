@@ -3,11 +3,11 @@
 :root {
   --gray-light-color: var(--gray-light);
   --gray-lightest-color: var(--gray-lightest);
-  --highlight-color: var(--blue);
-  --color-text: #111;
-  --color-off-white: #F3F6F9;
-  --color-gray-lightest: #D4D9DF;
-  --color-danger-dark: #AE1010;
+  --highlight-color: var(--accent-soft);
+  --color-text: var(--secondary-content-color);
+  --color-off-white: var(--secondary-highlight-color);
+  --color-gray-lightest: var(--gray-lightest);
+  --color-danger-dark: rgb(174, 16, 16);
 }
 
 .reply-tag {
@@ -23,6 +23,20 @@
 
 .text-vanilla {
   color: var(--color-text);
+
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  li,
+  pre {
+    // Each line follows its own language direction (e.g. English in an RTL page)
+    text-align: start;
+    unicode-bidi: plaintext;
+  }
 
   img {
     max-width: 100%;
@@ -167,18 +181,22 @@
     }
   }
 
+  // Message bubble
   .text {
+    background-color: var(--secondary-highlight-color);
+    border-radius: .25rem .9rem .9rem .9rem;
     box-sizing: border-box;
+    max-width: 100%;
     overflow-wrap: break-word;
-    width: 100%;
+    padding: .4rem .7rem;
+    // Each message follows its own language direction (e.g. English in an RTL page)
+    text-align: start;
+    unicode-bidi: plaintext;
     white-space: pre-wrap;
-
-    [dir="ltr"] & {
-      padding: 0 $padding-extra-small 0 0;
-    }
+    width: fit-content;
 
     [dir="rtl"] & {
-      padding: 0 0 0 $padding-extra-small;
+      border-radius: .9rem .25rem .9rem .9rem;
     }
   }
 
@@ -201,8 +219,14 @@
     border-radius: 50%;
   }
 
+  // Messages still to come: faded, but readable (WCAG AA)
   .inactive {
-    opacity: .5;
+    opacity: .7;
+  }
+
+  // Faded avatars would make their initials unreadable
+  .interactive.inactive {
+    opacity: 1;
   }
 
   .emphasized {

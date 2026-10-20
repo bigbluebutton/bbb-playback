@@ -6,12 +6,21 @@ const propTypes = { code: PropTypes.string };
 
 const defaultProps = { code: '' };
 
+// Arrow keys read better as arrows
+const SYMBOLS = {
+  ArrowDown: '↓',
+  ArrowLeft: '←',
+  ArrowRight: '→',
+  ArrowUp: '↑',
+};
+
 const Key = ({ code }) => {
+  const symbol = SYMBOLS[code];
 
   return (
-    <div className="key">
-      {code}
-    </div>
+    <kbd className="key" title={symbol ? code : undefined}>
+      {symbol || code}
+    </kbd>
   );
 };
 

@@ -21,6 +21,7 @@ const Notes = () => {
   return (
     <div
       aria-label={intl.formatMessage(intlMessages.aria)}
+      role="region"
       className="notes-wrapper"
       id={ID.NOTES}
       tabIndex="0"

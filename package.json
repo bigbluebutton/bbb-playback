@@ -6,10 +6,10 @@
     "@bigbluebutton/tldraw": "^2.0.0-alpha.36",
     "bowser": "^2.11.0",
     "classnames": "^2.3.1",
-    "darkreader": "^4.9.46",
     "dompurify": "^3.3.0",
     "linkify-react": "^4.3.2",
     "linkifyjs": "^4.3.2",
+    "ogv": "1.9.0",
     "prop-types": "^15.8.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
@@ -38,8 +38,10 @@
     "webpack-dev-server": "4.15.2"
   },
   "scripts": {
+    "prestart": "node scripts/copy-ogv.js",
     "start": "react-scripts start",
     "start:proxy": "bash start-proxy.sh",
+    "prebuild": "node scripts/copy-ogv.js",
     "build": "react-scripts build",
     "test": "react-scripts test"
   },

@@ -158,12 +158,13 @@ const TldrawPresentation = ({ size }) => {
   return (
     <div
       aria-label={intl.formatMessage(intlMessages.aria)}
+      role="region"
       className={cx('presentation-wrapper', { inactive: (currentContent !== ID.PRESENTATION && showScreenshare) })}
       id={ID.PRESENTATION}
     >
       {!started
         ? <div className={cx('presentation', 'logo')} />
-        : <div className={'presentation'}
+        : <div className="presentation stage"
           style={{
             position: 'absolute',
             width: svgWidth < 0 ? 0 : svgWidth,

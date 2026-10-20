@@ -14,19 +14,27 @@ const ERROR = {
   REQUEST_TIMEOUT: 408,
   CONFLICT: 409,
   GONE: 410,
+  SERVICE_UNAVAILABLE: 503,
 };
 
 const EVENT_PREFIX = 'bbbplayback';
 
 const EVENTS = {
+  BOOKMARKS: `${EVENT_PREFIX}bookmarks`,
+  OPEN_PANEL: `${EVENT_PREFIX}openpanel`,
+  THEME: `${EVENT_PREFIX}theme`,
   TIME_UPDATE: `${EVENT_PREFIX}timeupdate`,
+  TOAST: `${EVENT_PREFIX}toast`,
+  WATCHED: `${EVENT_PREFIX}watched`,
 };
 
 const ID = {
   ABOUT: 'about',
   ALTERNATES: 'alternates',
+  BOOKMARKS: 'bookmarks',
   CANVASES: 'canvases',
   CAPTIONS: 'captions',
+  CHAPTERS: 'chapters',
   CHAT: 'chat',
   CURSOR: 'cursor',
   DESKSHARE: 'deskshare',
@@ -48,6 +56,7 @@ const ID = {
   STORAGE: 'storage',
   SWAP: 'swap',
   THUMBNAILS: 'thumbnails',
+  TRANSCRIPT: 'transcript',
   TLDRAW: 'tldraw',
   USERS: 'users',
   VIDEOS: 'videos',
