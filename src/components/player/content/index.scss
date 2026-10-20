@@ -3,10 +3,6 @@
 :root {
   --top-content-background-color: var(--primary-background-color);
   --top-content-color: var(--primary-content-color);
-
-  --bottom-content-active-background-color: var(--tertiary-highlight-color);
-  --bottom-content-background-color: var(--tertiary-background-color);
-  --bottom-content-color: var(--tertiary-content-color);
 }
 
 .content {
@@ -23,29 +19,6 @@
     height: 100%;
     position: relative;
     width: 100%;
-  }
-
-  .bottom-content {
-    background-color: var(--bottom-content-background-color);
-    color: var(--bottom-content-color);
-    display: flex;
-    min-height: $bottom-content-height;
-    position: relative;
-    width: 100%;
-
-    .active {
-      background-color: var(--bottom-content-active-background-color);
-    }
-
-    .interactive {
-      cursor: pointer;
-      outline: none;
-
-      &:focus,
-      &:hover {
-        background-color:var(--bottom-content-active-background-color);
-      }
-    }
   }
 
   .inactive {

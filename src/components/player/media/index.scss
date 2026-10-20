@@ -6,6 +6,7 @@
 .media {
   background-color: var(--media-background-color);
   display: flex;
+  flex-direction: column;
   grid-area: media;
   height: 100%;
   width: 100%;

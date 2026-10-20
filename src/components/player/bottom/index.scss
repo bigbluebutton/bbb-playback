@@ -1,0 +1,34 @@
+@import 'src/styles/sizes';
+
+:root {
+  --bottom-content-active-background-color: var(--tertiary-highlight-color);
+  --bottom-content-background-color: var(--tertiary-background-color);
+  --bottom-content-color: var(--tertiary-content-color);
+}
+
+.bottom-content {
+  background-color: var(--bottom-content-background-color);
+  color: var(--bottom-content-color);
+  display: flex;
+  min-height: $bottom-content-height;
+  position: relative;
+  width: 100%;
+
+  &.inactive {
+    display: none;
+  }
+
+  .active {
+    background-color: var(--bottom-content-active-background-color);
+  }
+
+  .interactive {
+    cursor: pointer;
+    outline: none;
+
+    &:focus,
+    &:hover {
+      background-color:var(--bottom-content-active-background-color);
+    }
+  }
+}

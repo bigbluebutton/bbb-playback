@@ -1,0 +1,112 @@
+@import 'src/styles/sizes';
+
+:root {
+  --minimized-highlight-color: var(--blue);
+  --minimized-tooltip-background-color: var(--gray-darker);
+  --minimized-tooltip-color: var(--white);
+}
+
+.minimized {
+  // Sized by its column, never the other way around
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: relative;
+  width: 100%;
+
+  .minimized-bar {
+    align-items: center;
+    background-color: var(--bottom-content-background-color);
+    border: none;
+    color: var(--bottom-content-color);
+    cursor: pointer;
+    display: flex;
+    font-family: inherit;
+    font-size: small;
+    font-weight: var(--font-weight-semi-bold);
+    gap: $margin;
+    min-height: 2rem;
+    outline: none;
+    padding: $padding-extra-small $padding-small;
+    text-align: start;
+    width: 100%;
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--bottom-content-active-background-color);
+    }
+
+    &:focus-visible {
+      box-shadow: inset 0 0 0 $border-width-small var(--minimized-highlight-color);
+    }
+  }
+
+  .minimized-label,
+  .minimized-toggle {
+    align-items: center;
+    display: flex;
+    gap: $margin;
+  }
+
+  .minimized-label {
+    min-width: 0;
+  }
+
+  .minimized-toggle {
+    margin-inline-start: auto;
+    white-space: nowrap;
+  }
+
+  // Narrow bars keep the chevron only, leaving room for the label
+  .minimized-toggle-text {
+    display: none;
+  }
+
+  .minimized-chevron {
+    font-size: x-small;
+    transform: rotate(-90deg);
+
+    &.open {
+      transform: rotate(90deg);
+    }
+  }
+
+  .minimized-tooltip {
+    background-color: var(--minimized-tooltip-background-color);
+    border-radius: $border-radius;
+    bottom: 100%;
+    color: var(--minimized-tooltip-color);
+    display: none;
+    font-size: small;
+    inset-inline-start: $padding-small;
+    margin-bottom: $margin;
+    max-width: 20rem;
+    padding: $padding-extra-small $padding-small;
+    pointer-events: none;
+    position: absolute;
+    z-index: 2;
+  }
+
+  // Touch screens have no hover, and a tap would leave the tooltip stuck
+  .minimized-bar:focus-visible + .minimized-tooltip {
+    display: block;
+  }
+
+  @media (hover: hover) {
+    .minimized-bar:hover + .minimized-tooltip {
+      display: block;
+    }
+  }
+
+  .bottom-content .active {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 $border-width-small var(--minimized-highlight-color);
+  }
+}
+
+@container (min-width: 18rem) {
+  .minimized .minimized-toggle-text {
+    display: inline;
+  }
+}
