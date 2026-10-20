@@ -3,7 +3,10 @@
 # Installs the caption translation server on this BigBlueButton server:
 # LibreTranslate, served to the player at /playback/translate. With Docker
 # it runs as a container (docker-compose.yml); without it, as a system
-# service in a Python environment (bbb-playback-translate).
+# service in a Python environment (bbb-playback-translate). In front of it
+# runs the gateway (gateway.py, bbb-playback-translate-gateway), which holds
+# each viewer to one language at a time while it gets ready and limits the
+# requests running at once.
 # Run it from the repository: sudo ./translate/install.sh
 
 set -e
@@ -20,13 +23,19 @@ if [ "$(id -u)" -ne 0 ]; then
   exit 1
 fi
 
+if ! python3 -c 'import sys; sys.exit(sys.version_info < (3, 8))' 2> /dev/null; then
+  echo "Python 3.8 or later is needed (python3)." >&2
+  exit 1
+fi
+
+# The services run as this user, never as root
+id -u $SERVICE > /dev/null 2>&1 || useradd --system --home-dir $HOME_DIR --shell /usr/sbin/nologin $SERVICE
+mkdir -p $HOME_DIR
+chown $SERVICE: $HOME_DIR
+
 install_service() {
   echo "Docker is not installed: installing LibreTranslate as the $SERVICE service."
   apt-get install -y -qq python3-venv python3-pip > /dev/null
-
-  id -u $SERVICE > /dev/null 2>&1 || useradd --system --home-dir $HOME_DIR --shell /usr/sbin/nologin $SERVICE
-  mkdir -p $HOME_DIR
-  chown $SERVICE: $HOME_DIR
 
   sudo -H -u $SERVICE python3 -m venv $HOME_DIR/venv
   sudo -H -u $SERVICE $HOME_DIR/venv/bin/pip install -q --upgrade pip
@@ -78,6 +87,9 @@ if [ "$READY" != true ]; then
   echo "Not ready after 40 minutes. See what it is doing: $LOGS" >&2
   exit 1
 fi
+
+# The gateway between nginx and LibreTranslate
+./install-gateway.sh
 
 NGINX_FILES=/usr/share/bigbluebutton/nginx
 cp translate.nginx $NGINX_FILES/translate.nginx

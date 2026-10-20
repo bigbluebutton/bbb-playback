@@ -70,6 +70,11 @@ the background and slow everything down. Captions off and the recording's
 own captions stay available, and turning captions off frees the menu at
 once.
 
+The translation server holds viewers to the same rule
+(`translate/gateway.py`, see [translate/README.md](../translate/README.md)),
+so a viewer, or a script, cannot keep it busy with several languages at
+once; the player waits and tries again when it says so.
+
 Once a language is ready, switching is free: the language left behind
 pauses after the line it is on and keeps what it has translated, so
 picking it again carries on from there. It never changes what is on
@@ -131,7 +136,7 @@ in `src/config.js` to a mirror (see the README's Configuration section).
 | `src/utils/captions/vtt.js` | Reads caption files and orders lines from where the viewer is |
 | `src/components/webcams/index.scss` | Caption placement and style |
 | `src/locales/messages/*.json` | Notices and labels in 19 languages (`player.captions.*`) |
-| `translate/` | The LibreTranslate server: `install.sh`, `docker-compose.yml`, `translate.nginx` |
+| `translate/` | The LibreTranslate server: `install.sh`, `docker-compose.yml`, `translate.nginx`, and the gateway in front of it (`gateway.py`, `install-gateway.sh`, tests in `test_gateway.py`) |
 
 ## Troubleshooting
 

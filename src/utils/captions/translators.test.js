@@ -95,15 +95,82 @@ describe('translators', () => {
   });
 
   it('rejects failed or incomplete answers', async () => {
-    global.fetch = mockServer(() => ({ ok: false, status: 503 }));
+    global.fetch = mockServer(() => ({ ok: false, status: 500 }));
     const translator = await httpProvider('https://mt.example.com').create('en', 'es');
-    await expect(translator.translate(['Hello'])).rejects.toThrow('503');
+    await expect(translator.translate(['Hello'])).rejects.toThrow('500');
 
     global.fetch = mockServer(() => ({
       ok: true,
       json: () => Promise.resolve({ translatedText: ['Hola'] }),
     }));
     await expect(translator.translate(['Hello', 'Bye'])).rejects.toThrow('mismatch');
+  });
+
+  it('tells our own server which viewer asks, and no other site', async () => {
+    global.fetch = mockServer(() => ({
+      ok: true,
+      json: () => Promise.resolve({ translatedText: ['Hola'] }),
+    }));
+
+    await (await httpProvider('/playback/translate').create('en', 'es')).translate(['Hello']);
+    const viewer = global.fetch.mock.calls[1][1].headers['X-Playback-Viewer'];
+    expect(viewer).toMatch(/^[0-9a-f]{24}$/);
+
+    await (await httpProvider('https://mt.example.com').create('en', 'es')).translate(['Hello']);
+    expect(global.fetch.mock.calls[3][1].headers['X-Playback-Viewer']).toBeUndefined();
+  });
+
+  describe('when the server asks to wait', () => {
+    beforeEach(() => {
+      jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    // Moves the fake clock on and lets the waiting promises run
+    const advance = async (ms) => {
+      jest.advanceTimersByTime(ms);
+      for (let index = 0; index < 20; index++) await Promise.resolve();
+    };
+
+    const answer = (status, retryAfter) => ({
+      headers: { get: (name) => (name === 'Retry-After' ? retryAfter : null) },
+      json: () => Promise.resolve(status === 200 ? { translatedText: ['Hola'] } : { error: 'wait' }),
+      ok: status === 200,
+      status,
+    });
+
+    it('waits as long as it says and tries again', async () => {
+      const answers = [answer(409, '2'), answer(429, '1'), answer(200)];
+      global.fetch = mockServer(() => answers.shift());
+      const translator = await httpProvider('/playback/translate').create('en', 'es');
+
+      const result = translator.translate(['Hello']);
+      await advance(0);
+      expect(global.fetch).toHaveBeenCalledTimes(2);
+      await advance(1999);
+      expect(global.fetch).toHaveBeenCalledTimes(2);
+      await advance(1);
+      expect(global.fetch).toHaveBeenCalledTimes(3);
+      await advance(1000);
+
+      await expect(result).resolves.toEqual(['Hola']);
+      expect(global.fetch).toHaveBeenCalledTimes(4);
+    });
+
+    it('gives up after a while', async () => {
+      global.fetch = mockServer(() => answer(409, '1'));
+      const translator = await httpProvider('/playback/translate').create('en', 'es');
+
+      const result = translator.translate(['Hello']);
+      const caught = expect(result).rejects.toThrow('409');
+      for (let second = 0; second < 32; second++) await advance(1000);
+      await caught;
+      // The first try and 30 more
+      expect(global.fetch).toHaveBeenCalledTimes(32);
+    });
   });
 });
 

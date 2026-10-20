@@ -28,3 +28,6 @@ yarn-error.log*
 
 # Copied from node_modules/ogv by scripts/copy-ogv.js
 /public/ogv
+
+# Python
+__pycache__/

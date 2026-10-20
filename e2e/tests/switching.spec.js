@@ -167,3 +167,30 @@ test('a language that fails on screen says so and goes back to the original', as
   await expect(captions(page)).toContainText(FIRST_LINE);
   await expect(captions(page)).not.toContainText('[es]');
 });
+
+test('the player waits when the server holds the language, then translates', async ({ page, hasTouch }) => {
+  // The server's gateway answers "wait" to the first requests
+  let held = 0;
+  let viewer = null;
+  await page.route(TRANSLATE, async (route) => {
+    viewer = route.request().headers()['x-playback-viewer'];
+    if (held < 2) {
+      held += 1;
+      return route.fulfill({
+        body: '{"error":"Another language is being prepared"}',
+        contentType: 'application/json',
+        headers: { 'Retry-After': '1' },
+        status: 409,
+      });
+    }
+
+    return route.fallback();
+  });
+  await open(page);
+  await pick(page, 'Spanish', hasTouch);
+
+  await expect(captions(page)).toContainText(`[es] ${FIRST_LINE}`, { timeout: 15000 });
+  expect(held).toBe(2);
+  expect(viewer).toMatch(/^[0-9a-f]{24}$/);
+  await noNoticeAbout(page, "Couldn't translate");
+});

@@ -35,12 +35,31 @@ sudo ./translate/install.sh
 ```
 
 It starts the server, waits for the language models to download (a few
-minutes the first time, about 3 GB), adds the `/playback/translate` route to nginx and
-checks it from outside. No player setting needs to change:
+minutes the first time, about 3 GB), starts the gateway in front of it (see
+below), adds the `/playback/translate` route to nginx and checks it from
+outside. No player setting needs to change:
 `captions.translate.url` in `src/config.js` already points there.
 
 To see what it is doing: `cd translate && sudo docker compose logs -f`
 (Docker) or `sudo journalctl -u bbb-playback-translate -f` (service).
+
+## One language at a time
+
+In front of LibreTranslate runs a small gateway (`gateway.py`, the
+`bbb-playback-translate-gateway` service, standard Python only). It applies
+on the server the rule the CC menu shows: while a viewer's language is being
+prepared (until its first lines are translated), requests for another
+language get `409` with `Retry-After`; once it is ready, the viewer may pick
+any language. It also limits the requests one viewer (4) and one address
+(16) run at once (`429`), and the size of each request (32 lines, 256 KB).
+The player waits and tries again when asked to, so viewers never see these
+answers. Viewers are told apart by an id the player sends with each request
+(`X-Playback-Viewer`, one per browser tab), or by their address.
+
+`install.sh` sets it up, and `deploy.sh` keeps it up to date on servers that
+run the translation server (`install-gateway.sh`). To see what it is doing:
+`sudo journalctl -u bbb-playback-translate-gateway -f`.
+Its tests: `python3 -m unittest discover -s translate`.
 
 ## Languages
 
