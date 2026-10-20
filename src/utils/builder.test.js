@@ -1,4 +1,6 @@
 import {
+  addAlternatesToThumbnails,
+  build,
   buildStyle,
   getAttr,
   getId,
@@ -101,4 +103,18 @@ it('gets a numeric array from a string', () => {
   expect(getNumbers('')).toEqual([]);
   expect(getNumbers(' ')).toEqual([]);
   expect(getNumbers()).toEqual([]);
+});
+
+it('adds slide texts to PNG and tldraw SVG thumbnails', async () => {
+  // Built before the tldraw files are loaded, as when this one arrives first
+  const alternates = await build('presentation_text.json', {
+    presentation: { 'slide-1': 'First slide', 'slide-2': 'Second slide' },
+  });
+
+  const thumbnails = addAlternatesToThumbnails([
+    { src: 'presentation/presentation/thumbnails/thumb-1.png' },
+    { src: 'presentation/presentation/svgs/slide2.svg' },
+  ], alternates);
+
+  expect(thumbnails.map(({ alt }) => alt)).toEqual(['First slide', 'Second slide']);
 });
