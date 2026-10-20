@@ -138,10 +138,8 @@ npm test
 
 Browser tests open a small Arabic-captioned recording
 (`e2e/fixtures`) through a local server (`e2e/server.js`), with a stand-in
-for Chrome's translator (`e2e/fake-translator.js`), and check the CC button,
-recording and translated
-captions, switching languages, the remembered language, caption placement
-and a right-to-left interface:
+for Chrome's translator (`e2e/fake-translator.js`), and check translated
+captions and switching languages (`e2e/tests/switching.spec.js`):
 
 ```sh
 npm run build
