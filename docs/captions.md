@@ -135,20 +135,3 @@ worker, the remembered language and the caption files:
 ```sh
 npm test
 ```
-
-Browser tests open a small Arabic-captioned recording
-(`e2e/fixtures`) through a local server (`e2e/server.js`), with a stand-in
-for Chrome's translator (`e2e/fake-translator.js`), and check translated
-captions and switching languages (`e2e/tests/switching.spec.js`):
-
-```sh
-npm run build
-npx playwright install chromium   # once
-npm run test:e2e
-```
-
-Locally they run in Chromium as desktop Chrome, desktop Safari (its user
-agent), iPhone, iPad and Android. CI (`.github/workflows/ci.yml`) also runs
-them in the real Safari (WebKit, desktop and iPhone) and Firefox engines;
-locally, set `E2E_ALL_BROWSERS=1` after
-`npx playwright install webkit firefox`.

@@ -25,7 +25,6 @@
     "videojs-seek-buttons": "^3.0.1"
   },
   "devDependencies": {
-    "@playwright/test": "1.56.1",
     "react-scripts": "^5.0.1"
   },
   "overrides": {
@@ -44,8 +43,7 @@
     "start:proxy": "bash start-proxy.sh",
     "prebuild": "node scripts/copy-ogv.js",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "test:e2e": "playwright test -c e2e/playwright.config.js"
+    "test": "react-scripts test"
   },
   "eslintConfig": {
     "extends": "react-app"

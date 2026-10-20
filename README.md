@@ -42,8 +42,6 @@ How it works, setup, troubleshooting and tests: [docs/captions.md](docs/captions
 
 ```
 npm test                 # unit tests
-npm run build
-npm run test:e2e         # browser tests (npx playwright install chromium, once)
 ```
 
 ## Development proxy
