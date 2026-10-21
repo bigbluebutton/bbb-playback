@@ -36,13 +36,7 @@ Translation happens in the viewer's browser (Chrome's built-in translator,
 or open models in every other browser), with nothing to install on the
 server.
 
-How it works, setup, troubleshooting and tests: [docs/captions.md](docs/captions.md).
-
-## Tests
-
-```
-npm test                 # unit tests
-```
+How it works, setup and troubleshooting: [docs/captions.md](docs/captions.md).
 
 ## Development proxy
 

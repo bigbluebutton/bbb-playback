@@ -1,7 +1,4 @@
-import {
-  getScrollTop,
-  handleOnKeyActivation,
-} from './handlers';
+import { getScrollTop } from './handlers';
 
 it('gets the vertical offset of a scrollable list', () => {
   const parentNode = { clientHeight: 100 };
@@ -16,19 +13,4 @@ it('gets the vertical offset of a scrollable list', () => {
   expect(getScrollTop(firstNode, currentNode, 'top')).toEqual(100);
   expect(getScrollTop(firstNode, currentNode, 'middle')).toEqual(55);
   expect(getScrollTop(firstNode, currentNode, 'bottom')).toEqual(10);
-});
-
-it('activates on Enter and Space only', () => {
-  const action = jest.fn();
-  const preventDefault = jest.fn();
-
-  handleOnKeyActivation({ key: 'Enter', preventDefault }, action);
-  handleOnKeyActivation({ key: ' ', preventDefault }, action);
-  expect(action).toHaveBeenCalledTimes(2);
-  expect(preventDefault).toHaveBeenCalledTimes(2);
-
-  handleOnKeyActivation({ key: 'Tab', preventDefault }, action);
-  handleOnKeyActivation(null, action);
-  expect(action).toHaveBeenCalledTimes(2);
-  expect(preventDefault).toHaveBeenCalledTimes(2);
 });

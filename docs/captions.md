@@ -2,7 +2,7 @@
 
 This guide covers the CC button of the presentation player: what viewers
 get, how translation works, how to set it up on a BigBlueButton server, and
-how to check and troubleshoot it.
+how to troubleshoot it.
 
 ## What viewers get
 
@@ -128,13 +128,3 @@ sudo ./scripts/remove-translation-server.sh
 
 Translations are saved per browser. To start one over, clear the site's data
 in the browser, or open the recording in a private window.
-
-## Testing
-
-Unit tests cover the translation flow (translator order and fallback,
-notices, pausing and resuming a language), the remembered language and the
-caption files:
-
-```sh
-npm test
-```
