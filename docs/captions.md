@@ -132,8 +132,8 @@ in the browser, or open the recording in a private window.
 ## Testing
 
 Unit tests cover the translation flow (translator order and fallback,
-notices, pausing and resuming a language), the in-browser translator and its
-worker, the remembered language and the caption files:
+notices, pausing and resuming a language), the remembered language and the
+caption files:
 
 ```sh
 npm test
