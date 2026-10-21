@@ -10,6 +10,7 @@ import SectionButton from './buttons/section';
 import useShareItem from './buttons/share';
 import useSwapItem from './buttons/swap';
 import ThemeButton from './buttons/theme';
+import SummaryButton from './buttons/summary';
 import { ID } from 'utils/constants';
 import './index.scss';
 
@@ -52,6 +53,7 @@ const Top = ({
       <div className="end">
         <Status />
         <Progress />
+        <SummaryButton />
         <BookmarkButton />
         <SearchButton openSearch={() => openModal(ID.SEARCH)} />
         <ThemeButton />

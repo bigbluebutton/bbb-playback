@@ -73,4 +73,16 @@ describe('caption language preference', () => {
     restoreCaptionLanguage(chosen);
     expect(chosen.showing()).toBe('es');
   });
+
+  it('turns on the recording’s own captions on a first visit', () => {
+    // In the viewer's language when the recording has it
+    const player = createPlayer([['captions', 'ar'], ['captions', 'en'], ['subtitles', 'es']]);
+    restoreCaptionLanguage(player, 'en-US');
+    expect(player.showing()).toBe('en');
+
+    // Otherwise the first ones, never a translation
+    const other = createPlayer([['captions', 'ar'], ['subtitles', 'es']]);
+    restoreCaptionLanguage(other, 'es');
+    expect(other.showing()).toBe('ar');
+  });
 });

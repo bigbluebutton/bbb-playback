@@ -45,7 +45,7 @@ const setupCaptions = (videojsPlayer, options) => {
   return setupCaptionTranslation(videojsPlayer, options).then(() => {
     if (videojsPlayer.isDisposed()) return;
 
-    restoreCaptionLanguage(videojsPlayer);
+    restoreCaptionLanguage(videojsPlayer, options.locale);
     // Only from here on, so the restore itself is not taken for a choice
     watchCaptionLanguage(videojsPlayer);
   });

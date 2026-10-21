@@ -50,6 +50,7 @@ const ID = {
   PRESENTATION: 'presentation',
   SCREENSHARE: 'screenshare',
   SEARCH: 'search',
+  SUMMARY: 'summary',
   SETTINGS: 'settings',
   SHAPES: 'shapes',
   SLIDES: 'slides',
@@ -119,7 +120,7 @@ const THEME = {
 
 const getRouter = () => {
   if (typeof NO_ROUTER !== 'undefined') {
-    if (NO_ROUTER === '1') return false;
+    if (NO_ROUTER) return false;
   }
 
   return true;

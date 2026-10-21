@@ -196,6 +196,11 @@
   }
 }
 
+// The summary button's icon takes the bar's color like the other icons
+.top-bar .icon-summary {
+  color: inherit;
+}
+
 // The top bar's action (bookmark this moment): a white pill with its name,
 // standing out from the icon buttons on the gradient
 .top-bar .action-button {
