@@ -74,9 +74,12 @@ back to the original with a notice saying so.
 
 ## Setting it up
 
-Deploy the player on the BigBlueButton server, from the repository:
+Deploy the player on the BigBlueButton server, from the repository.
+`deploy.sh` builds with the dependencies already installed, so install
+them first (after every update that changes `package-lock.json`):
 
 ```sh
+npm ci
 ./deploy.sh
 ```
 
