@@ -123,5 +123,9 @@
   "player.tab.bookmarks": "북마크",
   "button.more.aria": "추가 옵션",
   "player.bookmark.action": "북마크",
-  "player.captions.wait": "{language} 자막이 준비되면 선택할 수 있습니다"
+  "player.captions.wait": "{language} 자막이 준비되면 선택할 수 있습니다",
+  "button.summary.aria": "회의 요약이 준비되었습니다",
+  "player.summary.hint": "이 세션의 핵심 내용을 새 탭에서 확인하세요",
+  "player.summary.open": "열기",
+  "player.summary.dismiss": "닫기"
 }

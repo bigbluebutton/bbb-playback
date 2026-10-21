@@ -123,5 +123,9 @@
   "player.tab.bookmarks": "Favoritos",
   "button.more.aria": "Mais opções",
   "player.bookmark.action": "Favoritar",
-  "player.captions.wait": "Disponível quando as legendas em {language} estiverem prontas"
+  "player.captions.wait": "Disponível quando as legendas em {language} estiverem prontas",
+  "button.summary.aria": "O resumo da sua reunião está pronto",
+  "player.summary.hint": "Os pontos principais desta sessão, em uma nova aba",
+  "player.summary.open": "Abrir",
+  "player.summary.dismiss": "Fechar"
 }

@@ -123,5 +123,9 @@
   "player.tab.bookmarks": "Signets",
   "button.more.aria": "Plus d’options",
   "player.bookmark.action": "Marquer",
-  "player.captions.wait": "Disponible dès que les sous-titres en {language} sont prêts"
+  "player.captions.wait": "Disponible dès que les sous-titres en {language} sont prêts",
+  "button.summary.aria": "Le résumé de votre réunion est prêt",
+  "player.summary.hint": "Les points clés de cette séance, dans un nouvel onglet",
+  "player.summary.open": "Ouvrir",
+  "player.summary.dismiss": "Fermer"
 }

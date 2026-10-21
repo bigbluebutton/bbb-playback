@@ -123,5 +123,9 @@
   "player.tab.bookmarks": "Bladwijzers",
   "button.more.aria": "Meer opties",
   "player.bookmark.action": "Bladwijzer",
-  "player.captions.wait": "Beschikbaar zodra de ondertiteling in het {language} klaar is"
+  "player.captions.wait": "Beschikbaar zodra de ondertiteling in het {language} klaar is",
+  "button.summary.aria": "Je vergadersamenvatting is klaar",
+  "player.summary.hint": "De belangrijkste punten van deze sessie, in een nieuw tabblad",
+  "player.summary.open": "Openen",
+  "player.summary.dismiss": "Sluiten"
 }

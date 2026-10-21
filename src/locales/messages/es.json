@@ -123,5 +123,9 @@
   "player.tab.bookmarks": "Marcadores",
   "button.more.aria": "Más opciones",
   "player.bookmark.action": "Marcar",
-  "player.captions.wait": "Disponible cuando los subtítulos en {language} estén listos"
+  "player.captions.wait": "Disponible cuando los subtítulos en {language} estén listos",
+  "button.summary.aria": "El resumen de tu reunión está listo",
+  "player.summary.hint": "Los puntos clave de esta sesión, en una pestaña nueva",
+  "player.summary.open": "Abrir",
+  "player.summary.dismiss": "Cerrar"
 }

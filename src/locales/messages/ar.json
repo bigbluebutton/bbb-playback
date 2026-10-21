@@ -123,5 +123,9 @@
   "player.tab.bookmarks": "الإشارات",
   "button.more.aria": "مزيد من الخيارات",
   "player.bookmark.action": "حفظ اللحظة",
-  "player.captions.wait": "متاح بعد أن تصبح التعليقات باللغة {language} جاهزة"
+  "player.captions.wait": "متاح بعد أن تصبح التعليقات باللغة {language} جاهزة",
+  "button.summary.aria": "ملخص الاجتماع جاهز",
+  "player.summary.hint": "أهم نقاط هذه الجلسة، في علامة تبويب جديدة",
+  "player.summary.open": "فتح",
+  "player.summary.dismiss": "إغلاق"
 }

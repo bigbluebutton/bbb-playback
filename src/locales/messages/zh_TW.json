@@ -123,5 +123,9 @@
   "player.tab.bookmarks": "書籤",
   "button.more.aria": "更多選項",
   "player.bookmark.action": "加入書籤",
-  "player.captions.wait": "{language}字幕準備好後即可選擇"
+  "player.captions.wait": "{language}字幕準備好後即可選擇",
+  "button.summary.aria": "會議摘要已完成",
+  "player.summary.hint": "在新分頁中查看本次會議的重點",
+  "player.summary.open": "開啟",
+  "player.summary.dismiss": "關閉"
 }

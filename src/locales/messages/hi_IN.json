@@ -123,5 +123,9 @@
   "player.tab.bookmarks": "बुकमार्क",
   "button.more.aria": "और विकल्प",
   "player.bookmark.action": "बुकमार्क",
-  "player.captions.wait": "{language} कैप्शन तैयार होने पर उपलब्ध"
+  "player.captions.wait": "{language} कैप्शन तैयार होने पर उपलब्ध",
+  "button.summary.aria": "आपकी मीटिंग का सारांश तैयार है",
+  "player.summary.hint": "इस सत्र के मुख्य बिंदु, एक नए टैब में",
+  "player.summary.open": "खोलें",
+  "player.summary.dismiss": "बंद करें"
 }

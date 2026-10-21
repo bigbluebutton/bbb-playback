@@ -123,5 +123,9 @@
   "player.tab.bookmarks": "Segnalibri",
   "button.more.aria": "Altre opzioni",
   "player.bookmark.action": "Segnalibro",
-  "player.captions.wait": "Disponibile quando i sottotitoli in {language} sono pronti"
+  "player.captions.wait": "Disponibile quando i sottotitoli in {language} sono pronti",
+  "button.summary.aria": "Il riepilogo della riunione è pronto",
+  "player.summary.hint": "I punti chiave di questa sessione, in una nuova scheda",
+  "player.summary.open": "Apri",
+  "player.summary.dismiss": "Chiudi"
 }

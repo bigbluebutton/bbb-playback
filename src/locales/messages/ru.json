@@ -123,5 +123,9 @@
   "player.tab.bookmarks": "Закладки",
   "button.more.aria": "Другие действия",
   "player.bookmark.action": "В закладки",
-  "player.captions.wait": "Будет доступно, когда субтитры ({language}) будут готовы"
+  "player.captions.wait": "Будет доступно, когда субтитры ({language}) будут готовы",
+  "button.summary.aria": "Сводка встречи готова",
+  "player.summary.hint": "Главное из этой встречи, в новой вкладке",
+  "player.summary.open": "Открыть",
+  "player.summary.dismiss": "Закрыть"
 }

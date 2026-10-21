@@ -123,5 +123,9 @@
   "player.tab.bookmarks": "Penanda",
   "button.more.aria": "Opsi lainnya",
   "player.bookmark.action": "Tandai",
-  "player.captions.wait": "Tersedia setelah teks {language} siap"
+  "player.captions.wait": "Tersedia setelah teks {language} siap",
+  "button.summary.aria": "Ringkasan rapat Anda sudah siap",
+  "player.summary.hint": "Poin-poin penting sesi ini, di tab baru",
+  "player.summary.open": "Buka",
+  "player.summary.dismiss": "Tutup"
 }

@@ -123,5 +123,9 @@
   "player.tab.bookmarks": "نشانک‌ها",
   "button.more.aria": "گزینه‌های بیشتر",
   "player.bookmark.action": "نشانک",
-  "player.captions.wait": "پس از آماده شدن زیرنویس {language} در دسترس است"
+  "player.captions.wait": "پس از آماده شدن زیرنویس {language} در دسترس است",
+  "button.summary.aria": "خلاصه جلسه آماده است",
+  "player.summary.hint": "نکات اصلی این جلسه، در یک زبانه جدید",
+  "player.summary.open": "باز کردن",
+  "player.summary.dismiss": "بستن"
 }

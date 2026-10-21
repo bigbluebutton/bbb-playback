@@ -123,5 +123,9 @@
   "player.tab.bookmarks": "书签",
   "button.more.aria": "更多选项",
   "player.bookmark.action": "添加书签",
-  "player.captions.wait": "{language}字幕准备好后即可选择"
+  "player.captions.wait": "{language}字幕准备好后即可选择",
+  "button.summary.aria": "会议摘要已生成",
+  "player.summary.hint": "在新标签页中查看本次会议的要点",
+  "player.summary.open": "打开",
+  "player.summary.dismiss": "关闭"
 }

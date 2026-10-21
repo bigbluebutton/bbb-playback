@@ -123,5 +123,9 @@
   "player.tab.bookmarks": "Lesezeichen",
   "button.more.aria": "Weitere Optionen",
   "player.bookmark.action": "Merken",
-  "player.captions.wait": "Verfügbar, sobald die Untertitel auf {language} bereit sind"
+  "player.captions.wait": "Verfügbar, sobald die Untertitel auf {language} bereit sind",
+  "button.summary.aria": "Ihre Besprechungszusammenfassung ist fertig",
+  "player.summary.hint": "Die wichtigsten Punkte dieser Sitzung, in einem neuen Tab",
+  "player.summary.open": "Öffnen",
+  "player.summary.dismiss": "Schließen"
 }

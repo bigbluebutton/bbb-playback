@@ -9,6 +9,18 @@ const intlMessages = defineMessages({
         id: 'button.summary.aria',
         description: 'Aria label for the summary button',
     },
+    hint: {
+        id: 'player.summary.hint',
+        description: 'Second line of the meeting summary notice',
+    },
+    open: {
+        id: 'player.summary.open',
+        description: 'Button that opens the meeting summary',
+    },
+    dismiss: {
+        id: 'player.summary.dismiss',
+        description: 'Button that closes the meeting summary notice',
+    },
 });
 
 const TOAST_DELAY_MS = 5000;     // delay before showing the toast
@@ -18,7 +30,6 @@ const TOAST_DURATION_MS = 8000;  // used only when autoClose=true
 const TOAST_MAX_WIDTH_PX   = 520;   // width
 const TOAST_TOP_OFFSET_PX  = 70;    // distance from top
 const PROGRESS_HEIGHT_PX   = 4;     // progress bar thickness
-const PROGRESS_LOOP_MS     = 12000; // loop length when not auto-closing
 const TOAST_MIN_HEIGHT_PX  = 88;    // <<< increase toast height here
 
 // /presentation/<version>/<ID>  OR fallback to ?meetingId=
@@ -74,13 +85,6 @@ const fetchSummaryUrl = async (meetingId, signal) => {
 
 /* ===================== TOAST ===================== */
 
-const VARIANTS = {
-    info:    { accent: '#5b8cff', accent2: '#7dd3fc', icon: InfoIcon },
-    success: { accent: '#10b981', accent2: '#34d399', icon: CheckIcon },
-    warn:    { accent: '#f59e0b', accent2: '#fbbf24', icon: WarnIcon },
-    error:   { accent: '#ef4444', accent2: '#f87171', icon: ErrorIcon },
-};
-
 const TopToast = ({
                       title = 'Meeting summary ready.',
                       hint = 'You can open it now.',
@@ -89,14 +93,14 @@ const TopToast = ({
                       variant = 'info',
                       duration = TOAST_DURATION_MS,
                       autoClose = false, // keep until user dismisses
+                      openLabel = 'Open',
+                      dismissLabel = 'Dismiss',
                   }) => {
     const [open, setOpen] = useState(true);
     const [paused, setPaused] = useState(false);
     const startedAt = useRef(null);
     const remaining = useRef(duration);
     const timer = useRef(null);
-
-    const { accent, accent2, icon: Icon } = VARIANTS[variant] || VARIANTS.info;
 
     const clear = () => { if (timer.current) clearTimeout(timer.current); timer.current = null; };
     const schedule = (ms) => {
@@ -171,49 +175,43 @@ const TopToast = ({
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
             style={{
-                '--accent': accent,
-                '--accent2': accent2,
-                '--duration': `${autoClose ? duration : PROGRESS_LOOP_MS}ms`,
+                '--duration': `${duration}ms`,
                 '--play': paused ? 'paused' : 'running',
-                '--progressMode': autoClose ? 'forwards' : 'infinite',
             }}
         >
             <div className="bbb-toast__inner">
-        <span className="bbb-toast__icon" aria-hidden="true">
-          <Icon />
-        </span>
+                <span className="bbb-toast__icon" aria-hidden="true">
+                    <SummaryIcon />
+                </span>
 
                 <div className="bbb-toast__msg" dir="auto">
                     <strong>{title}</strong>
-                    {hint ? <span className="bbb-toast__hint"> {hint}</span> : null}
+                    {hint ? <span className="bbb-toast__hint">{hint}</span> : null}
                 </div>
 
                 {onOpen && (
-                    <button className="bbb-toast__cta" onClick={onOpen}>
-                        Open
+                    <button className="bbb-toast__cta" onClick={onOpen} type="button">
+                        <span>{openLabel}</span>
+                        <OpenIcon />
                     </button>
                 )}
 
                 <button
                     className="bbb-toast__close"
-                    aria-label="Dismiss notification"
-                    title="Dismiss"
+                    aria-label={dismissLabel}
+                    title={dismissLabel}
                     onClick={() => { setOpen(false); onClose?.(); }}
+                    type="button"
                 >
-                    ×
+                    <CloseIcon />
                 </button>
 
-                <span className="bbb-toast__glow" aria-hidden="true" />
-                <span className="bbb-toast__progress" aria-hidden="true" />
+                {autoClose ? <span className="bbb-toast__progress" aria-hidden="true" /> : null}
             </div>
 
             <style>{`
+        /* In the player's colors: its theme (light or dark) and brand pink */
         .bbb-toast {
-          --bg: rgba(16,24,43,.92);
-          --ink: #e6edf3;
-          --muted: #9db1c7;
-          --line: rgba(255,255,255,.10);
-
           position: fixed;
           top: ${TOAST_TOP_OFFSET_PX}px;
           left: 50%;
@@ -221,15 +219,8 @@ const TopToast = ({
           width: min(${TOAST_MAX_WIDTH_PX}px, calc(100% - 24px));
           z-index: 2147483647;
           outline: none;
-          animation: bbbToastSlideDown 220ms cubic-bezier(.2,.8,.2,1);
-        }
-        @media (prefers-color-scheme: light) {
-          .bbb-toast {
-            --bg: rgba(255,255,255,.92);
-            --ink: #0f172a;
-            --muted: #556581;
-            --line: rgba(15,23,42,.08);
-          }
+          font-family: var(--font-family, inherit);
+          animation: bbbToastSlideDown 260ms cubic-bezier(.2,.8,.2,1);
         }
         @media (prefers-reduced-motion: reduce) {
           .bbb-toast { animation: none; }
@@ -241,129 +232,128 @@ const TopToast = ({
           display: flex;
           align-items: center;
           gap: 14px;
-          min-height: ${TOAST_MIN_HEIGHT_PX}px;       /* <<< increased height */
-          padding: 16px 16px 14px 16px;               /* a bit more padding */
-          border-radius: 16px;
-          -webkit-backdrop-filter: saturate(1.2) blur(10px);
-          backdrop-filter: saturate(1.2) blur(10px);
-          background:
-            radial-gradient(600px 120px at 10% -10%, color-mix(in oklab, var(--accent) 35%, transparent), transparent 60%),
-            radial-gradient(600px 120px at 90% -10%, color-mix(in oklab, var(--accent2) 35%, transparent), transparent 60%),
-            var(--bg);
-          border: 1px solid var(--line);
-          box-shadow: 0 18px 36px rgba(0,0,0,.35);
-          color: var(--ink);
+          min-height: ${TOAST_MIN_HEIGHT_PX}px;
+          padding: 18px 14px 16px 18px;
+          padding-inline: 18px 14px;
+          border-radius: 18px;
+          overflow: hidden;
+          background: var(--secondary-background-color, #fff);
+          color: var(--secondary-content-color, #1e293b);
+          border: 1px solid var(--border-color, rgba(15,23,42,.08));
+          box-shadow:
+            0 22px 48px -16px var(--accent-glow, rgba(252,37,198,.35)),
+            0 10px 28px -12px var(--shadow-color, rgba(15,23,42,.16));
         }
+        /* Brand gradient along the top edge */
+        .bbb-toast__inner::before{
+          content: '';
+          position: absolute;
+          inset: 0 0 auto 0;
+          height: 4px;
+          background: var(--accent-gradient, linear-gradient(90deg, #DE31AD, #F63CC2));
+        }
+
         .bbb-toast__icon{
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          width: 32px; height: 32px;                 /* bigger icon to match height */
-          border-radius: 10px;
-          color: var(--accent);
-          background: color-mix(in oklab, var(--accent) 18%, transparent);
-          border: 1px solid var(--line);
+          width: 44px; height: 44px;
+          border-radius: 14px;
+          color: #fff;
+          background: var(--accent-gradient, linear-gradient(90deg, #DE31AD, #F63CC2));
+          box-shadow: 0 8px 18px -8px var(--accent-glow, rgba(252,37,198,.35));
           flex: 0 0 auto;
         }
-        .bbb-toast__icon svg { width: 20px; height: 20px; display:block; }
+        .bbb-toast__icon svg { width: 22px; height: 22px; display: block; }
 
         .bbb-toast__msg{
           display: flex;
-          align-items: baseline;
-          gap: 8px;
+          flex-direction: column;
+          gap: 3px;
           flex: 1 1 auto;
           min-width: 0;
-          font-size: 15px;                            /* slightly larger text */
           line-height: 1.3;
         }
         .bbb-toast__msg strong{
+          font-size: 15px;
           font-weight: 700;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          max-width: 60vw;
+          overflow-wrap: anywhere;
         }
         .bbb-toast__hint{
-          color: var(--muted);
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          max-width: 40vw;
+          color: var(--muted-content-color, #5a6577);
+          font-size: 13px;
         }
 
         .bbb-toast__cta{
           appearance: none;
           border: 0;
-          padding: 10px 14px;                         /* taller button */
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 10px 16px;
           border-radius: 999px;
+          font: inherit;
           font-weight: 700;
-          font-size: 13px;
+          font-size: 14px;
           color: #fff;
-          background: linear-gradient(135deg, var(--accent), var(--accent2));
-          box-shadow: 0 6px 18px color-mix(in oklab, var(--accent) 35%, transparent);
+          background: var(--accent-gradient, linear-gradient(90deg, #DE31AD, #F63CC2));
+          box-shadow: 0 8px 20px -8px var(--accent-glow, rgba(252,37,198,.35));
           cursor: pointer;
-          transition: transform .08s ease, filter .2s ease;
+          transition: transform .1s ease, filter .2s ease, box-shadow .2s ease;
           flex: 0 0 auto;
+          white-space: nowrap;
         }
-        .bbb-toast__cta:hover{ filter: brightness(1.05); }
+        .bbb-toast__cta svg { width: 14px; height: 14px; display: block; }
+        [dir="rtl"] .bbb-toast__cta svg { transform: scaleX(-1); }
+        .bbb-toast__cta:hover{ filter: brightness(1.06); box-shadow: 0 10px 24px -8px var(--accent-glow, rgba(252,37,198,.35)); }
         .bbb-toast__cta:active{ transform: translateY(1px); }
+        .bbb-toast__cta:focus-visible{ outline: none; box-shadow: 0 0 0 3px var(--secondary-background-color, #fff), 0 0 0 5px var(--accent-color, #FC25C6); }
 
         .bbb-toast__close{
           appearance: none;
           border: 0;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px; height: 32px;
+          border-radius: 50%;
           background: transparent;
-          color: var(--ink);
-          opacity: .8;
-          font-size: 20px;                             /* slightly larger close icon */
-          line-height: 1;
+          color: var(--muted-content-color, #5a6577);
           cursor: pointer;
-          padding: 6px 8px;                            /* taller tap target */
-          border-radius: 10px;
-          transition: background-color .2s ease, opacity .2s ease;
+          transition: background-color .2s ease, color .2s ease;
           flex: 0 0 auto;
         }
-        .bbb-toast__close:hover{ background: rgba(0,0,0,.08); opacity: 1; }
-        @media (prefers-color-scheme: dark) {
-          .bbb-toast__close:hover{ background: rgba(255,255,255,.08); }
-        }
+        .bbb-toast__close svg { width: 16px; height: 16px; display: block; }
+        .bbb-toast__close:hover{ background: var(--accent-soft, rgba(252,37,198,.1)); color: var(--accent-text-color, #c21391); }
+        .bbb-toast__close:focus-visible{ outline: none; box-shadow: 0 0 0 2px var(--accent-color, #FC25C6); }
 
-        .bbb-toast__glow{
-          position: absolute;
-          inset: -1px;
-          border-radius: 16px;
-          pointer-events: none;
-          background:
-            radial-gradient(500px 100px at 10% -10%, color-mix(in oklab, var(--accent) 22%, transparent), transparent 60%),
-            radial-gradient(500px 100px at 90% -10%, color-mix(in oklab, var(--accent2) 22%, transparent), transparent 60%);
-          filter: blur(10px);
-          opacity: .55;
-        }
+        /* Time left, only when the notice closes by itself */
         .bbb-toast__progress{
           position: absolute;
-          left: 0; bottom: 0;
+          inset: auto 0 0 0;
           height: ${PROGRESS_HEIGHT_PX}px;
-          width: 100%;
-          background: linear-gradient(90deg, var(--accent), var(--accent2));
+          background: var(--accent-gradient, linear-gradient(90deg, #DE31AD, #F63CC2));
           transform-origin: left center;
-          animation: bbbToastProgress var(--duration) linear var(--progressMode);
+          animation: bbbToastProgress var(--duration) linear forwards;
           animation-play-state: var(--play);
-          opacity: .95;
         }
+        [dir="rtl"] .bbb-toast__progress { transform-origin: right center; }
 
         @keyframes bbbToastSlideDown {
-          from { opacity: 0; transform: translate(-50%, -10px); }
+          from { opacity: 0; transform: translate(-50%, -12px); }
           to   { opacity: 1; transform: translate(-50%, 0); }
         }
         @keyframes bbbToastProgress {
-          from { transform: scaleX(0); }
-          to   { transform: scaleX(1); }
+          from { transform: scaleX(1); }
+          to   { transform: scaleX(0); }
         }
 
-        @media (max-width: 420px) {
-          .bbb-toast__inner { flex-wrap: wrap; padding-right: 10px; }
-          .bbb-toast__msg { width: 100%; order: 2; }
-          .bbb-toast__cta { order: 3; }
-          .bbb-toast__close { order: 4; margin-left: auto; }
+        @media (max-width: 480px) {
+          .bbb-toast { top: 64px; }
+          .bbb-toast__inner { flex-wrap: wrap; gap: 12px; padding: 16px; }
+          .bbb-toast__msg { flex-basis: calc(100% - 100px); }
+          .bbb-toast__cta { order: 3; flex: 1 1 auto; justify-content: center; }
+          .bbb-toast__close { position: absolute; top: 10px; inset-inline-end: 8px; }
         }
       `}</style>
         </div>
@@ -373,31 +363,25 @@ const TopToast = ({
 };
 
 /* Minimal inline icons */
-function InfoIcon() {
+function SummaryIcon() {
     return (
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2Zm0 5.2a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Zm1.6 11h-3.2a.8.8 0 0 1 0-1.6h.8v-4h-.8a.8.8 0 0 1 0-1.6h2.4a.8.8 0 0 1 .8.8v4.8h.8a.8.8 0 0 1 0 1.6Z"/>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+            <path d="M14 3v5h5M9 13h6M9 17h4" />
         </svg>
     );
 }
-function CheckIcon() {
+function OpenIcon() {
     return (
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M12 2a10 10 0 1 0 .001 20.001A10 10 0 0 0 12 2Zm-1.1 13.7-3.6-3.6 1.13-1.13 2.47 2.47 4.8-4.8 1.13 1.13-5.93 5.93z"/>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M7 17 17 7M9 7h8v8" />
         </svg>
     );
 }
-function WarnIcon() {
+function CloseIcon() {
     return (
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M1.5 20h21L12 3 1.5 20Zm11.25-3h-1.5v-1.5h1.5V17Zm0-3h-1.5V10h1.5v4Z"/>
-        </svg>
-    );
-}
-function ErrorIcon() {
-    return (
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M12 2a10 10 0 1 0 .001 20.001A10 10 0 0 0 12 2Zm3.18 13.18-1.06 1.06L12 13.12l-2.12 2.12-1.06-1.06L10.88 12 8.82 9.94l1.06-1.06L12 10.88l2.12-2.12 1.06 1.06L13.12 12l2.06 2.18Z"/>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
+            <path d="M6 6l12 12M18 6 6 18" />
         </svg>
     );
 }
@@ -455,7 +439,9 @@ const Summary = () => {
             {showToast && (
                 <TopToast
                     title={intl.formatMessage(intlMessages.summary)}
-                    hint=""
+                    hint={intl.formatMessage(intlMessages.hint)}
+                    openLabel={intl.formatMessage(intlMessages.open)}
+                    dismissLabel={intl.formatMessage(intlMessages.dismiss)}
                     variant="info"
                     duration={TOAST_DURATION_MS}
                     onOpen={() => { setShowToast(false); openSummary(); }}

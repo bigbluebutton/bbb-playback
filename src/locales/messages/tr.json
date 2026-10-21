@@ -123,5 +123,9 @@
   "player.tab.bookmarks": "Yer imleri",
   "button.more.aria": "Diğer seçenekler",
   "player.bookmark.action": "Yer imi ekle",
-  "player.captions.wait": "{language} altyazılar hazır olunca kullanılabilir"
+  "player.captions.wait": "{language} altyazılar hazır olunca kullanılabilir",
+  "button.summary.aria": "Toplantı özetiniz hazır",
+  "player.summary.hint": "Bu oturumun önemli noktaları, yeni bir sekmede",
+  "player.summary.open": "Aç",
+  "player.summary.dismiss": "Kapat"
 }
