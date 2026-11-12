@@ -102,6 +102,14 @@ When no URL is provided, the dev server starts normally without any proxy.
 ## Configuration
 
 - captions:
+  - `reflow`: captions typed or transcribed live are recorded a word or two at
+    a time; regroup them into sentence-sized cues in the player, the transcript
+    and the lines sent for translation
+    - `enabled`: [`true`|`false`]
+    - `threshold`: cues averaging this many words or more are left as they are
+    - `characters`: maximum characters per cue (wide East Asian characters count twice)
+    - `duration`: maximum seconds per cue
+    - `gap`: silence (seconds) between cues that always starts a new cue
   - `translate`: offer the recording captions in more languages in the CC menu,
     translated when the viewer selects one
     - `enabled`: [`true`|`false`]

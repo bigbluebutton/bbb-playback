@@ -11,6 +11,12 @@ how to troubleshoot it.
   itself instead of leaving them to the browser, so they look and behave the
   same everywhere, including right-to-left languages.
 - **The recording's captions** in every language they were recorded in.
+  Captions typed or transcribed live are recorded a word or two at a time;
+  the player regroups them into sentences (up to about two lines and seven
+  seconds each, breaking at the end of a sentence and at pauses), in the
+  captions, the transcript and the lines sent for translation. Captions
+  that already hold sentences are shown as they are. See `captions.reflow`
+  in the README's Configuration section.
 - **Translated captions**: the CC menu also lists other languages, marked
   "auto-translated". Picking one shows each line as soon as its translation
   arrives, starting from where the viewer is watching. Translation happens
@@ -104,7 +110,9 @@ sudo ./scripts/remove-translation-server.sh
 | Path | What it does |
 |---|---|
 | `src/components/webcams/index.js` | Creates the video player; turns off the browser's own caption rendering (`nativeTextTracks: false`), which hid the CC button in Safari |
-| `src/components/webcams/captions/index.js` | Sets up the CC menu: translation, then the remembered language |
+| `src/components/webcams/captions/index.js` | Sets up the CC menu: tidies and regroups the recording's cues as they load, then translation, then the remembered language |
+| `src/utils/captions/reflow.js` | Regroups word-level cues into sentences |
+| `src/utils/captions/cues.js` | Creates and clears cues on video.js tracks |
 | `src/components/webcams/captions/translation.js` | Adds the translated languages and translates the picked one, line by line, with fallback between translators |
 | `src/components/webcams/captions/preference.js` | Remembers and restores the caption language |
 | `src/utils/captions/translators.js` | The translators (Chrome's, the in-browser models) and their order |
