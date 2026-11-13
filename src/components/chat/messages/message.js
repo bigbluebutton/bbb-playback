@@ -49,7 +49,7 @@ const Message = ({
   timestamp,
 }) => {
   const handleOnClick = () => {
-    player.primary.currentTime(timestamp);
+    if (player.primary) player.primary.currentTime(timestamp);
   };
 
   return (

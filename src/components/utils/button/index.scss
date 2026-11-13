@@ -3,30 +3,45 @@
 :root {
   --button-default-background-color: transparent;
   --button-default-color: inherit;
+  --button-default-hover-background-color: var(--primary-highlight-color);
 
   --button-disabled-background-color: var(--gray-light);
   --button-disabled-color: var(--white);
 
-  --button-solid-background-color: var(--blue);
+  --button-solid-background-color: var(--accent-color);
+  --button-solid-background: var(--accent-gradient);
   --button-solid-color: var(--white);
 
   --button-box-shadow-color: var(--gray-light);
 }
 
-$button-size: 2rem;
+$button-size: 2.25rem;
 
 .button-wrapper {
   display: flex;
   height: $button-size;
-  margin: 0 $margin 0 $margin;
+  margin: 0 $margin-extra-small;
   width: $button-size;
 
   .button {
+    align-items: center;
+    border-radius: $border-radius;
     cursor: pointer;
+    display: flex;
     font-size: medium;
     height: 100%;
+    justify-content: center;
     outline: none;
+    padding: 0;
+    transition:
+      background-color var(--transition-duration) ease,
+      box-shadow var(--transition-duration) ease,
+      filter var(--transition-duration) ease;
     width: 100%;
+
+    &:focus-visible {
+      box-shadow: 0 0 0 $focus-ring-width var(--focus-ring-color);
+    }
   }
 
   .default {
@@ -34,18 +49,24 @@ $button-size: 2rem;
     border: none;
     color: var(--button-default-color);
 
-    &:focus {
-      box-shadow: 0 0 0 $margin-extra-small;
+    &:hover {
+      background-color: var(--button-default-hover-background-color);
     }
   }
 
   .solid {
-    background-color: var(--button-solid-background-color);
+    background: var(--button-solid-background-color);
+    background: var(--button-solid-background);
     border: none;
+    box-shadow: 0 1px 3px var(--shadow-color);
     color: var(--button-solid-color);
 
-    &:focus {
-      box-shadow: 0 0 0 $margin-extra-small var(--button-box-shadow-color);
+    &:hover {
+      filter: brightness(1.1);
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 $focus-ring-width var(--button-solid-color), 0 0 0 ($focus-ring-width * 2) var(--focus-ring-color);
     }
   }
 

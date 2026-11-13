@@ -12,6 +12,12 @@ const defaultProps = {
   text: '',
 };
 
+const decodeEntities = (text) => {
+  const textarea = document.createElement('textarea');
+  textarea.innerHTML = text;
+  return textarea.value;
+};
+
 const Text = ({
   active,
   text,
@@ -19,7 +25,9 @@ const Text = ({
   return (
     <div
       className='text-vanilla'
-      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(text) }}
+      // Messages can be in a different language than the page
+      dir="auto"
+      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(decodeEntities(text)) }}
     />
   );
 };

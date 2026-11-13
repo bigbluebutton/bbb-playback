@@ -1,19 +1,107 @@
 @import 'src/styles/sizes';
 
 .body-data {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  overflow-x: hidden;
-  overflow-y: auto;
   width: 100%;
 
-  .item {
-    box-sizing: border-box;
+  .items {
     display: grid;
-    font-size: large;
+    gap: .5rem;
+    grid-template-columns: repeat(auto-fill, minmax(5.6rem, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .item {
+    align-items: center;
+    background-color: var(--accent-soft);
+    border: 1px solid rgba(252, 37, 198, .22);
+    border-radius: .8rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+    min-width: 0;
+    padding: .7rem .4rem .55rem;
+    position: relative;
+    text-align: center;
+  }
+
+  .item-icon {
+    align-items: center;
+    background: var(--accent-color);
+    background: var(--accent-gradient);
+    border-radius: 50%;
+    box-shadow: 0 4px 10px -4px var(--accent-glow);
+    color: var(--white);
+    display: flex;
+    font-size: 1rem;
+    height: 2.1rem;
+    justify-content: center;
+    width: 2.1rem;
+
+    svg {
+      height: 1.05rem;
+      width: 1.05rem;
+    }
+  }
+
+  .item-label {
+    font-size: .76rem;
     font-weight: var(--font-weight-semi-bold);
-    grid-gap: $padding-extra-small;
-    padding: $padding-small $padding-extra-small;
+    line-height: 1.25;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .item-count {
+    color: var(--accent-text-color);
+    font-size: 1rem;
+    font-weight: var(--font-weight-bold);
+    line-height: 1;
+  }
+
+  // Check or cross in the tile's corner
+  .item-state {
+    align-items: center;
+    background: var(--accent-color);
+    border: 2px solid var(--modal-background-color);
+    border-radius: 50%;
+    color: var(--white);
+    display: flex;
+    font-size: .55rem;
+    height: 1.05rem;
+    inset-inline-end: .35rem;
+    justify-content: center;
+    position: absolute;
+    top: .35rem;
+    width: 1.05rem;
+
+    svg {
+      height: .6rem;
+      width: .6rem;
+    }
+  }
+
+  .unavailable {
+    background-color: transparent;
+    border-color: var(--border-color);
+    border-style: dashed;
+    color: var(--muted-content-color);
+
+    .item-icon {
+      background: var(--secondary-highlight-color);
+      box-shadow: none;
+      color: var(--muted-content-color);
+    }
+
+    .item-label {
+      font-weight: var(--font-weight-regular);
+    }
+
+    .item-state {
+      background: var(--muted-content-color);
+      opacity: .7;
+    }
   }
 }

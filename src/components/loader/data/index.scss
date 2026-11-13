@@ -14,9 +14,12 @@
     font-weight: var(--font-weight-semi-bold);
     padding: $padding;
     opacity: .25;
+    transform: scale(.92);
+    transition: opacity .3s ease-in, transform .3s ease-out;
   }
 
   .loaded {
     opacity: 1;
+    transform: none;
   }
 }

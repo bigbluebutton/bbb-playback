@@ -1,85 +1,56 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   defineMessages,
   useIntl,
 } from 'react-intl';
-import {
-  enable,
-  disable,
-} from 'darkreader';
 import Button from 'components/utils/button';
 import { controls as config } from 'config';
-import { THEME } from 'utils/constants';
+import {
+  EVENTS,
+  THEME,
+} from 'utils/constants';
 import layout from 'utils/layout';
+import {
+  applyTheme,
+  getTheme,
+  saveTheme,
+} from 'utils/theme';
 
 const intlMessages = defineMessages({
-  theme: {
-    id: 'button.theme.aria',
-    description: 'Aria label for the theme button',
+  dark: {
+    id: 'button.theme.dark.aria',
+    description: 'Aria label for the button that switches to the dark theme',
+  },
+  light: {
+    id: 'button.theme.light.aria',
+    description: 'Aria label for the button that switches to the light theme',
   },
 });
 
-const themeOptions = {};
-
-const css = `
-.video-js .vjs-volume-level,
-.video-js .vjs-play-progress {
-  background-color: white;
-}
-.tl-container {
-  .tl-image {
-    background-color: white !important;
-  }
-  .tl-background {
-    background-color: #F9FAFB !important;
-  }
-}
-`;
-
-const ignoreInlineStyle = [
-  'g > circle',
-  'g > line',
-  'g > path',
-  'g > polygon',
-  'g > polyline',
-  'g > foreignObject',
-  'path',
-  'svg',
-  'g',
-  'line',
-  'textarea',
-  'rect',
-  'circle',
-  '.tl-html-container > div.tl-text-shape__wrapper.tl-text-shadow',
-  '.tl-text',
-  '.tl-text-input',
-  '.tl-text-content',
-  '.tl-text-label__inner',
-  '.tl-note__container',
-  '.tl-text.tl-text-content',
-  '.tl-arrow-label',
-  '.tl-arrow-label__inner',
-];
-
-const fixes = {
-  css,
-  ignoreInlineStyle,
-};
-
 const Theme = () => {
   const intl = useIntl();
-  const [dark, setDark] = useState(false);
+  const [theme, setTheme] = useState(getTheme);
 
-  const toggleTheme = () => {
-    dark ? disable() : enable(themeOptions, fixes);
-    setDark(prevDark => !prevDark);
-  };
+  useEffect(() => {
+    const handleTheme = (event) => setTheme(event.detail.theme);
+    document.addEventListener(EVENTS.THEME, handleTheme);
+
+    return () => document.removeEventListener(EVENTS.THEME, handleTheme);
+  }, []);
 
   if (!layout.control || !config.theme) return null;
 
+  const dark = theme === THEME.DARK;
+  const next = dark ? THEME.LIGHT : THEME.DARK;
+
+  const toggleTheme = () => {
+    saveTheme(next);
+    applyTheme(next);
+  };
+
   return (
     <Button
-      aria={intl.formatMessage(intlMessages.theme)}
+      aria={intl.formatMessage(dark ? intlMessages.light : intlMessages.dark)}
       circle
       handleOnClick={toggleTheme}
       icon={dark ? THEME.LIGHT : THEME.DARK}

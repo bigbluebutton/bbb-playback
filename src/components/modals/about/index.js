@@ -13,7 +13,7 @@ const defaultProps = { handleClose: () => {} };
 const About = ({ handleClose }) => {
 
   return (
-    <Modal onClose={handleClose}>
+    <Modal className="about-modal" onClose={handleClose}>
       <Header />
       <Body />
       <Footer />

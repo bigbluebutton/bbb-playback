@@ -52,6 +52,8 @@ const Button = ({
         className={cx('button', style)}
         disabled={disabled}
         onClick={() => handleOnClick()}
+        title={aria || undefined}
+        type="button"
       >
         <Icon name={icon} />
       </button>

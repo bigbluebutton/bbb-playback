@@ -4,6 +4,7 @@
 
 :root {
   --body-background-color: var(--primary-background-color);
+  --transition-duration: #{$transition-duration};
 }
 
 body,
@@ -13,11 +14,31 @@ html {
 }
 
 body {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
   background-color: var(--body-background-color);
   font-family: var(--font-family);
   font-weight: var(--font-weight-regular);
   margin: 0;
   overflow: hidden;
+  text-rendering: optimizeLegibility;
+}
+
+// Keyboard users get a visible focus indicator, pointer users do not
+:focus-visible {
+  outline: $focus-ring-width solid var(--focus-ring-color);
+  outline-offset: -$focus-ring-width;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
 }
 
 #root {

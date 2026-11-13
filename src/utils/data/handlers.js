@@ -72,6 +72,17 @@ const handleOnEnterPress = (event, action) => {
   }
 };
 
+// Keyboard activation for non-button elements acting as buttons
+const handleOnKeyActivation = (event, action) => {
+  if (!event) return;
+
+  if (event.key === 'Enter' || event.key === ' ') {
+    // Avoid scrolling the page when activating with the space bar
+    if (typeof event.preventDefault === 'function') event.preventDefault();
+    if (typeof action === 'function') action();
+  }
+};
+
 const handleAutoScroll = (fNode, cNode, direction, align) => {
   // Auto-scroll can start after getting the first and current nodes
   if (fNode && cNode) {
@@ -95,4 +106,5 @@ export {
   getScrollTop,
   handleAutoScroll,
   handleOnEnterPress,
+  handleOnKeyActivation,
 };

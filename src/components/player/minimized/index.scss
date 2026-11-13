@@ -1,7 +1,7 @@
 @import 'src/styles/sizes';
 
 :root {
-  --minimized-highlight-color: var(--blue);
+  --minimized-highlight-color: var(--focus-ring-color);
   --minimized-tooltip-background-color: var(--gray-darker);
   --minimized-tooltip-color: var(--white);
 }

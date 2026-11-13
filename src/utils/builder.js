@@ -214,9 +214,11 @@ const buildThumbnails = slides => {
 
   return slides.reduce((result, slide) => {
     const {
+      height,
       id,
       src,
       timestamp,
+      width,
     } = slide;
 
     if (src.includes(ID.DESKSHARE)) {
@@ -226,10 +228,13 @@ const buildThumbnails = slides => {
         timestamp,
       });
     } else {
+      // Slide dimensions let thumbnails reserve their space before loading
       result.push({
+        height,
         id,
         src: src.replace(prefix, url),
         timestamp,
+        width,
       });
     }
 

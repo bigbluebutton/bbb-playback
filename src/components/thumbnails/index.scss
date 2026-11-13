@@ -2,21 +2,37 @@
 @import 'src/styles/sizes';
 
 $thumbnail-height: calc((#{$bottom-content-height} / 10) * 6);
+$thumbnail-radius: .6rem;
 
 .thumbnails-wrapper {
+  align-items: center;
   display: flex;
+  gap: $margin-small;
   height: 100%;
   overflow-x: auto;
   overflow-y: hidden;
+  padding: 0 $padding-small;
   position: absolute;
   scroll-behavior: smooth;
+  scrollbar-width: thin;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .thumbnail-wrapper {
+  border-radius: $thumbnail-radius + .2rem;
   box-sizing: border-box;
   display: flex;
+  flex-shrink: 0;
   padding: $padding-extra-small;
+  position: relative;
+  transition:
+    background-color var(--transition-duration) ease,
+    transform var(--transition-duration) ease;
+
+  &.interactive:hover {
+    transform: translateY(-3px);
+  }
 
   .thumbnail {
     align-self: flex-start;
@@ -25,21 +41,82 @@ $thumbnail-height: calc((#{$bottom-content-height} / 10) * 6);
     justify-content: center;
 
     .thumbnail-image {
+      background-color: var(--white);
+      border-radius: $thumbnail-radius;
+      box-shadow: 0 0 0 1px var(--border-color), 0 4px 12px -6px var(--shadow-color);
       display: block;
       height: $thumbnail-height;
+      transition: box-shadow var(--transition-duration) ease;
       width: auto;
     }
 
-    .thumbnail-index {
+    .thumbnail-footer {
+      align-items: baseline;
       display: flex;
       font-size: x-small;
-      font-weight: var(--font-weight-bold);
-      margin-top: $margin-extra-small;
+      font-variant-numeric: tabular-nums;
+      gap: $margin-small;
+      justify-content: space-between;
+      margin-top: $margin-small;
+      padding: 0 $padding-extra-small;
     }
 
+    .thumbnail-index {
+      font-weight: var(--font-weight-bold);
+    }
+
+    .thumbnail-time {
+      color: var(--muted-content-color);
+    }
+
+    // Screen share segments get a colorful tile
     .screenshare {
-      font-size: xxx-large;
-      font-weight: var(--font-weight-semi-bold);
+      align-items: center;
+      aspect-ratio: 16 / 10;
+      background: var(--accent-gradient);
+      box-shadow: 0 6px 14px -6px var(--accent-glow);
+      color: var(--white);
+      display: flex;
+      font-size: 1.75rem;
+      justify-content: center;
+    }
+  }
+
+  // Current slide: gradient ring, glow and playback progress
+  &.active {
+    .thumbnail .thumbnail-image {
+      box-shadow:
+        0 0 0 2px var(--secondary-background-color),
+        0 0 0 4px var(--accent-color),
+        0 8px 22px -6px var(--accent-glow);
+    }
+
+    .thumbnail-index {
+      color: var(--accent-text-color);
+    }
+  }
+}
+
+.thumbnail-progress {
+  background-color: var(--border-color);
+  border-radius: 2px;
+  bottom: 1px;
+  height: 3px;
+  left: $padding-small;
+  overflow: hidden;
+  position: absolute;
+  right: $padding-small;
+
+  span {
+    background: var(--accent-gradient);
+    display: block;
+    height: 100%;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .2s linear;
+
+    [dir="rtl"] & {
+      transform-origin: right;
     }
   }
 }

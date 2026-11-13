@@ -1,3 +1,37 @@
+const captions = {
+  // Captions typed or transcribed live are recorded a word or two at a
+  // time: regroup them into sentence-sized cues, in the player, the
+  // transcript and the lines sent for translation
+  reflow: {
+    enabled: true,
+    // Cues averaging this many words or more are left as they are
+    threshold: 4,
+    // Maximum characters per cue (wide East Asian characters count twice)
+    characters: 84,
+    // Maximum seconds per cue
+    duration: 7,
+    // Silence (seconds) between cues that always starts a new cue
+    gap: 1.5,
+  },
+  // Offer the recording captions in other languages, translated on demand
+  // in the viewer's browser, by the first of these that handles the
+  // language: Chrome's built-in on-device translator, then open models run
+  // in the browser (`local`)
+  translate: {
+    enabled: true,
+    // Start downloading the viewer's language pack on their first click
+    preload: true,
+    languages: ['ar', 'de', 'en', 'es', 'fa', 'fr', 'hi', 'id', 'it', 'ja', 'ko', 'nl', 'pt', 'ru', 'tr', 'uk', 'ur', 'zh'],
+    // Works in every browser with nothing to install. Models download once
+    // from `models` (about 110 MB per language, cached by the browser)
+    local: {
+      enabled: true,
+      library: 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/dist/transformers.min.js',
+      models: 'https://huggingface.co/',
+    },
+  },
+};
+
 const chat = {
   align: 'bottom',
   scroll: true,
@@ -8,6 +42,7 @@ const controls = {
   fullscreen: true,
   search: true,
   section: true,
+  share: true,
   swap: true,
   theme: true,
 };
@@ -51,6 +86,8 @@ const search = {
 
 const shortcuts = {
   enabled: true,
+  // Single key controls: Space/K, J/L, arrows, F and M
+  plain: true,
   fullscreen: 'K',
   play: 'Enter',
   section: 'L',
@@ -78,6 +115,7 @@ const thumbnails = {
 };
 
 export {
+  captions,
   chat,
   controls,
   date,

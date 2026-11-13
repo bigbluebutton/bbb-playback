@@ -1,0 +1,110 @@
+@import 'src/styles/sizes';
+
+:root {
+  --toast-background-color: rgb(30, 41, 59);
+  --toast-color: rgb(248, 250, 252);
+  --toast-action-color: rgb(255, 140, 215);
+}
+
+:root[data-theme="dark"] {
+  --toast-background-color: rgb(241, 245, 249);
+  --toast-color: rgb(15, 23, 42);
+  --toast-action-color: var(--accent-color);
+}
+
+.toast-region {
+  bottom: calc(#{$control-bar-height} + #{$bottom-bar-height} + #{$margin});
+  display: flex;
+  justify-content: center;
+  left: 0;
+  pointer-events: none;
+  position: fixed;
+  right: 0;
+  z-index: 4;
+}
+
+.toast {
+  align-items: center;
+  animation: toast-enter .2s ease-out;
+  background-color: var(--toast-background-color);
+  border-radius: 999px;
+  box-shadow: 0 8px 24px var(--shadow-color);
+  color: var(--toast-color);
+  display: flex;
+  font-size: .875rem;
+  gap: $margin;
+  max-width: calc(100vw - #{$margin * 4});
+  padding: $padding-small $padding * 1.5;
+  pointer-events: auto;
+}
+
+.toast-message {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.toast-action {
+  background: none;
+  border: none;
+  border-radius: $border-radius;
+  color: var(--toast-action-color);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: var(--font-weight-semi-bold);
+  padding: $padding-extra-small $padding-small;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+@keyframes toast-enter {
+  from {
+    opacity: 0;
+    transform: translateY(.5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+// Progress of a longer task, e.g. a translation getting ready
+.toast-progress {
+  background-color: rgba(127, 127, 127, .35);
+  background-color: color-mix(in srgb, var(--toast-color) 20%, transparent);
+  border-radius: 999px;
+  flex: 0 0 4rem;
+  height: 4px;
+  overflow: hidden;
+  position: relative;
+
+  > span {
+    background: var(--accent-gradient);
+    border-radius: inherit;
+    display: block;
+    height: 100%;
+    transition: width .4s ease-out;
+  }
+
+  &.busy > span {
+    animation: toast-busy 1.4s ease-in-out infinite;
+    width: 40%;
+  }
+}
+
+@keyframes toast-busy {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(250%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast-progress.busy > span {
+    animation: none;
+    width: 100%;
+  }
+}

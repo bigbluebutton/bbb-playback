@@ -38,13 +38,16 @@ const getLocale = () => {
   return fileToLocale(file);
 };
 
+// Missing strings fall back from region (pt_BR) to language (pt) to English
 const getMessages = (locale) => {
   const file = localeToFile(locale);
-  if (file !== FALLBACK_LOCALE) {
-    return Object.assign(messages[FALLBACK_LOCALE], messages[file]);
-  }
+  const [ language, ] = file.split('_');
 
-  return messages[file];
+  return {
+    ...messages[FALLBACK_LOCALE],
+    ...messages[language],
+    ...messages[file],
+  };
 };
 
 export {

@@ -1,31 +1,57 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import Body from './body';
-import Footer from './footer';
-import Header from './header';
-import { search as config } from 'config';
-import Modal from 'components/utils/modal';
-import { search as getSearch } from 'utils/actions';
-import storage from 'utils/data/storage';
 import {
-  isEmpty,
-  isEqual,
-} from 'utils/data/validators';
+  defineMessages,
+  useIntl,
+} from 'react-intl';
+import Icon from 'components/utils/icon';
+import Modal from 'components/utils/modal';
+import { search as config } from 'config';
+import { search as getSearch } from 'utils/actions';
+import { getThumbnailItems } from 'components/thumbnails/utils';
+import { ID } from 'utils/constants';
+import player from 'utils/player';
+import Results from './results';
 import './index.scss';
 
-const getValue = (event) => {
-  if (event && event.target) return event.target.value;
-
-  return null;
-};
-
-const isValid = (value) => {
-  if (value && typeof value === 'string') {
-    return value.length >= config.length.min;
-  }
-
-  return false;
-};
+const intlMessages = defineMessages({
+  title: {
+    id: 'player.search.modal.title',
+    description: 'Label for the search modal title',
+  },
+  subtitle: {
+    id: 'player.search.modal.subtitle',
+    description: 'Label for the search modal subtitle',
+  },
+  placeholder: {
+    id: 'player.search.modal.placeholder',
+    description: 'Placeholder of the search input',
+  },
+  clear: {
+    id: 'button.clear.aria',
+    description: 'Aria label for the clear button',
+  },
+  hint: {
+    id: 'player.search.modal.hint',
+    description: 'Shown until the query is long enough',
+  },
+  count: {
+    id: 'player.search.modal.count',
+    description: 'Number of slides found',
+  },
+  empty: {
+    id: 'player.search.modal.empty',
+    description: 'Shown when no slide matches',
+  },
+  cancel: {
+    id: 'player.search.modal.cancel',
+    description: 'Label of the cancel button',
+  },
+  show: {
+    id: 'player.search.modal.show',
+    description: 'Label of the button that filters the thumbnails',
+  },
+});
 
 const propTypes = {
   handleClose: PropTypes.func,
@@ -41,48 +67,122 @@ const Search = ({
   handleClose,
   handleSearch,
 }) => {
-  const [disabled, setDisabled] = useState(true);
-  const [search, setSearch] = useState([]);
+  const intl = useIntl();
+  const [query, setQuery] = useState('');
 
-  const handleOnChange = (event) => {
-    const value = getValue(event);
-    if (isValid(value)) {
-      const result = getSearch(value, storage.thumbnails);
+  const trimmed = query.trim();
+  const valid = trimmed.length >= config.length.min;
 
-      // If different, update search
-      if (!isEqual(search, result)) {
-        setSearch(result);
-      }
+  const items = useMemo(getThumbnailItems, []);
 
-      // Check to enable
-      if (disabled) setDisabled(false);
-    } else {
-      // If not empty, clear search
-      if (!isEmpty(search)) {
-        setSearch([]);
-      }
+  // Indexes match the filmstrip, so "Show in filmstrip" keeps the right ones
+  const indexes = useMemo(() => {
+    if (!valid) return [];
 
-      // Chack to disable
-      if (!disabled) setDisabled(true);
-    }
-  };
+    return getSearch(trimmed, items).filter(index => items[index].src !== ID.SCREENSHARE);
+  }, [items, trimmed, valid]);
 
-  const handleOnClick = () => {
-    handleSearch(search);
+  const results = indexes.map(index => ({ index, item: items[index] }));
+  const found = results.length > 0;
+
+  const showInFilmstrip = () => {
+    if (!found) return;
+
+    handleSearch(indexes);
     handleClose();
   };
 
+  const jumpTo = (item) => {
+    if (player.primary) player.primary.currentTime(item.timestamp);
+    handleClose();
+  };
+
+  let status;
+  if (!valid) {
+    status = intl.formatMessage(intlMessages.hint, { min: config.length.min });
+  } else if (found) {
+    status = intl.formatMessage(intlMessages.count, { count: results.length });
+  } else {
+    status = intl.formatMessage(intlMessages.empty, { query: trimmed });
+  }
+
   return (
-    <Modal onClose={handleClose}>
-      <Header />
-      <Body
-        handleOnChange={(event) => handleOnChange(event)}
-        search={search}
-      />
-      <Footer
-        disabled={disabled}
-        handleOnClick={() => handleOnClick()}
-      />
+    <Modal
+      className="search-modal"
+      onClose={handleClose}
+      title={(
+        <>
+          <span className="search-title-icon"><Icon name="search" /></span>
+          {intl.formatMessage(intlMessages.title)}
+        </>
+      )}
+    >
+      <p className="search-subtitle">
+        {intl.formatMessage(intlMessages.subtitle)}
+      </p>
+      <div className="search-field">
+        <span className="search-field-icon"><Icon name="search" /></span>
+        <input
+          aria-label={intl.formatMessage(intlMessages.subtitle)}
+          maxLength={config.length.max}
+          onChange={(event) => setQuery(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') showInFilmstrip();
+          }}
+          placeholder={intl.formatMessage(intlMessages.placeholder)}
+          type="text"
+          value={query}
+        />
+        {query ? (
+          <button
+            aria-label={intl.formatMessage(intlMessages.clear)}
+            className="search-field-clear"
+            onClick={() => setQuery('')}
+            type="button"
+          >
+            <Icon name="close" />
+          </button>
+        ) : null}
+      </div>
+      <div
+        aria-live="polite"
+        className={found ? 'search-status found' : 'search-status'}
+        role="status"
+      >
+        {status}
+      </div>
+      {found ? (
+        <Results
+          onSelect={jumpTo}
+          query={trimmed}
+          results={results}
+        />
+      ) : (
+        <div
+          aria-hidden="true"
+          className="search-empty"
+        >
+          <span className="search-empty-icon"><Icon name="search" /></span>
+        </div>
+      )}
+      <div className="search-footer">
+        <button
+          className="search-button secondary"
+          onClick={handleClose}
+          type="button"
+        >
+          {intl.formatMessage(intlMessages.cancel)}
+        </button>
+        <button
+          className="search-button primary"
+          disabled={!found}
+          onClick={showInFilmstrip}
+          type="button"
+        >
+          {intl.formatMessage(intlMessages.show)}
+          {found ? <span className="search-button-count">{results.length}</span> : null}
+        </button>
+      </div>
     </Modal>
   );
 };

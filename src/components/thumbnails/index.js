@@ -13,13 +13,14 @@ import {
   POSITIONS,
 } from 'utils/constants';
 import { handleAutoScroll } from 'utils/data/handlers';
-import storage from 'utils/data/storage';
 import {
   isEmpty,
   isEqual,
 } from 'utils/data/validators';
-import { buildThumbnailItems } from './utils';
+import getDuration from 'utils/duration';
+import { getThumbnailItems } from './utils';
 import './index.scss';
+
 
 const intlMessages = defineMessages({
   aria: {
@@ -77,15 +78,14 @@ const Thumbnails = ({
     }
   });
 
-  const items = useMemo(() => {
-    return buildThumbnailItems(storage.thumbnails, storage.layoutSwap, storage.screenshare);
-  }, []);
+  const items = useMemo(getThumbnailItems, []);
 
   const currentIndex = useCurrentIndex(items);
 
   return (
     <div
       aria-label={intl.formatMessage(intlMessages.aria)}
+      role="region"
       className="thumbnails-wrapper"
       id={ID.THUMBNAILS}
       onMouseEnter={() => interaction.current = true}
@@ -99,7 +99,9 @@ const Thumbnails = ({
           result.push(
             <Item
               active={active}
+              end={items[index + 1] ? items[index + 1].timestamp : getDuration()}
               index={index}
+              key={item.id ?? index}
               interactive={interactive}
               item={item}
               setRef={setRef}

@@ -3,9 +3,10 @@
 :root {
   --loader-background-color: var(--primary-background-color);
   --loader-color: var(--primary-content-color);
+  --loader-dot-color: var(--accent-color);
 }
 
-$dot-size: 20px;
+$dot-size: 14px;
 $dots-wrapper-width: 100px;
 
 .loader-wrapper {
@@ -35,7 +36,8 @@ $dots-wrapper-width: 100px;
 
   div {
     animation: dots 1.4s infinite ease-in-out both;
-    background-color: var(--loader-color);
+    background: var(--loader-dot-color);
+    background: var(--accent-gradient);
     border-radius: 100%;
     display: inline-block;
     height: $dot-size;

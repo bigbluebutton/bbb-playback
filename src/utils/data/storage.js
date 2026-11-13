@@ -43,11 +43,12 @@ const hasFetched = () => {
   return false;
 }
 
+// Every file and the media probe must be settled. Counting the stored keys
+// is not enough since media and lazily derived data share the same object
 const hasLoaded = () => {
-  const stored = Object.keys(DATA).length;
-  const data = Object.keys(files).length;
+  const settled = Object.keys(files).every(data => Object.hasOwn(DATA, data));
 
-  if (stored >= data) {
+  if (settled && Object.hasOwn(DATA, ID.MEDIA)) {
     logger.debug(ID.STORAGE, STATE.LOADED);
     STATUS = STATE.LOADED;
 
@@ -94,12 +95,16 @@ const fetchFile = (data, recordId, onUpdate, onLoaded, onError) => {
 const fetchMedia = (recordId, onUpdate, onLoaded, onError) => {
   const fetches = medias.map(type => {
     const url = buildFileURL(`video/webcams.${type}`, recordId);
-    return fetch(url, { method: 'HEAD' });
+    // A failing format must not prevent the other formats from being used
+    return fetch(url, { method: 'HEAD' }).catch(error => {
+      logger.warn(ID.STORAGE, ID.MEDIA, type, error);
+      return null;
+    });
   });
 
   Promise.all(fetches).then(responses => {
     const media = [];
-    responses.forEach(response => {
+    responses.filter(Boolean).forEach(response => {
       const { ok, url } = response;
       if (ok) {
         logger.debug(ID.STORAGE, ID.MEDIA, response);
@@ -134,6 +139,9 @@ const tryMediaFallback = (recordId, onUpdate, onLoaded, onError) => {
     } else {
       onError(ERROR.NOT_FOUND);
     }
+  }).catch(error => {
+    logger.warn(ID.STORAGE, ID.MEDIA, error);
+    onError(ERROR.NOT_FOUND);
   });
 };
 
@@ -183,17 +191,18 @@ const storage = {
   get alternates() {
     return DATA[ID.ALTERNATES];
   },
+  // Lists are empty, never null, when a recording lacks the file
   get captions() {
-    return DATA[ID.CAPTIONS];
+    return DATA[ID.CAPTIONS] || [];
   },
   get chat() {
-    return DATA[ID.CHAT];
+    return DATA[ID.CHAT] || [];
   },
   get polls() {
-    return DATA[ID.POLLS];
+    return DATA[ID.POLLS] || [];
   },
   get videos() {
-    return DATA[ID.VIDEOS];
+    return DATA[ID.VIDEOS] || [];
   },
   get cursor() {
     const result = DATA[ID.CURSOR];
@@ -224,29 +233,31 @@ const storage = {
     return result ? result.data : [];
   },
   get screenshare() {
-    return DATA[ID.SCREENSHARE];
+    return DATA[ID.SCREENSHARE] || [];
   },
   get shapes() {
     return DATA[ID.SHAPES];
   },
+  // Recordings without a presentation (e.g. audio only) have no shapes
   get slides() {
-    return this.shapes[ID.SLIDES];
+    return (this.shapes && this.shapes[ID.SLIDES]) || [];
   },
   get canvases() {
-    return this.shapes[ID.CANVASES];
+    return (this.shapes && this.shapes[ID.CANVASES]) || [];
   },
   get thumbnails() {
     if (!hasProperty(DATA, ID.THUMBNAILS)) {
-      DATA[ID.THUMBNAILS] = addAlternatesToThumbnails(this.shapes[ID.THUMBNAILS], this.alternates);
+      const thumbnails = (this.shapes && this.shapes[ID.THUMBNAILS]) || [];
+      DATA[ID.THUMBNAILS] = addAlternatesToThumbnails(thumbnails, this.alternates || []);
     }
 
     return DATA[ID.THUMBNAILS];
   },
   get layoutSwap() {
-    return DATA[ID.LAYOUT];
+    return DATA[ID.LAYOUT] || [];
   },
   get tldraw() {
-    return DATA[ID.TLDRAW];
+    return DATA[ID.TLDRAW] || [];
   },
 };
 

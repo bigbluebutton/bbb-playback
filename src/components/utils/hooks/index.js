@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import watched from 'utils/watched';
 import { EVENTS } from 'utils/constants';
 import {
   getCurrentContent,
@@ -99,8 +100,39 @@ const useCurrentInterval = (data) => {
   return currentInterval;
 };
 
+// Watched ranges, refreshed at most once a second while playing
+const useWatched = () => {
+  const [ranges, setRanges] = useState(() => watched.getRanges());
+
+  useEffect(() => {
+    let timeout = null;
+    const handleWatched = () => {
+      if (timeout) return;
+      timeout = setTimeout(() => {
+        timeout = null;
+        setRanges(watched.getRanges());
+      }, 1000);
+    };
+
+    setRanges(watched.getRanges());
+    document.addEventListener(EVENTS.WATCHED, handleWatched);
+    // Loading earlier visits is reflected right away
+    const handleLoaded = () => setRanges(watched.getRanges());
+    document.addEventListener(EVENTS.WATCHED, handleLoaded, { once: true });
+
+    return () => {
+      document.removeEventListener(EVENTS.WATCHED, handleWatched);
+      document.removeEventListener(EVENTS.WATCHED, handleLoaded);
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  return ranges;
+};
+
 export {
   useCurrentContent,
+  useWatched,
   useCurrentIndex,
   useCurrentInterval,
   useLayoutSwap,

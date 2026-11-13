@@ -16,6 +16,12 @@ const defaultProps = {
   text: '',
 };
 
+const decodeEntities = (text) => {
+  const textarea = document.createElement('textarea');
+  textarea.innerHTML = text;
+  return textarea.value;
+};
+
 const Reply = ({
   active,
   idToReference,
@@ -36,7 +42,7 @@ const Reply = ({
     <span
       onClick={handleClickReply}
       className={cx('reply-tag', 'text-vanilla', {inactive: !active})}
-      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(text) }}
+      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(decodeEntities(text)) }}
     >
     </span>
   );
