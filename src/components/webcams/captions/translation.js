@@ -1,5 +1,10 @@
 import { captions as config } from 'config';
 import {
+  clearCues,
+  createCue,
+} from 'utils/captions/cues';
+import { reflowCues } from 'utils/captions/reflow';
+import {
   isBlank,
   parseVTT,
   pickNext,
@@ -42,25 +47,11 @@ const loadSourceCues = (source) => {
     if (!response.ok) throw new Error(`captions ${response.status}`);
 
     return response.text();
-    // Translators get the words only, without word timings or styles
-  }).then(text => parseVTT(text)
+    // Translators get the words only, without word timings or styles, in
+    // the same sentence-sized lines the player shows
+  }).then(text => reflowCues(parseVTT(text))
     .map(cue => ({ ...cue, text: toPlainText(cue.text) }))
     .filter(cue => !isBlank(cue.text)));
-};
-
-// video.js tracks copy cues that are not its own VTTCue type, which would
-// break replacing the text later; native tracks (Safari) need native cues
-const createCue = (track, cue) => {
-  const emulated = Array.isArray(track.cues_) && window.vttjs && window.vttjs.VTTCue;
-  const Cue = emulated ? window.vttjs.VTTCue : window.VTTCue;
-
-  return new Cue(cue.start, cue.end, cue.text);
-};
-
-const clearCues = (track) => {
-  if (!track.cues) return;
-
-  while (track.cues.length > 0) track.removeCue(track.cues[0]);
 };
 
 // Shown for a line still being translated: never the original language,

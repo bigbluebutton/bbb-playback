@@ -5,6 +5,7 @@ import {
 } from 'react-intl';
 import cx from 'classnames';
 import Icon from 'components/utils/icon';
+import { reflowCues } from 'utils/captions/reflow';
 import {
   isBlank,
   parseVTT,
@@ -115,9 +116,10 @@ const Transcript = () => {
         return response.text();
       })
       .then(text => {
-        // Words only: captions can carry word timings and styles
+        // Words only: captions can carry word timings and styles. Lines are
+        // the same sentence-sized ones the player shows
         if (!cancelled) {
-          setCues(parseVTT(text)
+          setCues(reflowCues(parseVTT(text))
             .map(cue => ({ ...cue, text: toPlainText(cue.text) }))
             .filter(cue => !isBlank(cue.text)));
         }
