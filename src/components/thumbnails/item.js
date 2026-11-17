@@ -38,8 +38,10 @@ const Item = ({
       >
         <Thumbnail
           alt={item.alt}
+          height={item.height}
           index={index}
           src={item.src}
+          width={item.width}
         />
       </div>
     );
@@ -59,8 +61,10 @@ const Item = ({
     >
       <Thumbnail
         alt={item.alt}
+        height={item.height}
         index={index}
         src={item.src}
+        width={item.width}
       />
     </div>
   );

@@ -8,17 +8,23 @@ import './index.scss';
 
 const propTypes = {
   alt: PropTypes.string,
+  height: PropTypes.number,
   src: PropTypes.string,
+  width: PropTypes.number,
 };
 
 const defaultProps = {
   alt: '',
+  height: undefined,
   src: '',
+  width: undefined,
 };
 
 const Image = ({
   alt,
+  height,
   src,
+  width,
 }) => {
   const screenshare = src === ID.SCREENSHARE;
 
@@ -32,11 +38,17 @@ const Image = ({
 
   const logo = src.includes('logo');
 
+  // Lazy loading needs the image size before it loads: with no size, every
+  // image not loaded yet is 0 wide, and the whole strip counts as visible
+  const size = width > 0 && height > 0 ? { height, width } : {};
+
   return (
     <img
       alt={alt}
       className={cx('thumbnail-image', { logo })}
+      loading="lazy"
       src={buildFileURL(src)}
+      {...size}
     />
   );
 };
