@@ -77,6 +77,12 @@ const buildOptions = (sources, tracks) => {
     },
     controls: true,
     fill: true,
+    html5: {
+      // video.js only adds the `tracks` below when it renders the captions
+      // itself, and it uses the native text tracks in Safari, which left
+      // Safari with no captions and no CC button
+      nativeTextTracks: false,
+    },
     inactivityTimeout: 0,
     playbackRates: config.rates,
     sources: sources.current,
