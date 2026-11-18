@@ -66,10 +66,15 @@ const getScrollTop = (firstNode, currentNode, align) => {
   return verticalOffset;
 };
 
-const handleOnEnterPress = (event, action) => {
-  if (event && event.key === 'Enter') {
-    if (typeof action === 'function') action();
-  }
+// Elements acting as buttons activate with Enter and Space, like a button.
+// Keys with a modifier are left to the shortcuts (Alt+Shift+Enter plays)
+const handleOnKeyActivation = (event, action) => {
+  if (event.key !== 'Enter' && event.key !== ' ') return;
+  if (event.altKey || event.ctrlKey || event.metaKey) return;
+
+  // Space would scroll the list around the element
+  event.preventDefault();
+  action();
 };
 
 const handleAutoScroll = (fNode, cNode, direction, align) => {
@@ -94,5 +99,5 @@ export {
   getScrollLeft,
   getScrollTop,
   handleAutoScroll,
-  handleOnEnterPress,
+  handleOnKeyActivation,
 };

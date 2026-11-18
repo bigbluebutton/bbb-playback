@@ -10,7 +10,7 @@ import {
   controls as config,
   date,
 } from 'config';
-import { handleOnEnterPress } from 'utils/data/handlers';
+import { handleOnKeyActivation } from 'utils/data/handlers';
 import storage from 'utils/data/storage';
 import layout from 'utils/layout';
 import './index.scss';
@@ -45,11 +45,12 @@ const Title = ({ openAbout }) => {
 
   return (
     <span
-      aria={intl.formatMessage(intlMessages.about)}
       className={cx('title', { interactive })}
       onClick={openAbout}
-      onKeyPress={event => handleOnEnterPress(event, openAbout)}
+      onKeyDown={event => handleOnKeyActivation(event, openAbout)}
+      role="button"
       tabIndex="0"
+      title={intl.formatMessage(intlMessages.about)}
     >
       {storage.metadata.name}
       {date.enabled ? (
