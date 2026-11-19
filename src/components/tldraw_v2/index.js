@@ -19,7 +19,7 @@ import './index.scss';
 import {
   getTldrawData, getViewBox, createTldrawImageAsset,
   createTldrawBackgroundShape, createTldrawCursorShape,
-  setupColorThemePaletteOverrides
+  getTldrawImageFilePath, setupColorThemePaletteOverrides
 } from 'utils/tldraw';
 import { buildFileURL } from 'utils/data';
 import { isEmpty } from 'utils/data/validators';
@@ -88,6 +88,16 @@ const SlideData = (tldrawAPI) => {
       const newShape = { ...shape };
       newShape.parentId = tldrawAPI?.getCurrentPageId();
       shapes[newShape.id] = newShape;
+
+      const imageFilePath = getTldrawImageFilePath(newShape);
+      if (imageFilePath) {
+        assets[newShape.props.assetId] = createTldrawImageAsset(
+          newShape.props.assetId,
+          buildFileURL(imageFilePath),
+          newShape.props.w,
+          newShape.props.h,
+        );
+      }
     }
   }
 
